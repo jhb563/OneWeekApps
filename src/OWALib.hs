@@ -9,5 +9,6 @@ Stability   : Stable
 
 module OWALib where
 
+-- | 'titleString' Returns the title of our program.
 titleString :: String
 titleString = "Running OWA!"
