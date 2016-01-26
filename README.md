@@ -19,3 +19,6 @@ OneWeekApps is being developed as a framework for rapidly developing mobile apps
 4. Finally run with .cabal-sandbox/bin/owa
 5. It doesn't do very much yet!
 
+# Generating Documentation
+1. OWA uses Haddock for documentation.
+2. To generate documentation, simply run `cabal haddock --executables`
