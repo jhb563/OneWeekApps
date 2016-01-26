@@ -1,0 +1,7 @@
+machine:
+  ghc:
+  	version: 7.10.2
+
+test:
+  post:
+    - cabal haddock --builddir=$CIRCLE_ARTIFACTS
