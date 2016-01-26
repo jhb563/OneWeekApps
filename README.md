@@ -11,3 +11,11 @@ OneWeekApps is being developed as a framework for rapidly developing mobile apps
 # Long Term Goals
 1. Allow the user to modify their app structure and have changes reflected in XCode/AS project while respecting any additions made to the project.
 2. Expand to android.
+
+# Running the Program
+1. To run the program, first make sure you have ghc and cabal installed.
+2. Then in the project directory, creating the sandbox by running `cabal sandbox init`
+3. Next install the project with `cabal install -j`
+4. Finally run with .cabal-sandbox/bin/owa
+5. It doesn't do very much yet!
+
