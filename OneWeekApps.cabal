@@ -34,8 +34,7 @@ test-suite tests
   default-extensions: OverloadedStrings
   type: exitcode-stdio-1.0
   main-is: tests/OWATests.hs
-  build-depends: base,
+  build-depends: base >= 4.8 && < 4.9,
                  hspec     >= 1.8,
                  OneWeekApps
   default-language: Haskell2010
-
