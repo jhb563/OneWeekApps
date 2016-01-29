@@ -16,8 +16,10 @@ extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library
-  build-depends:       base
-  exposed-modules:     OWALib
+  build-depends:       base,
+                       directory
+  exposed-modules:     OWALib,
+                       OWAFileSearch
   hs-source-dirs:      src
   default-language: Haskell2010
 
@@ -25,7 +27,8 @@ executable OneWeekApps
   main-is:             owa.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base
+  build-depends:       base,
+                       directory
   hs-source-dirs:      src
   default-language:    Haskell2010
 
@@ -33,8 +36,10 @@ test-suite tests
   ghc-options: -Wall
   default-extensions: OverloadedStrings
   type: exitcode-stdio-1.0
-  main-is: tests/OWATests.hs
+  main-is: OWATests.hs
+  hs-source-dirs:   tests
   build-depends: base,
                  hspec     >= 1.8,
+                 directory,
                  OneWeekApps
   default-language: Haskell2010

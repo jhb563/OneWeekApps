@@ -9,8 +9,11 @@ Maintainer  : jhbowen047@gmail.com
 module Main where
 
 import System.Environment
+import System.Directory
 import OWALib
 
 -- | 'main' runs the main progream
 main :: IO ()
-main = putStrLn titleString 
+main = do
+    currentFilePath <- getCurrentDirectory
+    putStrLn currentFilePath
