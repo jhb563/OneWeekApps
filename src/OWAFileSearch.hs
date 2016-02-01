@@ -6,12 +6,20 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 module OWAFileSearch (
-    findAppDirectory
+    findAppDirectory,
+    findColorsFiles,
+    findFontsFiles,
+    findAlertsFiles,
+    findErrorsFiles
 ) where
 
 import System.Directory
 import Data.List.Split
 import Control.Monad
+
+----------------------------------------------------------
+--------------Finding App Directory ----------------------
+----------------------------------------------------------
 
 -- | 'appString' The directory name we are trying to find
 appString :: String
@@ -40,3 +48,19 @@ findAppDirectoryHelper (fPath:queue) = if isTargetDir fPath
 isTargetDir :: FilePath -> Bool
 isTargetDir fPath = last components == appString
   where components = splitOn "/" fPath
+
+----------------------------------------------------------
+--------------Finding Input Files - ----------------------
+----------------------------------------------------------
+
+findColorsFiles :: FilePath -> IO [FilePath]
+findColorsFiles appDirectory = return [appDirectory]
+
+findFontsFiles :: FilePath -> IO [FilePath]
+findFontsFiles appDirectory = return [appDirectory]
+
+findAlertsFiles :: FilePath -> IO [FilePath]
+findAlertsFiles appDirectory = return [appDirectory]
+
+findErrorsFiles :: FilePath -> IO [FilePath]
+findErrorsFiles appDirectory = return [appDirectory]

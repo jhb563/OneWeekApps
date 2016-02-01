@@ -2,8 +2,10 @@ module Main where
 
 import System.Directory
 import AppDirectoryTests
+import FileSearchTests
 
 main :: IO ()
 main = do
   currentFilePath <- getCurrentDirectory
-  runAppDirectoryTests currentFilePath
+  _ <- runAppDirectoryTests currentFilePath
+  runFileSearchTests currentFilePath
