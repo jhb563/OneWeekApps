@@ -15,5 +15,5 @@ import OWALib
 -- | 'main' runs the main progream
 main :: IO ()
 main = do
-    currentFilePath <- getCurrentDirectory
-    putStrLn currentFilePath
+  currentFilePath <- getCurrentDirectory
+  putStrLn currentFilePath

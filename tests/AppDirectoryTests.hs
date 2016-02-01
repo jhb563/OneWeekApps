@@ -54,17 +54,17 @@ falseAppFileExtensions = ["/app", "/myappium", "appTopic", "thingWithapp"]
 
 setupTestEnv :: FilePath -> IO ()
 setupTestEnv currentDirectory = do
-    _ <- createDirectoryIfMissing True $ currentDirectory ++ redHerring2Extension 
-    _ <- createDirectoryIfMissing True $ currentDirectory ++ deepAppExtension
-    _ <- createDirectoryIfMissing True $ currentDirectory ++ app1Extension 
-    let falseAppNamesFullPath = currentDirectory ++ falseAppNamesExtension
-    _ <- createDirectoryIfMissing True falseAppNamesFullPath
-    mapM_ (createFileAndClose falseAppNamesFullPath) falseAppFileExtensions
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ redHerring2Extension 
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ deepAppExtension
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ app1Extension 
+  let falseAppNamesFullPath = currentDirectory ++ falseAppNamesExtension
+  _ <- createDirectoryIfMissing True falseAppNamesFullPath
+  mapM_ (createFileAndClose falseAppNamesFullPath) falseAppFileExtensions
 
 createFileAndClose :: FilePath -> FilePath -> IO ()
 createFileAndClose base extension = do
-                              handle <- openFile (base ++ extension) WriteMode
-                              hClose handle
+  handle <- openFile (base ++ extension) WriteMode
+  hClose handle
 
 teardownTestEnv :: FilePath -> IO ()
 teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvExtension)

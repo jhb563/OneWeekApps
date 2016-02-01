@@ -5,5 +5,5 @@ import AppDirectoryTests
 
 main :: IO ()
 main = do
-    currentFilePath <- getCurrentDirectory
-    runAppDirectoryTests currentFilePath
+  currentFilePath <- getCurrentDirectory
+  runAppDirectoryTests currentFilePath
