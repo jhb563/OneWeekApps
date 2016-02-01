@@ -15,17 +15,16 @@ appString = "app"
 findAppDirectory :: FilePath -> IO (Maybe FilePath)
 findAppDirectory currentFilePath = do
                                 isDirectory <- doesDirectoryExist currentFilePath
-                                if isDirectory then findAppDirectoryHelper currentFilePath [] else return Nothing
+                                if isDirectory then findAppDirectoryHelper [currentFilePath] else return Nothing
 
-findAppDirectoryHelper :: FilePath -> [FilePath] -> IO (Maybe FilePath)
-findAppDirectoryHelper fPath queue = if isTargetDir fPath then return (Just fPath)
+findAppDirectoryHelper :: [FilePath] -> IO (Maybe FilePath)
+findAppDirectoryHelper [] = return Nothing
+findAppDirectoryHelper (fPath:queue) = if isTargetDir fPath then return (Just fPath)
                                         else do
                                             newPaths <- listDirectory fPath
                                             newDirectories <- filterM doesDirectoryExist (map (\path -> fPath ++ ('/':path)) newPaths)
                                             let newQueue = queue ++ newDirectories
-                                            if length newQueue > 0 then 
-                                                findAppDirectoryHelper (head newQueue) (tail newQueue)
-                                                else return Nothing
+                                            findAppDirectoryHelper newQueue
 
 -- | 'isTargetDir' Tells us if the given directory ends in our appString.
 isTargetDir :: FilePath -> Bool

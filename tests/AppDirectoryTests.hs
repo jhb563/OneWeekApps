@@ -72,33 +72,42 @@ teardownTestEnv currentDirectory = do
 
 runAppDirectoryTests :: FilePath -> IO ()
 runAppDirectoryTests currentDirectory = do
-    let testenvPath = currentDirectory ++ testEnvExtension
-    let app1Path = currentDirectory ++ app1Extension
-    let failStartPath = currentDirectory ++ failStartExtension
-    let deepStartPath = currentDirectory ++ deepStartExtension
-    let deepAppPath = currentDirectory ++ deepAppExtension
-    let appFailPath = currentDirectory ++ falseAppNamesStart
-    _ <- setupTestEnv currentDirectory
-    _ <- hspec $ do
-        describe "Locate app Directory" $ do
+  hspec $ beforeAll_ (setupTestEnv currentDirectory)
+     . afterAll_ (teardownTestEnv currentDirectory) $ do
+    _ <- findAppDirectorySuccessSpec currentDirectory
+    findAppDirectoryFailSpec currentDirectory
 
-            context "app directory is below current directory" $ do
-              it "Directory should be found at /testenv/app" $ do
-                findAppDirectory testenvPath `shouldReturn` Just app1Path
+findAppDirectorySuccessSpec :: FilePath -> Spec
+findAppDirectorySuccessSpec currentDirectory = do
+  let testenvPath = currentDirectory ++ testEnvExtension
+  let app1Path = currentDirectory ++ app1Extension
+  let deepStartPath = currentDirectory ++ deepStartExtension
+  let deepAppPath = currentDirectory ++ deepAppExtension
+  describe "Locate app Directory" $ do
 
-            context "Current Directory is app" $ do
-                it "Directory should be found as current" $ do
-                  findAppDirectory app1Path `shouldReturn` Just app1Path
+        context "when app directory is below current directory" $ do
+          it "Directory should be found at /testenv/app" $ do
+            findAppDirectory testenvPath `shouldReturn` Just app1Path
 
-            context "app directory is further below current directory" $ do
-              it "Directory should be found at ./furtherBelowTest/app" $ do
-                findAppDirectory deepStartPath `shouldReturn` Just deepAppPath
+        context "when current Directory is app" $ do
+            it "Directory should be found as current" $ do
+              findAppDirectory app1Path `shouldReturn` Just app1Path
 
-        context "No app Directory" $ do
-          it "Should return nothing" $ do
-            findAppDirectory failStartPath `shouldReturn` Nothing
+        context "when app directory is further below current directory" $ do
+          it "Directory should be found at testenv/deeperTest/deeperTest2/app" $ do
+            findAppDirectory deepStartPath `shouldReturn` Just deepAppPath
 
-          context "we have directories beginning, ending, and containing app, and files even matching app" $ do
-            it "Should return nothing" $ do
-                findAppDirectory appFailPath `shouldReturn` Nothing
-    teardownTestEnv  currentDirectory
+findAppDirectoryFailSpec :: FilePath -> Spec
+findAppDirectoryFailSpec currentDirectory = do
+  let failStartPath = currentDirectory ++ failStartExtension
+  let appFailPath = currentDirectory ++ falseAppNamesStart
+  describe "Fail to find app directory" $ do
+
+    context "when there is no app Directory" $ do
+      it "Should return nothing" $ do
+        findAppDirectory failStartPath `shouldReturn` Nothing
+
+      context "when there are directories beginning, ending, and containing app, and files even matching app" $ do
+        it "Should return nothing" $ do
+            findAppDirectory appFailPath `shouldReturn` Nothing
+
