@@ -2,6 +2,7 @@ module AppDirectoryTests where
 
 import OWAFileSearch
 import System.Directory
+import System.IO
 import Test.Hspec
 
 -- Setup will create a testenv folder with the following structure
@@ -13,6 +14,14 @@ import Test.Hspec
 -- -- | deeperTest
 -- -- -- | deeperTest2
 -- -- --  -- | app
+-- -- | failureCases
+-- -- -- | appTastic
+-- -- -- -- | buildAnApp
+-- -- -- -- -- | myappium
+-- -- -- -- -- -- | app (file)
+-- -- -- -- -- -- | myappium (file)
+-- -- -- -- -- -- | appTopic (file)
+-- -- -- -- -- -- | thingwithapp (file)
 
 -- Tear Down will destroy these directories
 
@@ -34,11 +43,28 @@ deepStartExtension = "/testenv/deeperTest"
 deepAppExtension :: FilePath
 deepAppExtension = "/testenv/deeperTest/deeperTest2/app"
 
+falseAppNamesStart :: FilePath
+falseAppNamesStart = "/testenv/failureCases"
+
+falseAppNamesExtension :: FilePath
+falseAppNamesExtension = "/testenv/failureCases/appTastic/buildAnApp/myappium"
+
+falseAppFileExtensions :: [FilePath]
+falseAppFileExtensions = ["/app", "/myappium", "appTopic", "thingWithapp"]
+
 setupTestEnv :: FilePath -> IO ()
 setupTestEnv currentDirectory = do
     _ <- createDirectoryIfMissing True $ currentDirectory ++ redHerring2Extension 
     _ <- createDirectoryIfMissing True $ currentDirectory ++ deepAppExtension
-    createDirectoryIfMissing True $ currentDirectory ++ app1Extension 
+    _ <- createDirectoryIfMissing True $ currentDirectory ++ app1Extension 
+    let falseAppNamesFullPath = currentDirectory ++ falseAppNamesExtension
+    _ <- createDirectoryIfMissing True $ falseAppNamesFullPath
+    sequence_ $ map (createFileAndClose falseAppNamesFullPath) falseAppFileExtensions
+
+createFileAndClose :: FilePath -> FilePath -> IO ()
+createFileAndClose base extension = do
+                              handle <- openFile (base ++ extension) WriteMode
+                              hClose handle
 
 teardownTestEnv :: FilePath -> IO ()
 teardownTestEnv currentDirectory = do
@@ -51,23 +77,28 @@ runAppDirectoryTests currentDirectory = do
     let failStartPath = currentDirectory ++ failStartExtension
     let deepStartPath = currentDirectory ++ deepStartExtension
     let deepAppPath = currentDirectory ++ deepAppExtension
+    let appFailPath = currentDirectory ++ falseAppNamesStart
     _ <- setupTestEnv currentDirectory
     _ <- hspec $ do
         describe "Locate app Directory" $ do
 
             context "app directory is below current directory" $ do
               it "Directory should be found at /testenv/app" $ do
-                findAppDirectory testenvPath `shouldBe` Just app1Path
+                findAppDirectory testenvPath `shouldReturn` Just app1Path
 
             context "Current Directory is app" $ do
                 it "Directory should be found as current" $ do
-                  findAppDirectory app1Path `shouldBe` Just app1Path
+                  findAppDirectory app1Path `shouldReturn` Just app1Path
 
             context "app directory is further below current directory" $ do
               it "Directory should be found at ./furtherBelowTest/app" $ do
-                findAppDirectory deepStartPath `shouldBe` Just deepAppPath
+                findAppDirectory deepStartPath `shouldReturn` Just deepAppPath
 
         context "No app Directory" $ do
           it "Should return nothing" $ do
-            findAppDirectory failStartPath `shouldBe` Nothing
+            findAppDirectory failStartPath `shouldReturn` Nothing
+
+          context "we have directories beginning, ending, and containing app, and files even matching app" $ do
+            it "Should return nothing" $ do
+                findAppDirectory appFailPath `shouldReturn` Nothing
     teardownTestEnv  currentDirectory
