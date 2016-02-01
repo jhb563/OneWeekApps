@@ -13,7 +13,9 @@ appString = "app"
 -- | 'findAppDirectory' Given a filepath, returns the filepath of the first directory it finds
 -- whose name is 'app', via Breadth first search
 findAppDirectory :: FilePath -> IO (Maybe FilePath)
-findAppDirectory currentFilePath = findAppDirectoryHelper currentFilePath []
+findAppDirectory currentFilePath = do
+                                isDirectory <- doesDirectoryExist currentFilePath
+                                if isDirectory then findAppDirectoryHelper currentFilePath [] else return Nothing
 
 findAppDirectoryHelper :: FilePath -> [FilePath] -> IO (Maybe FilePath)
 findAppDirectoryHelper fPath queue = if isTargetDir fPath then return (Just fPath)
