@@ -53,14 +53,54 @@ isTargetDir fPath = last components == appString
 --------------Finding Input Files - ----------------------
 ----------------------------------------------------------
 
+-- | 'findColorsFiles' Locates all the files with the extension '.colors', searching recursively
+-- from the given directory.
 findColorsFiles :: FilePath -> IO [FilePath]
-findColorsFiles appDirectory = return [appDirectory]
+findColorsFiles appDirectory = searchDirectoryForExtension colorsExtension [appDirectory] []
 
+-- | 'findFontsFiles' Locates all the files with the extension '.fonts', searching recursively
+-- from the given directory.
 findFontsFiles :: FilePath -> IO [FilePath]
-findFontsFiles appDirectory = return [appDirectory]
+findFontsFiles appDirectory = searchDirectoryForExtension fontsExtension [appDirectory] []
 
+-- | 'findAlertsFiles' Locates all the files with the extension '.alerts', searching recursively
+-- from the given directory.
 findAlertsFiles :: FilePath -> IO [FilePath]
-findAlertsFiles appDirectory = return [appDirectory]
+findAlertsFiles appDirectory = searchDirectoryForExtension alertsExtension [appDirectory] []
 
+-- | 'findErrorsFiles' Locates all the files with the extension '.errors', searching recursively
+-- from the given directory.
 findErrorsFiles :: FilePath -> IO [FilePath]
-findErrorsFiles appDirectory = return [appDirectory]
+findErrorsFiles appDirectory = searchDirectoryForExtension errorsExtension [appDirectory] []
+
+colorsExtension :: String
+colorsExtension = "colors"
+
+fontsExtension :: String
+fontsExtension = "fonts"
+
+alertsExtension :: String
+alertsExtension = "alerts"
+
+errorsExtension :: String
+errorsExtension = "errors"
+
+-- | 'searchDirectoryForExtension' is a common helper method doing most of the work
+-- for searching for the files. It uses BFS on the directory. It includes a queue of unexplored
+-- directories, as well as an accumulator argument for the files found.
+searchDirectoryForExtension :: String -> [FilePath] -> [FilePath] -> IO [FilePath]
+searchDirectoryForExtension extension [] locatedFiles = return locatedFiles
+searchDirectoryForExtension extension (nextFilePath:queue) locatedFiles = do
+  directoryListing <- listDirectory nextFilePath
+  let absolutePaths = (map (\fp -> nextFilePath ++ ('/':fp)) directoryListing)
+  filesInDirectory <- filterM doesFileExist absolutePaths
+  subdirectories <- filterM doesDirectoryExist absolutePaths
+  let matchingFiles = filter (fileHasTargetExtension extension) filesInDirectory
+  let newLocatedFiles = matchingFiles ++ locatedFiles
+  let newQueue = queue ++ subdirectories
+  searchDirectoryForExtension extension newQueue newLocatedFiles
+
+-- | 'fileHasTargetExtension' tells us if the given file ends with the given extension
+fileHasTargetExtension :: String -> FilePath -> Bool
+fileHasTargetExtension extension filePath = last components == extension
+  where components = splitOn "." filePath
