@@ -11,6 +11,7 @@ module FileSearchTests (
     runFileSearchTests
 ) where
 
+import Data.List
 import OWAFileSearch
 import System.Directory
 import System.IO
@@ -45,27 +46,63 @@ findBasicTests currentDirectory = do
 
 findColorsTests :: FilePath -> Spec
 findColorsTests currentDirectory = do
-  describe "Find Colors in hard context" $ do
-    it "Complex" $
-      pending
+  let complexPath = currentDirectory ++ complexExtension
+  let deeperComplexPath = currentDirectory ++ colorComplexExtension
+  let complexColors = map (currentDirectory++) colorComplexFileExtensions
+  let deepComplexColors = map (currentDirectory++) colorDeeperComplexFileExtensions
+  describe "Find Colors in complex context" $ do
+    context "when in the root complex directory" $
+      it "Should find several files at multiple levels" $
+        findColorsFiles complexPath `shouldReturnSorted` complexColors
+
+    context "when in a deeper directory $" $
+      it "Should find a single file" $
+        findColorsFiles deeperComplexPath `shouldReturnSorted` deepComplexColors
 
 findFontsTests :: FilePath -> Spec
 findFontsTests currentDirectory = do
-  describe "Find Fonts in hard context" $ do
-    it "Complex" $
-      pending
+  let complexPath = currentDirectory ++ complexExtension
+  let deeperComplexPath = currentDirectory ++ fontComplexExtension
+  let complexFonts = map (currentDirectory++) fontComplexFileExtensions
+  let deepComplexFonts = map (currentDirectory++) fontDeeperComplexFileExtensions
+  describe "Find Fonts in complex context" $ do
+    context "when in the root complex directory" $
+      it "Should find several files at multiple levels" $
+        findFontsFiles complexPath `shouldReturnSorted` complexFonts
+
+    context "when in a deeper directory $" $
+      it "Should find a single file" $
+        findFontsFiles deeperComplexPath `shouldReturnSorted` deepComplexFonts
 
 findAlertsTests :: FilePath -> Spec
 findAlertsTests currentDirectory = do
-  describe "Find Alerts in hard context" $ do
-    it "Complex" $
-      pending
+  let complexPath = currentDirectory ++ complexExtension
+  let deeperComplexPath = currentDirectory ++ alertComplexExtension
+  let complexAlerts = map (currentDirectory++) alertComplexFileExtensions
+  let deepComplexAlerts = map (currentDirectory++) alertDeeperComplexFileExtensions
+  describe "Find Alerts in complex context" $ do
+    context "when in the root complex directory" $
+      it "Should find several files at multiple levels" $
+        findAlertsFiles complexPath `shouldReturnSorted` complexAlerts
+
+    context "when in a deeper directory $" $
+      it "Should find a single file" $
+        findAlertsFiles deeperComplexPath `shouldReturnSorted` deepComplexAlerts
 
 findErrorsTests :: FilePath -> Spec
 findErrorsTests currentDirectory = do
-  describe "Find Errors in hard context" $ do
-    it "Complex" $
-      pending
+  let complexPath = currentDirectory ++ complexExtension
+  let deeperComplexPath = currentDirectory ++ errorComplexExtension
+  let complexErrors = map (currentDirectory++) errorComplexFileExtensions
+  let deepComplexErrors = map (currentDirectory++) errorDeeperComplexFileExtensions
+  describe "Find Errors in complex context" $ do
+    context "when in the root complex directory" $
+      it "Should find several files at multiple levels" $
+        findErrorsFiles complexPath `shouldReturnSorted` complexErrors
+
+    context "when in a deeper directory $" $
+      it "Should find a single file" $
+        findAlertsFiles deeperComplexPath `shouldReturnSorted` deepComplexErrors
 
 findFailureTests :: FilePath -> Spec
 findFailureTests currentDirectory = do
@@ -100,6 +137,52 @@ basicExtension = "/testenv/basic"
 complexExtension :: FilePath
 complexExtension = "/testenv/complex"
 
+colorComplexExtension :: FilePath
+colorComplexExtension = "/testenv/complex/level1b"
+
+colorComplexFileExtensions :: [FilePath]
+colorComplexFileExtensions = ["/testenv/complex/l0.colors",
+                              "/testenv/complex/l02.colors",
+                              "/testenv/complex/level1b/level2b/l2b.colors"]
+
+colorDeeperComplexFileExtensions :: [FilePath]
+colorDeeperComplexFileExtensions = ["/testenv/complex/level1b/level2b/l2b.colors"]
+
+fontComplexExtension :: FilePath
+fontComplexExtension = "/testenv/complex/level1a"
+
+fontComplexFileExtensions :: [FilePath]
+fontComplexFileExtensions = ["/testenv/complex/l0.fonts",
+                             "/testenv/complex/level1a/level2a/l2a.fonts"]
+
+fontDeeperComplexFileExtensions :: [FilePath]
+fontDeeperComplexFileExtensions = ["/testenv/complex/level1a/level2a/l2a.fonts"]
+
+alertComplexExtension :: FilePath
+alertComplexExtension = "/testenv/complex/level1c"
+
+alertComplexFileExtensions :: [FilePath]
+alertComplexFileExtensions = ["/testenv/complex/level1c/l1c.alerts",
+                                    "/testenv/complex/level1c/l1c2.alerts"]
+
+alertDeeperComplexFileExtensions :: [FilePath]
+alertDeeperComplexFileExtensions = ["/testenv/complex/l0.alerts",
+                                    "/testenv/complex/level1a/l1a.alerts",
+                                    "/testenv/complex/level1c/l1c.alerts",
+                                    "/testenv/complex/level1c/l1c2.alerts"]
+
+errorComplexExtension :: FilePath
+errorComplexExtension = "/testenv/complex/level1a"
+
+errorComplexFileExtensions :: [FilePath]
+errorComplexFileExtensions = ["/testenv/complex/level1a/l1a.errors",
+                              "/testenv/complex/level1a/l1a2.errors",
+                              "/testenv/complex/level1b/l1b.errors"]
+
+errorDeeperComplexFileExtensions :: [FilePath]
+errorDeeperComplexFileExtensions = ["/testenv/complex/level1a/l1a.errors",
+                                    "/testenv/complex/level1a/l1a2.errors"]
+
 failureExtension :: FilePath
 failureExtension = "/testenv/failure"
 
@@ -108,11 +191,16 @@ createFileAndClose base extension = do
   handle <- openFile (base ++ extension) WriteMode
   hClose handle
 
+shouldReturnSorted :: (Show a, Ord a) => IO [a] -> [a] -> Expectation
+shouldReturnSorted returned expected = do
+  actual <- returned
+  (sort actual) `shouldBe` expected
+
 directoryExtensions :: [FilePath]
 directoryExtensions = ["/testenv",
                        "/testenv/basic",
                        "/testenv/complex/level1a/level2a",
-                       "/testenv/complex/l1nothing",
+                       "/testenv/complex/level1a/l1nothing",
                        "/testenv/complex/level1b/level2b",
                        "/testenv/complex/level1c",
                        "/testenv/failure/failLevel1a/failLevel2",
