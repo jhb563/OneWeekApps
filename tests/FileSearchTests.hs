@@ -1,3 +1,12 @@
+-- OWAFileSearch will expose the following methods:
+-- findColorsFiles :: FilePath -> IO [FilePath]
+-- findFontsFiles :: FilePath -> IO [FilePath]
+-- findAlertsFiles :: FilePath -> IO [FilePath]
+-- findErrorsFiles :: FilePath -> IO [FilePath]
+-- We will pass an "app" directory (though in these tests it might
+-- not necessarily be called app), and these methods will search for all
+-- files with the respective extensions:
+-- .colors, .fonts, .alerts, .errors
 module FileSearchTests (
     runFileSearchTests
 ) where
@@ -98,18 +107,6 @@ createFileAndClose :: FilePath -> FilePath -> IO ()
 createFileAndClose base extension = do
   handle <- openFile (base ++ extension) WriteMode
   hClose handle
-
-
-
--- OWAFileSearch will expose the following methods:
--- findColorsFiles :: FilePath -> IO [FilePath]
--- findFontsFiles :: FilePath -> IO [FilePath]
--- findAlertsFiles :: FilePath -> IO [FilePath]
--- findErrorsFiles :: FilePath -> IO [FilePath]
--- We will pass an "app" directory (though in these tests it might
--- not necessarily be called app), and these methods will search for all
--- files with the respective extensions:
--- .colors, .fonts, .alerts, .errors
 
 directoryExtensions :: [FilePath]
 directoryExtensions = ["/testenv",
