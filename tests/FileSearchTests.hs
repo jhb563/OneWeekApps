@@ -2,7 +2,10 @@ module FileSearchTests (
     runFileSearchTests
 ) where
 
+import OWAFileSearch
 import System.Directory
+import System.IO
+import Test.Hspec
 
 runFileSearchTests :: FilePath -> IO ()
 runFileSearchTests currentDirectory = hspec $
@@ -59,17 +62,25 @@ findFailureTests :: FilePath -> Spec
 findFailureTests currentDirectory = do
   let failurePath = currentDirectory ++ failureExtension
   describe "Find files when none exist" $ do
-    it "Should not find any colors"
+    it "Should not find any colors" $
       findColorsFiles failurePath `shouldReturn` []
 
-    it "Should not find any fonts"
+    it "Should not find any fonts" $
       findFontsFiles failurePath `shouldReturn` []
 
-    it "Should not find any alerts"
+    it "Should not find any alerts" $
       findAlertsFiles failurePath `shouldReturn` []
 
-    it "Should not find any errors"
+    it "Should not find any errors" $
       findErrorsFiles failurePath `shouldReturn` []
+
+setupTestEnv :: FilePath -> IO ()
+setupTestEnv currentDirectory = do
+  _ <- mapM_ (\fp -> createDirectoryIfMissing True $ currentDirectory ++ fp) directoryExtensions
+  mapM_ (createFileAndClose currentDirectory) fileExtensions
+
+teardownTestEnv :: FilePath -> IO ()
+teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvExtension)
 
 testEnvExtension :: FilePath
 testEnvExtension = "/testenv"
@@ -83,11 +94,12 @@ complexExtension = "/testenv/complex"
 failureExtension :: FilePath
 failureExtension = "/testenv/failure"
 
-setupTestEnv :: FilePath -> IO ()
-setupTestEnv currentDirectory = createDirectoryIfMissing True $ currentDirectory ++ testEnvExtension
+createFileAndClose :: FilePath -> FilePath -> IO ()
+createFileAndClose base extension = do
+  handle <- openFile (base ++ extension) WriteMode
+  hClose handle
 
-teardownTestEnv :: FilePath -> IO ()
-teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvExtension)
+
 
 -- OWAFileSearch will expose the following methods:
 -- findColorsFiles :: FilePath -> IO [FilePath]
@@ -98,6 +110,46 @@ teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++
 -- not necessarily be called app), and these methods will search for all
 -- files with the respective extensions:
 -- .colors, .fonts, .alerts, .errors
+
+directoryExtensions :: [FilePath]
+directoryExtensions = ["/testenv",
+                       "/testenv/basic",
+                       "/testenv/complex/level1a/level2a",
+                       "/testenv/complex/l1nothing",
+                       "/testenv/complex/level1b/level2b",
+                       "/testenv/complex/level1c",
+                       "/testenv/failure/failLevel1a/failLevel2",
+                       "/testenv/failure/failLevel1b"]
+
+fileExtensions :: [FilePath]
+fileExtensions = ["/testenv/basic/myapp.colors",
+                  "/testenv/basic/myapp.fonts",
+                  "/testenv/basic/myapp.alerts",
+                  "/testenv/basic/myapp.errors",
+                  "/testenv/complex/level1a/level2a/l2a.fonts",
+                  "/testenv/complex/level1a/l1a.alerts",
+                  "/testenv/complex/level1a/l1a.errors",
+                  "/testenv/complex/level1a/l1a2.errors",
+                  "/testenv/complex/level1a/distraction.js",
+                  "/testenv/complex/level1b/level2b/l2b.colors",
+                  "/testenv/complex/level1b/level2b/color.font",
+                  "/testenv/complex/level1b/l1b.colors",
+                  "/testenv/complex/level1b/l1b.errors",
+                  "/testenv/complex/level1c/l1c.alerts",
+                  "/testenv/complex/level1c/l1c2.alerts",
+                  "/testenv/complex/level1c/l1c.fonts",
+                  "/testenv/complex/l0.colors",
+                  "/testenv/complex/l0.fonts",
+                  "/testenv/complex/l02.colors",
+                  "/testenv/complex/l0.alerts",
+                  "/testenv/complex/color.xml",
+                  "/testenv/complex/random.app",
+                  "/testenv/failure/failLevel1a/failLevel2/nothing.here",
+                  "/testenv/failure/failLevel1a/xml.font",
+                  "/testenv/failure/failLevel1a/spec.alert",
+                  "/testenv/failure/fonts.xml",
+                  "/testenv/failure/alerts.json",
+                  "/testenv/failure/errors.error"]
 
 -- Setup Directory Structure
 -- | testenv
