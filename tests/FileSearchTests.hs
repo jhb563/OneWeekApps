@@ -33,16 +33,16 @@ findBasicTests currentDirectory = do
   let basicPath = currentDirectory ++ basicExtension
   describe "Find files in simple context" $ do
     it "Colors should be at /testenv/basic/myapp.colors" $
-      findColorsFiles basicPath `shouldReturn` [basicPath ++ "myapp.colors"]
+      findColorsFiles basicPath `shouldReturn` [basicPath ++ "/myapp.colors"]
 
     it "Fonts should be at /testenv/basic/myapp.fonts" $
-      findFontsFiles basicPath `shouldReturn` [basicPath ++ "myapp.fonts"]
+      findFontsFiles basicPath `shouldReturn` [basicPath ++ "/myapp.fonts"]
 
     it "Alerts should be at /testenv/basic/myapp.alerts" $
-      findAlertsFiles basicPath `shouldReturn` [basicPath ++ "myapp.alerts"]
+      findAlertsFiles basicPath `shouldReturn` [basicPath ++ "/myapp.alerts"]
 
     it "Errors should be at /testenv/basic/myapp.errors" $
-      findErrorsFiles basicPath `shouldReturn` [basicPath ++ "myapp.errors"]
+      findErrorsFiles basicPath `shouldReturn` [basicPath ++ "/myapp.errors"]
 
 findColorsTests :: FilePath -> Spec
 findColorsTests currentDirectory = do
@@ -56,7 +56,7 @@ findColorsTests currentDirectory = do
         findColorsFiles complexPath `shouldReturnSorted` complexColors
 
     context "when in a deeper directory $" $
-      it "Should find a single file" $
+      it "Should only find files beneath that directory" $
         findColorsFiles deeperComplexPath `shouldReturnSorted` deepComplexColors
 
 findFontsTests :: FilePath -> Spec
@@ -71,7 +71,7 @@ findFontsTests currentDirectory = do
         findFontsFiles complexPath `shouldReturnSorted` complexFonts
 
     context "when in a deeper directory $" $
-      it "Should find a single file" $
+      it "Should only find files beneath that directory" $
         findFontsFiles deeperComplexPath `shouldReturnSorted` deepComplexFonts
 
 findAlertsTests :: FilePath -> Spec
@@ -86,7 +86,7 @@ findAlertsTests currentDirectory = do
         findAlertsFiles complexPath `shouldReturnSorted` complexAlerts
 
     context "when in a deeper directory $" $
-      it "Should find a single file" $
+      it "Should only find files beneath that directory" $
         findAlertsFiles deeperComplexPath `shouldReturnSorted` deepComplexAlerts
 
 findErrorsTests :: FilePath -> Spec
@@ -101,8 +101,8 @@ findErrorsTests currentDirectory = do
         findErrorsFiles complexPath `shouldReturnSorted` complexErrors
 
     context "when in a deeper directory $" $
-      it "Should find a single file" $
-        findAlertsFiles deeperComplexPath `shouldReturnSorted` deepComplexErrors
+      it "Should only find files beneath that directory" $
+        findErrorsFiles deeperComplexPath `shouldReturnSorted` deepComplexErrors
 
 findFailureTests :: FilePath -> Spec
 findFailureTests currentDirectory = do
@@ -143,17 +143,20 @@ colorComplexExtension = "/testenv/complex/level1b"
 colorComplexFileExtensions :: [FilePath]
 colorComplexFileExtensions = ["/testenv/complex/l0.colors",
                               "/testenv/complex/l02.colors",
+                              "/testenv/complex/level1b/l1b.colors",
                               "/testenv/complex/level1b/level2b/l2b.colors"]
 
 colorDeeperComplexFileExtensions :: [FilePath]
-colorDeeperComplexFileExtensions = ["/testenv/complex/level1b/level2b/l2b.colors"]
+colorDeeperComplexFileExtensions = ["/testenv/complex/level1b/l1b.colors",
+                                    "/testenv/complex/level1b/level2b/l2b.colors"]
 
 fontComplexExtension :: FilePath
 fontComplexExtension = "/testenv/complex/level1a"
 
 fontComplexFileExtensions :: [FilePath]
 fontComplexFileExtensions = ["/testenv/complex/l0.fonts",
-                             "/testenv/complex/level1a/level2a/l2a.fonts"]
+                             "/testenv/complex/level1a/level2a/l2a.fonts",
+                             "/testenv/complex/level1c/l1c.fonts"]
 
 fontDeeperComplexFileExtensions :: [FilePath]
 fontDeeperComplexFileExtensions = ["/testenv/complex/level1a/level2a/l2a.fonts"]
@@ -162,13 +165,13 @@ alertComplexExtension :: FilePath
 alertComplexExtension = "/testenv/complex/level1c"
 
 alertComplexFileExtensions :: [FilePath]
-alertComplexFileExtensions = ["/testenv/complex/level1c/l1c.alerts",
-                                    "/testenv/complex/level1c/l1c2.alerts"]
+alertComplexFileExtensions = ["/testenv/complex/l0.alerts",
+                              "/testenv/complex/level1a/l1a.alerts",
+                              "/testenv/complex/level1c/l1c.alerts",
+                              "/testenv/complex/level1c/l1c2.alerts"]
 
 alertDeeperComplexFileExtensions :: [FilePath]
-alertDeeperComplexFileExtensions = ["/testenv/complex/l0.alerts",
-                                    "/testenv/complex/level1a/l1a.alerts",
-                                    "/testenv/complex/level1c/l1c.alerts",
+alertDeeperComplexFileExtensions = ["/testenv/complex/level1c/l1c.alerts",
                                     "/testenv/complex/level1c/l1c2.alerts"]
 
 errorComplexExtension :: FilePath
