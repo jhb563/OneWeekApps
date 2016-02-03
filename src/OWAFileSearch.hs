@@ -92,7 +92,7 @@ searchDirectoryForExtension :: String -> [FilePath] -> [FilePath] -> IO [FilePat
 searchDirectoryForExtension extension [] locatedFiles = return locatedFiles
 searchDirectoryForExtension extension (nextFilePath:queue) locatedFiles = do
   directoryListing <- listDirectory nextFilePath
-  let absolutePaths = (map (\fp -> nextFilePath ++ ('/':fp)) directoryListing)
+  let absolutePaths = map (\fp -> nextFilePath ++ ('/':fp)) directoryListing
   filesInDirectory <- filterM doesFileExist absolutePaths
   subdirectories <- filterM doesDirectoryExist absolutePaths
   let matchingFiles = filter (fileHasTargetExtension extension) filesInDirectory

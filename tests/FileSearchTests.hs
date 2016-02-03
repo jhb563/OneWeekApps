@@ -197,7 +197,7 @@ createFileAndClose base extension = do
 shouldReturnSorted :: (Show a, Ord a) => IO [a] -> [a] -> Expectation
 shouldReturnSorted returned expected = do
   actual <- returned
-  (sort actual) `shouldBe` expected
+  sort actual `shouldBe` expected
 
 directoryExtensions :: [FilePath]
 directoryExtensions = ["/testenv",
