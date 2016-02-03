@@ -1,73 +1,16 @@
-module AppDirectoryTests where
+-- OWAFileSearch will expose the method:
+-- findAppDirectory :: FilePath -> IO (Maybe FilePath)
+-- We pass in a starting directory, and it will do a BFS
+-- for the first directory called 'app'
+
+module AppDirectoryTests (
+  runAppDirectoryTests
+) where
 
 import OWAFileSearch
 import System.Directory
-import System.IO
 import Test.Hspec
-
--- Setup will create a testenv folder with the following structure
--- | testenv
--- -- | app
--- -- | failTest
--- -- -- | redHerring
--- -- -- -- | redHerring2
--- -- | deeperTest
--- -- -- | deeperTest2
--- -- --  -- | app
--- -- | failureCases
--- -- -- | appTastic
--- -- -- -- | buildAnApp
--- -- -- -- -- | myappium
--- -- -- -- -- -- | app (file)
--- -- -- -- -- -- | myappium (file)
--- -- -- -- -- -- | appTopic (file)
--- -- -- -- -- -- | thingwithapp (file)
-
--- Tear Down will destroy these directories
-
-testEnvExtension :: FilePath
-testEnvExtension = "/testenv"
-
-app1Extension :: FilePath
-app1Extension = "/testenv/app"
-
-failStartExtension :: FilePath
-failStartExtension = "/testenv/failTest"
-
-redHerring2Extension :: FilePath
-redHerring2Extension = "/testenv/failTest/redHerring/redHerring2"
-
-deepStartExtension :: FilePath
-deepStartExtension = "/testenv/deeperTest"
-
-deepAppExtension :: FilePath
-deepAppExtension = "/testenv/deeperTest/deeperTest2/app"
-
-falseAppNamesStart :: FilePath
-falseAppNamesStart = "/testenv/failureCases"
-
-falseAppNamesExtension :: FilePath
-falseAppNamesExtension = "/testenv/failureCases/appTastic/buildAnApp/myappium"
-
-falseAppFileExtensions :: [FilePath]
-falseAppFileExtensions = ["/app", "/myappium", "appTopic", "thingWithapp"]
-
-setupTestEnv :: FilePath -> IO ()
-setupTestEnv currentDirectory = do
-  _ <- createDirectoryIfMissing True $ currentDirectory ++ redHerring2Extension 
-  _ <- createDirectoryIfMissing True $ currentDirectory ++ deepAppExtension
-  _ <- createDirectoryIfMissing True $ currentDirectory ++ app1Extension 
-  let falseAppNamesFullPath = currentDirectory ++ falseAppNamesExtension
-  _ <- createDirectoryIfMissing True falseAppNamesFullPath
-  mapM_ (createFileAndClose falseAppNamesFullPath) falseAppFileExtensions
-
-createFileAndClose :: FilePath -> FilePath -> IO ()
-createFileAndClose base extension = do
-  handle <- openFile (base ++ extension) WriteMode
-  hClose handle
-
-teardownTestEnv :: FilePath -> IO ()
-teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvExtension)
+import TestUtil
 
 runAppDirectoryTests :: FilePath -> IO ()
 runAppDirectoryTests currentDirectory = hspec $ 
@@ -110,3 +53,72 @@ findAppDirectoryFailSpec currentDirectory = do
       it "Should return nothing" $
           findAppDirectory appFailPath `shouldReturn` Nothing
 
+    context "when there is a capitalized app directory App" $
+      it "Should return nothing" $
+        findAppDirectory capitalAppStart `shouldReturn` Nothing
+
+setupTestEnv :: FilePath -> IO ()
+setupTestEnv currentDirectory = do
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ redHerring2Extension 
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ deepAppExtension
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ app1Extension 
+  _ <- createDirectoryIfMissing True $ currentDirectory ++ capitalAppExtension
+  let falseAppNamesFullPath = currentDirectory ++ falseAppNamesExtension
+  _ <- createDirectoryIfMissing True falseAppNamesFullPath
+  mapM_ (createFileAndClose falseAppNamesFullPath) falseAppFileExtensions
+
+teardownTestEnv :: FilePath -> IO ()
+teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvExtension)
+
+testEnvExtension :: FilePath
+testEnvExtension = "/testenv"
+
+app1Extension :: FilePath
+app1Extension = "/testenv/app"
+
+failStartExtension :: FilePath
+failStartExtension = "/testenv/failTest"
+
+redHerring2Extension :: FilePath
+redHerring2Extension = "/testenv/failTest/redHerring/redHerring2"
+
+deepStartExtension :: FilePath
+deepStartExtension = "/testenv/deeperTest"
+
+deepAppExtension :: FilePath
+deepAppExtension = "/testenv/deeperTest/deeperTest2/app"
+
+capitalAppStart :: FilePath
+capitalAppStart = "/testenv/failureCases/AppTest"
+
+capitalAppExtension :: FilePath
+capitalAppExtension = "/testenv/failureCases/AppTest/App"
+
+falseAppNamesStart :: FilePath
+falseAppNamesStart = "/testenv/failureCases"
+
+falseAppNamesExtension :: FilePath
+falseAppNamesExtension = "/testenv/failureCases/appTastic/buildAnApp/myappium"
+
+falseAppFileExtensions :: [FilePath]
+falseAppFileExtensions = ["/app", "/myappium", "appTopic", "thingWithapp"]
+
+-- Setup Directory Structure
+-- | testenv
+-- -- | app
+-- -- | failTest
+-- -- -- | redHerring
+-- -- -- -- | redHerring2
+-- -- | deeperTest
+-- -- -- | deeperTest2
+-- -- --  -- | app
+-- -- | failureCases
+-- -- -- | AppTest
+-- -- -- -- App
+-- -- -- | appTastic
+-- -- -- -- | buildAnApp
+-- -- -- -- -- | myappium
+-- -- -- -- -- -- | app (file)
+-- -- -- -- -- -- | myappium (file)
+-- -- -- -- -- -- | appTopic (file)
+-- -- -- -- -- -- | thingwithapp (file)
