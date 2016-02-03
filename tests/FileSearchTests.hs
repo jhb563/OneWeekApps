@@ -7,15 +7,15 @@
 -- not necessarily be called app), and these methods will search for all
 -- files with the respective extensions:
 -- .colors, .fonts, .alerts, .errors
+
 module FileSearchTests (
     runFileSearchTests
 ) where
 
-import Data.List
 import OWAFileSearch
 import System.Directory
-import System.IO
 import Test.Hspec
+import TestUtil
 
 runFileSearchTests :: FilePath -> IO ()
 runFileSearchTests currentDirectory = hspec $
@@ -188,16 +188,6 @@ errorDeeperComplexFileExtensions = ["/testenv/complex/level1a/l1a.errors",
 
 failureExtension :: FilePath
 failureExtension = "/testenv/failure"
-
-createFileAndClose :: FilePath -> FilePath -> IO ()
-createFileAndClose base extension = do
-  handle <- openFile (base ++ extension) WriteMode
-  hClose handle
-
-shouldReturnSorted :: (Show a, Ord a) => IO [a] -> [a] -> Expectation
-shouldReturnSorted returned expected = do
-  actual <- returned
-  sort actual `shouldBe` expected
 
 directoryExtensions :: [FilePath]
 directoryExtensions = ["/testenv",
