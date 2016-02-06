@@ -11,6 +11,8 @@ module OWAColorParser (
 ) where
 
 import OWAColor
+import System.Directory
+import System.IO
 
 parseColorsFromFile :: FilePath -> IO ([OWAColor])
 parseColorsFromFile fPath = return []

@@ -1,0 +1,23 @@
+Color aTest1
+  Hex 0xDEADC0
+  Alpha 1.0
+
+Color aTest2
+  Hex 0xdeCb11
+  Alpha 0.76
+
+Color aTest3
+  Hex 0x1d2Bc3
+  Alpha .56
+
+Color aTest4
+  Hex 0xF4f44f
+  Alpha 0.10
+
+Color aTest5
+  Hex 0xeEf44F
+  Alpha .75
+
+Color aTest6
+  Hex 0x350650
+  Alpha 0.98

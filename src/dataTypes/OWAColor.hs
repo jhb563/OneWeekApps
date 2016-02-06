@@ -8,7 +8,8 @@ Maintainer  : jhbowen047@gmail.com
 -}
 
 module OWAColor (
-  OWAColor(..)
+  OWAColor(..),
+  colorFromTuple
 ) where
 
 -- Simple RGBA color representation, with a name.
@@ -20,3 +21,17 @@ data OWAColor = OWAColor {
   blue :: Float,
   alpha :: Float
 } deriving (Show, Eq)
+
+colorFromTuple :: (String, Float, Float, Float, Float) -> OWAColor
+colorFromTuple (n, r, g, b, a) = OWAColor {
+  colorName = n,
+  red = adjustedRGBValue r,
+  green = adjustedRGBValue g,
+  blue = adjustedRGBValue b,
+  alpha = a
+}
+
+adjustedRGBValue :: Float -> Float
+adjustedRGBValue val = if val > 255.0 then 1.0
+  else if val < 0.0 then 0.0
+    else val / 255.0
