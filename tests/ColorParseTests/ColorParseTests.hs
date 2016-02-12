@@ -12,13 +12,14 @@ import OWAColor
 import Test.Hspec
 
 runColorParseTests :: FilePath -> IO ()
-runColorParseTests currentDirectory = hspec $ do
-  _ <- rgbTests currentDirectory
-  _ <- rgbaTests currentDirectory
-  _ <- rgbHexTests currentDirectory
-  _ <- rgbaHexTests currentDirectory
-  _ <- hexAlphaTests currentDirectory
-  mixFormatInFileTests currentDirectory
+runColorParseTests startFilePath = hspec $ do
+  let testDirectory = startFilePath ++ "/tests/ColorParseTests"
+  _ <- rgbTests testDirectory
+  _ <- rgbaTests testDirectory
+  _ <- rgbHexTests testDirectory
+  _ <- rgbaHexTests testDirectory
+  _ <- hexAlphaTests testDirectory
+  mixFormatInFileTests testDirectory
 
 rgbTests :: FilePath -> Spec
 rgbTests currentDirectory = do
