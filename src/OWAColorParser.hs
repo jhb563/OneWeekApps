@@ -103,7 +103,42 @@ hexChar :: GenParser Char st Char
 hexChar = oneOf "0123456789aAbBcCdDeEfF"
 
 attrsFromHexString :: String -> [(ColorAttr, ColorVal)]
-attrsFromHexString hexString = []
+attrsFromHexString (r1:r2:g1:g2:b1:b2:[]) = [(redKeyword, hexValFromChars r1 r2),
+                                             (greenKeyword, hexValFromChars g1 g2),
+                                             (bluekeyword, hexValFromChars b1 b2)]
+attrsFromHexString (a1:a2:r1:r2:g1:g2:b1:b2:[]) = [(redKeyword, hexValFromChars r1 r2),
+                                             (greenKeyword, hexValFromChars g1 g2),
+                                             (bluekeyword, hexValFromChars b1 b2),
+                                             (alphaKeyword, (hexValFromChars a1 a2) / 255.0)]
+attrsFromHexString invalidHexString = []
+
+hexValFromChars :: Char -> Char -> ColorVal
+hexValFromChars c1 c2 = (16.0 * (hexValFromChar c1)) + (hexValFromChar c2)
+
+hexValFromChar :: Char -> Float
+hexValFromChar c = case c of
+  '0' -> 0.0
+  '1' -> 1.0
+  '2' -> 2.0
+  '3' -> 3.0
+  '4' -> 4.0
+  '5' -> 5.0
+  '6' -> 6.0
+  '7' -> 7.0
+  '8' -> 8.0
+  '9' -> 9.0
+  'a' -> 10.0
+  'A' -> 10.0
+  'b' -> 11.0
+  'B' -> 11.0
+  'c' -> 12.0
+  'C' -> 12.0
+  'd' -> 13.0
+  'D' -> 13.0
+  'e' -> 14.0
+  'E' -> 14.0
+  'f' -> 15.0
+  'F' -> 15.0
 
 -- Try to get some digits. If there are no digits, we MUST have . followed by at least one digit
 -- If there are initially digits, then the . and following digits are optional.
