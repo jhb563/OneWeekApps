@@ -11,6 +11,7 @@ module OWAColorParser (
 ) where
 
 import Data.Either
+import Data.Maybe
 import OWAColor
 import System.IO
 import Text.Parsec
@@ -23,19 +24,25 @@ type ColorAttr = String
 type ColorVal = Float
 type ColorAttrMap = Map.Map ColorAttr ColorVal
 
+-- | 'parseColorsFromFile' takes a file, reads its contents,
+-- and returns a list of colors contained in the file.
 parseColorsFromFile :: FilePath -> IO ([OWAColor])
 parseColorsFromFile fPath = do
   contents <- readFile fPath
-  let result = parseColorContents contents
-  either colorListFromError colorListFromList result
+  let errorOrColors = parseColorContents contents
+  either printErrorAndReturnEmpty (\cs -> return $ catMaybes cs) errorOrColors
 
-parseColorContents :: String -> Either ParseError [OWAColor]
-parseColorContents contents = parse manyColorParser "" contents
+-- | 'parseColorContents' takes a string representing file contents,
+-- and returns either a ParseError if the string could not be parsed,
+-- or a list of parsed colors.
+parseColorContents :: String -> Either ParseError [Maybe OWAColor]
+parseColorContents contents = parse (many colorParser) "" contents
 
-manyColorParser :: GenParser Char st [OWAColor]
-manyColorParser = many colorParser
+-------------------------------------------------------------------------------
+-----------------------------------PARSERS-------------------------------------
+-------------------------------------------------------------------------------
 
-colorParser :: GenParser Char st OWAColor
+colorParser :: GenParser Char st (Maybe OWAColor)
 colorParser = do
   spaces
   string "Color"
@@ -46,12 +53,8 @@ colorParser = do
   endOfLine
   attrs <- many1 attrLine
   let attrMap = Map.fromList (concat attrs)
-  finalColor <- case (colorFromNameAndAttrMap name attrMap) of
-    Just color -> return color
-    Nothing -> return $ colorFromTuple (name, 0.0, 0.0, 0.0, 0.0)
-  return finalColor
+  return (colorFromNameAndAttrMap name attrMap)
 
--- Try the different parser for possible attributes. 
 attrLine :: GenParser Char st [(ColorAttr, ColorVal)]
 attrLine = do
   string "\t" <|> string "  "
@@ -99,8 +102,43 @@ singleAttrParser keyword = do
   endOfLine
   return (keyword, value)
 
+parseFloat :: GenParser Char st ColorVal
+parseFloat = do
+  wholeNumberString <- many digit
+  let wholeNumberPortion = if length wholeNumberString > 0
+                            then read wholeNumberString :: Float
+                            else 0.0
+  decimalPortion <- if length wholeNumberString > 0 
+    then option 0.0 decimalAndFollowing 
+    else decimalAndFollowing
+  return $ wholeNumberPortion + decimalPortion
+
+decimalAndFollowing :: GenParser Char st ColorVal
+decimalAndFollowing = do
+  char '.'
+  following <- many digit
+  let asFloat = if length following > 0  
+                  then read ('0':'.':following) :: Float 
+                  else 0.0
+  return asFloat
+
 hexChar :: GenParser Char st Char
 hexChar = oneOf "0123456789aAbBcCdDeEfF"
+
+-------------------------------------------------------------------------------
+--------------CONSTRUCTING ATTRIBUTES AND COLOR--------------------------------
+-------------------------------------------------------------------------------
+
+colorFromNameAndAttrMap :: String -> ColorAttrMap -> Maybe OWAColor
+colorFromNameAndAttrMap name attrMap = do
+  --red <- return $ fromIntegral $ length $ Map.keys attrMap -- Map.lookup redKeyword attrMap
+  red <- Map.lookup redKeyword attrMap
+  green <-  Map.lookup greenKeyword attrMap 
+  blue <-  Map.lookup bluekeyword attrMap 
+  alpha <- case (Map.lookup alphaKeyword attrMap) of
+    Just a -> Just a
+    Nothing -> Just 1.0
+  return $ colorFromTuple (name, red, green, blue, alpha)
 
 attrsFromHexString :: String -> [(ColorAttr, ColorVal)]
 attrsFromHexString (r1:r2:g1:g2:b1:b2:[]) = [(redKeyword, hexValFromChars r1 r2),
@@ -139,59 +177,9 @@ hexValFromChar c = case c of
   'E' -> 14.0
   'f' -> 15.0
   'F' -> 15.0
-
--- Try to get some digits. If there are no digits, we MUST have . followed by at least one digit
--- If there are initially digits, then the . and following digits are optional.
-parseFloat :: GenParser Char st ColorVal
-parseFloat = do
-  wholeNumberString <- many digit
-  let wholeNumberPortion = if length wholeNumberString > 0
-                            then read wholeNumberString :: Float
-                            else 0.0
-  decimalPortion <- if length wholeNumberString > 0 
-    then option 0.0 decimalAndFollowing 
-    else decimalAndFollowing
-  return $ wholeNumberPortion + decimalPortion
-
-decimalAndFollowing :: GenParser Char st ColorVal
-decimalAndFollowing = do
-  char '.'
-  following <- many digit
-  let asFloat = if length following > 0  
-                  then read ('0':'.':following) :: Float 
-                  else 0.0
-  return asFloat
-
-colorListFromError :: ParseError -> IO [OWAColor]
-colorListFromError e = do
-  putStrLn "ERROR PARSING"
-  mapM (putStrLn . showMessage) (errorMessages e)
-  let src = errorPos e
-  putStrLn $ sourceName src
-  putStrLn (show $ sourceLine src)
-  putStrLn (show $ sourceColumn src)
-  putStrLn "END ERROR"
-  return []
-
-colorListFromList :: [OWAColor] -> IO [OWAColor]
-colorListFromList l = return l
-
-showMessage :: Message -> String
-showMessage (SysUnExpect str) = "SysUnExpect " ++ str
-showMessage (UnExpect str) = "UnExpect " ++ str
-showMessage (Expect str) = "Expect " ++ str
-showMessage (Message str) = "Message " ++ str
-
-colorFromNameAndAttrMap :: String -> ColorAttrMap -> Maybe OWAColor
-colorFromNameAndAttrMap name attrMap = do
-  --red <- return $ fromIntegral $ length $ Map.keys attrMap -- Map.lookup redKeyword attrMap
-  red <- Map.lookup redKeyword attrMap
-  green <-  Map.lookup greenKeyword attrMap 
-  blue <-  Map.lookup bluekeyword attrMap 
-  alpha <- case (Map.lookup alphaKeyword attrMap) of
-    Just a -> Just a
-    Nothing -> Just 1.0
-  return $ colorFromTuple (name, red, green, blue, alpha)
+-------------------------------------------------------------------------------
+-------------------KEYWORD CONSTANTS-------------------------------------------
+-------------------------------------------------------------------------------
 
 redKeyword :: ColorAttr
 redKeyword = "Red"
@@ -208,6 +196,21 @@ alphaKeyword = "Alpha"
 hexKeyword :: ColorAttr
 hexKeyword = "Hex"
 
-colorKeywords :: [ColorAttr]
-colorKeywords = [redKeyword, greenKeyword, bluekeyword,
-                 alphaKeyword, hexKeyword]
+-------------------------------------------------------------------------------
+-------------------DEBUGGING ERRORS--------------------------------------------
+-------------------------------------------------------------------------------
+
+printErrorAndReturnEmpty :: ParseError -> IO [OWAColor]
+printErrorAndReturnEmpty e = do
+  mapM (putStrLn . showMessage) (errorMessages e)
+  let src = errorPos e
+  putStrLn $ sourceName src
+  putStrLn (show $ sourceLine src)
+  putStrLn (show $ sourceColumn src)
+  return []
+
+showMessage :: Message -> String
+showMessage (SysUnExpect str) = "SysUnExpect " ++ str
+showMessage (UnExpect str) = "UnExpect " ++ str
+showMessage (Expect str) = "Expect " ++ str
+showMessage (Message str) = "Message " ++ str
