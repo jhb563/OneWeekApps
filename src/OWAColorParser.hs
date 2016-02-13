@@ -26,17 +26,17 @@ type ColorAttrMap = Map.Map ColorAttr ColorVal
 
 -- | 'parseColorsFromFile' takes a file, reads its contents,
 -- and returns a list of colors contained in the file.
-parseColorsFromFile :: FilePath -> IO ([OWAColor])
+parseColorsFromFile :: FilePath -> IO [OWAColor]
 parseColorsFromFile fPath = do
   contents <- readFile fPath
   let errorOrColors = parseColorContents contents
-  either printErrorAndReturnEmpty (\cs -> return $ catMaybes cs) errorOrColors
+  either printErrorAndReturnEmpty (return . catMaybes) errorOrColors
 
 -- | 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> Either ParseError [Maybe OWAColor]
-parseColorContents contents = parse (many colorParser) "" contents
+parseColorContents = parse (many colorParser) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -58,8 +58,7 @@ colorParser = do
 attrLine :: GenParser Char st [(ColorAttr, ColorVal)]
 attrLine = do
   string "\t" <|> string "  "
-  attrs <- choice attrParsers
-  return attrs
+  choice attrParsers
 
 attrParsers :: [GenParser Char st [(ColorAttr, ColorVal)]]
 attrParsers = [redParser, greenParser, blueParser, alphaParser, hexParser]
@@ -105,10 +104,10 @@ singleAttrParser keyword = do
 parseFloat :: GenParser Char st ColorVal
 parseFloat = do
   wholeNumberString <- many digit
-  let wholeNumberPortion = if length wholeNumberString > 0
+  let wholeNumberPortion = if not (null wholeNumberString)
                             then read wholeNumberString :: Float
                             else 0.0
-  decimalPortion <- if length wholeNumberString > 0 
+  decimalPortion <- if not (null wholeNumberString)
     then option 0.0 decimalAndFollowing 
     else decimalAndFollowing
   return $ wholeNumberPortion + decimalPortion
@@ -117,7 +116,7 @@ decimalAndFollowing :: GenParser Char st ColorVal
 decimalAndFollowing = do
   char '.'
   following <- many digit
-  let asFloat = if length following > 0  
+  let asFloat = if not (null following)
                   then read ('0':'.':following) :: Float 
                   else 0.0
   return asFloat
@@ -135,23 +134,23 @@ colorFromNameAndAttrMap name attrMap = do
   red <- Map.lookup redKeyword attrMap
   green <-  Map.lookup greenKeyword attrMap 
   blue <-  Map.lookup bluekeyword attrMap 
-  alpha <- case (Map.lookup alphaKeyword attrMap) of
+  alpha <- case Map.lookup alphaKeyword attrMap of
     Just a -> Just a
     Nothing -> Just 1.0
   return $ colorFromTuple (name, red, green, blue, alpha)
 
 attrsFromHexString :: String -> [(ColorAttr, ColorVal)]
-attrsFromHexString (r1:r2:g1:g2:b1:b2:[]) = [(redKeyword, hexValFromChars r1 r2),
+attrsFromHexString [r1,r2,g1,g2,b1,b2] = [(redKeyword, hexValFromChars r1 r2),
                                              (greenKeyword, hexValFromChars g1 g2),
                                              (bluekeyword, hexValFromChars b1 b2)]
-attrsFromHexString (a1:a2:r1:r2:g1:g2:b1:b2:[]) = [(redKeyword, hexValFromChars r1 r2),
+attrsFromHexString [a1,a2,r1,r2,g1,g2,b1,b2] = [(redKeyword, hexValFromChars r1 r2),
                                              (greenKeyword, hexValFromChars g1 g2),
                                              (bluekeyword, hexValFromChars b1 b2),
-                                             (alphaKeyword, (hexValFromChars a1 a2) / 255.0)]
+                                             (alphaKeyword, hexValFromChars a1 a2 / 255.0)]
 attrsFromHexString invalidHexString = []
 
 hexValFromChars :: Char -> Char -> ColorVal
-hexValFromChars c1 c2 = (16.0 * (hexValFromChar c1)) + (hexValFromChar c2)
+hexValFromChars c1 c2 = 16.0 * hexValFromChar c1 + hexValFromChar c2
 
 hexValFromChar :: Char -> Float
 hexValFromChar c = case c of
@@ -202,11 +201,11 @@ hexKeyword = "Hex"
 
 printErrorAndReturnEmpty :: ParseError -> IO [OWAColor]
 printErrorAndReturnEmpty e = do
-  mapM (putStrLn . showMessage) (errorMessages e)
+  mapM_ (putStrLn . showMessage) (errorMessages e)
   let src = errorPos e
-  putStrLn $ sourceName src
-  putStrLn (show $ sourceLine src)
-  putStrLn (show $ sourceColumn src)
+  print $ sourceName src
+  print $ sourceLine src
+  print $ sourceColumn src
   return []
 
 showMessage :: Message -> String

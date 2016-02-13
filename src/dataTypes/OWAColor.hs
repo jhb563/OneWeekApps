@@ -32,6 +32,7 @@ colorFromTuple (n, r, g, b, a) = OWAColor {
 }
 
 adjustedRGBValue :: Float -> Float
-adjustedRGBValue val = if val > 255.0 then 1.0
-  else if val < 0.0 then 0.0
-    else val / 255.0
+adjustedRGBValue val
+  | val > 255.0 = 1.0
+  | val < 0.0 = 0.0
+  | otherwise = val / 255.0

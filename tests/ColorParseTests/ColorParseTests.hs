@@ -24,7 +24,7 @@ runColorParseTests startFilePath = hspec $ do
 rgbTests :: FilePath -> Spec
 rgbTests currentDirectory = do
   let rgbTestsFile = currentDirectory ++ rgbTestsExtension
-  describe "Parse Colors from RGB Format" $ do
+  describe "Parse Colors from RGB Format" $
     context "when colors might be in any order" $
       context "with any number of new lines between colors" $
         it "Should match our list of rgbColors" $
@@ -33,7 +33,7 @@ rgbTests currentDirectory = do
 rgbaTests :: FilePath -> Spec
 rgbaTests currentDirectory = do
   let rgbaTestsFile = currentDirectory ++ rgbaTestsExtension
-  describe "Parse Colors from RGBA Format" $ do
+  describe "Parse Colors from RGBA Format" $
     context "when attributes might be in any order" $
       it "Should match our list of rgbaColors" $
         parseColorsFromFile rgbaTestsFile `shouldReturn` rgbaColorsList
@@ -41,28 +41,28 @@ rgbaTests currentDirectory = do
 rgbHexTests :: FilePath -> Spec
 rgbHexTests currentDirectory = do
   let rgbHexTestsFile = currentDirectory ++ rgbHexTestsExtension
-  describe "Parse Colors from Hex RGB Format" $ do
+  describe "Parse Colors from Hex RGB Format" $
     it "Should match our list of rgbHexColors" $
       parseColorsFromFile rgbHexTestsFile `shouldReturn` rgbHexColorsList
 
 rgbaHexTests :: FilePath -> Spec
 rgbaHexTests currentDirectory = do
   let rgbaHexTestsFile = currentDirectory ++ rgbaHexTestsExtension
-  describe "Parse Colors from Hex RGBA Format" $ do
+  describe "Parse Colors from Hex RGBA Format" $
     it "Should match our list of rgbaHexColors" $
       parseColorsFromFile rgbaHexTestsFile `shouldReturn` rgbaHexColorsList
 
 hexAlphaTests :: FilePath -> Spec
 hexAlphaTests currentDirectory = do
   let hexAlphaTestsFile = currentDirectory ++ hexAlphaTestsExtension
-  describe "Parse Colors from Hex + Alpha Format" $ do
+  describe "Parse Colors from Hex + Alpha Format" $
     it "Should match our list of hexAlphaColors" $
       parseColorsFromFile hexAlphaTestsFile `shouldReturn` hexAlphaColorsList
 
 mixFormatInFileTests :: FilePath -> Spec
 mixFormatInFileTests currentDirectory = do
   let mixFormatFile = currentDirectory ++ mixFormatExtension
-  describe "Parse Colors from different formats in same file" $ do
+  describe "Parse Colors from different formats in same file" $
     it "Should match our list of mixed format colors" $
       parseColorsFromFile mixFormatFile `shouldReturn` mixFormatColorsList
 
