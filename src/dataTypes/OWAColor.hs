@@ -12,7 +12,7 @@ module OWAColor (
   colorFromTuple
 ) where
 
--- Simple RGBA color representation, with a name.
+-- | Simple RGBA color representation, with a name.
 -- All values are expressed between 0.0 and 1.0
 data OWAColor = OWAColor {
   colorName :: String,
@@ -22,6 +22,8 @@ data OWAColor = OWAColor {
   alpha :: Float
 } deriving (Show, Eq)
 
+-- | 'colorFromTuple' is a convenience constructor taking a tuple
+-- with a name and 4 float values for RGBA
 colorFromTuple :: (String, Float, Float, Float, Float) -> OWAColor
 colorFromTuple (n, r, g, b, a) = OWAColor {
   colorName = n,

@@ -24,6 +24,10 @@ type ColorAttr = String
 type ColorVal = Float
 type ColorAttrMap = Map.Map ColorAttr ColorVal
 
+-------------------------------------------------------------------------------
+----------------------ENTRY METHODS--------------------------------------------
+-------------------------------------------------------------------------------
+
 -- | 'parseColorsFromFile' takes a file, reads its contents,
 -- and returns a list of colors contained in the file.
 parseColorsFromFile :: FilePath -> IO [OWAColor]
@@ -32,7 +36,7 @@ parseColorsFromFile fPath = do
   let errorOrColors = parseColorContents contents
   either printErrorAndReturnEmpty (return . catMaybes) errorOrColors
 
--- | 'parseColorContents' takes a string representing file contents,
+-- 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> Either ParseError [Maybe OWAColor]
