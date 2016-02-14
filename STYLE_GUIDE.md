@@ -8,6 +8,7 @@ For the sake of code consistency and ease of coding, follow these guidelines!
 4. Start all lines all the way to the left except for indent spacing, except the next point:
 5. If it is feasible and doesn't make a line too long, lists can have their different elements at an equal indentation level. 
 6. Break source files up by section (see OWAFileSearch for an example). Public methods of each section should be at the top. 
+7. Alphabetize imports.
 7. Use Haddock comments for all public methods and modules in source code (not test code).
 8. Use HLint. 
 

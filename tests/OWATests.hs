@@ -8,7 +8,7 @@ import ColorParseTests
 main :: IO ()
 main = do
   currentFilePath <- getCurrentDirectory
-  _ <- runAppDirectoryTests currentFilePath
-  _ <- runFileSearchTests currentFilePath
+  runAppDirectoryTests currentFilePath
+  runFileSearchTests currentFilePath
   runColorParseTests currentFilePath
  

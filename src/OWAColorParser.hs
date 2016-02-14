@@ -13,12 +13,12 @@ module OWAColorParser (
 import Data.Either
 import Data.Maybe
 import OWAColor
+import qualified Data.Map.Strict as Map
 import System.IO
 import Text.Parsec
 import Text.Parsec.Error
 import Text.Parsec.Char
 import Text.ParserCombinators.Parsec
-import qualified Data.Map.Strict as Map
 
 type ColorAttr = String
 type ColorVal = Float
@@ -134,7 +134,6 @@ hexChar = oneOf "0123456789aAbBcCdDeEfF"
 
 colorFromNameAndAttrMap :: String -> ColorAttrMap -> Maybe OWAColor
 colorFromNameAndAttrMap name attrMap = do
-  --red <- return $ fromIntegral $ length $ Map.keys attrMap -- Map.lookup redKeyword attrMap
   red <- Map.lookup redKeyword attrMap
   green <-  Map.lookup greenKeyword attrMap 
   blue <-  Map.lookup bluekeyword attrMap 
