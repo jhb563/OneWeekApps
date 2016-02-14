@@ -1,0 +1,59 @@
+Color aTest1
+  Red 245
+  Green 173
+  Blue 122
+  Alpha 0.94
+
+Color aTest2
+  Red 252
+  Green 253
+  Alpha .91
+  Blue 108
+
+Color aTest3
+  Red 85
+  Blue 81
+  Green 47
+  Alpha .88
+
+Color aTest4
+  Red 6
+  Blue 18
+  Alpha 0.15
+  Green 75
+
+Color aTest5
+  Red 220
+  Alpha 0.30
+  Green 120
+  Blue 5
+
+Color aTest6
+  Alpha .76
+  Red 191
+  Green 176
+  Blue 226
+
+Color aTest7
+  Blue 12
+  Red 118
+  Alpha .77
+  Green 210
+
+Color aTest8
+  Green 111
+  Alpha 0.08
+  Red 69
+  Blue 44
+
+Color aTest9
+  Blue 167
+  Red 19
+  Green 141
+  Alpha 0.96
+
+Color aTest10
+  Alpha 0.18
+  Green 152
+  Red 14
+  Blue 116

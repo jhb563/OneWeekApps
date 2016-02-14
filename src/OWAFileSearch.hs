@@ -21,10 +21,6 @@ import Control.Monad
 -----------------------------------Finding App Directory -----------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------
 
--- | 'appString' The directory name we are trying to find
-appString :: String
-appString = "app"
-
 -- | 'findAppDirectory' takes a filepath and returns the filepath of the first directory it finds
 -- whose name is 'app', via Breadth first search
 findAppDirectory :: FilePath -> IO (Maybe FilePath)
@@ -32,7 +28,7 @@ findAppDirectory currentFilePath = do
   isDirectory <- doesDirectoryExist currentFilePath
   if isDirectory then findAppDirectoryHelper [currentFilePath] else return Nothing
 
--- | 'findAppDirectoryHelper' is the tail recursion helper for findAppDirectory. It does the bulk
+-- 'findAppDirectoryHelper' is the tail recursion helper for findAppDirectory. It does the bulk
 -- of the work in performing the BFS on the file tree.
 findAppDirectoryHelper :: [FilePath] -> IO (Maybe FilePath)
 findAppDirectoryHelper [] = return Nothing
@@ -44,10 +40,14 @@ findAppDirectoryHelper (fPath:queue) = if isTargetDir fPath
     let newQueue = queue ++ newDirectories
     findAppDirectoryHelper newQueue
 
--- | 'isTargetDir' Tells us if the given directory ends in our appString.
+-- 'isTargetDir' Tells us if the given directory ends in our appString.
 isTargetDir :: FilePath -> Bool
 isTargetDir fPath = last components == appString
   where components = splitOn "/" fPath
+
+-- 'appString' The directory name we are trying to find
+appString :: String
+appString = "app"
 
 --------------------------------------------------------------------------------------------------------------------
 -----------------------------------Finding Input Files -------------------------------------------------------------
@@ -85,7 +85,7 @@ alertsExtension = "alerts"
 errorsExtension :: String
 errorsExtension = "errors"
 
--- | 'searchDirectoryForExtension' is a common helper method doing most of the work
+-- 'searchDirectoryForExtension' is a common helper method doing most of the work
 -- for searching for the files. It uses BFS on the directory. It includes a queue of unexplored
 -- directories, as well as an accumulator argument for the files found.
 searchDirectoryForExtension :: String -> [FilePath] -> [FilePath] -> IO [FilePath]
@@ -100,7 +100,7 @@ searchDirectoryForExtension extension (nextFilePath:queue) locatedFiles = do
   let newQueue = queue ++ subdirectories
   searchDirectoryForExtension extension newQueue newLocatedFiles
 
--- | 'fileHasTargetExtension' tells us if the given file ends with the given extension
+-- 'fileHasTargetExtension' tells us if the given file ends with the given extension
 fileHasTargetExtension :: String -> FilePath -> Bool
 fileHasTargetExtension extension filePath = last components == extension
   where components = splitOn "." filePath

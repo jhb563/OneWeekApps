@@ -18,10 +18,15 @@ cabal-version:       >=1.10
 library
   build-depends:       base,
                        directory >= 1.2.5,
-                       split
+                       split,
+                       parsec,
+                       containers
   exposed-modules:     OWALib,
-                       OWAFileSearch
-  hs-source-dirs:      src
+                       OWAFileSearch,
+                       OWAColorParser,
+                       OWAColor
+  hs-source-dirs:      src,
+                       src/dataTypes
   default-language: Haskell2010
 
 executable OneWeekApps
@@ -38,7 +43,8 @@ test-suite tests
   default-extensions: OverloadedStrings
   type: exitcode-stdio-1.0
   main-is: OWATests.hs
-  hs-source-dirs:   tests
+  hs-source-dirs:   tests,
+                    tests/ColorParseTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
