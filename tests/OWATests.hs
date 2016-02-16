@@ -4,6 +4,7 @@ import System.Directory
 import AppDirectoryTests
 import FileSearchTests
 import ColorParseTests
+import ColorObjcTests
 
 main :: IO ()
 main = do
@@ -11,4 +12,5 @@ main = do
   runAppDirectoryTests currentFilePath
   runFileSearchTests currentFilePath
   runColorParseTests currentFilePath
+  runColorObjcTests
  

@@ -139,7 +139,7 @@ mixFormatColorsList = map colorFromTuple [("christmas", 127.758126, 164.6, 0.0, 
 -- Failure Cases
 -- Keywords:
 -- Color, Red, Green, Blue, Alpha, Hex
--- Naming a color by a Keyword or other invalid name
+-- Naming a color by a Keyword or other invalid name (duplicates)
 -- Putting words instead numbers (line numbers)
 -- Invalid combination of keywords
 -- Failure to tab

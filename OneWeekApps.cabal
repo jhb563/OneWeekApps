@@ -24,7 +24,9 @@ library
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColorParser,
-                       OWAColor
+                       OWAColor,
+                       OWAObjcAbSyn,
+                       OWAColorObjc
   hs-source-dirs:      src,
                        src/dataTypes
   default-language: Haskell2010
