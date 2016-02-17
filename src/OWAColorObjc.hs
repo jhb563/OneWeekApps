@@ -14,12 +14,18 @@ module OWAColorObjc (
 import OWAColor
 import OWAObjcAbSyn
 
+-- | 'objcHeaderFromColors' takes a name for the new colors category, as well
+-- as a list of color objects, and returns the structure for the category's
+-- header file in Objective C
 objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
 objcHeaderFromColors categoryName colors = ObjcFile 
   [commentSection True categoryName,
    headerImportSection,
    CategoryInterfaceSection $ colorCategoryFromColors categoryName colors]
 
+-- | 'objcImplementationFromColors' takes a name for the new colors category, as well
+-- as a list of color objects, and returns the structure for the category's
+-- implementation file in Objective C
 objcImplementationFromColors :: String -> [OWAColor] -> ObjcFile
 objcImplementationFromColors categoryName colors = ObjcFile
   [commentSection False categoryName,

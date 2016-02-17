@@ -20,8 +20,7 @@ runColorObjcTests = hspec $ do
   manyColorsTest
 
 noColorTest :: Spec
-noColorTest = do
-  describe "Create File Structure with no colors" $ do
+noColorTest = describe "Create File Structure with no colors" $ do
     it "Header Structure should match structure with no methods" $
       objcHeaderFromColors noColorCatName [] `shouldBe` emptyHeaderStructure
 
@@ -29,8 +28,7 @@ noColorTest = do
       objcImplementationFromColors noColorCatName [] `shouldBe` emptyMStructure
 
 oneColorTest :: Spec
-oneColorTest = do
-  describe "Create File Structure with one color" $ do
+oneColorTest = describe "Create File Structure with one color" $ do
     it "Header Structure should match structure with one method" $
       objcHeaderFromColors oneColorCatName oneColorList `shouldBe` oneColorHeaderStructure
 
@@ -38,8 +36,7 @@ oneColorTest = do
       objcImplementationFromColors oneColorCatName oneColorList `shouldBe` oneColorMStructure
 
 manyColorsTest :: Spec
-manyColorsTest = do
-  describe "Create File Structure with many colors" $ do
+manyColorsTest = describe "Create File Structure with many colors" $ do
     it "Header Structure should match structure with many methods" $
       objcHeaderFromColors manyColorCatName manyColorsList `shouldBe` manyColorHeaderStructure
 
