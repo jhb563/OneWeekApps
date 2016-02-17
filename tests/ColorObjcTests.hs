@@ -46,6 +46,21 @@ manyColorsTest = do
     it "M Structure should match structure with many methods" $
       objcImplementationFromColors manyColorCatName manyColorsList `shouldBe` manyColorMStructure
 
+commentSection :: Bool -> String -> FileSection
+commentSection isHeader catName = BlockCommentSection ["",
+                                              "UIColor+" ++ catName ++ ending,
+                                              "MySampleApp",
+                                              "",
+                                              "Created By James Bowen 2/16/2016",
+                                              "Copyright (c) 2016 One Week Apps. All Rights Reserved",
+                                              ""]
+                                where ending = if isHeader then ".h" else ".m"
+
+headerImportSection :: FileSection
+headerImportSection = ImportsSection [ModuleImport "UIKit"]
+
+mImportSection :: String -> FileSection
+mImportSection catName = ImportsSection [FileImport $ "UIColor+" ++ catName ++ ".h"]
 
 noColorCatName :: String
 noColorCatName = "NoColorCategory"
@@ -71,20 +86,96 @@ manyColorsList = map colorFromTuple [("aTest1", 245.0, 173.0, 122.0, 0.94),
                                     ("aTest9", 19.0, 141.0, 167.0, 0.96),
                                     ("aTest10", 14.0, 152.0, 116.0, 0.18)]
 
+noColorCategory :: Category
+noColorCategory = Category {
+  originalTypeName = "UIColor",
+  categoryName = noColorCatName,
+  categoryMethods = []
+}
+
+oneColorCateogry :: Category
+oneColorCateogry = Category {
+  originalTypeName = "UIColor",
+  categoryName = oneColorCatName,
+  categoryMethods = [ObjcMethod {
+    isStatic = True,
+    nameIntro = colorName $ head oneColorList,
+    returnType = PointerType "UIColor",
+    params = [],
+    methodBody = [ReturnStatement $ methodBodyExprForColor (head oneColorList)]
+  }]
+}
+
+manyColorCategory :: Category
+manyColorCategory = Category {
+  originalTypeName = "UIColor",
+  categoryName = manyColorCatName,
+  categoryMethods = map (\color -> ObjcMethod {
+    isStatic = True,
+    nameIntro = colorName color,
+    returnType = PointerType "UIColor",
+    params = [],
+    methodBody = [ReturnStatement $ methodBodyExprForColor color]
+  }) manyColorsList
+}
+
 emptyHeaderStructure :: ObjcFile
-emptyHeaderStructure = ObjcFile []
+emptyHeaderStructure = ObjcFile [commentSection True noColorCatName,
+                                 headerImportSection,
+                                 CategoryInterfaceSection noColorCategory]
 
 emptyMStructure :: ObjcFile
-emptyMStructure = ObjcFile []
+emptyMStructure = ObjcFile [commentSection False noColorCatName,
+                            mImportSection noColorCatName,
+                            CategoryImplementationSection noColorCategory]
 
 oneColorHeaderStructure :: ObjcFile
-oneColorHeaderStructure = ObjcFile []
+oneColorHeaderStructure = ObjcFile [commentSection True oneColorCatName,
+                                    headerImportSection,
+                                    CategoryInterfaceSection oneColorCateogry]
 
 oneColorMStructure :: ObjcFile
-oneColorMStructure = ObjcFile []
+oneColorMStructure = ObjcFile [commentSection False oneColorCatName,
+                               mImportSection oneColorCatName,
+                               CategoryImplementationSection oneColorCateogry]
 
 manyColorHeaderStructure :: ObjcFile
-manyColorHeaderStructure = ObjcFile []
+manyColorHeaderStructure = ObjcFile [commentSection True manyColorCatName,
+                                     headerImportSection,
+                                     CategoryInterfaceSection manyColorCategory]
 
 manyColorMStructure :: ObjcFile
-manyColorMStructure = ObjcFile []
+manyColorMStructure = ObjcFile [commentSection False manyColorCatName,
+                                mImportSection manyColorCatName,
+                                CategoryImplementationSection manyColorCategory]
+
+methodBodyExprForColor :: OWAColor -> ObjcExpression
+methodBodyExprForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod [FloatLit $ red color,
+                                                                              FloatLit $ green color,
+                                                                              FloatLit $ blue color,
+                                                                              FloatLit $ alpha color]
+
+colorWithRGBAMethod :: ObjcMethod
+colorWithRGBAMethod = ObjcMethod {
+  isStatic = True,
+  nameIntro = "colorWith",
+  returnType = PointerType "UIColor",
+  params = [ParamDef {
+    paramTitle = "Red",
+    paramType = SimpleType "CGFloat",
+    paramName = "red"
+  }, ParamDef {
+    paramTitle = "green",
+    paramType = SimpleType "CGFloat",
+    paramName = "green"
+  }, ParamDef {
+    paramTitle = "blue",
+    paramType = SimpleType "CGFloat",
+    paramName = "blue"
+  }, ParamDef {
+    paramTitle = "alpha",
+    paramType = SimpleType "CGFloat",
+    paramName = "alpha"
+  }],
+  methodBody = []
+}
