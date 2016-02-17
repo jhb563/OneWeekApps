@@ -13,4 +13,3 @@ main = do
   runFileSearchTests currentFilePath
   runColorParseTests currentFilePath
   runColorObjcTests
- 

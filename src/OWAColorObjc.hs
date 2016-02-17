@@ -33,14 +33,15 @@ objcImplementationFromColors categoryName colors = ObjcFile
    CategoryImplementationSection $ colorCategoryFromColors categoryName colors]
 
 commentSection :: Bool -> String -> FileSection
-commentSection isHeader categoryName = BlockCommentSection ["",
-                                              originalColorTypeName ++ ('+':categoryName) ++ ending,
-                                              "MySampleApp",
-                                              "",
-                                              "Created By James Bowen 2/16/2016",
-                                              "Copyright (c) 2016 One Week Apps. All Rights Reserved",
-                                              ""]
-                                where ending = if isHeader then ".h" else ".m"
+commentSection isHeader categoryName = BlockCommentSection 
+  ["",
+  originalColorTypeName ++ ('+':categoryName) ++ ending,
+  "MySampleApp",
+  "",
+  "Created By James Bowen 2/16/2016",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
+  ""]
+  where ending = if isHeader then ".h" else ".m"
 
 headerImportSection :: FileSection
 headerImportSection = ImportsSection [ModuleImport "UIKit"]
@@ -66,33 +67,38 @@ methodForColor color = ObjcMethod {
 }
 
 returnExpressionForColor :: OWAColor -> ObjcExpression
-returnExpressionForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod [FloatLit $ red color,
-                                                                                 FloatLit $ green color,
-                                                                                 FloatLit $ blue color,
-                                                                                 FloatLit $ alpha color]
+returnExpressionForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod 
+  [FloatLit $ red color,
+  FloatLit $ green color,
+  FloatLit $ blue color,
+  FloatLit $ alpha color]
 
 colorWithRGBAMethod :: ObjcMethod
 colorWithRGBAMethod = ObjcMethod {
   isStatic = True,
   nameIntro = "colorWith",
   returnType = PointerType "UIColor",
-  params = [ParamDef {
-    paramTitle = "Red",
-    paramType = SimpleType "CGFloat",
-    paramName = "red"
-  }, ParamDef {
-    paramTitle = "green",
-    paramType = SimpleType "CGFloat",
-    paramName = "green"
-  }, ParamDef {
-    paramTitle = "blue",
-    paramType = SimpleType "CGFloat",
-    paramName = "blue"
-  }, ParamDef {
-    paramTitle = "alpha",
-    paramType = SimpleType "CGFloat",
-    paramName = "alpha"
-  }],
+  params = 
+    [ParamDef {
+      paramTitle = "Red",
+      paramType = SimpleType "CGFloat",
+      paramName = "red"
+    }, 
+    ParamDef {
+      paramTitle = "green",
+      paramType = SimpleType "CGFloat",
+      paramName = "green"
+    }, 
+    ParamDef {
+      paramTitle = "blue",
+      paramType = SimpleType "CGFloat",
+      paramName = "blue"
+    }, 
+    ParamDef {
+      paramTitle = "alpha",
+      paramType = SimpleType "CGFloat",
+      paramName = "alpha"
+    }],
   methodBody = []
 }
 
