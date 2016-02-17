@@ -6,11 +6,13 @@ For the sake of code consistency and ease of coding, follow these guidelines!
 2. Try to limit line length to 80 chars. 
 3. Use tab width of 2, using spaces.
 4. Start all lines all the way to the left except for indent spacing, except the next point:
-5. If it is feasible and doesn't make a line too long, lists can have their different elements at an equal indentation level. 
-6. Break source files up by section (see OWAFileSearch for an example). Public methods of each section should be at the top. 
-7. Alphabetize imports.
-7. Use Haddock comments for all public methods and modules in source code (not test code).
-8. Use HLint. 
+5. When a list will cause a line to become too long, start a new line with the list at an incremented indentation level. Each element of the list should be on a new line, starting from the same indentation level.
+6. When defining data types, if there is a single case, put it on one line along with any deriving statements. Otherwise start a new line after '=' and
+put each case on its own line indented. Then put any deriving statements on their own line. 
+7. Break source files up by section (see OWAFileSearch for an example). Public methods of each section should be at the top. 
+8. Alphabetize imports.
+9. Use Haddock comments for all public methods and modules in source code (not test code).
+10. Use HLint, running `hlint .` from the root directory when you are ready to commit changes.
 
 # Writing Test Specs
 1. Only expose public methods of a test file (typically a single method like runXXXTests)
