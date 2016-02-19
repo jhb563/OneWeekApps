@@ -2,5 +2,5 @@
 .cabal-sandbox/
 cabal.sandbox.config
 /testenv
-.result
+*.result
 
