@@ -1,0 +1,7 @@
+@interface UIColor (CategoryWithMethods)
+
++ (UIColor*)christmasColor;
++ (UIColor*)darkRed;
++ (UIColor*)offWhite;
+
+@end
