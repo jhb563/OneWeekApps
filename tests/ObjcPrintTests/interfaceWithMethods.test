@@ -1,4 +1,4 @@
-@interface UIColor (CategoryWithMethods)
+@interface UIColor (SampleCategory)
 
 + (UIColor*)christmasColor;
 + (UIColor*)darkRed;

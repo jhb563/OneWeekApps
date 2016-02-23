@@ -20,7 +20,8 @@ library
                        directory >= 1.2.5,
                        split,
                        parsec,
-                       containers
+                       containers,
+                       wl-pprint >= 1.2
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColorParser,
