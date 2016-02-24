@@ -147,7 +147,7 @@ fullImplementationFile = ObjcFile
     "Created By James Bowen 2/16/2016",
     "Copyright (c) 2016 One Week Apps. All Rights Reserved",
     ""],
-  ImportsSection [FileImport "MySampleApp.h"],
+  ImportsSection [FileImport "UIColor+SampleCategory.h"],
   CategoryImplementationSection categoryWithMethods]
 
 commentTestFileName :: FilePath

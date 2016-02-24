@@ -1,15 +1,15 @@
 @implementation UIColor (SampleCategory)
 
 + (UIColor*)christmasColor {
-	return [UIColor colorWithRed:0.9 green:0.9 blue:0.1 alpha:0.5];
+  return [UIColor colorWithRed:0.9 green:0.9 blue:0.1 alpha:0.5];
 }
 
 + (UIColor*)darkRed {
-	return [UIColor colorWithRed:0.4 green:0.0 blue:0.0 alpha:1.0];
+  return [UIColor colorWithRed:0.4 green:0.0 blue:0.0 alpha:1.0];
 }
 
 + (UIColor*)offWhite {
-	return [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
+  return [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0];
 }
 
 @end

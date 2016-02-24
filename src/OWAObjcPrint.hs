@@ -36,18 +36,46 @@ categoryInterfaceDoc :: Category -> Doc
 categoryInterfaceDoc category = text "@interface" <+> 
   text (originalTypeName category) <+> 
   parens (text $ categoryName category) <$>
-  vcatWithSpace (map methodHeaderDoc $ categoryMethods category) <$>
+  vcatWithSpace (map headerFileMethodHeaderDoc $ categoryMethods category) <$>
   endDoc
 
 categoryImplementationDoc :: Category -> Doc
-categoryImplementationDoc category = empty
+categoryImplementationDoc category = text "@implementation" <+>
+  text (originalTypeName category) <+>
+  parens (text $ categoryName category) <$>
+  spaceOut (map fullMethodDoc $ categoryMethods category) <$>
+  endDoc
+
+headerFileMethodHeaderDoc :: ObjcMethod -> Doc
+headerFileMethodHeaderDoc method = methodHeaderDoc method <> semi
 
 methodHeaderDoc :: ObjcMethod -> Doc
 methodHeaderDoc method = staticSignifier (isStatic method) <+>
   parens (typeDoc $ returnType method) <>
   text (nameIntro method) <>
-  hcat (map headerArgDef $ params method) <>
+  hcat (map headerArgDef $ params method)
+
+fullMethodDoc :: ObjcMethod -> Doc
+fullMethodDoc method = indentBlock (methodHeaderDoc method) body
+                    where body = vcat (map statementDoc $ methodBody method)
+
+statementDoc :: ObjcStatement -> Doc
+statementDoc (ReturnStatement objcExpression) = text "return" <+>
+  expressionDoc objcExpression <>
   semi
+
+expressionDoc :: ObjcExpression -> Doc
+expressionDoc (MethodCall callingExp method args) = brackets $
+  expressionDoc callingExp <+>
+  text (nameIntro method) <>
+  hsep (map argDoc $ zip (params method) args)
+expressionDoc (Var varName) = text varName
+expressionDoc (FloatLit floatVal) = text $ show floatVal
+
+argDoc :: (ParamDef, ObjcExpression) -> Doc
+argDoc (paramDef, objcExp) = text (paramTitle paramDef) <>
+  colon <>
+  expressionDoc objcExp
 
 staticSignifier :: Bool -> Doc
 staticSignifier isStatic = if isStatic then text "+" else text "-"
@@ -66,5 +94,12 @@ vcatWithSpace :: [Doc] -> Doc
 vcatWithSpace [] = empty
 vcatWithSpace docs = empty <$> vcat docs <$> empty
 
+spaceOut :: [Doc] -> Doc
+spaceOut [] = empty
+spaceOut (headDoc:restDocs) = empty <$> (foldl (\d1 -> \d2 -> d1 <$> empty <$> d2) headDoc restDocs) <$> empty
+
 endDoc :: Doc
 endDoc = text "@end" <$> empty
+
+indentBlock :: Doc -> Doc -> Doc
+indentBlock doc1 doc2 = nest 2 (doc1 <+> text "{" <$> doc2) <$> text "}"
