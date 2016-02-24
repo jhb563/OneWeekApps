@@ -48,7 +48,8 @@ test-suite tests
   type: exitcode-stdio-1.0
   main-is: OWATests.hs
   hs-source-dirs:   tests,
-                    tests/ColorParseTests,
+                    tests/ColorTests,
+                    tests/ColorTests/ColorParseTests,
                     tests/ObjcPrintTests
   build-depends: base,
                  hspec     >= 1.8,

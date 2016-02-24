@@ -13,7 +13,7 @@ import Test.Hspec
 
 runColorParseTests :: FilePath -> IO ()
 runColorParseTests startFilePath = hspec $ do
-  let testDirectory = startFilePath ++ "/tests/ColorParseTests"
+  let testDirectory = startFilePath ++ "/tests/ColorTests/ColorParseTests"
   rgbTests testDirectory
   rgbaTests testDirectory
   rgbHexTests testDirectory

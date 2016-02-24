@@ -7,6 +7,7 @@ module ObjcPrintTests (
   runObjcPrintTests
 ) where
 
+import ColorTestUtil
 import OWAColor
 import OWAObjcAbSyn
 import OWAObjcPrint
@@ -79,6 +80,42 @@ shouldProduce objcFile filename = do
   expectedFileString <- readFile (filename ++ testExtension)
   actualFileString `shouldBe` expectedFileString
 
+commentTestFileName :: FilePath
+commentTestFileName = "comment"
+
+importMixedTestFileName :: FilePath
+importMixedTestFileName = "importMixed"
+
+importHeaderTestFileName :: FilePath
+importHeaderTestFileName = "importHeader"
+
+importModuleTestFileName :: FilePath
+importModuleTestFileName = "importModule"
+
+noMethodInterfaceTestFileName :: FilePath
+noMethodInterfaceTestFileName = "noMethodInterface"
+
+interfaceWithMethodsTestFileName :: FilePath
+interfaceWithMethodsTestFileName = "interfaceWithMethods"
+
+noMethodImplementationTestFileName :: FilePath
+noMethodImplementationTestFileName = "noMethodImplementation"
+
+implementationWithMethodsTestFileName :: FilePath
+implementationWithMethodsTestFileName = "implementationWithMethods"
+
+fullInterfaceTestFileName :: FilePath
+fullInterfaceTestFileName = "fullInterface"
+
+fullImplementationTestFileName :: FilePath
+fullImplementationTestFileName = "fullImplementation"
+
+testExtension :: String
+testExtension = ".test"
+
+resultExtension :: String
+resultExtension = ".result"
+
 commentFile :: ObjcFile
 commentFile = ObjcFile
   [BlockCommentSection
@@ -150,35 +187,6 @@ fullImplementationFile = ObjcFile
   ImportsSection [FileImport "UIColor+SampleCategory.h"],
   CategoryImplementationSection categoryWithMethods]
 
-commentTestFileName :: FilePath
-commentTestFileName = "comment"
-
-importMixedTestFileName :: FilePath
-importMixedTestFileName = "importMixed"
-
-importHeaderTestFileName :: FilePath
-importHeaderTestFileName = "importHeader"
-
-importModuleTestFileName :: FilePath
-importModuleTestFileName = "importModule"
-
-noMethodInterfaceTestFileName :: FilePath
-noMethodInterfaceTestFileName = "noMethodInterface"
-
-interfaceWithMethodsTestFileName :: FilePath
-interfaceWithMethodsTestFileName = "interfaceWithMethods"
-
-noMethodImplementationTestFileName :: FilePath
-noMethodImplementationTestFileName = "noMethodImplementation"
-
-implementationWithMethodsTestFileName :: FilePath
-implementationWithMethodsTestFileName = "implementationWithMethods"
-
-fullInterfaceTestFileName :: FilePath
-fullInterfaceTestFileName = "fullInterface"
-
-fullImplementationTestFileName :: FilePath
-fullImplementationTestFileName = "fullImplementation"
 
 emptyCategory :: Category
 emptyCategory = Category {
@@ -249,38 +257,3 @@ methodBodyExprForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod
   FloatLit $ green color,
   FloatLit $ blue color,
   FloatLit $ alpha color]
-
-colorWithRGBAMethod :: ObjcMethod
-colorWithRGBAMethod = ObjcMethod {
-  isStatic = True,
-  nameIntro = "colorWith",
-  returnType = PointerType "UIColor",
-  params = 
-    [ParamDef {
-      paramTitle = "Red",
-      paramType = SimpleType "CGFloat",
-      paramName = "red"
-    }, 
-    ParamDef {
-      paramTitle = "green",
-      paramType = SimpleType "CGFloat",
-      paramName = "green"
-    }, 
-    ParamDef {
-      paramTitle = "blue",
-      paramType = SimpleType "CGFloat",
-      paramName = "blue"
-    }, 
-    ParamDef {
-      paramTitle = "alpha",
-      paramType = SimpleType "CGFloat",
-      paramName = "alpha"
-    }],
-  methodBody = []
-}
-
-testExtension :: String
-testExtension = ".test"
-
-resultExtension :: String
-resultExtension = ".result"
