@@ -1,3 +1,11 @@
+{-|
+Module      : OWAObjcPrint
+Description : Module for printing Objc file structures to files
+Copyright   : (c) James Bowen, 2016
+License     : MIT
+Maintainer  : jhbowen047@gmail.com
+-}
+
 module OWAObjcPrint (
   printStructureToFile
 ) where
@@ -6,12 +14,18 @@ import OWAObjcAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
+-- | 'printStructureToFile' takes a file structure, and a file path, and
+-- prints the file structure into the specified file using a PrettyPrint doc.
 printStructureToFile ::  ObjcFile -> FilePath -> IO ()
 printStructureToFile objcFile filePath = do
   let doc = docFromFile objcFile
   handle <- openFile filePath WriteMode
   hPutDoc handle doc
   hClose handle
+
+-------------------------------------------------------------------------------
+---------------------------Objective C Element Printers -----------------------
+-------------------------------------------------------------------------------
 
 docFromFile :: ObjcFile -> Doc
 docFromFile (ObjcFile []) = empty
@@ -58,6 +72,12 @@ fullMethodDoc :: ObjcMethod -> Doc
 fullMethodDoc method = indentBlock (methodHeaderDoc method) body
                     where body = vcat (map statementDoc $ methodBody method)
 
+headerArgDef :: ParamDef -> Doc
+headerArgDef paramDef = text (paramTitle paramDef) <>
+  colon <>
+  parens (typeDoc $ paramType paramDef) <>
+  text (paramName paramDef)
+
 statementDoc :: ObjcStatement -> Doc
 statementDoc (ReturnStatement objcExpression) = text "return" <+>
   expressionDoc objcExpression <>
@@ -83,11 +103,12 @@ typeDoc :: ObjcType -> Doc
 typeDoc (PointerType typeName) = text typeName <> text "*"
 typeDoc (SimpleType typeName) = text typeName
 
-headerArgDef :: ParamDef -> Doc
-headerArgDef paramDef = text (paramTitle paramDef) <>
-  colon <>
-  parens (typeDoc $ paramType paramDef) <>
-  text (paramName paramDef)
+-------------------------------------------------------------------------------
+---------------------------Pretty Print Formatting Helpers --------------------
+-------------------------------------------------------------------------------
+
+indentBlock :: Doc -> Doc -> Doc
+indentBlock doc1 doc2 = nest 2 (doc1 <+> text "{" PPrint.<$> doc2) PPrint.<$> text "}"
 
 vcatWithSpace :: [Doc] -> Doc
 vcatWithSpace [] = empty
@@ -100,6 +121,3 @@ spaceOut (headDoc:restDocs) = empty PPrint.<$>
 
 endDoc :: Doc
 endDoc = text "@end" PPrint.<$> empty
-
-indentBlock :: Doc -> Doc -> Doc
-indentBlock doc1 doc2 = nest 2 (doc1 <+> text "{" PPrint.<$> doc2) PPrint.<$> text "}"
