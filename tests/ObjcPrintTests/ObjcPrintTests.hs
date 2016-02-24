@@ -22,7 +22,7 @@ runObjcPrintTests currentDirectory = hspec $ do
   integrationTests testDirectory
 
 blockCommentTests :: FilePath -> Spec
-blockCommentTests testDirectory = describe "Print File Structure with a block comment section" $ do
+blockCommentTests testDirectory = describe "Print File Structure with a block comment section" $
   context "when the section contains empty and non-empty lines" $
     it "The printed file should match our sample comment file" $
       commentFile `shouldProduce` (testDirectory ++ commentTestFileName)
