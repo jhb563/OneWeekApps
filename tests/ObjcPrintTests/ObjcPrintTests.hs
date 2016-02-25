@@ -246,7 +246,7 @@ offWhiteColor :: OWAColor
 offWhiteColor = OWAColor {
   colorName = "offWhite",
   red = 0.9,
-  green = 0.9,
+  green = 0.97581234,
   blue = 0.9,
   alpha = 1.0
 }

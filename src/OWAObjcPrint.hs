@@ -10,6 +10,7 @@ module OWAObjcPrint (
   printStructureToFile
 ) where
 
+import Data.List
 import OWAObjcAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
@@ -89,7 +90,7 @@ expressionDoc (MethodCall callingExp method args) = brackets $
   text (nameIntro method) <>
   hsep (zipWith (curry argDoc) (params method) args)
 expressionDoc (Var varName) = text varName
-expressionDoc (FloatLit floatVal) = text $ show floatVal
+expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 
 argDoc :: (ParamDef, ObjcExpression) -> Doc
 argDoc (paramDef, objcExp) = text (paramTitle paramDef) <>
@@ -121,3 +122,14 @@ spaceOut (headDoc:restDocs) = empty PPrint.<$>
 
 endDoc :: Doc
 endDoc = text "@end" PPrint.<$> empty
+
+-------------------------------------------------------------------------------
+---------------------------Float Formatting Helper ----------------------------
+-------------------------------------------------------------------------------
+
+truncatedFloatString :: Float -> String
+truncatedFloatString flt = case decimalIndex of
+  Nothing -> initialString
+  Just index -> take (index + 4) initialString
+  where initialString = show flt
+        decimalIndex = elemIndex '.' initialString
