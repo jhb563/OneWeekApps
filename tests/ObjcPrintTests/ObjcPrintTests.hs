@@ -99,7 +99,7 @@ removeResultsFiles currentDirectory = do
   mapM_ removeFile resultFilePaths
 
 endsWithResult :: FilePath -> Bool
-endsWithResult fPath = (reverse (take resultLen (reverse fPath))) == resultExtension
+endsWithResult fPath = reverse (take resultLen (reverse fPath)) == resultExtension
   where resultLen = length resultExtension
 
 commentTestFileName :: FilePath
@@ -211,7 +211,6 @@ fullImplementationFile = ObjcFile
     ""],
   ImportsSection [FileImport "UIColor+SampleCategory.h"],
   CategoryImplementationSection categoryWithMethods]
-
 
 emptyCategory :: Category
 emptyCategory = Category {
