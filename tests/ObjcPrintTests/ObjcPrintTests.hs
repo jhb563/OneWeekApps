@@ -93,9 +93,9 @@ shouldProduce objcFile filename = do
 
 removeResultsFiles :: FilePath -> IO ()
 removeResultsFiles currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests"
+  let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests/"
   directoryListing <- listDirectory testDirectory
-  let resultFilePaths = filter endsWithResult directoryListing
+  let resultFilePaths = map (testDirectory ++) $ filter endsWithResult directoryListing
   mapM_ removeFile resultFilePaths
 
 endsWithResult :: FilePath -> Bool
