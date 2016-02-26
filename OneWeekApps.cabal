@@ -54,5 +54,6 @@ test-suite tests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
+                 process,
                  OneWeekApps
   default-language: Haskell2010

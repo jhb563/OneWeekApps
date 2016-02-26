@@ -3,4 +3,5 @@
 cabal.sandbox.config
 /testenv
 *.result
+*.diff
 
