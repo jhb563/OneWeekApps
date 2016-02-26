@@ -8,6 +8,5 @@ Maintainer  : jhbowen047@gmail.com
 
 module OWALib where
 
--- | 'titleString' Returns the title of our program.
-titleString :: String
-titleString = "Running OWA!"
+runOWA :: FilePath -> IO ()
+runOWA = print "Running OWA!"
