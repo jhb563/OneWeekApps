@@ -11,10 +11,14 @@ import ColorTestUtil
 import OWAColor
 import OWAObjcAbSyn
 import OWAObjcPrint
+import System.Directory
+import System.IO
+import System.Process
 import Test.Hspec
 
 runObjcPrintTests :: FilePath -> IO ()
-runObjcPrintTests currentDirectory = hspec $ do
+runObjcPrintTests currentDirectory = hspec $
+  afterAll_ (removeResultsFiles currentDirectory) $ do
   let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests/"
   blockCommentTests testDirectory
   importTests testDirectory
@@ -75,10 +79,28 @@ integrationTests testDirectory = describe "Print File Structure with comments, i
 shouldProduce :: ObjcFile -> FilePath -> Expectation
 shouldProduce objcFile filename = do
   let actualPath = filename ++ resultExtension
+  let expectedPath = filename ++ testExtension
   printStructureToFile objcFile actualPath
   actualFileString <- readFile actualPath
-  expectedFileString <- readFile (filename ++ testExtension)
-  actualFileString `shouldBe` expectedFileString
+  expectedFileString <- readFile expectedPath
+  if actualFileString == expectedFileString 
+    then actualFileString `shouldBe` expectedFileString
+    else do
+      (_,stdOutHandler,_,_) <- runInteractiveProcess "diff" [actualPath, expectedPath] Nothing Nothing
+      diffContents <- hGetContents stdOutHandler
+      writeFile (filename ++ diffExtension) diffContents
+      actualFileString `shouldBe` expectedFileString
+
+removeResultsFiles :: FilePath -> IO ()
+removeResultsFiles currentDirectory = do
+  let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests"
+  directoryListing <- listDirectory testDirectory
+  let resultFilePaths = filter endsWithResult directoryListing
+  mapM_ removeFile resultFilePaths
+
+endsWithResult :: FilePath -> Bool
+endsWithResult fPath = (reverse (take resultLen (reverse fPath))) == resultExtension
+  where resultLen = length resultExtension
 
 commentTestFileName :: FilePath
 commentTestFileName = "comment"
@@ -115,6 +137,9 @@ testExtension = ".test"
 
 resultExtension :: String
 resultExtension = ".result"
+
+diffExtension :: String
+diffExtension = ".diff"
 
 commentFile :: ObjcFile
 commentFile = ObjcFile
