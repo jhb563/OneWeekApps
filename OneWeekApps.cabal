@@ -20,13 +20,15 @@ library
                        directory >= 1.2.5,
                        split,
                        parsec,
-                       containers
+                       containers,
+                       wl-pprint >= 1.2
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColorParser,
                        OWAColor,
                        OWAObjcAbSyn,
-                       OWAColorObjc
+                       OWAColorObjc,
+                       OWAObjcPrint
   hs-source-dirs:      src,
                        src/dataTypes
   default-language: Haskell2010
@@ -46,9 +48,12 @@ test-suite tests
   type: exitcode-stdio-1.0
   main-is: OWATests.hs
   hs-source-dirs:   tests,
-                    tests/ColorParseTests
+                    tests/ColorTests,
+                    tests/ColorTests/ColorParseTests,
+                    tests/ObjcPrintTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
+                 process,
                  OneWeekApps
   default-language: Haskell2010
