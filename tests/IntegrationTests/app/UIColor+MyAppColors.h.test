@@ -8,7 +8,7 @@
 
 @import UIKit;
 
-@implementation UIColor (MyAppColors)
+@interface UIColor (MyAppColors)
 
 + (UIColor*)testColor1;
 + (UIColor*)testColor2;

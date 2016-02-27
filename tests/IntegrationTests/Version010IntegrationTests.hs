@@ -12,10 +12,12 @@ import TestUtil
 import Test.Hspec
 
 runV010IntegrationTests :: FilePath -> IO ()
-runV010IntegrationTests currentDirectory = hspec $
-  beforeAll_ (runOWA currentDirectory)
-  . afterAll_ (removeProducedFiles currentDirectory) $ do
-    checkColorsFiles currentDirectory
+runV010IntegrationTests currentDirectory = do
+  let testDirectory = currentDirectory ++ "/tests/IntegrationTests"
+  hspec $
+    beforeAll_ (runOWA testDirectory)
+    . afterAll_ (removeProducedFiles testDirectory) $ do
+      checkColorsFiles testDirectory
 
 checkColorsFiles :: FilePath -> Spec
 checkColorsFiles currentDirectory = do

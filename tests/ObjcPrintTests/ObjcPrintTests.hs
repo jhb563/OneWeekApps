@@ -261,7 +261,7 @@ darkRedColor :: OWAColor
 darkRedColor = OWAColor {
   colorName = "darkRed",
   red = 0.4,
-  green = 0.0,
+  green = 0.0411,
   blue = 0.0,
   alpha = 1.0
 }

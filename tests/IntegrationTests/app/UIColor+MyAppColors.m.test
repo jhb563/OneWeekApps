@@ -31,7 +31,7 @@
 }
 
 + (UIColor*)testColor6 {
-  return [UIColor colorWithRed:0.037 green:0.914 blue:0.996 alpha:0.35];
+  return [UIColor colorWithRed:0.041 green:0.914 blue:0.996 alpha:0.35];
 }
 
 @end

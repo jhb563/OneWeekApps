@@ -86,7 +86,7 @@ mixFormatExtension = "/mixFormatTests.colors"
 
 rgbColorsList :: [OWAColor]
 rgbColorsList = map colorFromTuple [("color1", 178.0, 224.0, 67.0, 1.0),
-                                    ("color2", 0.0, 255.0, 0.0, 1.0),
+                                    ("color2", 9.6, 255.0, 0.0, 1.0),
                                     ("purple", 255.0, 0.0, 255.0, 1.0),
                                     ("black", 0.0, 0.0, 0.0, 1.0),
                                     ("white", 255.0, 255.0, 255.0, 1.0),
