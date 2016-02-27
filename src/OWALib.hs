@@ -9,4 +9,4 @@ Maintainer  : jhbowen047@gmail.com
 module OWALib where
 
 runOWA :: FilePath -> IO ()
-runOWA = print "Running OWA!"
+runOWA filePath = print "Running OWA!"

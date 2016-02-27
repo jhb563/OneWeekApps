@@ -8,6 +8,7 @@ module Version010IntegrationTests (
 ) where
 
 import OWALib
+import TestUtil
 
 runV010IntegrationTests :: FilePath -> IO ()
 runV010IntegrationTests currentDirectory = hspec $
@@ -28,23 +29,9 @@ checkColorsFiles currentDirectory = do
     it "Implementation File Should Match" $
       producedColorImplementationFilePath `filesShouldMatch` testColorImplementationFilePath
 
-filesShouldMatch :: FilePath -> FilePath -> Expectation
-filesShouldMatch actualFile expectedFile = do
-  actualString <- readFile actualFile
-  expectedString <- readFile expectedFile
-  if actualString == expectedString
-    then actualString `shouldBe` expectedString
-    else do
-      (_,stdOutHandler,_,_) <- runInteractiveProcess "diff" [actualFile, expectedFile] Nothing Nothing
-      diffContents <- hGetContents stdOutHandler
-      writeFile (actualFile ++ diffExtension) diffContents
-      actualString `shouldBe` expectedString
-  actualString `shouldBe` expectedString
-
 removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles currentDirectory = do
-  let fullFilePaths = map (currentDirectory ++) producedFiles
-  mapM_ removeFile fullFilePaths
+  removeFiles $ map (currentDirectory ++) producedFiles
 
 colorHeaderFileExtension :: String
 colorHeaderFileExtension = "/app/UIColor+MyAppColors.h"
@@ -61,5 +48,4 @@ colorImplementationTestExtension = "/app/UIColor+MyAppColors.m.test"
 producedFiles :: [FilePath]
 producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension]
 
-diffExtension :: String
-diffExtension = ".diff"
+
