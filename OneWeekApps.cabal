@@ -50,7 +50,8 @@ test-suite tests
   hs-source-dirs:   tests,
                     tests/ColorTests,
                     tests/ColorTests/ColorParseTests,
-                    tests/ObjcPrintTests
+                    tests/ObjcPrintTests,
+                    tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

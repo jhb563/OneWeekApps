@@ -6,6 +6,7 @@ import FileSearchTests
 import ColorParseTests
 import ColorObjcTests
 import ObjcPrintTests
+import Version010IntegrationTests
 
 main :: IO ()
 main = do
@@ -15,3 +16,4 @@ main = do
   runColorParseTests currentFilePath
   runColorObjcTests
   runObjcPrintTests currentFilePath
+  runV010IntegrationTests currentFilePath
