@@ -11,6 +11,7 @@ module OWAObjcPrint (
 ) where
 
 import Data.List
+import Numeric
 import OWAObjcAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
@@ -130,6 +131,9 @@ endDoc = text "@end" PPrint.<$> empty
 truncatedFloatString :: Float -> String
 truncatedFloatString flt = case decimalIndex of
   Nothing -> initialString
-  Just index -> take (index + 4) initialString
-  where initialString = show flt
+  Just index -> case reverse initialString of
+    '0':'0':rest -> reverse rest
+    '0':rest -> reverse rest
+    _ -> initialString
+  where initialString = Numeric.showFFloat (Just 3) flt ""
         decimalIndex = elemIndex '.' initialString

@@ -14,17 +14,20 @@ import OWAObjcPrint
 import System.Directory
 import System.IO
 import System.Process
+import TestUtil
 import Test.Hspec
 
 runObjcPrintTests :: FilePath -> IO ()
-runObjcPrintTests currentDirectory = hspec $
-  afterAll_ (removeResultsFiles currentDirectory) $ do
+runObjcPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests/"
-  blockCommentTests testDirectory
-  importTests testDirectory
-  interfaceTests testDirectory
-  implementationTests testDirectory
-  integrationTests testDirectory
+  hspec $
+    beforeAll_ (removeDiffFiles testDirectory)
+    . afterAll_ (removeResultsFiles testDirectory) $ do
+      blockCommentTests testDirectory
+      importTests testDirectory
+      interfaceTests testDirectory
+      implementationTests testDirectory
+      integrationTests testDirectory
 
 blockCommentTests :: FilePath -> Spec
 blockCommentTests testDirectory = describe "Print File Structure with a block comment section" $
@@ -92,8 +95,7 @@ shouldProduce objcFile filename = do
       actualFileString `shouldBe` expectedFileString
 
 removeResultsFiles :: FilePath -> IO ()
-removeResultsFiles currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests/"
+removeResultsFiles testDirectory = do
   directoryListing <- listDirectory testDirectory
   let resultFilePaths = map (testDirectory ++) $ filter endsWithResult directoryListing
   mapM_ removeFile resultFilePaths
@@ -261,7 +263,7 @@ darkRedColor :: OWAColor
 darkRedColor = OWAColor {
   colorName = "darkRed",
   red = 0.4,
-  green = 0.0,
+  green = 0.0411,
   blue = 0.0,
   alpha = 1.0
 }
