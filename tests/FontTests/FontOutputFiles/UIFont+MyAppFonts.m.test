@@ -19,11 +19,11 @@
 }
 
 + (UIFont*)labelFont {
-  return [UIFont fontWithName:@"SanFranciscoDisplay-Regular" size:14.5];
+  return [UIFont fontWithName:@"SanFranciscoDisplay-Regular" size:14.569];
 }
 
 + (UIFont*)thinFont {
-  return [UIFont fontWithName:@"HelveticaNeue-Thin" size:14.0];
+  return [UIFont fontWithName:@"HelveticaNeue-Thin" size:14.023];
 }
 
 + (UIFont*)placeholderFont {

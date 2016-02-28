@@ -35,7 +35,7 @@ labelFont :: OWAFont
 labelFont = OWAFont {
   fontName = "labelFont",
   fontFamily = "SanFranciscoDisplay",
-  fontSize = 14.5,
+  fontSize = 14.5687,
   fontStyles = [Regular]
 }
 
@@ -43,7 +43,7 @@ thinFont :: OWAFont
 thinFont = OWAFont {
   fontName = "thinFont",
   fontFamily = "HelveticaNeue",
-  fontSize = 14.0,
+  fontSize = 14.02341,
   fontStyles = [Thin]
 }
 

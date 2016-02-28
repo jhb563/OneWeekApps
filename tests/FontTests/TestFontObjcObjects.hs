@@ -10,7 +10,7 @@ fontsHeaderBlockComment = BlockCommentSection
   "UIFont+MyAppFonts.h",
   "MySampleApp",
   "",
-  "Created By James Bowen 2/28/2016",
+  "Created By James Bowen 2/29/2016",
   "Copyright (c) 2016 OneWeekApps. All Rights Reserved",
   ""]
 
@@ -33,7 +33,7 @@ fontsImplementationBlockComment = BlockCommentSection
   "UIFont+MyAppFonts.m",
   "MySampleApp",
   "",
-  "Created By James Bowen 2/28/2016",
+  "Created By James Bowen 2/29/2016",
   "Copyright (c) 2016 OneWeekApps. All Rights Reserved",
   ""]
 
