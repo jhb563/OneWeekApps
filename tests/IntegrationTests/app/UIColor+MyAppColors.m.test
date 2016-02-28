@@ -11,19 +11,19 @@
 @implementation UIColor (MyAppColors)
 
 + (UIColor*)testColor1 {
-  return [UIColor colorWithRed:0.768 green:0.392 blue:0.560 alpha:1.0];
+  return [UIColor colorWithRed:0.769 green:0.392 blue:0.561 alpha:1.0];
 }
 
 + (UIColor*)testColor2 {
-  return [UIColor colorWithRed:0.482 green:0.725 blue:0.376 alpha:0.97];
+  return [UIColor colorWithRed:0.482 green:0.726 blue:0.376 alpha:0.97];
 }
 
 + (UIColor*)testColor3 {
-  return [UIColor colorWithRed:0.870 green:0.678 blue:0.752 alpha:1.0];
+  return [UIColor colorWithRed:0.871 green:0.678 blue:0.753 alpha:1.0];
 }
 
 + (UIColor*)testColor4 {
-  return [UIColor colorWithRed:0.2 green:0.690 blue:0.941 alpha:0.227];
+  return [UIColor colorWithRed:0.2 green:0.69 blue:0.941 alpha:0.227];
 }
 
 + (UIColor*)testColor5 {
@@ -31,7 +31,7 @@
 }
 
 + (UIColor*)testColor6 {
-  return [UIColor colorWithRed:0.041 green:0.914 blue:0.996 alpha:0.35];
+  return [UIColor colorWithRed:0.041 green:0.915 blue:0.996 alpha:0.35];
 }
 
 @end

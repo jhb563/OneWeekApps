@@ -2,7 +2,8 @@ module TestUtil (
   createFileAndClose,
   shouldReturnSorted,
   filesShouldMatch,
-  removeFiles
+  removeFiles,
+  removeDiffFiles
 ) where
 
 import Data.List
@@ -42,5 +43,16 @@ removeFiles :: [FilePath] -> IO ()
 removeFiles filePaths = do
   mapM_ removeFile filePaths
 
+removeDiffFiles :: FilePath -> IO ()
+removeDiffFiles directory = do
+  allFiles <- listDirectory directory
+  let diffFiles = map (directory ++) (filter isDiffFile allFiles)
+  removeFiles diffFiles
+
 diffExtension :: String
 diffExtension = ".diff"
+
+isDiffFile :: FilePath -> Bool
+isDiffFile filePath = case reverse filePath of
+  -> 'f':'f':'i':'d':'.':_ = True
+  otherwise -> False

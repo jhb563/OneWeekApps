@@ -15,6 +15,7 @@ runV010IntegrationTests :: FilePath -> IO ()
 runV010IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/IntegrationTests"
   hspec $
+    beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension)
     beforeAll_ (runOWA testDirectory)
     . afterAll_ (removeProducedFiles testDirectory) $ do
       checkColorsFiles testDirectory
@@ -36,6 +37,9 @@ removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles currentDirectory = do
   removeFiles $ map (currentDirectory ++) producedFiles
 
+appExtension :: String
+appExtension = "/app"
+
 colorHeaderFileExtension :: String
 colorHeaderFileExtension = "/app/UIColor+MyAppColors.h"
 
@@ -50,5 +54,3 @@ colorImplementationTestExtension = "/app/UIColor+MyAppColors.m.test"
 
 producedFiles :: [FilePath]
 producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension]
-
-

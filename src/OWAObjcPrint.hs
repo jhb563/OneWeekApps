@@ -129,5 +129,11 @@ endDoc = text "@end" PPrint.<$> empty
 -------------------------------------------------------------------------------
 
 truncatedFloatString :: Float -> String
-truncatedFloatString flt = Numeric.showFFloat (Just 3) flt ""
-
+truncatedFloatString flt = case decimalIndex of
+  Nothing -> initialString
+  Just index -> case reverse initialString of
+    '0':'0':rest -> reverse rest
+    '0':rest -> reverse rest
+    otherwise -> initialString
+  where initialString = Numeric.showFFloat (Just 3) flt ""
+        decimalIndex = elemIndex '.' initialString

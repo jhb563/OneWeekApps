@@ -15,11 +15,11 @@
 }
 
 + (UIColor*)darkRed {
-  return [UIColor colorWithRed:0.4 green:0.0 blue:0.0 alpha:1.0];
+  return [UIColor colorWithRed:0.4 green:0.041 blue:0.0 alpha:1.0];
 }
 
 + (UIColor*)offWhite {
-  return [UIColor colorWithRed:0.9 green:0.975 blue:0.9 alpha:1.0];
+  return [UIColor colorWithRed:0.9 green:0.976 blue:0.9 alpha:1.0];
 }
 
 @end
