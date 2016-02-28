@@ -83,5 +83,6 @@ data ObjcStatement = ReturnStatement ObjcExpression deriving (Show, Eq)
 data ObjcExpression = 
   MethodCall ObjcExpression ObjcMethod [ObjcExpression] |
   Var Identifier |
+  StringLit String |
   FloatLit Float
   deriving (Show, Eq)

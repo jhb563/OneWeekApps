@@ -2,6 +2,19 @@ module TestFonts where
 
 import OWAFont
 
+allTestFonts :: [OWAFont]
+allTestFonts = [myFont,
+  titleFont,
+  labelFont,
+  thinFont,
+  placeholderFont,
+  buttonFont,
+  textfieldFont,
+  randomFont,
+  noStyleFont,
+  styleInNameFont,
+  timesFont]
+
 myFont :: OWAFont
 myFont = OWAFont {
   fontName = "myFont",

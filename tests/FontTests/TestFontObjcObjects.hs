@@ -1,5 +1,6 @@
 module TestFontObjcObjects where
 
+import OWAFont
 import OWAObjcAbSyn
 import TestFonts
 
@@ -53,5 +54,40 @@ fontsCategory :: Category
 fontsCategory = Category {
   originalTypeName = "UIFont",
   categoryName = "MyAppFonts",
-  categoryMethods = []
+  categoryMethods = map methodFromFont allTestFonts
+}
+
+methodFromFont :: OWAFont -> ObjcMethod
+methodFromFont font = ObjcMethod {
+  isStatic = True,
+  nameIntro = fontName font,
+  returnType = PointerType "UIFont",
+  params = [],
+  methodBody = [ReturnStatement $ MethodCall
+                Var "UIFont"
+                fontWithNameMethod
+                [StringLit $ familyNameForFont font, FloatLit $ fontSize font]]
+}
+
+familyNameForFont :: OWAFont -> String
+familyNameForFont font = case fontStyles font of
+  [] -> fontFamilyName font
+  styles -> fontFamilyName font ++ '-':styleList
+    where styleList = foldl (\str style -> str ++ (show style)) styles
+
+fontWithNameMethod :: ObjcMethod
+fontWithNameMethod = ObjcMethod {
+  isStatic = True,
+  nameIntro = "fontWith",
+  returnType = PointerType "UIFont",
+  params = [ParamDef {
+    paramTitle = "Name",
+    paramType = PointerType "NSString",
+    paramName = "name"
+  }, ParamDef {
+    paramTitle = "size",
+    paramType = SimpleType "CGFloat",
+    paramName = "size"
+  }],
+  methodBody = []
 }
