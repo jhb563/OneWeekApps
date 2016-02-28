@@ -134,6 +134,6 @@ truncatedFloatString flt = case decimalIndex of
   Just index -> case reverse initialString of
     '0':'0':rest -> reverse rest
     '0':rest -> reverse rest
-    otherwise -> initialString
+    _ -> initialString
   where initialString = Numeric.showFFloat (Just 3) flt ""
         decimalIndex = elemIndex '.' initialString

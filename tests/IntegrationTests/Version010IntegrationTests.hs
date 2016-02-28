@@ -15,7 +15,7 @@ runV010IntegrationTests :: FilePath -> IO ()
 runV010IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/IntegrationTests"
   hspec $
-    beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension)
+    beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
     beforeAll_ (runOWA testDirectory)
     . afterAll_ (removeProducedFiles testDirectory) $ do
       checkColorsFiles testDirectory

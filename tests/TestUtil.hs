@@ -46,7 +46,7 @@ removeFiles filePaths = do
 removeDiffFiles :: FilePath -> IO ()
 removeDiffFiles directory = do
   allFiles <- listDirectory directory
-  let diffFiles = map (directory ++) (filter isDiffFile allFiles)
+  let diffFiles = map (\fp -> directory ++ '/':fp) (filter isDiffFile allFiles)
   removeFiles diffFiles
 
 diffExtension :: String
@@ -54,5 +54,5 @@ diffExtension = ".diff"
 
 isDiffFile :: FilePath -> Bool
 isDiffFile filePath = case reverse filePath of
-  -> 'f':'f':'i':'d':'.':_ = True
-  otherwise -> False
+  'f':'f':'i':'d':'.':_ -> True
+  _ -> False
