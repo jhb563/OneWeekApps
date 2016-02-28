@@ -11,6 +11,7 @@ module OWAObjcPrint (
 ) where
 
 import Data.List
+import Numeric
 import OWAObjcAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint

@@ -10,6 +10,8 @@ module OWALib (
   runOWA
 ) where
 
+import Data.List
+import OWAColor
 import OWAColorObjc
 import OWAColorParser
 import OWAFileSearch
