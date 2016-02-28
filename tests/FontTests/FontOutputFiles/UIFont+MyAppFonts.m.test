@@ -1,0 +1,57 @@
+//
+// UIFont+MyAppFonts.m
+// MySampleApp
+//
+// Created By James Bowen 2/29/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIFont+MyAppFonts.h"
+
+@implementation UIFont (MyAppFonts)
+
++ (UIFont*)myFont {
+  return [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0];
+}
+
++ (UIFont*)titleFont {
+  return [UIFont fontWithName:@"Helvetica-Bold" size:32.0];
+}
+
++ (UIFont*)labelFont {
+  return [UIFont fontWithName:@"SanFranciscoDisplay-Regular" size:14.569];
+}
+
++ (UIFont*)thinFont {
+  return [UIFont fontWithName:@"HelveticaNeue-Thin" size:14.023];
+}
+
++ (UIFont*)placeholderFont {
+  return [UIFont fontWithName:@"Verdana-Italic" size:0.5];
+}
+
++ (UIFont*)buttonFont {
+  return [UIFont fontWithName:@"Avenir-BolidItalic" size:12.0];
+}
+
++ (UIFont*)textfieldFont {
+  return [UIFont fontWithName:@"Trebuchet-BoldItalic" size:0.7];
+}
+
++ (UIFont*)randomFont {
+  return [UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:13.6];
+}
+
++ (UIFont*)noStyleFont {
+  return [UIFont fontWithName:@"GillSans" size:12.0];
+}
+
++ (UIFont*)styleInNameFont {
+  return [UIFont fontWithName:@"Georgia-BoldItalic" size:13.2];
+}
+
++ (UIFont*)timesFont {
+  return [UIFont fontWithName:@"TimesNewRomanPSMT" size:17.0];
+}
+
+@end
