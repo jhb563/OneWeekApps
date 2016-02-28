@@ -17,6 +17,8 @@ import OWAColorParser
 import OWAFileSearch
 import OWAObjcPrint
 
+-- | 'runOWA' is the main running method for the OWA program. It takes a filepath
+-- for a directory to search from, and generates all files.
 runOWA :: FilePath -> IO ()
 runOWA filePath = do
   maybeAppDirectory <- findAppDirectory filePath
