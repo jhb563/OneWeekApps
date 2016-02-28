@@ -26,6 +26,7 @@ library
                        OWAFileSearch,
                        OWAColorParser,
                        OWAColor,
+                       OWAFont,
                        OWAObjcAbSyn,
                        OWAColorObjc,
                        OWAObjcPrint
