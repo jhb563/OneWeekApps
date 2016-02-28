@@ -23,11 +23,11 @@ runObjcPrintTests currentDirectory = do
   hspec $
     beforeAll_ (removeDiffFiles testDirectory)
     . afterAll_ (removeResultsFiles testDirectory) $ do
-    blockCommentTests testDirectory
-    importTests testDirectory
-    interfaceTests testDirectory
-    implementationTests testDirectory
-    integrationTests testDirectory
+      blockCommentTests testDirectory
+      importTests testDirectory
+      interfaceTests testDirectory
+      implementationTests testDirectory
+      integrationTests testDirectory
 
 blockCommentTests :: FilePath -> Spec
 blockCommentTests testDirectory = describe "Print File Structure with a block comment section" $
@@ -283,4 +283,3 @@ methodBodyExprForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod
   FloatLit $ green color,
   FloatLit $ blue color,
   FloatLit $ alpha color]
-

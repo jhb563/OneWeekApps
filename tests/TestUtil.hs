@@ -37,7 +37,6 @@ filesShouldMatch actualFile expectedFile = do
       diffContents <- hGetContents stdOutHandler
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
-  actualString `shouldBe` expectedString
 
 removeFiles :: [FilePath] -> IO ()
 removeFiles = mapM_ removeFile
