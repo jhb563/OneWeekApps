@@ -40,8 +40,7 @@ filesShouldMatch actualFile expectedFile = do
   actualString `shouldBe` expectedString
 
 removeFiles :: [FilePath] -> IO ()
-removeFiles filePaths = do
-  mapM_ removeFile filePaths
+removeFiles = mapM_ removeFile
 
 removeDiffFiles :: FilePath -> IO ()
 removeDiffFiles directory = do

@@ -17,7 +17,7 @@ runV010IntegrationTests currentDirectory = do
   hspec $
     beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
     beforeAll_ (runOWA testDirectory)
-    . afterAll_ (removeProducedFiles testDirectory) $ do
+    . afterAll_ (removeProducedFiles testDirectory) $
       checkColorsFiles testDirectory
 
 checkColorsFiles :: FilePath -> Spec
@@ -34,8 +34,7 @@ checkColorsFiles currentDirectory = do
       producedColorImplementationFilePath `filesShouldMatch` testColorImplementationFilePath
 
 removeProducedFiles :: FilePath -> IO ()
-removeProducedFiles currentDirectory = do
-  removeFiles $ map (currentDirectory ++) producedFiles
+removeProducedFiles currentDirectory = removeFiles $ map (currentDirectory ++) producedFiles
 
 appExtension :: String
 appExtension = "/app"
