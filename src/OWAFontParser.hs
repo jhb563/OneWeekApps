@@ -11,11 +11,17 @@ module OWAFontParser (
 ) where
 
 import OWAFont
+import ParseUtil
+
+---------------------------------------------------------------------------
+--------------------ENTRY METHODS------------------------------------------
+---------------------------------------------------------------------------
 
 -- | 'parseFontsFromFile' takes a file, reads its contens,
 -- and returns a list of fonts contained in the file.
 parseFontsFromFile :: FilePath -> IO [OWAFont]
 parseFontsFromFile fPath = do
-  print "Parsing Files!"
-  return []
+  contents <- readFile fPath
+  let errorOrFonts = parseFontContents contents
+  either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
