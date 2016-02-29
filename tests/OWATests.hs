@@ -5,6 +5,7 @@ import AppDirectoryTests
 import FileSearchTests
 import ColorParseTests
 import ColorObjcTests
+import FontParseTests
 import ObjcPrintTests
 import Version010IntegrationTests
 
@@ -15,5 +16,6 @@ main = do
   runFileSearchTests currentFilePath
   runColorParseTests currentFilePath
   runColorObjcTests
+  runFontParseTests currentFilePath
   runObjcPrintTests currentFilePath
   runV010IntegrationTests currentFilePath
