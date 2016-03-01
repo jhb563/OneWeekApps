@@ -13,6 +13,7 @@ module OWAColorParser (
 import Data.Either
 import Data.Maybe
 import OWAColor
+import ParseUtil
 import qualified Data.Map.Strict as Map
 import System.IO
 import Text.Parsec
@@ -49,12 +50,7 @@ parseColorContents = parse (many colorParser) ""
 colorParser :: GenParser Char st (Maybe OWAColor)
 colorParser = do
   spaces
-  string "Color"
-  char ' '
-  firstLetter <- lower
-  rest <- many alphaNum
-  let name = firstLetter:rest
-  endOfLine
+  name <- nameParserWithKeyword colorKeyword
   attrs <- many1 attrLine
   let attrMap = Map.fromList (concat attrs)
   return (colorFromNameAndAttrMap name attrMap)
@@ -69,22 +65,22 @@ attrParsers = [redParser, greenParser, blueParser, alphaParser, hexParser]
 
 redParser :: GenParser Char st [(ColorAttr, ColorVal)]
 redParser = do
-  tuple <- singleAttrParser redKeyword
+  tuple <- floatAttributeParser redKeyword
   return [tuple]
 
 greenParser :: GenParser Char st [(ColorAttr, ColorVal)]
 greenParser = do
-  tuple <- singleAttrParser greenKeyword
+  tuple <- floatAttributeParser greenKeyword
   return [tuple]
 
 blueParser :: GenParser Char st [(ColorAttr, ColorVal)]
 blueParser = do
-  tuple <- singleAttrParser bluekeyword
+  tuple <- floatAttributeParser bluekeyword
   return [tuple]
 
 alphaParser :: GenParser Char st [(ColorAttr, ColorVal)]
 alphaParser = do
-  tuple <- singleAttrParser alphaKeyword
+  tuple <- floatAttributeParser alphaKeyword
   return [tuple]
 
 hexParser :: GenParser Char st [(ColorAttr, ColorVal)]
@@ -96,34 +92,6 @@ hexParser = do
   endOfLine
   let attrs = attrsFromHexString hexString
   return attrs
-
-singleAttrParser :: ColorAttr -> GenParser Char st (ColorAttr, ColorVal)
-singleAttrParser keyword = do
-  string keyword
-  char ' '
-  value <- parseFloat
-  endOfLine
-  return (keyword, value)
-
-parseFloat :: GenParser Char st ColorVal
-parseFloat = do
-  wholeNumberString <- many digit
-  let wholeNumberPortion = if not (null wholeNumberString)
-                            then read wholeNumberString :: Float
-                            else 0.0
-  decimalPortion <- if not (null wholeNumberString)
-    then option 0.0 decimalAndFollowing 
-    else decimalAndFollowing
-  return $ wholeNumberPortion + decimalPortion
-
-decimalAndFollowing :: GenParser Char st ColorVal
-decimalAndFollowing = do
-  char '.'
-  following <- many digit
-  let asFloat = if not (null following)
-                  then read ('0':'.':following) :: Float 
-                  else 0.0
-  return asFloat
 
 hexChar :: GenParser Char st Char
 hexChar = oneOf "0123456789aAbBcCdDeEfF"
@@ -179,9 +147,13 @@ hexValFromChar c = case c of
   'E' -> 14.0
   'f' -> 15.0
   'F' -> 15.0
+
 -------------------------------------------------------------------------------
 -------------------KEYWORD CONSTANTS-------------------------------------------
 -------------------------------------------------------------------------------
+
+colorKeyword :: String
+colorKeyword = "Color"
 
 redKeyword :: ColorAttr
 redKeyword = "Red"
@@ -198,21 +170,3 @@ alphaKeyword = "Alpha"
 hexKeyword :: ColorAttr
 hexKeyword = "Hex"
 
--------------------------------------------------------------------------------
--------------------DEBUGGING ERRORS--------------------------------------------
--------------------------------------------------------------------------------
-
-printErrorAndReturnEmpty :: ParseError -> IO [OWAColor]
-printErrorAndReturnEmpty e = do
-  mapM_ (putStrLn . showMessage) (errorMessages e)
-  let src = errorPos e
-  print $ sourceName src
-  print $ sourceLine src
-  print $ sourceColumn src
-  return []
-
-showMessage :: Message -> String
-showMessage (SysUnExpect str) = "SysUnExpect " ++ str
-showMessage (UnExpect str) = "UnExpect " ++ str
-showMessage (Expect str) = "Expect " ++ str
-showMessage (Message str) = "Message " ++ str

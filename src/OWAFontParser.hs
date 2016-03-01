@@ -10,8 +10,10 @@ module OWAFontParser (
   parseFontsFromFile
 ) where
 
+import Data.Maybe
 import OWAFont
 import ParseUtil
+import Text.Parsec.Error
 
 ---------------------------------------------------------------------------
 --------------------ENTRY METHODS------------------------------------------
@@ -24,4 +26,7 @@ parseFontsFromFile fPath = do
   contents <- readFile fPath
   let errorOrFonts = parseFontContents contents
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
+
+parseFontContents :: String -> Either ParseError [Maybe OWAFont]
+parseFontContents contents = Right []
 
