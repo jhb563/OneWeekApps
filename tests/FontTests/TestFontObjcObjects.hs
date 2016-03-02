@@ -11,7 +11,7 @@ fontsHeaderBlockComment = BlockCommentSection
   "MySampleApp",
   "",
   "Created By James Bowen 2/29/2016",
-  "Copyright (c) 2016 OneWeekApps. All Rights Reserved",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
   ""]
 
 fontsHeaderImports :: FileSection
@@ -27,6 +27,12 @@ fontsHeaderFile = ObjcFile
   fontsHeaderImports,
   fontsHeaderInterfaceSection]
 
+emptyFontsHeaderFile :: ObjcFile
+emptyFontsHeaderFile = ObjcFile
+  [fontsHeaderBlockComment,
+  fontsHeaderImports,
+  CategoryInterfaceSection emptyFontsCategory]
+
 fontsImplementationBlockComment :: FileSection
 fontsImplementationBlockComment = BlockCommentSection
   ["",
@@ -34,7 +40,7 @@ fontsImplementationBlockComment = BlockCommentSection
   "MySampleApp",
   "",
   "Created By James Bowen 2/29/2016",
-  "Copyright (c) 2016 OneWeekApps. All Rights Reserved",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
   ""]
 
 fontsImplementationImports :: FileSection
@@ -49,6 +55,19 @@ fontsImplementationFile = ObjcFile
   [fontsImplementationBlockComment,
   fontsImplementationImports,
   fontsImplementationSection]
+
+emptyFontsImplementationFile :: ObjcFile
+emptyFontsImplementationFile = ObjcFile
+  [fontsImplementationBlockComment,
+  fontsImplementationImports,
+  CategoryImplementationSection emptyFontsCategory]
+
+emptyFontsCategory :: Category
+emptyFontsCategory = Category {
+  originalTypeName = "UIFont",
+  categoryName = "MyAppFonts",
+  categoryMethods = []
+}
 
 fontsCategory :: Category
 fontsCategory = Category {

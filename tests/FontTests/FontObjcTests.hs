@@ -8,15 +8,16 @@ module FontObjcTests (
   runFontObjcTests
 ) where
 
-import OWAFont
 import OWAFontObjc
 import TestFontObjcObjects
 import TestFonts
 import Test.Hspec
 
+runFontObjcTests :: IO ()
 runFontObjcTests = hspec $ do
   fontHeaderTest
   fontImplementationTest
+  noMethodsTest
 
 fontHeaderTest :: Spec
 fontHeaderTest = describe "Create Header File Structure for Fonts" $ do
@@ -27,6 +28,14 @@ fontImplementationTest :: Spec
 fontImplementationTest = describe "Create Implementation File Structure for Fonts" $ do
   it "Implementation Structure should match our test" $
     objcImplementationFromFonts fontCategoryName allTestFonts `shouldBe` fontsImplementationFile 
+
+noMethodsTest :: Spec
+noMethodsTest = describe "Create Files with no methods" $ do
+  it "Header structure should match empty category header" $
+    objcHeaderFromFonts fontCategoryName [] `shouldBe` emptyFontsHeaderFile
+
+  it "Implementation structure should match empty category implementation" $
+    objcImplementationFromFonts fontCategoryName [] `shouldBe` emptyFontsImplementationFile
 
 fontCategoryName :: String
 fontCategoryName = "MyAppFonts"
