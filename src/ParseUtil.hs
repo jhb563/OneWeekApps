@@ -83,6 +83,6 @@ printErrorAndReturnEmpty e = do
 showMessage :: Message -> String
 showMessage (SysUnExpect str) = "System Unexpected " ++ str
 showMessage (UnExpect str) = "Unexpected " ++ str
-showMessage (Expect str) = "Exepected " ++ str
+showMessage (Expect str) = "Expected " ++ str
 showMessage (Message str) = str
 

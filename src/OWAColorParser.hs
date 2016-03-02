@@ -61,7 +61,7 @@ attrLine = do
   choice attrParsers
 
 attrParsers :: [GenParser Char st [(ColorAttr, ColorVal)]]
-attrParsers = [redParser, greenParser, blueParser, alphaParser, hexParser]
+attrParsers = map Text.Parsec.try [redParser, greenParser, blueParser, alphaParser, hexParser]
 
 redParser :: GenParser Char st [(ColorAttr, ColorVal)]
 redParser = do

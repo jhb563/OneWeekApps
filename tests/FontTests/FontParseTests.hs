@@ -47,7 +47,7 @@ noStyleFontTests testDirectory = do
   let noStyleFontTestsFile = testDirectory ++ noStyleFontsExtension
   describe "Parse Fonts with no style attributes" $
     context "when attributes might be included in the family name" $
-      it "Shuold match our list of no-style fonts" $
+      it "Should match our list of no-style fonts" $
         parseFontsFromFile noStyleFontTestsFile `shouldReturn` noStyleFontsList
 
 regularFontsExtension :: String

@@ -84,7 +84,7 @@ fontStyleAttributeParser :: GenParser Char st String
 fontStyleAttributeParser = choice styleAttributeParsers
 
 styleAttributeParsers :: [GenParser Char st String]
-styleAttributeParsers = map string styleAttributeStrings
+styleAttributeParsers = map  (Text.Parsec.try . string) styleAttributeStrings
 
 -------------------------------------------------------------------------------
 --------------CONSTRUCTING FONTS-----------------------------------------------
