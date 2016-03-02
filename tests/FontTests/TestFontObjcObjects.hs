@@ -64,7 +64,7 @@ methodFromFont font = ObjcMethod {
   returnType = PointerType "UIFont",
   params = [],
   methodBody = [ReturnStatement $ MethodCall
-                Var "UIFont"
+                (Var "UIFont")
                 fontWithNameMethod
                 [StringLit $ familyNameForFont font, FloatLit $ fontSize font]]
 }
@@ -73,7 +73,7 @@ familyNameForFont :: OWAFont -> String
 familyNameForFont font = case fontStyles font of
   [] -> fontFamily font
   styles -> fontFamily font ++ ('-':styleList)
-    where styleList = foldl (\str style -> str ++ show style) '' styles
+    where styleList = foldl (\str style -> str ++ show style) "" styles
 
 fontWithNameMethod :: ObjcMethod
 fontWithNameMethod = ObjcMethod {
