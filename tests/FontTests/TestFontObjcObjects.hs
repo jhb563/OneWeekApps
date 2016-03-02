@@ -10,8 +10,8 @@ fontsHeaderBlockComment = BlockCommentSection
   "UIFont+MyAppFonts.h",
   "MySampleApp",
   "",
-  "Created By James Bowen 2/29/2016",
-  "Copyright (c) 2016 OneWeekApps. All Rights Reserved",
+  "Created By James Bowen 2/16/2016",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
   ""]
 
 fontsHeaderImports :: FileSection
@@ -27,14 +27,20 @@ fontsHeaderFile = ObjcFile
   fontsHeaderImports,
   fontsHeaderInterfaceSection]
 
+emptyFontsHeaderFile :: ObjcFile
+emptyFontsHeaderFile = ObjcFile
+  [fontsHeaderBlockComment,
+  fontsHeaderImports,
+  CategoryInterfaceSection emptyFontsCategory]
+
 fontsImplementationBlockComment :: FileSection
 fontsImplementationBlockComment = BlockCommentSection
   ["",
   "UIFont+MyAppFonts.m",
   "MySampleApp",
   "",
-  "Created By James Bowen 2/29/2016",
-  "Copyright (c) 2016 OneWeekApps. All Rights Reserved",
+  "Created By James Bowen 2/16/2016",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
   ""]
 
 fontsImplementationImports :: FileSection
@@ -50,6 +56,19 @@ fontsImplementationFile = ObjcFile
   fontsImplementationImports,
   fontsImplementationSection]
 
+emptyFontsImplementationFile :: ObjcFile
+emptyFontsImplementationFile = ObjcFile
+  [fontsImplementationBlockComment,
+  fontsImplementationImports,
+  CategoryImplementationSection emptyFontsCategory]
+
+emptyFontsCategory :: Category
+emptyFontsCategory = Category {
+  originalTypeName = "UIFont",
+  categoryName = "MyAppFonts",
+  categoryMethods = []
+}
+
 fontsCategory :: Category
 fontsCategory = Category {
   originalTypeName = "UIFont",
@@ -64,16 +83,16 @@ methodFromFont font = ObjcMethod {
   returnType = PointerType "UIFont",
   params = [],
   methodBody = [ReturnStatement $ MethodCall
-                Var "UIFont"
+                (Var "UIFont")
                 fontWithNameMethod
                 [StringLit $ familyNameForFont font, FloatLit $ fontSize font]]
 }
 
 familyNameForFont :: OWAFont -> String
 familyNameForFont font = case fontStyles font of
-  [] -> fontFamilyName font
-  styles -> fontFamilyName font ++ '-':styleList
-    where styleList = foldl (\str style -> str ++ show style) styles
+  [] -> fontFamily font
+  styles -> fontFamily font ++ ('-':styleList)
+    where styleList = foldl (\str style -> str ++ show style) "" styles
 
 fontWithNameMethod :: ObjcMethod
 fontWithNameMethod = ObjcMethod {

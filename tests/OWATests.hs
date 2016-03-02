@@ -1,12 +1,13 @@
 module Main where
 
-import System.Directory
 import AppDirectoryTests
-import FileSearchTests
-import ColorParseTests
 import ColorObjcTests
+import ColorParseTests
+import FileSearchTests
+import FontObjcTests
 import FontParseTests
 import ObjcPrintTests
+import System.Directory
 import Version010IntegrationTests
 
 main :: IO ()
@@ -17,5 +18,6 @@ main = do
   runColorParseTests currentFilePath
   runColorObjcTests
   runFontParseTests currentFilePath
+  runFontObjcTests
   runObjcPrintTests currentFilePath
   runV010IntegrationTests currentFilePath
