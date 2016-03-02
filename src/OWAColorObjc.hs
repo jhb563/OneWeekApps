@@ -34,8 +34,8 @@ objcImplementationFromColors categoryName colors = ObjcFile
   CategoryImplementationSection $ colorCategoryFromColors categoryName colors]
 
 colorCategoryFromColors :: String -> [OWAColor] -> Category
-colorCategoryFromColors categoryName colors = categoryFromNamesAndMethodBuilder
-  originalColorTypeName categoryName methodForColor colors 
+colorCategoryFromColors categoryName = categoryFromNamesAndMethodBuilder
+  originalColorTypeName categoryName methodForColor 
 
 methodForColor :: OWAColor -> ObjcMethod
 methodForColor color = ObjcMethod {

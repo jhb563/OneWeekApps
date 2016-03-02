@@ -15,6 +15,13 @@ module ObjcUtil (
 
 import OWAObjcAbSyn
 
+-------------------------------------------------------------------------------
+-------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------
+-------------------------------------------------------------------------------
+
+-- | Takes strings for the original type name, the category name, and
+-- a boolean signal for whether the comment is for a header or .m file.
+-- Constructs the header comment which goes at the top of a category file.
 categoryCommentSection :: String -> String -> Bool -> FileSection
 categoryCommentSection originalTypeName categoryName isHeader = BlockCommentSection
   ["",
@@ -26,9 +33,17 @@ categoryCommentSection originalTypeName categoryName isHeader = BlockCommentSect
   ""]
   where ending = if isHeader then ".h" else ".m"
 
+-------------------------------------------------------------------------------
+-------------------IMPORT SECTIONS---------------------------------------------
+-------------------------------------------------------------------------------
+
+-- | Returns a imports section which simply imports the UIKit module
 uiKitImportsSection :: FileSection
 uiKitImportsSection = ImportsSection [ModuleImport "UIKit"]
 
+-- | Takes strings for the original type and category name of a category,
+-- and returns a imports section importing the header file of that
+-- category.
 categoryMImportsSection :: String -> String -> FileSection
 categoryMImportsSection originalTypeName categoryName = ImportsSection
   [FileImport $ categoryFileName originalTypeName categoryName True]
@@ -37,6 +52,12 @@ categoryFileName :: String -> String -> Bool -> String
 categoryFileName originalTypeName categoryName isHeader = originalTypeName ++ ('+':categoryName) ++ ending
   where ending = if isHeader then ".h" else ".m"
 
+-------------------------------------------------------------------------------
+-------------------CATEGORY BUILDER--------------------------------------------
+-------------------------------------------------------------------------------
+
+-- | Takes the type and category names, a method for constructing ObjcMethod objects,
+-- and a list of objects, and returns the category object.
 categoryFromNamesAndMethodBuilder :: String -> String -> (a -> ObjcMethod) -> [a] -> Category
 categoryFromNamesAndMethodBuilder typeName catName methodBuilder objects = Category {
   originalTypeName = typeName,

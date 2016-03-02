@@ -34,8 +34,8 @@ objcImplementationFromFonts categoryName fonts = ObjcFile
   CategoryImplementationSection $ fontCategoryFromFonts categoryName fonts]
 
 fontCategoryFromFonts :: String -> [OWAFont] -> Category
-fontCategoryFromFonts categoryName fonts = categoryFromNamesAndMethodBuilder
-  originalFontTypeName categoryName methodForFont fonts
+fontCategoryFromFonts categoryName = categoryFromNamesAndMethodBuilder
+  originalFontTypeName categoryName methodForFont
 
 methodForFont :: OWAFont -> ObjcMethod
 methodForFont font = ObjcMethod {

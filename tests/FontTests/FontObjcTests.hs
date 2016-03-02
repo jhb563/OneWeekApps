@@ -20,12 +20,12 @@ runFontObjcTests = hspec $ do
   noMethodsTest
 
 fontHeaderTest :: Spec
-fontHeaderTest = describe "Create Header File Structure for Fonts" $ do
+fontHeaderTest = describe "Create Header File Structure for Fonts" $
   it "Header Structure should match our test" $
     objcHeaderFromFonts fontCategoryName allTestFonts `shouldBe` fontsHeaderFile
 
 fontImplementationTest :: Spec
-fontImplementationTest = describe "Create Implementation File Structure for Fonts" $ do
+fontImplementationTest = describe "Create Implementation File Structure for Fonts" $
   it "Implementation Structure should match our test" $
     objcImplementationFromFonts fontCategoryName allTestFonts `shouldBe` fontsImplementationFile 
 
