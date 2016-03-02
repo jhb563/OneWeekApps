@@ -10,7 +10,13 @@ module OWAFont where
 -- | Enumerated type for possible style attributes to add to a font. By
 -- no means is this exhaustive, and may be modified to include more attributes
 -- in the future.
-data FontStyle = Thin | Light | Regular | Medium | Bold | Italic deriving (Show)
+data FontStyle = Thin |
+ Light |
+ Regular |
+ Medium |
+ Bold |
+ Italic
+ deriving (Show, Read, Eq)
 
 -- | Font model, which requires a name, family, size, and list of styles. 
 -- Styles not covered by the FontStyle type above can be incorporated into
@@ -20,4 +26,4 @@ data OWAFont = OWAFont {
   fontFamily :: String,
   fontSize :: Float,
   fontStyles :: [FontStyle]
-} deriving (Show)
+} deriving (Show, Eq)

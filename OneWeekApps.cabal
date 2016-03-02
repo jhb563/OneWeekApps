@@ -26,10 +26,12 @@ library
                        OWAFileSearch,
                        OWAColorParser,
                        OWAColor,
+                       OWAFontParser,
                        OWAFont,
                        OWAObjcAbSyn,
                        OWAColorObjc,
                        OWAObjcPrint
+  other-modules:       ParseUtil
   hs-source-dirs:      src,
                        src/dataTypes
   default-language: Haskell2010
@@ -56,6 +58,7 @@ test-suite tests
   hs-source-dirs:   tests,
                     tests/ColorTests,
                     tests/ColorTests/ColorParseTests,
+                    tests/FontTests,
                     tests/ObjcPrintTests,
                     tests/IntegrationTests
   build-depends: base,

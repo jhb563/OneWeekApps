@@ -6,7 +6,7 @@ For the sake of code consistency and ease of coding, follow these guidelines!
 2. Try to limit line length to 80 chars. 
 3. Use tab width of 2, using spaces.
 4. Start all lines all the way to the left except for indent spacing, except the next point:
-5. When a list will cause a line to become too long, start a new line with the list at an incremented indentation level. Each element of the list should be on a new line, starting from the same indentation level.
+5. When a list will cause a line to become too long, start a new line with the list at an incremented indentation level. Each element of the list should be on a new line, starting from the same indentation level. As an exception, the opening brace and first element should go on the preceding line if following '='.
 6. When defining data types, if there is a single case, put it on one line along with any deriving statements. Otherwise start a new line after '=' and
 put each case on its own line indented. Then put any deriving statements on their own line. 
 7. Break source files up by section (see OWAFileSearch for an example). Public methods of each section should be at the top. 
