@@ -32,7 +32,8 @@ library
                        OWAColorObjc,
                        OWAFontObjc,
                        OWAObjcPrint
-  other-modules:       ParseUtil
+  other-modules:       ParseUtil,
+                       ObjcUtil
   hs-source-dirs:      src,
                        src/dataTypes
   default-language: Haskell2010

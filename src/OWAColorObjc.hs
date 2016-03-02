@@ -11,6 +11,7 @@ module OWAColorObjc (
   objcImplementationFromColors
 ) where
 
+import ObjcUtil
 import OWAColor
 import OWAObjcAbSyn
 
@@ -19,43 +20,22 @@ import OWAObjcAbSyn
 -- header file in Objective C
 objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
 objcHeaderFromColors categoryName colors = ObjcFile 
-  [commentSection True categoryName,
-   headerImportSection,
-   CategoryInterfaceSection $ colorCategoryFromColors categoryName colors]
+  [categoryCommentSection originalColorTypeName categoryName True,
+  uiKitImportsSection,
+  CategoryInterfaceSection $ colorCategoryFromColors categoryName colors]
 
 -- | 'objcImplementationFromColors' takes a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- implementation file in Objective C
 objcImplementationFromColors :: String -> [OWAColor] -> ObjcFile
 objcImplementationFromColors categoryName colors = ObjcFile
-  [commentSection False categoryName,
-   mImportSection categoryName,
-   CategoryImplementationSection $ colorCategoryFromColors categoryName colors]
-
-commentSection :: Bool -> String -> FileSection
-commentSection isHeader categoryName = BlockCommentSection 
-  ["",
-  originalColorTypeName ++ ('+':categoryName) ++ ending,
-  "MySampleApp",
-  "",
-  "Created By James Bowen 2/16/2016",
-  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
-  ""]
-  where ending = if isHeader then ".h" else ".m"
-
-headerImportSection :: FileSection
-headerImportSection = ImportsSection [ModuleImport "UIKit"]
-
-mImportSection :: String -> FileSection
-mImportSection categoryName = ImportsSection [FileImport fileName]
-              where fileName = originalColorTypeName ++ ('+':categoryName) ++ ".h"
+  [categoryCommentSection originalColorTypeName categoryName False,
+  categoryMImportsSection originalColorTypeName categoryName,
+  CategoryImplementationSection $ colorCategoryFromColors categoryName colors]
 
 colorCategoryFromColors :: String -> [OWAColor] -> Category
-colorCategoryFromColors categoryName colors = Category {
-  originalTypeName = originalColorTypeName,
-  categoryName = categoryName,
-  categoryMethods = map methodForColor colors
-}
+colorCategoryFromColors categoryName colors = categoryFromNamesAndMethodBuilder
+  originalColorTypeName categoryName methodForColor colors 
 
 methodForColor :: OWAColor -> ObjcMethod
 methodForColor color = ObjcMethod {

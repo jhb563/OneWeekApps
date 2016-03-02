@@ -11,6 +11,7 @@ module OWAFontObjc (
   objcImplementationFromFonts
 ) where
 
+import ObjcUtil
 import OWAFont
 import OWAObjcAbSyn
 
@@ -19,8 +20,8 @@ import OWAObjcAbSyn
 -- header file in Objective C
 objcHeaderFromFonts :: String -> [OWAFont] -> ObjcFile
 objcHeaderFromFonts categoryName fonts = ObjcFile 
-  [commentSection True categoryName,
-  headerImportSection,
+  [categoryCommentSection originalFontTypeName categoryName True,
+  uiKitImportsSection,
   CategoryInterfaceSection $ fontCategoryFromFonts categoryName fonts]
 
 -- | 'objcImplementationFromFonts' takes a name for the new fonts category, as well
@@ -28,34 +29,13 @@ objcHeaderFromFonts categoryName fonts = ObjcFile
 -- implementation file in Objective C
 objcImplementationFromFonts :: String -> [OWAFont] -> ObjcFile
 objcImplementationFromFonts categoryName fonts = ObjcFile
-  [commentSection False categoryName,
-  mImportSection categoryName,
+  [categoryCommentSection originalFontTypeName categoryName False,
+  categoryMImportsSection originalFontTypeName categoryName,
   CategoryImplementationSection $ fontCategoryFromFonts categoryName fonts]
 
-commentSection :: Bool -> String -> FileSection
-commentSection isHeader categoryName = BlockCommentSection 
-  ["",
-  originalFontTypeName ++ ('+':categoryName) ++ ending,
-  "MySampleApp",
-  "",
-  "Created By James Bowen 2/29/2016",
-  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
-  ""]
-  where ending = if isHeader then ".h" else ".m"
-
-headerImportSection :: FileSection
-headerImportSection = ImportsSection [ModuleImport "UIKit"]
-
-mImportSection :: String -> FileSection
-mImportSection categoryName = ImportsSection [FileImport fileName]
-              where fileName = originalFontTypeName ++ ('+':categoryName) ++ ".h"
-
 fontCategoryFromFonts :: String -> [OWAFont] -> Category
-fontCategoryFromFonts catName fonts = Category {
-  originalTypeName = originalFontTypeName,
-  categoryName = catName,
-  categoryMethods = map methodForFont fonts
-}
+fontCategoryFromFonts categoryName fonts = categoryFromNamesAndMethodBuilder
+  originalFontTypeName categoryName methodForFont fonts
 
 methodForFont :: OWAFont -> ObjcMethod
 methodForFont font = ObjcMethod {
