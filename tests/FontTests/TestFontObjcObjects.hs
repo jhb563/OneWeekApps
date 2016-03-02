@@ -71,9 +71,9 @@ methodFromFont font = ObjcMethod {
 
 familyNameForFont :: OWAFont -> String
 familyNameForFont font = case fontStyles font of
-  [] -> fontFamilyName font
-  styles -> fontFamilyName font ++ '-':styleList
-    where styleList = foldl (\str style -> str ++ show style) styles
+  [] -> fontFamily font
+  styles -> fontFamily font ++ ('-':styleList)
+    where styleList = foldl (\str style -> str ++ show style) '' styles
 
 fontWithNameMethod :: ObjcMethod
 fontWithNameMethod = ObjcMethod {

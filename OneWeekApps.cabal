@@ -30,6 +30,7 @@ library
                        OWAFont,
                        OWAObjcAbSyn,
                        OWAColorObjc,
+                       OWAFontObjc,
                        OWAObjcPrint
   other-modules:       ParseUtil
   hs-source-dirs:      src,
