@@ -19,6 +19,7 @@ import Text.ParserCombinators.Parsec
 -------------------------------------------------------------------------------
 -------------------PARSING NAME ATTRIBUTES-------------------------------------
 -------------------------------------------------------------------------------
+
 -- | Takes a string for a keyword, and returns a parser which parses that
 -- keyword, a space, and then an alphanumeric name beginning with a
 -- lowercase letter.
@@ -34,6 +35,7 @@ nameParserWithKeyword keyword = do
 -------------------------------------------------------------------------------
 -------------------PARSING FLOAT ATTRIBUTES------------------------------------
 -------------------------------------------------------------------------------
+
 -- | Takes a string for a keyword, and returns a parser which parses that
 -- keyword, a space, and then a float value.
 floatAttributeParser :: String -> GenParser Char st (String, Float)
