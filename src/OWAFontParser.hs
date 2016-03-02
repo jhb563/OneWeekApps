@@ -76,7 +76,7 @@ fontStylesParser :: GenParser Char st (FontAttr, FontVal)
 fontStylesParser = do
   string fontStylesKeyword
   char ' '
-  attributes <- fontStyleAttributeParser `sepBy1` (string ", ")
+  attributes <- fontStyleAttributeParser `sepBy1` string ", "
   endOfLine
   return (fontStylesKeyword, StyleAttrs attributes)
 
