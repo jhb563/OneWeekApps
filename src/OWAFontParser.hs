@@ -14,7 +14,9 @@ import Data.Maybe
 import OWAFont
 import ParseUtil
 import qualified Data.Map.Strict as Map
+import Text.Parsec
 import Text.Parsec.Error
+import Text.ParserCombinators.Parsec
 
 type FontAttr = String
 data FontVal = FamilyVal String |
@@ -35,13 +37,13 @@ parseFontsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents contents = Right []
+parseFontContents = parse (many fontParser) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
 -------------------------------------------------------------------------------
 
-fontParser :: GenParser Char st (Maybe OWAColor)
+fontParser :: GenParser Char st (Maybe OWAFont)
 fontParser = do
   spaces
   name <- nameParserWithKeyword fontKeyword
@@ -55,13 +57,14 @@ fontAttrLine = do
   choice fontAttrParsers
 
 fontAttrParsers :: [GenParser Char st (FontAttr, FontVal)]
-fontAttrParsers = [fontFamilyParser, fontSizeParser, fontStylesParser]
+fontAttrParsers = map Text.Parsec.try [fontFamilyParser, fontSizeParser, fontStylesParser]
 
 fontFamilyParser :: GenParser Char st (FontAttr, FontVal)
 fontFamilyParser = do
   string fontFamilyKeyword
   char ' '
   familyName <- many (alphaNum <|> char '-')
+  endOfLine
   return (fontFamilyKeyword, FamilyVal familyName)
 
 fontSizeParser :: GenParser Char st (FontAttr, FontVal)
@@ -73,13 +76,38 @@ fontStylesParser :: GenParser Char st (FontAttr, FontVal)
 fontStylesParser = do
   string fontStylesKeyword
   char ' '
-  -- TODO: Comma Separated List of style vals
+  attributes <- fontStyleAttributeParser `sepBy1` (string ", ")
+  endOfLine
+  return (fontStylesKeyword, StyleAttrs attributes)
+
+fontStyleAttributeParser :: GenParser Char st String
+fontStyleAttributeParser = choice styleAttributeParsers
+
+styleAttributeParsers :: [GenParser Char st String]
+styleAttributeParsers = map string styleAttributeStrings
 
 -------------------------------------------------------------------------------
 --------------CONSTRUCTING FONTS-----------------------------------------------
 -------------------------------------------------------------------------------
 
 fontFromNameAndAttrMap :: String -> FontAttrMap -> Maybe OWAFont
+fontFromNameAndAttrMap name attrMap = do
+  familyName <- case Map.lookup fontFamilyKeyword attrMap of
+    Just (FamilyVal name) -> Just name
+    _ -> Nothing
+  size <- case Map.lookup fontSizeKeyword attrMap of
+    Just (SizeVal size) -> Just size
+    _ -> Nothing
+  styleAttrs <- case Map.lookup fontStylesKeyword attrMap of
+    Just (StyleAttrs attrs) -> Just $ map (\str -> read str :: FontStyle) attrs   
+    Nothing -> Just []
+    _ -> Nothing
+  return OWAFont {
+    fontName = name,
+    fontFamily = familyName,
+    fontSize = size,
+    fontStyles = styleAttrs
+  }
 
 -------------------------------------------------------------------------------
 -------------------FONT KEYWORDS-----------------------------------------------
@@ -96,3 +124,11 @@ fontSizeKeyword = "Size"
 
 fontStylesKeyword :: String
 fontStylesKeyword = "Styles"
+
+styleAttributeStrings :: [String]
+styleAttributeStrings = ["Thin",
+  "Light",
+  "Regular",
+  "Medium",
+  "Bold",
+  "Italic"]
