@@ -14,6 +14,16 @@ fontsHeaderBlockComment = BlockCommentSection
   "Copyright (c) 2016 One Week Apps. All Rights Reserved",
   ""]
 
+emptyFontsHeaderBlockComment :: FileSection
+emptyFontsHeaderBlockComment = BlockCommentSection
+  ["",
+  "UIFont+EmptyCategory.h",
+  "MySampleApp",
+  "",
+  "Created By James Bowen 2/16/2016",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
+  ""]
+
 fontsHeaderImports :: FileSection
 fontsHeaderImports = ImportsSection
   [ModuleImport "UIKit"]
@@ -29,7 +39,7 @@ fontsHeaderFile = ObjcFile
 
 emptyFontsHeaderFile :: ObjcFile
 emptyFontsHeaderFile = ObjcFile
-  [fontsHeaderBlockComment,
+  [emptyFontsHeaderBlockComment,
   fontsHeaderImports,
   CategoryInterfaceSection emptyFontsCategory]
 
@@ -43,9 +53,23 @@ fontsImplementationBlockComment = BlockCommentSection
   "Copyright (c) 2016 One Week Apps. All Rights Reserved",
   ""]
 
+emptyFontsImplementationBlockComment :: FileSection
+emptyFontsImplementationBlockComment = BlockCommentSection
+  ["",
+  "UIFont+EmptyCategory.m",
+  "MySampleApp",
+  "",
+  "Created By James Bowen 2/16/2016",
+  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
+  ""]
+
 fontsImplementationImports :: FileSection
 fontsImplementationImports = ImportsSection
   [FileImport "UIFont+MyAppFonts.h"]
+
+emptyFontsImplementationImports :: FileSection
+emptyFontsImplementationImports = ImportsSection
+  [FileImport "UIFont+EmptyCategory.h"]
 
 fontsImplementationSection :: FileSection
 fontsImplementationSection = CategoryImplementationSection fontsCategory
@@ -58,14 +82,14 @@ fontsImplementationFile = ObjcFile
 
 emptyFontsImplementationFile :: ObjcFile
 emptyFontsImplementationFile = ObjcFile
-  [fontsImplementationBlockComment,
-  fontsImplementationImports,
+  [emptyFontsImplementationBlockComment,
+  emptyFontsImplementationImports,
   CategoryImplementationSection emptyFontsCategory]
 
 emptyFontsCategory :: Category
 emptyFontsCategory = Category {
   originalTypeName = "UIFont",
-  categoryName = "MyAppFonts",
+  categoryName = "EmptyCategory",
   categoryMethods = []
 }
 

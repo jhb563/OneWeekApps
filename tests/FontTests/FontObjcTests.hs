@@ -32,11 +32,14 @@ fontImplementationTest = describe "Create Implementation File Structure for Font
 noMethodsTest :: Spec
 noMethodsTest = describe "Create Files with no methods" $ do
   it "Header structure should match empty category header" $
-    objcHeaderFromFonts fontCategoryName [] `shouldBe` emptyFontsHeaderFile
+    objcHeaderFromFonts emptyCategoryName [] `shouldBe` emptyFontsHeaderFile
 
   it "Implementation structure should match empty category implementation" $
-    objcImplementationFromFonts fontCategoryName [] `shouldBe` emptyFontsImplementationFile
+    objcImplementationFromFonts emptyCategoryName [] `shouldBe` emptyFontsImplementationFile
 
 fontCategoryName :: String
 fontCategoryName = "MyAppFonts"
+
+emptyCategoryName :: String
+emptyCategoryName = "EmptyCategory"
 
