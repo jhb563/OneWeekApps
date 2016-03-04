@@ -17,8 +17,9 @@ runV010IntegrationTests currentDirectory = do
   hspec $
     beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
     beforeAll_ (runOWA testDirectory)
-    . afterAll_ (removeProducedFiles testDirectory) $
+    . afterAll_ (removeProducedFiles testDirectory) $ do
       checkColorsFiles testDirectory
+      checkFontsFiles testDirectory
 
 checkColorsFiles :: FilePath -> Spec
 checkColorsFiles currentDirectory = do
@@ -32,6 +33,19 @@ checkColorsFiles currentDirectory = do
 
     it "Implementation File Should Match" $
       producedColorImplementationFilePath `filesShouldMatch` testColorImplementationFilePath
+
+checkFontsFiles :: FilePath -> Spec
+checkFontsFiles currentDirectory = do
+  let producedFontHeaderFilePath = currentDirectory ++ fontHeaderFileExtension
+  let producedFontImplementationFilePath = currentDirectory ++ fontImplementationFileExtension
+  let testFontHeaderFilePath = currentDirectory ++ fontHeaderTestExtension
+  let testFontImplementationFilePath = currentDirectory ++ fontImplementationTestExtension
+  describe "Compare Produced Fonts File" $ do
+    it "Header File Should Match" $
+      producedFontHeaderFilePath `filesShouldMatch` testFontHeaderFilePath
+
+    it "Implementation File Should Match" $
+      producedFontImplementationFilePath `filesShouldMatch` testFontImplementationFilePath
 
 removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles currentDirectory = removeFiles $ map (currentDirectory ++) producedFiles
@@ -51,5 +65,18 @@ colorHeaderTestExtension = "/app/UIColor+MyAppColors.h.test"
 colorImplementationTestExtension :: String
 colorImplementationTestExtension = "/app/UIColor+MyAppColors.m.test"
 
+fontHeaderFileExtension :: String
+fontHeaderFileExtension = "/app/UIFont+MyAppFonts.h"
+
+fontImplementationFileExtension :: String
+fontImplementationFileExtension = "/app/UIFont+MyAppFonts.m"
+
+fontHeaderTestExtension :: String
+fontHeaderTestExtension = "/app/UIFont+MyAppFonts.h.test"
+
+fontImplementationTestExtension :: String
+fontImplementationTestExtension = "/app/UIFont+MyAppFonts.m.test"
+
 producedFiles :: [FilePath]
-producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension]
+producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension,
+  fontHeaderFileExtension, fontImplementationFileExtension]

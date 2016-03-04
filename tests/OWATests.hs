@@ -6,6 +6,7 @@ import ColorParseTests
 import FileSearchTests
 import FontObjcTests
 import FontParseTests
+import FontPrintTests
 import ObjcPrintTests
 import System.Directory
 import Version010IntegrationTests
@@ -19,5 +20,6 @@ main = do
   runColorObjcTests
   runFontParseTests currentFilePath
   runFontObjcTests
+  runFontPrintTests currentFilePath
   runObjcPrintTests currentFilePath
   runV010IntegrationTests currentFilePath

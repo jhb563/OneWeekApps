@@ -10,11 +10,13 @@ module OWALib (
   runOWA
 ) where
 
-import Data.List
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
 import OWAFileSearch
+import OWAFont
+import OWAFontObjc
+import OWAFontParser
 import OWAObjcPrint
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
@@ -25,16 +27,22 @@ runOWA filePath = do
   case maybeAppDirectory of 
     Nothing -> print "Could not find app directory!"
     Just appDirectory -> do
-      colorFiles <- findColorsFiles appDirectory
-      listOfColorLists <- mapM parseColorsFromFile colorFiles
-      let colors = sortBy colorByName $ concat listOfColorLists
-      let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
-      let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
-      printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
-      printStructureToFile colorMFileStructure (appDirectory ++ colorImplementationFileExtension)
+      produceColorsFiles appDirectory
+      produceFontsFiles appDirectory
 
-colorByName :: OWAColor -> OWAColor -> Ordering
-colorByName color1 color2 = colorName color1 `compare` colorName color2
+---------------------------------------------------------------------------
+------------------------PRODUCING COLORS FILES-----------------------------
+---------------------------------------------------------------------------
+
+produceColorsFiles :: FilePath -> IO ()
+produceColorsFiles appDirectory = do
+  colorFiles <- findColorsFiles appDirectory
+  listOfColorLists <- mapM parseColorsFromFile colorFiles
+  let colors = concat listOfColorLists
+  let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
+  let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
+  printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
+  printStructureToFile colorMFileStructure (appDirectory ++ colorImplementationFileExtension)
 
 colorCategoryName :: String
 colorCategoryName = "MyAppColors"
@@ -44,3 +52,26 @@ colorHeaderFileExtension = "/UIColor+MyAppColors.h"
 
 colorImplementationFileExtension :: FilePath
 colorImplementationFileExtension = "/UIColor+MyAppColors.m"
+
+---------------------------------------------------------------------------
+------------------------PRODUCING COLORS FILES-----------------------------
+---------------------------------------------------------------------------
+
+produceFontsFiles :: FilePath -> IO ()
+produceFontsFiles appDirectory = do
+  fontFiles <- findFontsFiles appDirectory
+  listOfFontLists <- mapM parseFontsFromFile fontFiles
+  let fonts = concat listOfFontLists
+  let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
+  let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
+  printStructureToFile fontHeaderFileStructure (appDirectory ++ fontHeaderFileExtension)
+  printStructureToFile fontMFileStructure (appDirectory ++ fontImplementationFileExtension)
+
+fontCategoryName :: String
+fontCategoryName = "MyAppFonts"
+
+fontHeaderFileExtension :: FilePath
+fontHeaderFileExtension = "/UIFont+MyAppFonts.h"
+
+fontImplementationFileExtension :: FilePath
+fontImplementationFileExtension = "/UIFont+MyAppFonts.m"

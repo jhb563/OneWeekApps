@@ -15,6 +15,19 @@ allTestFonts = [myFont,
   styleInNameFont,
   timesFont]
 
+sortedTestFonts :: [OWAFont]
+sortedTestFonts = [buttonFont,
+  labelFont,
+  myFont,
+  noStyleFont,
+  placeholderFont,
+  randomFont,
+  styleInNameFont,
+  textfieldFont,
+  thinFont,
+  timesFont,
+  titleFont]
+
 myFont :: OWAFont
 myFont = OWAFont {
   fontName = "myFont",

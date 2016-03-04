@@ -91,6 +91,7 @@ expressionDoc (MethodCall callingExp method args) = brackets $
   text (nameIntro method) <>
   hsep (zipWith (curry argDoc) (params method) args)
 expressionDoc (Var varName) = text varName
+expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 
 argDoc :: (ParamDef, ObjcExpression) -> Doc
