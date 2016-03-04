@@ -1,0 +1,58 @@
+//
+// UIAlertController+MyAppAlerts.m
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIAlertController+MyAppAlerts.h"
+
+@implementation UIAlertController (MyAppAlerts)
+
++ (UIAlertController*)blankMessage {
+
+}
+
++ (UIAlertController*)escapedQuotes {
+
+}
+
++ (UIAlertController*)keyAlert {
+
+}
+
++ (UIAlertController*)myFirstAlert {
+
+}
+
++ (UIAlertController*)noMessageAlert {
+
+}
+
++ (UIAlertController*)noTitleAlert {
+
+}
+
++ (UIAlertController*)otherEscapeCharacters {
+
+}
+
++ (UIAlertController*)secondAlert { 
+
+}
+
++ (UIAlertController*)threeButtons {
+
+}
+
++ (UIAlertController*)twoButtonAlert {
+
+}
+
++ (UIAlertController*)twoButtonsNoKeys {
+
+}
+
+@end
+

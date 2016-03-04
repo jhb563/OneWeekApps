@@ -1,0 +1,10 @@
+Alert escapedQuotes
+  Title "KEY_TITLE"
+  Message "This message has \"quotes\" in it"
+  Buttons "\"Hi\""
+
+Alert otherEscapeCharacters
+  Title "2TITLE"
+  Message "!./*&()[]15hasdf123\n\r\t"
+  Buttons "...", "Whyyyyy"
+

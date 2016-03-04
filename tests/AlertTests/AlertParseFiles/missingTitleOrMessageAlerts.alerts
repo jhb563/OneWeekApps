@@ -1,0 +1,11 @@
+Alert noTitleAlert
+  Message "NO_TITLE_MESSAGE"
+  Buttons "Wut"
+
+Alert noMessageAlert
+  Title "YOU_WIN"
+  Buttons "GREAT"
+
+Alert blankMessage
+  Buttons "NOTHING"
+
