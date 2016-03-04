@@ -17,7 +17,7 @@ runV010IntegrationTests currentDirectory = do
   hspec $
     beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
     beforeAll_ (runOWA testDirectory)
-    . afterAll_ (removeProducedFiles testDirectory) $
+    . afterAll_ (removeProducedFiles testDirectory) $ do
       checkColorsFiles testDirectory
       checkFontsFiles testDirectory
 
