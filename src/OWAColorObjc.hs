@@ -11,6 +11,7 @@ module OWAColorObjc (
   objcImplementationFromColors
 ) where
 
+import Data.List
 import ObjcUtil
 import OWAColor
 import OWAObjcAbSyn
@@ -22,7 +23,8 @@ objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
 objcHeaderFromColors categoryName colors = ObjcFile 
   [categoryCommentSection originalColorTypeName categoryName True,
   uiKitImportsSection,
-  CategoryInterfaceSection $ colorCategoryFromColors categoryName colors]
+  CategoryInterfaceSection $ colorCategoryFromColors categoryName sortedColors]
+    where sortedColors = sortBy sortColorsByName colors 
 
 -- | 'objcImplementationFromColors' takes a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
@@ -31,7 +33,8 @@ objcImplementationFromColors :: String -> [OWAColor] -> ObjcFile
 objcImplementationFromColors categoryName colors = ObjcFile
   [categoryCommentSection originalColorTypeName categoryName False,
   categoryMImportsSection originalColorTypeName categoryName,
-  CategoryImplementationSection $ colorCategoryFromColors categoryName colors]
+  CategoryImplementationSection $ colorCategoryFromColors categoryName sortedColors]
+    where sortedColors = sortBy sortColorsByName colors
 
 colorCategoryFromColors :: String -> [OWAColor] -> Category
 colorCategoryFromColors categoryName = categoryFromNamesAndMethodBuilder
@@ -84,3 +87,6 @@ colorWithRGBAMethod = ObjcMethod {
 
 originalColorTypeName :: String
 originalColorTypeName = "UIColor"
+
+sortColorsByName :: OWAColor -> OWAColor -> Ordering
+sortColorsByName color1 color2 = colorName color1 `compare` colorName color2

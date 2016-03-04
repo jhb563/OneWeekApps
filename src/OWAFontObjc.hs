@@ -11,6 +11,7 @@ module OWAFontObjc (
   objcImplementationFromFonts
 ) where
 
+import Data.List
 import ObjcUtil
 import OWAFont
 import OWAObjcAbSyn
@@ -22,7 +23,8 @@ objcHeaderFromFonts :: String -> [OWAFont] -> ObjcFile
 objcHeaderFromFonts categoryName fonts = ObjcFile 
   [categoryCommentSection originalFontTypeName categoryName True,
   uiKitImportsSection,
-  CategoryInterfaceSection $ fontCategoryFromFonts categoryName fonts]
+  CategoryInterfaceSection $ fontCategoryFromFonts categoryName sortedFonts]
+    where sortedFonts = sortBy sortFontsByName fonts
 
 -- | 'objcImplementationFromFonts' takes a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
@@ -31,7 +33,8 @@ objcImplementationFromFonts :: String -> [OWAFont] -> ObjcFile
 objcImplementationFromFonts categoryName fonts = ObjcFile
   [categoryCommentSection originalFontTypeName categoryName False,
   categoryMImportsSection originalFontTypeName categoryName,
-  CategoryImplementationSection $ fontCategoryFromFonts categoryName fonts]
+  CategoryImplementationSection $ fontCategoryFromFonts categoryName sortedFonts]
+    where sortedFonts = sortBy sortFontsByName fonts
 
 fontCategoryFromFonts :: String -> [OWAFont] -> Category
 fontCategoryFromFonts categoryName = categoryFromNamesAndMethodBuilder
@@ -79,3 +82,5 @@ fontWithNameMethod = ObjcMethod {
 originalFontTypeName :: String
 originalFontTypeName = "UIFont"
 
+sortFontsByName :: OWAFont -> OWAFont -> Ordering
+sortFontsByName font1 font2 = fontName font1 `compare` fontName font2

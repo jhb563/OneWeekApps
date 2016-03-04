@@ -10,17 +10,16 @@
 
 @interface UIFont (MyAppFonts)
 
-+ (UIFont*)myFont;
-+ (UIFont*)titleFont;
-+ (UIFont*)labelFont;
-+ (UIFont*)thinFont;
-+ (UIFont*)placeholderFont;
 + (UIFont*)buttonFont;
-+ (UIFont*)textfieldFont;
-+ (UIFont*)randomFont;
++ (UIFont*)labelFont;
++ (UIFont*)myFont;
 + (UIFont*)noStyleFont;
++ (UIFont*)placeholderFont;
++ (UIFont*)randomFont;
 + (UIFont*)styleInNameFont;
++ (UIFont*)textfieldFont;
++ (UIFont*)thinFont;
 + (UIFont*)timesFont;
++ (UIFont*)titleFont;
 
 @end
-

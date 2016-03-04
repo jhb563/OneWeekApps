@@ -7,9 +7,14 @@ module FontPrintTests (
   runFontPrintTests
 ) where
 
+import OWAObjcPrint
+import TestFontObjcObjects
+import TestUtil
+import Test.Hspec
+
 runFontPrintTests :: FilePath -> IO ()
 runFontPrintTests currentDirectory = do
-  let testDirectory = currentDirectory + "/tests/FontTests/FontOutputFiles/"
+  let testDirectory = currentDirectory ++ "/tests/FontTests/FontOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory) 
@@ -21,17 +26,17 @@ emptyCategoryTests :: FilePath -> Spec
 emptyCategoryTests testDirectory = describe "Print File Structure for Empty Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ emptyHeaderResultFile) `filesShouldMatch` 
-      (testDirectory ++ emptyHeaderTestFile) $
-
+      (testDirectory ++ emptyHeaderTestFile)
+  
   it "The printed implementation file should match" $
-    (testDirectory ++ emptyImplementationResultFile `filesShouldMatch`
+    (testDirectory ++ emptyImplementationResultFile) `filesShouldMatch`
       (testDirectory ++ emptyImplementationTestFile) 
 
 fullCategoryTests :: FilePath -> Spec
 fullCategoryTests testDirectory = describe "Print File Structure for Normal Font Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ headerResultFile) `filesShouldMatch`
-      (testDirectory ++ headerTestFile) $
+      (testDirectory ++ headerTestFile) 
 
   it "The printed implementation file should match" $
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
@@ -40,17 +45,13 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
 createResultsFiles :: FilePath -> IO ()
 createResultsFiles outputDirectory = do
   let testFilePaths = map (outputDirectory ++) resultsFiles
-  let testFileStructures = [emptyFontsHeaderFile,
-    emptyFontsImplementationFile,
-    fontsHeaderFile,
-    fontsImplementationFile]
+  let testFileStructures = [emptyFontsHeaderFile, emptyFontsImplementationFile, fontsHeaderFile, fontsImplementationFile]
   mapM_ (\(objcFile, filePath) ->
     printStructureToFile objcFile filePath) 
     (zip testFileStructures testFilePaths)
 
 removeResultsFiles :: FilePath -> IO ()
-removeResultsFiles outputDirectory = mapM_ removeFile 
-  (map (outputDirectory ++) resultsFiles)
+removeResultsFiles outputDirectory = removeFiles (map (outputDirectory ++) resultsFiles)
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

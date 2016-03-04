@@ -10,7 +10,6 @@ module OWALib (
   runOWA
 ) where
 
-import Data.List
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
@@ -27,14 +26,11 @@ runOWA filePath = do
     Just appDirectory -> do
       colorFiles <- findColorsFiles appDirectory
       listOfColorLists <- mapM parseColorsFromFile colorFiles
-      let colors = sortBy colorByName $ concat listOfColorLists
+      let colors = concat listOfColorLists
       let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
       let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
       printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
       printStructureToFile colorMFileStructure (appDirectory ++ colorImplementationFileExtension)
-
-colorByName :: OWAColor -> OWAColor -> Ordering
-colorByName color1 color2 = colorName color1 `compare` colorName color2
 
 colorCategoryName :: String
 colorCategoryName = "MyAppColors"

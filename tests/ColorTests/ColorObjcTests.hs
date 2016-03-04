@@ -76,6 +76,7 @@ oneColorList = [colorFromTuple ("christmas", 127.758126, 164.6, 0.0, 1.0)]
 manyColorsList :: [OWAColor]
 manyColorsList = map colorFromTuple 
   [("aTest1", 245.0, 173.0, 122.0, 0.94),
+  ("aTest10", 14.0, 152.0, 116.0, 0.18),
   ("aTest2", 252.0, 253.0, 108.0, 0.91),
   ("aTest3", 85.0, 47.0, 81.0, 0.88),
   ("aTest4", 6.0, 75.0, 18.0, 0.15),
@@ -83,8 +84,7 @@ manyColorsList = map colorFromTuple
   ("aTest6", 191.0, 176.0, 226.0, 0.76),
   ("aTest7", 118.0, 210.0, 12.0, 0.77),
   ("aTest8", 69.0, 111.0, 44.0, 0.08),
-  ("aTest9", 19.0, 141.0, 167.0, 0.96),
-  ("aTest10", 14.0, 152.0, 116.0, 0.18)]
+  ("aTest9", 19.0, 141.0, 167.0, 0.96)]
 
 noColorCategory :: Category
 noColorCategory = Category {

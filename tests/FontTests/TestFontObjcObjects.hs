@@ -97,7 +97,7 @@ fontsCategory :: Category
 fontsCategory = Category {
   originalTypeName = "UIFont",
   categoryName = "MyAppFonts",
-  categoryMethods = map methodFromFont allTestFonts
+  categoryMethods = map methodFromFont sortedTestFonts
 }
 
 methodFromFont :: OWAFont -> ObjcMethod
