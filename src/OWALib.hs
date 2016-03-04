@@ -63,7 +63,7 @@ produceFontsFiles appDirectory = do
   listOfFontLists <- mapM parseFontsFromFile fontFiles
   let fonts = concat listOfFontLists
   let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
-  let fontMFileStructure = objcImplementationFromColorsFromFonts fontCategoryName fonts
+  let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
   printStructureToFile fontHeaderFileStructure (appDirectory ++ fontHeaderFileExtension)
   printStructureToFile fontMFileStructure (appDirectory ++ fontImplementationFileExtension)
 
