@@ -46,9 +46,7 @@ createResultsFiles :: FilePath -> IO ()
 createResultsFiles outputDirectory = do
   let testFilePaths = map (outputDirectory ++) resultsFiles
   let testFileStructures = [emptyFontsHeaderFile, emptyFontsImplementationFile, fontsHeaderFile, fontsImplementationFile]
-  mapM_ (\(objcFile, filePath) ->
-    printStructureToFile objcFile filePath) 
-    (zip testFileStructures testFilePaths)
+  mapM_ (uncurry printStructureToFile) (zip testFileStructures testFilePaths)
 
 removeResultsFiles :: FilePath -> IO ()
 removeResultsFiles outputDirectory = removeFiles (map (outputDirectory ++) resultsFiles)
