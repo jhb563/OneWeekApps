@@ -1,0 +1,25 @@
+//
+// UIFont+MyAppFonts.h
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIFont (MyAppFonts)
+
++ (UIFont*)buttonFont;
++ (UIFont*)labelFont;
++ (UIFont*)myFont;
++ (UIFont*)noStyleFont;
++ (UIFont*)placeholderFont;
++ (UIFont*)randomFont;
++ (UIFont*)styleInNameFont;
++ (UIFont*)textfieldFont;
++ (UIFont*)thinFont;
++ (UIFont*)timesFont;
++ (UIFont*)titleFont;
+
+@end
