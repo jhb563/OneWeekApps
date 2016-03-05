@@ -19,7 +19,7 @@ import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
 
 type AlertAttr = String
-data AlertVal = LocalizedKey 
+type AlertVal = LocalizedKey 
 type AlertAttrMap = Map.Map AlertAttr AlertVal
 
 ---------------------------------------------------------------------------
@@ -35,7 +35,7 @@ parseAlertsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrAlerts
 
 parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
-parseAlertContents = parse (many alertParser) ""
+parseAlertContents = parse (alertParser `endBy` spaces) ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -67,14 +67,44 @@ localizedKeyParserWithKeyword keyword = do
 
 parseLocalizedKey :: GenParser Char st AlertVal
 parseLocalizedKey = do
-  
+  char '"'
+  substrings <- many (noneOf "\"\n") `endBy` char '"'
+  case substrings of
+    [] -> return ""
+    (s:ss) -> return $ concat (s:map ('"':) ss)
 
 ---------------------------------------------------------------------------
 --------------------CONSTRUCTING ALERTS------------------------------------
 ---------------------------------------------------------------------------
 
 alertFromNameAndAttrMap :: String -> AlertAttrMap -> Maybe OWAAlert
-alertFromNameAndAttrMap name attrMap = Nothing
+alertFromNameAndAttrMap name attrMap = do
+  title <- case Map.lookup titleKeyword attrMap of
+    Just title -> Just title
+    _ -> Just ""
+  message <- case Map.lookup messageKeyword attrMap of
+    Just message -> Just message
+    _ -> Just ""
+  buttonFormat <- buttonFormatFromAttrMap attrMap
+  return OWAAlert {
+    alertName = name,
+    alertTitle = title,
+    alertMessage = message,
+    alertButtonFormat = buttonFormat
+  } 
+
+buttonFormatFromAttrMap :: AlertAttrMap -> Maybe AlertButtonFormat
+buttonFormatFromAttrMap attrMap 
+  | Map.member dismissButtonKeyword attrMap = do
+    dismissTitle <- Map.lookup dismissButtonKeyword attrMap
+    return $ DismissButton dismissTitle
+  | Map.member neutralButtonKeyword attrMap = do
+    neutralTitle <- Map.lookup neutralButtonKeyword attrMap
+    return $ NeutralButton neutralTitle
+  | otherwise = do
+    yesTitle <- Map.lookup yesButtonKeyword attrMap
+    noTitle <- Map.lookup noButtonKeyword attrMap
+    return $ YesNoButtons yesTitle noTitle
 
 ---------------------------------------------------------------------------
 --------------------ALERT KEYWORDS-----------------------------------------
@@ -83,9 +113,27 @@ alertFromNameAndAttrMap name attrMap = Nothing
 alertKeyword :: String
 alertKeyword = "Alert"
 
-attributeKeywords = ["Title",
-  "Message",
-  "DismissButton",
-  "NeutralButton",
-  "YesButton",
-  "NoButton"]
+titleKeyword :: AlertAttr
+titleKeyword = "Title"
+
+messageKeyword :: AlertAttr
+messageKeyword = "Message"
+
+dismissButtonKeyword :: AlertAttr
+dismissButtonKeyword = "DismissButton"
+
+neutralButtonKeyword :: AlertAttr
+neutralButtonKeyword = "NeutralButton"
+
+yesButtonKeyword :: AlertAttr
+yesButtonKeyword = "YesButton"
+
+noButtonKeyword :: AlertAttr
+noButtonKeyword = "NoButton"
+
+attributeKeywords = [titleKeyword,
+  messageKeyword,
+  dismissButtonKeyword,
+  neutralButtonKeyword,
+  yesButtonKeyword,
+  noButtonKeyword]
