@@ -27,17 +27,22 @@ emptyAlertsHeaderBlockComment = BlockCommentSection
 alertsHeaderImports :: FileSection
 alertsHeaderImports = ImportsSection [ModuleImport "UIKit"]
 
+alertTypedefSection :: FileSection
+alertTypedefSection = ForwardDeclarationSection [TypeDefDecl (SimpleType "void") "AlertHandler" []
+
 alertsHeaderInterfaceSection :: FileSection
 alertsHeaderInterfaceSection = CategoryInterfaceSection alertsCategory
 
 alertsHeaderFile :: ObjcFile
 alertsHeaderFile = [alertsHeaderBlockComment,
   alertsHeaderImports,
+  alertTypedefSection,
   alertsHeaderInterfaceSection]
 
 emptyAlertsHeaderFile :: ObjcFile
 emptyAlertsHeaderFile = [emptyAlertsHeaderBlockComment,
   alertsHeaderImports,
+  alertTypedefSection,
   CategoryInterfaceSection emptyAlertsCategory]
 
 alertsImplementationBlockComment :: FileSection
