@@ -10,12 +10,19 @@ module OWAAlert where
 
 type LocalizedKey = String
 
--- | Alert model, which requires a name, title, message, and a list
--- of buttons. There must be at least one button.
+-- | Choice for format of buttons. Can either be a simple dismiss button (which
+-- closes the alert with no function), a neutral button (which might take a handler)
+-- or a yes/no set of buttons, which each have their own handler.
+data AlertButtonFormat = DismissButton LocalizedKey |
+  NeutralButton LocalizedKey |
+  YesNoButtons LocalizedKey LocalizedKey
+  deriving (Show, Eq)
+
+-- | Alert model, which requires a name, title, message, and a button format
 data OWAAlert = OWAAlert {
   alertName :: String,
   alertTitle :: LocalizedKey,
   alertMessage :: LocalizedKey,
-  alertButtons :: [LocalizdKey]
-}
+  alertButtonFormat :: AlertButtonFormat
+} deriving (Show, Eq)
 

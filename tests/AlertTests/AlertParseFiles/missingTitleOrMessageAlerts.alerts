@@ -1,11 +1,11 @@
 Alert noTitleAlert
+  DismissButton "Wut"
   Message "NO_TITLE_MESSAGE"
-  Buttons "Wut"
 
 Alert noMessageAlert
   Title "YOU_WIN"
-  Buttons "GREAT"
+  DismissButton "GREAT"
 
 Alert blankMessage
-  Buttons "NOTHING"
+  NeutralButton "NOTHING"
 

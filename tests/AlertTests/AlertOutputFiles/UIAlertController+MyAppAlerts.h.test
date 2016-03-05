@@ -8,19 +8,20 @@
 
 @import UIKit;
 
+typedef void (^AlertHandler)();
+
 @interface UIAlertController (MyAppAlerts)
 
-+ (UIAlertController*)blankMessage;
-+ (UIAlertController*)escapedQuotes;
-+ (UIAlertController*)keyAlert;
++ (UIAlertController*)blankMessageWithHandler:(AlertHandler)handler;
++ (UIAlertController*)escapedQuotesWithHandler:(AlertHandler)handler;
++ (UIAlertController*)keyAlertWithHandler:(AlertHandler)handler;
 + (UIAlertController*)myFirstAlert;
 + (UIAlertController*)noMessageAlert;
 + (UIAlertController*)noTitleAlert;
-+ (UIAlertController*)otherEscapeCharacters;
-+ (UIAlertController*)secondAlert;
-+ (UIAlertController*)threeButtons;
-+ (UIAlertController*)twoButtonAlert;
-+ (UIAlertController*)twoButtonsNoKeys;
++ (UIAlertController*)otherEscapeCharactersWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler;
++ (UIAlertController*)secondAlertWithHandler:(AlertHandler)handler;
++ (UIAlertController*)twoButtonAlertWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler;
++ (UIAlertController*)twoButtonsNoKeysWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler;
 
 @end
 

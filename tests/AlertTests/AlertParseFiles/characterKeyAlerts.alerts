@@ -1,10 +1,11 @@
 Alert escapedQuotes
   Title "KEY_TITLE"
   Message "This message has \"quotes\" in it"
-  Buttons "\"Hi\""
+  NeutralButton "\"Hi\""
 
 Alert otherEscapeCharacters
   Title "2TITLE"
+  YesButton "..."
+  NoButton "Whyyyyy"
   Message "!./*&()[]15hasdf123\n\r\t"
-  Buttons "...", "Whyyyyy"
 

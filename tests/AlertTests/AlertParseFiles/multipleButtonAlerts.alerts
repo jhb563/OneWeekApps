@@ -1,15 +1,12 @@
 Alert twoButtonAlert
   Title "QUIT_APP_TITLE"
   Message "SHOULD_QUIT_APP"
-  Buttons "YES","NO"
+  YesButton "YES"
+  NoButton "NO"
 
 Alert twoButtonsNoKeys
-  Title "Quit App?"
   Message "Do you want to quit the app?"
-  Buttons "Yes", "No"
+  NoButton "No"
+  YesButton "Yes"
+  Title "Quit App?"
 
-Alert threeButtons
-  Title "WHICH-DOOR"
-  Message "DOOR_OPTIONS"
-  Buttons "LEFT", "CENTER", "RIGHT"
- 
