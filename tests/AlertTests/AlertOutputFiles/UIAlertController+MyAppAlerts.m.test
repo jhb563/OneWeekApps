@@ -1,0 +1,129 @@
+//
+// UIAlertController+MyAppAlerts.m
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIAlertController+MyAppAlerts.h"
+
+@implementation UIAlertController (MyAppAlerts)
+
++ (UIAlertController*)blankMessageWithHandler:(AlertHandler)handler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"NOTHING", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (handler) {
+      handler();
+    }
+  }];
+  [alert addAction:neutralAction];
+  return alert;
+}
+
++ (UIAlertController*)escapedQuotesWithHandler:(AlertHandler)handler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"KEY_TITLE" message:NSLocalizedString(@"This message has \"quotes\" in it", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"\"Hi\"", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (handler) {
+      handler();
+    }
+  }];
+  [alert addAction:neutralAction];
+  return alert;
+}
+
++ (UIAlertController*)keyAlertWithHandler:(AlertHandler)handler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"KEY_ALERT_TITLE", nil) message:NSLocalizedString(@"KEY_ALERT_MESSAGE", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"KEY_ALERT_BUTTON_TITLE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (handler) {
+      handler();
+    }
+  }];
+  [alert addAction:neutralAction];
+  return alert;
+}
+
++ (UIAlertController*)myFirstAlert {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Error", nil) message:NSLocalizedString(@"You have encountered a fatal error. Goodbye", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil];
+  [alert addAction:dismissAction];
+  return alert;
+}
+
++ (UIAlertController*)noMessageAlert {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"YOU_WIN", nil) message:nil  preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"GREAT", nil) style:UIAlertActionStyleDefault handler:nil];
+  [alert addAction:dismissAction];
+  return alert;
+}
+
++ (UIAlertController*)noTitleAlert {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"NO_TITLE_MESSAGE", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Wut", nil) style:UIAlertActionStyleDefault handler:nil];
+  [alert addAction:dismissAction];
+  return alert;
+}
+
++ (UIAlertController*)otherEscapeCharactersWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"2TITLE", nil) message:NSLocalizedString(@"!./*&()[]15hasdf123\n\r\t", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* yesAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"...", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (yesHandler) {
+      yesHandler();
+    }
+  }];
+  [alert addAction:yesAction];
+  UIAlertAction* noAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Whyyyy", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (noHandler) {
+      noHandler();
+    }
+  }];
+  [alert addAction:noAction];
+  return alert;
+}
+
++ (UIAlertController*)secondAlertWithHandler:(AlertHandler)handler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Game Over", nil) message:NSLocalizedString(@"Sorry, you appear to have lost.", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"That Sucks", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (handler) {
+      handler();
+    }
+  }];
+  [alert addAction:neutralAction];
+  return alert;
+}
+
++ (UIAlertController*)twoButtonAlertWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"QUIT_APP_TITLE", nil) message:NSLocalizedString(@"SHOULD_QUIT_APP", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* yesAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"YES", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (yesHandler) {
+      yesHandler();
+    }
+  }];
+  [alert addAction:yesAction];
+  UIAlertAction* noAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"NO", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (noHandler) {
+      noHandler();
+    }
+  }];
+  [alert addAction:noAction];
+  return alert;
+}
+
++ (UIAlertController*)twoButtonsNoKeysWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Quit App?", nil) message:NSLocalizedString(@"Do you want to quit the app?", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* yesAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (yesHandler) {
+      yesHandler();
+    }
+  }];
+  [alert addAction:yesAction];
+  UIAlertAction* noAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"No", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (noHandler) {
+      noHandler();
+    }
+  }];
+  [alert addAction:noAction];
+  return alert;
+}
+
+@end

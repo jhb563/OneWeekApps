@@ -26,7 +26,7 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   CategoryInterfaceSection Category |
-  CategoryImplementationSection Category
+  CategoryImplementationSection Category 
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of an

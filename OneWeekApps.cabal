@@ -28,6 +28,7 @@ library
                        OWAColor,
                        OWAFontParser,
                        OWAFont,
+                       OWAAlert,
                        OWAObjcAbSyn,
                        OWAColorObjc,
                        OWAFontObjc,
@@ -61,6 +62,7 @@ test-suite tests
                     tests/ColorTests,
                     tests/ColorTests/ColorParseTests,
                     tests/FontTests,
+                    tests/AlertTests,
                     tests/ObjcPrintTests,
                     tests/IntegrationTests
   build-depends: base,
