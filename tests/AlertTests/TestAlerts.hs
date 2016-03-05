@@ -38,7 +38,7 @@ secondAlert :: OWAAlert
 secondAlert = OWAAlert {
   alertName = "secondAlert",
   alertTitle = "Game Over",
-  alertMessage = "Sorry, you appear to have lost."
+  alertMessage = "Sorry, you appear to have lost.",
   alertButtonFormat = NeutralButton "That Sucks"
 }
 

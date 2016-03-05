@@ -8,6 +8,8 @@ Maintainer  : jhbowen047@gmail.com
 
 module OWAAlert where
 
+-- | Typedef demonstrating which fields should be keys instead
+-- of the actual strings desired.
 type LocalizedKey = String
 
 -- | Choice for format of buttons. Can either be a simple dismiss button (which
