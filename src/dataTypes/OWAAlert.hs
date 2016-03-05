@@ -25,4 +25,3 @@ data OWAAlert = OWAAlert {
   alertMessage :: LocalizedKey,
   alertButtonFormat :: AlertButtonFormat
 } deriving (Show, Eq)
-

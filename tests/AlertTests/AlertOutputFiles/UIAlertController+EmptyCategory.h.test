@@ -13,4 +13,3 @@ typedef void (^AlertHandler)();
 @interface UIAlertController (EmptyCategory)
 
 @end
-

@@ -11,4 +11,3 @@
 @implementation UIAlertController (EmptyCategory)
 
 @end
-

@@ -25,7 +25,6 @@ data ObjcFile = ObjcFile [FileSection] deriving (Show, Eq)
 data FileSection = 
   BlockCommentSection [String] |
   ImportsSection [Import] |
-  ForwardDeclarationSection [ForwardDeclaration] |
   CategoryInterfaceSection Category |
   CategoryImplementationSection Category 
   deriving (Show, Eq)
@@ -36,10 +35,6 @@ data FileSection =
 data Import = 
   ModuleImport String |
   FileImport String
-  deriving (Show, Eq)
-
-data ForwardDeclaration =
-  TypeDefDecl ObjcType String [ObjcType]
   deriving (Show, Eq)
 
 -- | 'Category' stores the structure of an Objective C class extension.

@@ -24,4 +24,3 @@ typedef void (^AlertHandler)();
 + (UIAlertController*)twoButtonsNoKeysWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler;
 
 @end
-
