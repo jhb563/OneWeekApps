@@ -24,15 +24,16 @@ library
                        wl-pprint >= 1.2
   exposed-modules:     OWALib,
                        OWAFileSearch,
-                       OWAColorParser,
                        OWAColor,
-                       OWAFontParser,
+                       OWAColorParser,
+                       OWAColorObjc,
                        OWAFont,
+                       OWAFontParser,
+                       OWAFontObjc,
                        OWAAlert,
                        OWAAlertParser,
+                       OWAAlertObjc,
                        OWAObjcAbSyn,
-                       OWAColorObjc,
-                       OWAFontObjc,
                        OWAObjcPrint
   other-modules:       ParseUtil,
                        ObjcUtil

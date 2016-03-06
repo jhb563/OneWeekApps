@@ -10,7 +10,8 @@ module ObjcUtil (
   categoryCommentSection,
   uiKitImportsSection,
   categoryMImportsSection,
-  categoryFromNamesAndMethodBuilder
+  categoryFromNamesAndMethodBuilder,
+  localizedStringExpr  
 ) where
 
 import OWAObjcAbSyn
@@ -65,3 +66,13 @@ categoryFromNamesAndMethodBuilder typeName catName methodBuilder objects = Categ
   categoryMethods = map methodBuilder objects
 }
 
+-------------------------------------------------------------------------------
+-------------------LOCALIZED STRING HELPER-------------------------------------
+-------------------------------------------------------------------------------
+
+-- | Takes a string key and returns an expression featuring the string as a
+-- localized key.
+localizedStringExpr :: String -> ObjcExpression
+localizedStringExpr str = CFunctionCall "NSLocalizedString"
+  [StringLit str,
+  Var "nil"]

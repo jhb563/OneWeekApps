@@ -16,6 +16,10 @@ import ObjcUtil
 import OWAFont
 import OWAObjcAbSyn
 
+--------------------------------------------------------------------------------
+--------------------------ENTRY METHODS-----------------------------------------
+--------------------------------------------------------------------------------
+
 -- | 'objcHeaderFromFonts' takes a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
 -- header file in Objective C
@@ -36,6 +40,10 @@ objcImplementationFromFonts categoryName fonts = ObjcFile
   CategoryImplementationSection $ fontCategoryFromFonts categoryName sortedFonts]
     where sortedFonts = sortBy sortFontsByName fonts
 
+--------------------------------------------------------------------------------
+--------------------------CATEGORY CONSTRUCTION---------------------------------
+--------------------------------------------------------------------------------
+
 fontCategoryFromFonts :: String -> [OWAFont] -> Category
 fontCategoryFromFonts categoryName = categoryFromNamesAndMethodBuilder
   originalFontTypeName categoryName methodForFont
@@ -44,13 +52,13 @@ methodForFont :: OWAFont -> ObjcMethod
 methodForFont font = ObjcMethod {
   isStatic = True,
   nameIntro = fontName font,
-  returnType = PointerType "UIFont",
+  returnType = PointerType originalFontTypeName,
   params = [],
   methodBody = [ReturnStatement $ returnExpressionForFont font]
 }
 
 returnExpressionForFont :: OWAFont -> ObjcExpression
-returnExpressionForFont font = MethodCall (Var "UIFont") fontWithNameMethod 
+returnExpressionForFont font = MethodCall (Var originalFontTypeName) fontWithNameMethod 
   [StringLit $ fullNameForFont font,
   FloatLit $ fontSize font]
 
@@ -60,27 +68,26 @@ fullNameForFont font = case fontStyles font of
   styles -> fontFamily font ++ ('-':styleList)
     where styleList = foldl (\str style -> str ++ show style) "" styles
 
-fontWithNameMethod :: ObjcMethod
-fontWithNameMethod = ObjcMethod {
-  isStatic = True,
-  nameIntro = "fontWith",
-  returnType = PointerType "UIFont",
-  params = 
-    [ParamDef {
-      paramTitle = "Name",
-      paramType = PointerType "NSString",
-      paramName = "name"
-    },
-    ParamDef {
-      paramTitle = "size",
-      paramType = SimpleType "CGFloat",
-      paramName = "size"
-    }],
-  methodBody = []
+--------------------------------------------------------------------------------
+--------------------------LIBRARY METHOD----------------------------------------
+--------------------------------------------------------------------------------
+
+fontWithNameMethod :: CalledMethod 
+fontWithNameMethod = LibMethod {
+  libNameIntro = "fontWith",
+  libParams = ["Name", "size"]
 }
+
+--------------------------------------------------------------------------------
+--------------------------TYPE KEYWORDS-----------------------------------------
+--------------------------------------------------------------------------------
 
 originalFontTypeName :: String
 originalFontTypeName = "UIFont"
+
+--------------------------------------------------------------------------------
+--------------------------SORT HELPER-------------------------------------------
+--------------------------------------------------------------------------------
 
 sortFontsByName :: OWAFont -> OWAFont -> Ordering
 sortFontsByName font1 font2 = fontName font1 `compare` fontName font2
