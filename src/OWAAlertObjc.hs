@@ -16,6 +16,10 @@ import ObjcUtil
 import OWAAlert
 import OWAObjcAbSyn
 
+--------------------------------------------------------------------------------
+--------------------------ENTRY METHODS-----------------------------------------
+--------------------------------------------------------------------------------
+
 -- | 'objcHeaderFromAlerts' takes a name for the new alerts category, as well
 -- as a list of alert objects, and returns the structure for the category's
 -- header file in Objective C
@@ -36,6 +40,10 @@ objcImplementationFromAlerts categoryName alerts = ObjcFile
   categoryMImportsSection originalAlertTypeName categoryName,
   CategoryImplementationSection $ alertCategoryFromAlerts categoryName sortedAlerts]
     where sortedAlerts = sortBy sortAlertsByName alerts
+
+--------------------------------------------------------------------------------
+--------------------------CATEGORY CONSTRUCTION---------------------------------
+--------------------------------------------------------------------------------
 
 alertHandlerTypedefSection :: FileSection
 alertHandlerTypedefSection = ForwardDeclarationSection 
@@ -90,16 +98,9 @@ constructorAssignment alert = ExpressionStatement $ BinOp
     localizedStringExpr $ alertMessage alert,
     Var "UIAlertControllerStyleAlert"])
 
-alertControllerConstructor :: CalledMethod
-alertControllerConstructor = LibMethod {
-  libNameIntro = "alertControllerWith",
-  libParams = ["Title", "message", "preferredStyle"]
-}
-
-localizedStringExpr :: String -> ObjcExpression
-localizedStringExpr str = CFunctionCall "NSLocalizedString"
-  [StringLit str,
-  Var "nil"]
+--------------------------------------------------------------------------------
+--------------------------CONSTRUCTING ACTIONS----------------------------------
+--------------------------------------------------------------------------------
 
 actionStatementsForFormat :: AlertButtonFormat -> [ObjcStatement]
 actionStatementsForFormat (DismissButton name) = actionStatements name "dismissAction" ""
@@ -109,14 +110,14 @@ actionStatementsForFormat (YesNoButtons yesName noName) =
 
 actionStatements :: String -> String -> String -> [ObjcStatement]
 actionStatements buttonName actionName handlerName = 
-  [ExpressionStatement $ BinOp (VarDecl (PointerType "UIAlertAction") actionName)
+  [ExpressionStatement $ BinOp (VarDecl (PointerType alertTypeName) actionName)
     Assign
     (constructActionExpr buttonName handlerName),
   addActionStatement actionName]
 
 constructActionExpr :: String -> String -> ObjcExpression
 constructActionExpr buttonName handlerName = MethodCall
-  (Var "UIAlertAction")
+  (Var alertTypeName)
   actionConstructorMethod
   [localizedStringExpr buttonName,
   Var "UIAlertActionStyleDefault",
@@ -128,10 +129,24 @@ addActionStatement :: String -> ObjcStatement
 addActionStatement actionName = ExpressionStatement $
   MethodCall (Var "alert") addActionMethod [Var actionName]
   
-addActionMethod :: CalledMethod 
-addActionMethod = LibMethod {
-  libNameIntro = "add",
-  libParams = ["Action"]
+handlerBlock :: String -> ObjcExpression
+handlerBlock handlerName = VoidBlock
+  [BlockParam {
+    blockParamType = PointerType alertTypeName,
+    blockParamName = "action"
+  }]
+  [IfBlock
+    (Var handlerName)
+    [ExpressionStatement $ CFunctionCall handlerName []]]
+ 
+--------------------------------------------------------------------------------
+--------------------------ALERT LIBRARY METHODS---------------------------------
+--------------------------------------------------------------------------------
+
+alertControllerConstructor :: CalledMethod
+alertControllerConstructor = LibMethod {
+  libNameIntro = "alertControllerWith",
+  libParams = ["Title", "message", "preferredStyle"]
 }
 
 actionConstructorMethod :: CalledMethod 
@@ -140,18 +155,25 @@ actionConstructorMethod = LibMethod {
   libParams = ["Title", "style", "handler"]
 }
 
-handlerBlock :: String -> ObjcExpression
-handlerBlock handlerName = VoidBlock
-  [BlockParam {
-    blockParamType = PointerType "UIAlertAction",
-    blockParamName = "action"
-  }]
-  [IfBlock
-    (Var handlerName)
-    [ExpressionStatement $ CFunctionCall handlerName []]]
- 
+addActionMethod :: CalledMethod 
+addActionMethod = LibMethod {
+  libNameIntro = "add",
+  libParams = ["Action"]
+}
+
+--------------------------------------------------------------------------------
+--------------------------TYPE KEYWORDS-----------------------------------------
+--------------------------------------------------------------------------------
+
 originalAlertTypeName :: String
 originalAlertTypeName = "UIAlertController"
+
+alertTypeName :: String
+alertTypeName = "UIAlertAction"
+
+--------------------------------------------------------------------------------
+--------------------------SORT HELPER-------------------------------------------
+--------------------------------------------------------------------------------
 
 sortAlertsByName :: OWAAlert -> OWAAlert -> Ordering
 sortAlertsByName alert1 alert2 = alertName alert1 `compare` alertName alert2
