@@ -41,7 +41,7 @@ parseColorsFromFile fPath = do
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> Either ParseError [Maybe OWAColor]
-parseColorContents = parse (many colorParser) ""
+parseColorContents = parse (colorParser `endBy` spaces) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------

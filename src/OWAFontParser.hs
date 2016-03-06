@@ -28,7 +28,7 @@ type FontAttrMap = Map.Map FontAttr FontVal
 --------------------ENTRY METHODS------------------------------------------
 ---------------------------------------------------------------------------
 
--- | 'parseFontsFromFile' takes a file, reads its contens,
+-- | 'parseFontsFromFile' takes a file, reads its contents,
 -- and returns a list of fonts contained in the file.
 parseFontsFromFile :: FilePath -> IO [OWAFont]
 parseFontsFromFile fPath = do
@@ -37,7 +37,7 @@ parseFontsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents = parse (many fontParser) ""
+parseFontContents = parse (fontParser `endBy` spaces) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------

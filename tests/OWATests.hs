@@ -1,5 +1,6 @@
 module Main where
 
+import AlertParseTests
 import AppDirectoryTests
 import ColorObjcTests
 import ColorParseTests
@@ -21,5 +22,6 @@ main = do
   runFontParseTests currentFilePath
   runFontObjcTests
   runFontPrintTests currentFilePath
+  runAlertParseTests currentFilePath
   runObjcPrintTests currentFilePath
   runV010IntegrationTests currentFilePath

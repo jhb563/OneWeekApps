@@ -6,6 +6,6 @@ Alert escapedQuotes
 Alert otherEscapeCharacters
   Title "2TITLE"
   YesButton "..."
-  NoButton "Whyyyyy"
+  NoButton "Whyyyy"
   Message "!./*&()[]15hasdf123\n\r\t"
 

@@ -92,7 +92,7 @@ blankMessage = OWAAlert {
 
 escapedQuotes :: OWAAlert
 escapedQuotes = OWAAlert {
-  alertName = "escaptedQuotes",
+  alertName = "escapedQuotes",
   alertTitle = "KEY_TITLE",
   alertMessage = "This message has \\\"quotes\\\" in it",
   alertButtonFormat = NeutralButton "\\\"Hi\\\""

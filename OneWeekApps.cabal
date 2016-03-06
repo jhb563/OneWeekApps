@@ -29,6 +29,7 @@ library
                        OWAFontParser,
                        OWAFont,
                        OWAAlert,
+                       OWAAlertParser,
                        OWAObjcAbSyn,
                        OWAColorObjc,
                        OWAFontObjc,
