@@ -1,0 +1,12 @@
+Alert twoButtonAlert
+  Title "QUIT_APP_TITLE"
+  Message "SHOULD_QUIT_APP"
+  YesButton "YES"
+  NoButton "NO"
+
+Alert twoButtonsNoKeys
+  Message "Do you want to quit the app?"
+  NoButton "No"
+  YesButton "Yes"
+  Title "Quit App?"
+

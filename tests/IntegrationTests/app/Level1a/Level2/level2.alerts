@@ -1,0 +1,16 @@
+
+Alert myFirstAlert
+  Title "Error"
+  Message "You have encountered a fatal error. Goodbye"
+  DismissButton "OK"
+
+
+Alert secondAlert
+  Title "Game Over"
+  Message "Sorry, you appear to have lost."
+  NeutralButton "That Sucks"
+
+Alert keyAlert
+  Title "KEY_ALERT_TITLE"
+  Message "KEY_ALERT_MESSAGE"
+  NeutralButton "KEY_ALERT_BUTTON_TITLE"

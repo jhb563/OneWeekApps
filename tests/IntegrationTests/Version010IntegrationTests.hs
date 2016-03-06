@@ -20,6 +20,7 @@ runV010IntegrationTests currentDirectory = do
     . afterAll_ (removeProducedFiles testDirectory) $ do
       checkColorsFiles testDirectory
       checkFontsFiles testDirectory
+      checkAlertsFiles testDirectory
 
 checkColorsFiles :: FilePath -> Spec
 checkColorsFiles currentDirectory = do
@@ -27,7 +28,7 @@ checkColorsFiles currentDirectory = do
   let producedColorImplementationFilePath = currentDirectory ++ colorImplementationFileExtension
   let testColorHeaderFilePath = currentDirectory ++ colorHeaderTestExtension
   let testColorImplementationFilePath = currentDirectory ++ colorImplementationTestExtension
-  describe "Compare Produced Colors File" $ do
+  describe "Compare Produced Colors Files" $ do
     it "Header File Should Match" $
       producedColorHeaderFilePath `filesShouldMatch` testColorHeaderFilePath
 
@@ -40,12 +41,25 @@ checkFontsFiles currentDirectory = do
   let producedFontImplementationFilePath = currentDirectory ++ fontImplementationFileExtension
   let testFontHeaderFilePath = currentDirectory ++ fontHeaderTestExtension
   let testFontImplementationFilePath = currentDirectory ++ fontImplementationTestExtension
-  describe "Compare Produced Fonts File" $ do
+  describe "Compare Produced Fonts Files" $ do
     it "Header File Should Match" $
       producedFontHeaderFilePath `filesShouldMatch` testFontHeaderFilePath
 
     it "Implementation File Should Match" $
       producedFontImplementationFilePath `filesShouldMatch` testFontImplementationFilePath
+
+checkAlertsFiles :: FilePath -> Spec
+checkAlertsFiles currentDirectory = do
+  let producedAlertHeaderFilePath = currentDirectory ++ alertHeaderFileExtension
+  let producedAlertImplementationFilePath = currentDirectory ++ alertImplementationFileExtension
+  let testAlertHeaderFilePath = currentDirectory ++ alertHeaderTestExtension
+  let testAlertImplementationFilePath = currentDirectory ++ alertImplementationTestExtension
+  describe "Compare Produced Alerts Files" $ do
+    it "Header File Should Match" $
+      producedAlertHeaderFilePath `filesShouldMatch` testAlertHeaderFilePath
+
+    it "Implementation File Should Match" $
+      producedAlertImplementationFilePath `filesShouldMatch` testAlertImplementationFilePath
 
 removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles currentDirectory = removeFiles $ map (currentDirectory ++) producedFiles
@@ -77,6 +91,19 @@ fontHeaderTestExtension = "/app/UIFont+MyAppFonts.h.test"
 fontImplementationTestExtension :: String
 fontImplementationTestExtension = "/app/UIFont+MyAppFonts.m.test"
 
+alertHeaderFileExtension :: String
+alertHeaderFileExtension = "/app/UIAlertController+MyAppAlerts.h"
+
+alertImplementationFileExtension :: String
+alertImplementationFileExtension = "/app/UIAlertController+MyAppAlerts.m"
+
+alertHeaderTestExtension :: String
+alertHeaderTestExtension = "/app/UIAlertController+MyAppAlerts.h.test"
+
+alertImplementationTestExtension :: String
+alertImplementationTestExtension = "/app/UIAlertController+MyAppAlerts.m.test"
+
 producedFiles :: [FilePath]
 producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension,
-  fontHeaderFileExtension, fontImplementationFileExtension]
+  fontHeaderFileExtension, fontImplementationFileExtension,
+  alertHeaderFileExtension, alertImplementationFileExtension]
