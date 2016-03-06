@@ -16,6 +16,10 @@ import ObjcUtil
 import OWAColor
 import OWAObjcAbSyn
 
+--------------------------------------------------------------------------------
+--------------------------ENTRY METHODS-----------------------------------------
+--------------------------------------------------------------------------------
+
 -- | 'objcHeaderFromColors' takes a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- header file in Objective C
@@ -36,6 +40,10 @@ objcImplementationFromColors categoryName colors = ObjcFile
   CategoryImplementationSection $ colorCategoryFromColors categoryName sortedColors]
     where sortedColors = sortBy sortColorsByName colors
 
+--------------------------------------------------------------------------------
+--------------------------CATEGORY CONSTRUCTION---------------------------------
+--------------------------------------------------------------------------------
+
 colorCategoryFromColors :: String -> [OWAColor] -> Category
 colorCategoryFromColors categoryName = categoryFromNamesAndMethodBuilder
   originalColorTypeName categoryName methodForColor 
@@ -44,13 +52,13 @@ methodForColor :: OWAColor -> ObjcMethod
 methodForColor color = ObjcMethod {
   isStatic = True,
   nameIntro = colorName color,
-  returnType = PointerType "UIColor",
+  returnType = PointerType originalColorTypeName,
   params = [],
   methodBody = [ReturnStatement $ returnExpressionForColor color]
 }
 
 returnExpressionForColor :: OWAColor -> ObjcExpression
-returnExpressionForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod 
+returnExpressionForColor color = MethodCall (Var originalColorTypeName) colorWithRGBAMethod 
   [FloatLit $ red color,
   FloatLit $ green color,
   FloatLit $ blue color,
@@ -62,8 +70,16 @@ colorWithRGBAMethod = LibMethod {
   libParams = ["Red", "green", "blue", "alpha"]
 }
 
+--------------------------------------------------------------------------------
+--------------------------TYPE KEYWORDS-----------------------------------------
+--------------------------------------------------------------------------------
+
 originalColorTypeName :: String
 originalColorTypeName = "UIColor"
+
+--------------------------------------------------------------------------------
+--------------------------SORT HELPER-------------------------------------------
+--------------------------------------------------------------------------------
 
 sortColorsByName :: OWAColor -> OWAColor -> Ordering
 sortColorsByName color1 color2 = colorName color1 `compare` colorName color2

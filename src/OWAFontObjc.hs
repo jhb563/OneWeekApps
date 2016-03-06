@@ -16,6 +16,10 @@ import ObjcUtil
 import OWAFont
 import OWAObjcAbSyn
 
+--------------------------------------------------------------------------------
+--------------------------ENTRY METHODS-----------------------------------------
+--------------------------------------------------------------------------------
+
 -- | 'objcHeaderFromFonts' takes a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
 -- header file in Objective C
@@ -36,6 +40,10 @@ objcImplementationFromFonts categoryName fonts = ObjcFile
   CategoryImplementationSection $ fontCategoryFromFonts categoryName sortedFonts]
     where sortedFonts = sortBy sortFontsByName fonts
 
+--------------------------------------------------------------------------------
+--------------------------CATEGORY CONSTRUCTION---------------------------------
+--------------------------------------------------------------------------------
+
 fontCategoryFromFonts :: String -> [OWAFont] -> Category
 fontCategoryFromFonts categoryName = categoryFromNamesAndMethodBuilder
   originalFontTypeName categoryName methodForFont
@@ -50,7 +58,7 @@ methodForFont font = ObjcMethod {
 }
 
 returnExpressionForFont :: OWAFont -> ObjcExpression
-returnExpressionForFont font = MethodCall (Var "UIFont") fontWithNameMethod 
+returnExpressionForFont font = MethodCall (Var originalFontTypeName) fontWithNameMethod 
   [StringLit $ fullNameForFont font,
   FloatLit $ fontSize font]
 
@@ -66,8 +74,16 @@ fontWithNameMethod = LibMethod {
   libParams = ["Name", "size"]
 }
 
+--------------------------------------------------------------------------------
+--------------------------TYPE KEYWORDS-----------------------------------------
+--------------------------------------------------------------------------------
+
 originalFontTypeName :: String
 originalFontTypeName = "UIFont"
+
+--------------------------------------------------------------------------------
+--------------------------SORT HELPER-------------------------------------------
+--------------------------------------------------------------------------------
 
 sortFontsByName :: OWAFont -> OWAFont -> Ordering
 sortFontsByName font1 font2 = fontName font1 `compare` fontName font2
