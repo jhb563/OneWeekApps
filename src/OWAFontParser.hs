@@ -37,7 +37,7 @@ parseFontsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents = parse (many fontParser) ""
+parseFontContents = parse (fontParser `endBy` spaces) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
