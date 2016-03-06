@@ -69,7 +69,6 @@ data CalledMethod = UserMethod ObjcMethod |
     libNameIntro :: String,
     libParams :: [String]
   } deriving (Show, Eq)
-    
 
 -- | 'ObjcType' divides our possible types in Objective C as either "simple"
 -- or "pointer" types. The most clear reason we want this distinction is to
