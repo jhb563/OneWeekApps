@@ -10,6 +10,9 @@ module OWALib (
   runOWA
 ) where
 
+import OWAAlert
+import OWAAlertObjc
+import OWAAlertParser
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
@@ -29,6 +32,7 @@ runOWA filePath = do
     Just appDirectory -> do
       produceColorsFiles appDirectory
       produceFontsFiles appDirectory
+      produceAlertsFiles appDirectory
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------
@@ -54,7 +58,7 @@ colorImplementationFileExtension :: FilePath
 colorImplementationFileExtension = "/UIColor+MyAppColors.m"
 
 ---------------------------------------------------------------------------
-------------------------PRODUCING COLORS FILES-----------------------------
+------------------------PRODUCING FONTS FILES------------------------------
 ---------------------------------------------------------------------------
 
 produceFontsFiles :: FilePath -> IO ()
@@ -75,3 +79,26 @@ fontHeaderFileExtension = "/UIFont+MyAppFonts.h"
 
 fontImplementationFileExtension :: FilePath
 fontImplementationFileExtension = "/UIFont+MyAppFonts.m"
+
+---------------------------------------------------------------------------
+------------------------PRODUCING ALERTS FILES-----------------------------
+---------------------------------------------------------------------------
+
+produceAlertsFiles :: FilePath -> IO ()
+produceAlertsFiles appDirectory = do
+  alertFiles <- findAlertsFiles appDirectory
+  listOfAlertLists <- mapM parseAlertsFromFile alertFiles
+  let alerts = concat listOfAlertLists
+  let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
+  let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
+  printStructureToFile alertHeaderFileStructure (appDirectory ++ alertHeaderFileExtension)
+  printStructureToFile alertMFileStructure (appDirectory ++ alertImplmentationFileExtension)
+
+alertCategoryName :: String
+alertCategoryName = "MyAppAlerts"
+
+alertHeaderFileExtension :: FilePath
+alertHeaderFileExtension = "/UIAlertController+MyAppAlerts.h"
+
+alertImplmentationFileExtension :: FilePath
+alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.m"

@@ -1,0 +1,11 @@
+Alert noTitleAlert
+  DismissButton "Wut"
+  Message "NO_TITLE_MESSAGE"
+
+Alert noMessageAlert
+  Title "YOU_WIN"
+  DismissButton "GREAT"
+
+Alert blankMessage
+  NeutralButton "NOTHING"
+
