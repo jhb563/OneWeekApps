@@ -64,6 +64,10 @@ returnExpressionForColor color = MethodCall (Var originalColorTypeName) colorWit
   FloatLit $ blue color,
   FloatLit $ alpha color]
 
+--------------------------------------------------------------------------------
+-------------------------LIBRARY METHOD-----------------------------------------
+--------------------------------------------------------------------------------
+
 colorWithRGBAMethod :: CalledMethod 
 colorWithRGBAMethod = LibMethod {
   libNameIntro = "colorWith",

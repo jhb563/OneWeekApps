@@ -101,14 +101,10 @@ statementDoc (IfBlock condition statements) = indentBlock
   (vcat $ map statementDoc statements)
   
 expressionDoc :: ObjcExpression -> Doc
-expressionDoc (MethodCall callingExp (UserMethod method) args) = brackets $
-  expressionDoc callingExp <+>
-  text (nameIntro method) <>
-  hsep (zipWith (curry argDoc) (params method) args)
-expressionDoc (MethodCall callingExp (libMethod) args) = brackets $
-  expressionDoc callingExp <+>
-  text (libNameIntro libMethod) <>
-  hsep (zipWith (curry libArgDoc) (libParams libMethod) args)
+expressionDoc (MethodCall callingExp (UserMethod method) args) = methodCallDoc
+  callingExp (nameIntro method) (map paramTitle $ params method) args
+expressionDoc (MethodCall callingExp libMethod args) = methodCallDoc
+  callingExp (libNameIntro libMethod) (libParams libMethod) args
 expressionDoc (CFunctionCall funcName exprs) = text funcName <>
   parens (hcat (punctuate (text ", ") (map expressionDoc exprs)))
 expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
@@ -123,13 +119,14 @@ expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 
-argDoc :: (ParamDef, ObjcExpression) -> Doc
-argDoc (paramDef, objcExp) = text (paramTitle paramDef) <>
-  colon <>
-  expressionDoc objcExp
+methodCallDoc :: ObjcExpression -> String -> [String] -> [ObjcExpression] -> Doc
+methodCallDoc callingExp nameIntro titles paramExps = brackets $
+  expressionDoc callingExp <+>
+  text nameIntro <>
+  hsep (zipWith argDoc titles paramExps)
 
-libArgDoc :: (String, ObjcExpression) -> Doc
-libArgDoc (title, objcExp) = text title <> colon <> expressionDoc objcExp
+argDoc :: String -> ObjcExpression -> Doc
+argDoc title objcExp = text title <> colon <> expressionDoc objcExp
 
 staticSignifier :: Bool -> Doc
 staticSignifier isStatic = if isStatic then text "+" else text "-"

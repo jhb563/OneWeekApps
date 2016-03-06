@@ -68,6 +68,10 @@ fullNameForFont font = case fontStyles font of
   styles -> fontFamily font ++ ('-':styleList)
     where styleList = foldl (\str style -> str ++ show style) "" styles
 
+--------------------------------------------------------------------------------
+--------------------------LIBRARY METHOD----------------------------------------
+--------------------------------------------------------------------------------
+
 fontWithNameMethod :: CalledMethod 
 fontWithNameMethod = LibMethod {
   libNameIntro = "fontWith",
