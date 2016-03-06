@@ -1,4 +1,4 @@
--- OWAAlertsObjc will expose the methods
+-- OWAAlertObjc will expose the methods
 -- objcHeaderFromAlerts :: String -> [OWAAlert] -> ObjcFile
 -- objcImplementationFromAlerts :: String -> [OWAAlert] -> ObjcFile
 -- which each take a category name and a list of alerts and return a
@@ -16,6 +16,8 @@ module AlertPrintTests (
   runAlertPrintTests
 ) where
 
+import OWAAlertObjc
+import OWAObjcAbSyn
 import OWAObjcPrint
 import TestAlerts
 import TestUtil
@@ -59,8 +61,8 @@ createResultsFiles outputDirectory = do
 removeResultsFiles :: FilePath -> IO ()
 removeResultsFiles outputDirectory = removeFiles (map (outputDirectory ++) resultsFiles)
 
-testFilesStructures :: [ObjcFile]
-testFilesStructures = [objcHeaderFromAlerts "EmptyCategory" [],
+testFileStructures :: [ObjcFile]
+testFileStructures = [objcHeaderFromAlerts "EmptyCategory" [],
   objcImplementationFromAlerts "EmptyCategory" [],
   objcHeaderFromAlerts "MyAppAlerts" allTestAlerts,
   objcImplementationFromAlerts "MyAppAlerts" allTestAlerts]
