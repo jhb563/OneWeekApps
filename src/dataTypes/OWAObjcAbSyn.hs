@@ -25,6 +25,7 @@ data ObjcFile = ObjcFile [FileSection] deriving (Show, Eq)
 data FileSection = 
   BlockCommentSection [String] |
   ImportsSection [Import] |
+  ForwardDeclarationSection [ForwardDeclaration] |
   CategoryInterfaceSection Category |
   CategoryImplementationSection Category 
   deriving (Show, Eq)
@@ -37,6 +38,12 @@ data Import =
   FileImport String
   deriving (Show, Eq)
 
+-- | 'ForwardDeclaration' represents a statement declaring something before
+-- the main body of a file, such as a typedef, class, or protocol
+data ForwardDeclaration =
+  TypedefDecl ObjcType Identifier [ObjcType]
+  deriving (Show, Eq)
+
 -- | 'Category' stores the structure of an Objective C class extension.
 -- For now, this structure only allows extending the structure with
 -- methods, and not properties.
@@ -46,9 +53,7 @@ data Category = Category {
   categoryMethods :: [ObjcMethod]
 } deriving (Show, Eq)
 
--- | 'ObjcMethod' stores the structure of a particular method. Methods
--- for which the implementation is unimportant or unknown can use an empty
--- list for the methodBody.
+-- | 'ObjcMethod' stores the structure of a particular method. 
 data ObjcMethod = ObjcMethod {
   isStatic :: Bool,
   nameIntro :: String,
@@ -73,16 +78,24 @@ data ParamDef = ParamDef {
   paramName :: String
 } deriving (Show, Eq)
 
--- | 'ObjcStatement' is a single unit of a method implementation. For now,
--- the only type of statement we need is a return statement, but there will
--- be more in the future. 
-data ObjcStatement = ReturnStatement ObjcExpression deriving (Show, Eq)
+-- | 'ObjcStatement' is a single unit of a method implementation.
+data ObjcStatement =
+  ReturnStatement ObjcExpression |
+  ExpressionStatement ObjcExpression
+  deriving (Show, Eq)
 
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This
 -- will ultimately include more complicated types of expressions. 
 data ObjcExpression = 
   MethodCall ObjcExpression ObjcMethod [ObjcExpression] |
+  CFunctionCall String [ObjcExpression] |
+  BinOp ObjcExpression Operator ObjcExpression |
   Var Identifier |
+  VarDecl ObjcType Identifier |
   StringLit String |
   FloatLit Float
+  deriving (Show, Eq)
+
+data Operator = 
+  Assign
   deriving (Show, Eq)

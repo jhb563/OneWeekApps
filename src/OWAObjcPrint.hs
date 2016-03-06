@@ -36,6 +36,7 @@ docFromFile (ObjcFile sections) = vcat (map sectionDoc sections)
 sectionDoc :: FileSection -> Doc
 sectionDoc (BlockCommentSection commentLines) = vcat (map commentDoc commentLines) PPrint.<$> empty
 sectionDoc (ImportsSection includes) = vcat (map includeDoc includes) PPrint.<$> empty
+sectionDoc (ForwardDeclarationSection forwardDecls) = vcat (map forwardDeclDoc forwardDecls) PPrint.<$> empty
 sectionDoc (CategoryInterfaceSection category) = categoryInterfaceDoc category
 sectionDoc (CategoryImplementationSection category) = categoryImplementationDoc category
 
@@ -46,6 +47,13 @@ commentDoc str = text "//" <+> text str
 includeDoc :: Import -> Doc
 includeDoc (ModuleImport modName) = text "@import" <+> text modName <> semi
 includeDoc (FileImport fileName) = text "#import \"" <> text fileName <> text "\""
+
+forwardDeclDoc :: ForwardDeclaration -> Doc
+forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
+  typeDoc returnType <+>
+  parens (text $ '^':name) <>
+  parens (hcat $ punctuate (text ", ") (map typeDoc paramTypes)) <>
+  semi
 
 categoryInterfaceDoc :: Category -> Doc
 categoryInterfaceDoc category = text "@interface" <+> 
@@ -68,7 +76,7 @@ methodHeaderDoc :: ObjcMethod -> Doc
 methodHeaderDoc method = staticSignifier (isStatic method) <+>
   parens (typeDoc $ returnType method) <>
   text (nameIntro method) <>
-  hcat (map headerArgDef $ params method)
+  hcat (punctuate space (map headerArgDef $ params method))
 
 fullMethodDoc :: ObjcMethod -> Doc
 fullMethodDoc method = indentBlock (methodHeaderDoc method) body
@@ -84,13 +92,20 @@ statementDoc :: ObjcStatement -> Doc
 statementDoc (ReturnStatement objcExpression) = text "return" <+>
   expressionDoc objcExpression <>
   semi
-
+statementDoc (ExpressionStatement objcExpression) = expressionDoc objcExpression <> semi
+  
 expressionDoc :: ObjcExpression -> Doc
 expressionDoc (MethodCall callingExp method args) = brackets $
   expressionDoc callingExp <+>
   text (nameIntro method) <>
   hsep (zipWith (curry argDoc) (params method) args)
+expressionDoc (CFunctionCall funcName exprs) = text funcName <>
+  parens (hcat (punctuate (text ", ") (map expressionDoc exprs)))
+expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
+  opDoc op <+>
+  expressionDoc expr2
 expressionDoc (Var varName) = text varName
+expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 
@@ -105,6 +120,9 @@ staticSignifier isStatic = if isStatic then text "+" else text "-"
 typeDoc :: ObjcType -> Doc
 typeDoc (PointerType typeName) = text typeName <> text "*"
 typeDoc (SimpleType typeName) = text typeName
+
+opDoc :: Operator -> Doc
+opDoc Assign = equals
 
 -------------------------------------------------------------------------------
 ---------------------------Pretty Print Formatting Helpers --------------------

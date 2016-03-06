@@ -11,7 +11,7 @@
 @implementation UIAlertController (MyAppAlerts)
 
 + (UIAlertController*)blankMessageWithHandler:(AlertHandler)handler {
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"", nil) message:NSLocalizedString(@"", nil) preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"NOTHING", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
     if (handler) {
       handler();
@@ -22,7 +22,7 @@
 }
 
 + (UIAlertController*)escapedQuotesWithHandler:(AlertHandler)handler {
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"KEY_TITLE" message:NSLocalizedString(@"This message has \"quotes\" in it", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"KEY_TITLE", nil) message:NSLocalizedString(@"This message has \"quotes\" in it", nil) preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"\"Hi\"", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
     if (handler) {
       handler();
@@ -51,14 +51,14 @@
 }
 
 + (UIAlertController*)noMessageAlert {
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"YOU_WIN", nil) message:nil  preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"YOU_WIN", nil) message:NSLocalizedString(@"", nil) preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"GREAT", nil) style:UIAlertActionStyleDefault handler:nil];
   [alert addAction:dismissAction];
   return alert;
 }
 
 + (UIAlertController*)noTitleAlert {
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"NO_TITLE_MESSAGE", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"", nil) message:NSLocalizedString(@"NO_TITLE_MESSAGE", nil) preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction* dismissAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Wut", nil) style:UIAlertActionStyleDefault handler:nil];
   [alert addAction:dismissAction];
   return alert;

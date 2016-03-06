@@ -44,7 +44,7 @@ methodForFont :: OWAFont -> ObjcMethod
 methodForFont font = ObjcMethod {
   isStatic = True,
   nameIntro = fontName font,
-  returnType = PointerType "UIFont",
+  returnType = PointerType originalFontTypeName,
   params = [],
   methodBody = [ReturnStatement $ returnExpressionForFont font]
 }
