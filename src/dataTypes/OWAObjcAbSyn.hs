@@ -78,10 +78,17 @@ data ParamDef = ParamDef {
   paramName :: String
 } deriving (Show, Eq)
 
+-- | 'BlockParam' is similar to ParamDef, but does not have a title
+data BlockParam = BlockParam {
+  blockParamType :: ObjcType,
+  blockParamName :: String
+} deriving (Show,Eq)
+
 -- | 'ObjcStatement' is a single unit of a method implementation.
 data ObjcStatement =
   ReturnStatement ObjcExpression |
-  ExpressionStatement ObjcExpression
+  ExpressionStatement ObjcExpression |
+  IfBlock ObjcExpression [ObjcStatement]
   deriving (Show, Eq)
 
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This
@@ -90,12 +97,14 @@ data ObjcExpression =
   MethodCall ObjcExpression ObjcMethod [ObjcExpression] |
   CFunctionCall String [ObjcExpression] |
   BinOp ObjcExpression Operator ObjcExpression |
+  VoidBlock [BlockParam] [ObjcStatement] |
   Var Identifier |
   VarDecl ObjcType Identifier |
   StringLit String |
   FloatLit Float
   deriving (Show, Eq)
 
+-- | 'Operator' represents operators such as +,-,*,= etc.
 data Operator = 
   Assign
   deriving (Show, Eq)

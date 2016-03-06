@@ -88,11 +88,17 @@ headerArgDef paramDef = text (paramTitle paramDef) <>
   parens (typeDoc $ paramType paramDef) <>
   text (paramName paramDef)
 
+blockParamDoc :: BlockParam -> Doc
+blockParamDoc param = typeDoc (blockParamType param) <+> text (blockParamName param)
+
 statementDoc :: ObjcStatement -> Doc
 statementDoc (ReturnStatement objcExpression) = text "return" <+>
   expressionDoc objcExpression <>
   semi
 statementDoc (ExpressionStatement objcExpression) = expressionDoc objcExpression <> semi
+statementDoc (IfBlock condition statements) = indentBlock
+  (text "if" <+> parens (expressionDoc condition))
+  (vcat $ map statementDoc statements)
   
 expressionDoc :: ObjcExpression -> Doc
 expressionDoc (MethodCall callingExp method args) = brackets $
@@ -104,6 +110,10 @@ expressionDoc (CFunctionCall funcName exprs) = text funcName <>
 expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
   opDoc op <+>
   expressionDoc expr2
+expressionDoc (VoidBlock params statements) = indentBlock 
+  (text "^" <>
+    parens (hcat $ punctuate (text ", ") (map blockParamDoc params)))
+  (vcat $ map statementDoc statements)
 expressionDoc (Var varName) = text varName
 expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
