@@ -95,10 +95,10 @@ produceAlertsFiles appDirectory = do
   printStructureToFile alertMFileStructure (appDirectory ++ alertImplmentationFileExtension)
 
 alertCategoryName :: String
-alertCategoryName = "UIAlertController"
+alertCategoryName = "MyAppAlerts"
 
 alertHeaderFileExtension :: FilePath
 alertHeaderFileExtension = "/UIAlertController+MyAppAlerts.h"
 
 alertImplmentationFileExtension :: FilePath
-alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.h"
+alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.m"
