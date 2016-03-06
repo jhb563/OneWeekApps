@@ -101,10 +101,14 @@ statementDoc (IfBlock condition statements) = indentBlock
   (vcat $ map statementDoc statements)
   
 expressionDoc :: ObjcExpression -> Doc
-expressionDoc (MethodCall callingExp method args) = brackets $
+expressionDoc (MethodCall callingExp (UserMethod method) args) = brackets $
   expressionDoc callingExp <+>
   text (nameIntro method) <>
   hsep (zipWith (curry argDoc) (params method) args)
+expressionDoc (MethodCall callingExp (libMethod) args) = brackets $
+  expressionDoc callingExp <+>
+  text (libNameIntro libMethod) <>
+  hsep (zipWith (curry libArgDoc) (libParams libMethod) args)
 expressionDoc (CFunctionCall funcName exprs) = text funcName <>
   parens (hcat (punctuate (text ", ") (map expressionDoc exprs)))
 expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
@@ -123,6 +127,9 @@ argDoc :: (ParamDef, ObjcExpression) -> Doc
 argDoc (paramDef, objcExp) = text (paramTitle paramDef) <>
   colon <>
   expressionDoc objcExp
+
+libArgDoc :: (String, ObjcExpression) -> Doc
+libArgDoc (title, objcExp) = text title <> colon <> expressionDoc objcExp
 
 staticSignifier :: Bool -> Doc
 staticSignifier isStatic = if isStatic then text "+" else text "-"

@@ -56,33 +56,10 @@ returnExpressionForColor color = MethodCall (Var "UIColor") colorWithRGBAMethod
   FloatLit $ blue color,
   FloatLit $ alpha color]
 
-colorWithRGBAMethod :: ObjcMethod
-colorWithRGBAMethod = ObjcMethod {
-  isStatic = True,
-  nameIntro = "colorWith",
-  returnType = PointerType "UIColor",
-  params = 
-    [ParamDef {
-      paramTitle = "Red",
-      paramType = SimpleType "CGFloat",
-      paramName = "red"
-    }, 
-    ParamDef {
-      paramTitle = "green",
-      paramType = SimpleType "CGFloat",
-      paramName = "green"
-    }, 
-    ParamDef {
-      paramTitle = "blue",
-      paramType = SimpleType "CGFloat",
-      paramName = "blue"
-    }, 
-    ParamDef {
-      paramTitle = "alpha",
-      paramType = SimpleType "CGFloat",
-      paramName = "alpha"
-    }],
-  methodBody = []
+colorWithRGBAMethod :: CalledMethod 
+colorWithRGBAMethod = LibMethod {
+  libNameIntro = "colorWith",
+  libParams = ["Red", "green", "blue", "alpha"]
 }
 
 originalColorTypeName :: String

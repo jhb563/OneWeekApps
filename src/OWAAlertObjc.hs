@@ -90,25 +90,10 @@ constructorAssignment alert = ExpressionStatement $ BinOp
     localizedStringExpr $ alertMessage alert,
     Var "UIAlertControllerStyleAlert"])
 
-alertControllerConstructor :: ObjcMethod
-alertControllerConstructor = ObjcMethod {
-  isStatic = True,
-  nameIntro = "alertControllerWith",
-  returnType = PointerType "UIAlertController",
-  params = [ParamDef {
-    paramTitle = "Title",
-    paramType = PointerType "NSString",
-    paramName = "title"
-  }, ParamDef {
-    paramTitle = "message",
-    paramType = PointerType "NSString",
-    paramName = "message"
-  }, ParamDef {
-    paramTitle = "preferredStyle",
-    paramType = SimpleType "",
-    paramName = "style"
-  }],
-  methodBody = []
+alertControllerConstructor :: CalledMethod
+alertControllerConstructor = LibMethod {
+  libNameIntro = "alertControllerWith",
+  libParams = ["Title", "message", "preferredStyle"]
 }
 
 localizedStringExpr :: String -> ObjcExpression
@@ -143,38 +128,16 @@ addActionStatement :: String -> ObjcStatement
 addActionStatement actionName = ExpressionStatement $
   MethodCall (Var "alert") addActionMethod [Var actionName]
   
-addActionMethod :: ObjcMethod
-addActionMethod = ObjcMethod {
-  isStatic = False,
-  nameIntro = "add",
-  returnType = SimpleType "void",
-  params = [ParamDef {
-    paramTitle = "Action",
-    paramType = PointerType "UIAlertAction",
-    paramName = "action"
-  }],
-  methodBody = []
+addActionMethod :: CalledMethod 
+addActionMethod = LibMethod {
+  libNameIntro = "add",
+  libParams = ["Action"]
 }
 
-actionConstructorMethod :: ObjcMethod
-actionConstructorMethod = ObjcMethod {
-  isStatic = True,
-  nameIntro = "actionWith",
-  returnType = PointerType "UIAlertAction",
-  params = [ParamDef {
-    paramTitle = "Title",
-    paramType = PointerType "NSString",
-    paramName = "title"
-  }, ParamDef {
-    paramTitle = "style",
-    paramType = SimpleType "UIAlertActionStyle",
-    paramName = "style"
-  }, ParamDef {
-    paramTitle = "handler",
-    paramType = SimpleType "AlertHandler",
-    paramName = "handler"
-  }],
-  methodBody = []
+actionConstructorMethod :: CalledMethod 
+actionConstructorMethod = LibMethod {
+  libNameIntro = "actionWith",
+  libParams = ["Title", "style", "handler"]
 }
 
 handlerBlock :: String -> ObjcExpression

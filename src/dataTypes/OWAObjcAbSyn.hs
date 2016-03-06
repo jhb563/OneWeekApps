@@ -62,6 +62,15 @@ data ObjcMethod = ObjcMethod {
   methodBody :: [ObjcStatement]
 } deriving (Show, Eq)
 
+-- | 'CalledMethod' stores either an ObjcMethod which we have defined,
+-- or a Library method whose implementation is unimportant.
+data CalledMethod = UserMethod ObjcMethod |
+  LibMethod {
+    libNameIntro :: String,
+    libParams :: [String]
+  } deriving (Show, Eq)
+    
+
 -- | 'ObjcType' divides our possible types in Objective C as either "simple"
 -- or "pointer" types. The most clear reason we want this distinction is to
 -- avoid having to store asterisks as part of a type's name.
@@ -94,7 +103,7 @@ data ObjcStatement =
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This
 -- will ultimately include more complicated types of expressions. 
 data ObjcExpression = 
-  MethodCall ObjcExpression ObjcMethod [ObjcExpression] |
+  MethodCall ObjcExpression CalledMethod [ObjcExpression] |
   CFunctionCall String [ObjcExpression] |
   BinOp ObjcExpression Operator ObjcExpression |
   VoidBlock [BlockParam] [ObjcStatement] |

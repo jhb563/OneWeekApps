@@ -60,23 +60,10 @@ fullNameForFont font = case fontStyles font of
   styles -> fontFamily font ++ ('-':styleList)
     where styleList = foldl (\str style -> str ++ show style) "" styles
 
-fontWithNameMethod :: ObjcMethod
-fontWithNameMethod = ObjcMethod {
-  isStatic = True,
-  nameIntro = "fontWith",
-  returnType = PointerType "UIFont",
-  params = 
-    [ParamDef {
-      paramTitle = "Name",
-      paramType = PointerType "NSString",
-      paramName = "name"
-    },
-    ParamDef {
-      paramTitle = "size",
-      paramType = SimpleType "CGFloat",
-      paramName = "size"
-    }],
-  methodBody = []
+fontWithNameMethod :: CalledMethod 
+fontWithNameMethod = LibMethod {
+  libNameIntro = "fontWith",
+  libParams = ["Name", "size"]
 }
 
 originalFontTypeName :: String
