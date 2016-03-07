@@ -33,6 +33,7 @@ library
                        OWAAlert,
                        OWAAlertParser,
                        OWAAlertObjc,
+                       OWAError,
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,
@@ -65,6 +66,7 @@ test-suite tests
                     tests/ColorTests/ColorParseTests,
                     tests/FontTests,
                     tests/AlertTests,
+                    tests/ErrorTests,
                     tests/ObjcPrintTests,
                     tests/IntegrationTests
   build-depends: base,
