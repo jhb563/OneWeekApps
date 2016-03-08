@@ -38,7 +38,7 @@ authError :: OWAError
 authError = OWAError {
   errorName = "authError",
   errorDomain = "OWALogin",
-  errorCode = "OWALoginAUTHERROR",
+  errorCode = "AUTHERROR",
   errorDescription = "You can't \\\"Login\\\""
 }
 
@@ -55,7 +55,7 @@ userNotFound = OWAError {
   errorName = "userNotFound",
   errorDomain = "OWALogin",
   errorCode = "UserNotFound",
-  errorDescription = "You didn't \n make an account"
+  errorDescription = "You didn't \\n make an account"
 }
 
 simpleError :: OWAError

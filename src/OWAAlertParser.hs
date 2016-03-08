@@ -57,22 +57,6 @@ alertAttrLine = do
 alertAttrParsers :: [GenParser Char st (AlertAttr, AlertVal)]
 alertAttrParsers = map (Text.Parsec.try . localizedKeyParserWithKeyword) attributeKeywords
 
-localizedKeyParserWithKeyword :: String -> GenParser Char st (AlertAttr, AlertVal)
-localizedKeyParserWithKeyword keyword = do
-  string keyword
-  char ' '
-  localizedKey <- parseLocalizedKey
-  endOfLine
-  return (keyword, localizedKey)
-
-parseLocalizedKey :: GenParser Char st AlertVal
-parseLocalizedKey = do
-  char '"'
-  substrings <- many (noneOf "\"\n") `endBy` char '"'
-  case substrings of
-    [] -> return ""
-    (s:ss) -> return $ concat (s:map ('"':) ss)
-
 ---------------------------------------------------------------------------
 --------------------CONSTRUCTING ALERTS------------------------------------
 ---------------------------------------------------------------------------

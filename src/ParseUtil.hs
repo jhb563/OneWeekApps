@@ -9,6 +9,8 @@ Maintainer  : jhbowen047@gmail.com
 module ParseUtil (
   nameParserWithKeyword,
   floatAttributeParser,
+  variableNameParserWithKeyword,
+  localizedKeyParserWithKeyword,
   printErrorAndReturnEmpty
 ) where
 
@@ -17,7 +19,7 @@ import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
 
 -------------------------------------------------------------------------------
--------------------PARSING NAME ATTRIBUTES-------------------------------------
+-------------------PARSING STRING ATTRIBUTES-----------------------------------
 -------------------------------------------------------------------------------
 
 -- | Takes a string for a keyword, and returns a parser which parses that
@@ -31,6 +33,37 @@ nameParserWithKeyword keyword = do
   restOfName <- many alphaNum 
   endOfLine
   return (firstLetter:restOfName)
+
+-- | Takes a string for a keyword, and returns a parser which parses that keyword,
+-- a space, and then a string which begins with a letter, and contains alpha
+-- numeric characters and underscores. 
+variableNameParserWithKeyword :: String -> GenParser Char st (String, String)
+variableNameParserWithKeyword keyword = do
+  string keyword
+  char ' '
+  firstLetter <- letter
+  restOfName <- many (alphaNum <|> char '_')
+  endOfLine
+  return (keyword, firstLetter:restOfName)
+
+-- | Takes a string for a keyword, and returns a parser which parses that keyword,
+-- a space, and then a localized string key, which is a set of any non new-line
+-- characters surrounded by quotes, with inner quotes escaped.
+localizedKeyParserWithKeyword :: String -> GenParser Char st (String, String)
+localizedKeyParserWithKeyword keyword = do
+  string keyword
+  char ' '
+  localizedKey <- parseLocalizedKey
+  endOfLine
+  return (keyword, localizedKey)
+
+parseLocalizedKey :: GenParser Char st String
+parseLocalizedKey = do
+  char '"'
+  substrings <- many (noneOf "\"\n") `endBy` char '"'
+  case substrings of
+    [] -> return ""
+    (s:ss) -> return $ concat (s:map ('"':) ss)
 
 -------------------------------------------------------------------------------
 -------------------PARSING FLOAT ATTRIBUTES------------------------------------
