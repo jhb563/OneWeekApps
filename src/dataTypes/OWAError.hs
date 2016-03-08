@@ -23,4 +23,4 @@ data OWAError = OWAError {
   errorDomain :: String,
   errorCode :: String,
   errorDescription :: LocalizedKey
-}
+} deriving (Show, Eq)
