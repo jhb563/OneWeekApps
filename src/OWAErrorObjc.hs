@@ -29,7 +29,10 @@ type DomainMap = Map.Map String [OWAError]
 objcHeaderFromErrors :: String -> [OWAError] -> ObjcFile
 objcHeaderFromErrors categoryName errors = ObjcFile
   [categoryCommentSection originalErrorTypeName categoryName True,
-  foundationImportsSection]
+  foundationImportsSection,
+  CategoryInterfaceSection category sections]
+    where category = categoryForErrors categoryName errors
+          sections = methodHeaderSectionsForErrors errors
 
 -- | 'objcImplementationFromErrors' takes a name for the new errors category, as well
 -- as a list of error objects, and returns the structure for the category's
@@ -37,7 +40,73 @@ objcHeaderFromErrors categoryName errors = ObjcFile
 objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
 objcImplementationFromErrors categoryName errors = ObjcFile 
   [categoryCommentSection originalErrorTypeName categoryName False,
-  categoryMImportsSection originalErrorTypeName categoryName]
+  categoryMImportsSection originalErrorTypeName categoryName,
+  CategoryImplementationSection category sections]
+    where category = categoryForErrors categoryName errors
+          sections = methodImplementationSectionsForErrors errors
+
+--------------------------------------------------------------------------------
+--------------------------CONSTRUCTING CATEGORY---------------------------------
+--------------------------------------------------------------------------------
+
+categoryForErrors :: String -> [OWAError] -> Category
+categoryForErrors categoryName = categoryFromNamesAndMethodBuilder 
+  originalErrorTypeName 
+  categoryName 
+  methodFromError 
+
+methodFromError :: OWAError -> ObjcMethod
+methodFromError err = ObjcMethod {
+  isStatic = True,
+  nameIntro = errorName err,
+  returnType = PointerType originalErrorTypeName,
+  params = [],
+  methodBody = [ReturnStatement $ returnExprForError err]
+}
+
+returnExprForError :: OWAError -> ObjcExpression
+returnExprForError err = MethodCall
+  (Var originalErrorTypeName)
+  errorConstructorMethod
+  [StringLit $ errorDomain err,
+  Var $ errorCode err,
+  localizedDictionaryExpr $ errorDescription err]
+
+localizedDictionaryExpr :: String -> ObjcExpression
+localizedDictionaryExpr description = DictionaryLit
+  [(Var "NSLocalizedDescriptionKey", localizedStringExpr description)]
+
+--------------------------------------------------------------------------------
+--------------------------CONSTRUCTING FILE SECTIONS----------------------------
+--------------------------------------------------------------------------------
+
+methodHeaderSectionsForErrors :: [OWAError] -> [FileSection]
+methodHeaderSectionsForErrors errors = map headerSectionForDomain domains
+  where domains = sectionErrorsByDomain errors
+
+headerSectionForDomain :: OWAErrorDomain -> FileSection
+headerSectionForDomain domain = MethodHeaderListSection
+  (Just $ domainName domain)
+  (map methodFromError $ domainErrors domain)
+
+methodImplementationSectionsForErrors :: [OWAError] -> [FileSection]
+methodImplementationSectionsForErrors errors = map mSectionForDomain domains
+  where domains = sectionErrorsByDomain errors
+
+mSectionForDomain :: OWAErrorDomain -> FileSection
+mSectionForDomain domain = MethodImplementationListSection
+  (Just $ domainName domain)
+  (map methodFromError $ domainErrors domain)
+
+--------------------------------------------------------------------------------
+--------------------------ERROR LIBRARY METHOD----------------------------------
+--------------------------------------------------------------------------------
+
+errorConstructorMethod :: CalledMethod 
+errorConstructorMethod = LibMethod {
+  libNameIntro = "errorWith",
+  libParams = ["Domain", "code", "userInfo"]
+}
 
 --------------------------------------------------------------------------------
 --------------------------TYPE KEYWORDS-----------------------------------------

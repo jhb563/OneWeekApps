@@ -110,6 +110,7 @@ data ObjcExpression =
   VoidBlock [BlockParam] [ObjcStatement] |
   Var Identifier |
   VarDecl ObjcType Identifier |
+  DictionaryLit [(ObjcExpression, ObjcExpression)] |
   StringLit String |
   FloatLit Float
   deriving (Show, Eq)

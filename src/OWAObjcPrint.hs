@@ -80,6 +80,7 @@ methodHeaderListSectionDoc (Just comment) methods = text "//" <+> text comment P
 methodImplementationListSectionDoc :: Maybe String -> [ObjcMethod] -> Doc
 methodImplementationListSectionDoc Nothing methods = spaceOut (map fullMethodDoc methods)
 methodImplementationListSectionDoc (Just pragma) methods = pragmaDoc pragma PPrint.<$>
+  empty PPrint.<$>
   spaceOut (map fullMethodDoc methods)
 
 headerFileMethodHeaderDoc :: ObjcMethod -> Doc
@@ -129,8 +130,12 @@ expressionDoc (VoidBlock params statements) = indentBlock
   (vcat $ map statementDoc statements)
 expressionDoc (Var varName) = text varName
 expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
+expressionDoc (DictionaryLit exprMappings) = text "@{" <> (hcat $ punctuate (text ", ") (map keyValueDoc exprMappings)) <> text "}"
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
+
+keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc
+keyValueDoc (key, value) = expressionDoc key <+> colon <+> expressionDoc value
 
 methodCallDoc :: ObjcExpression -> String -> [String] -> [ObjcExpression] -> Doc
 methodCallDoc callingExp nameIntro titles paramExps = brackets $

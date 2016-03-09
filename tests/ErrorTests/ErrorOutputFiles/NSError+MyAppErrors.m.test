@@ -13,8 +13,8 @@ typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
   belongsToFirstDomain,
   MyAppFirstError,
   noPrefix,
-  MyAppErrorredundantCode,
-  MyAppErrorSimpleError,
+  MyAppErrorsredundantCode,
+  MyAppErrorsSimpleError,
   SecondError,
   MyOwnDomainSoleDomainCode,
   DisconnectError,
@@ -32,79 +32,79 @@ typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
 #pragma mark - FirstDomain
 
 + (NSError*)finalError {
-  return [NSError errorWithDomain:@"FirstDomain" code:FirstFinalError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"This is the last", nil)}];
+  return [NSError errorWithDomain:@"FirstDomain" code:FirstFinalError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"This is the last", nil)}];
 }
 
 + (NSError*)whatError {
-  return [NSError errorWithDomain:@"FirstDomain" code:belongsToFirstDomain userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"Wait an error happened?", nil)}];
+  return [NSError errorWithDomain:@"FirstDomain" code:belongsToFirstDomain userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Wait an error happened?", nil)}];
 }
 
 #pragma mark - MyAppErrors
 
 + (NSError*)firstPrefixedError {
-  return [NSError errorWithDomain:@"MyAppErrors" code:MyAppFirstError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"Use the different prefix", nil)}];
+  return [NSError errorWithDomain:@"MyAppErrors" code:MyAppFirstError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Use the different prefix", nil)}];
 }
 
 + (NSError*)noPrefixError {
-  return [NSError errorWithDomain:@"MyAppErrors" code:noPrefix userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"I don't have a prefix", nil)}];
+  return [NSError errorWithDomain:@"MyAppErrors" code:noPrefix userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"I don't have a prefix", nil)}];
 }
 
 + (NSError*)redundantDomain {
-  return [NSError errorWithDomain:@"MyAppErrors" code:MyAppErrorredundantCode userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"Domain Respecified", nil)}];
+  return [NSError errorWithDomain:@"MyAppErrors" code:MyAppErrorsredundantCode userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Domain Respecified", nil)}];
 }
 
 + (NSError*)simpleError {
-  return [NSError errorWithDomain:@"MyAppErrors" code:MyAppErrorSimpleError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"SIMPLE_ERROR", nil)}];
+  return [NSError errorWithDomain:@"MyAppErrors" code:MyAppErrorsSimpleError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"SIMPLE_ERROR", nil)}];
 }
 
 + (NSError*)unprefixedError {
-  return [NSError errorWithDomain:@"MyAppErrors" code:SecondError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"Use no prefix", nil)}];
+  return [NSError errorWithDomain:@"MyAppErrors" code:SecondError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Use no prefix", nil)}];
 }
 
 #pragma mark - MyOwnDomain
 
 + (NSError*)beforeDomainSpec {
-  return [NSError errorWithDomain:@"MyOwnDomain" code:MyOwnDomainSoleDomainCode userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"This appears before anything with a domain", nil)}];
+  return [NSError errorWithDomain:@"MyOwnDomain" code:MyOwnDomainSoleDomainCode userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"This appears before anything with a domain", nil)}];
 }
 
 #pragma mark - OWAFirstErrors
 
 + (NSError*)disconnectError {
-  return [NSError errorWithDomain:@"OWAFirstErrors" code:DisconnectError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"DISCONNECTED!.&*", nil)}];
+  return [NSError errorWithDomain:@"OWAFirstErrors" code:DisconnectError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"DISCONNECTED!.&*", nil)}];
 }
 
 + (NSError*)myError1 {
-  return [NSError errorWithDomain:@"OWAFirstErrors" code:NetworkingError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"DESCRIPTION_KEY", nil)}];
+  return [NSError errorWithDomain:@"OWAFirstErrors" code:NetworkingError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"DESCRIPTION_KEY", nil)}];
 }
 
 + (NSError*)sadError {
-  return [NSError errorWithDomain:@"OWAFirstErrors" code:tears_of_failure userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"Crying about stuff", nil)}];
+  return [NSError errorWithDomain:@"OWAFirstErrors" code:tears_of_failure userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Crying about stuff", nil)}];
 }
 
 #pragma mark - OWALogin
 
 + (NSError*)authError {
-  return [NSError errorWithDomain:@"OWALogin" code:OWALoginAUTHERROR userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"You can't \"Login\"", nil)}];
+  return [NSError errorWithDomain:@"OWALogin" code:AUTHERROR userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"You can't \"Login\"", nil)}];
 }
 
 + (NSError*)userNotFound {
-  return [NSError errorWithDomain:@"OWALogin" code:UserNotFound userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"You didn't \n make an account", nil)}];
+  return [NSError errorWithDomain:@"OWALogin" code:UserNotFound userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"You didn't \n make an account", nil)}];
 }
 
 #pragma mark - RandomDomain
 
 + (NSError*)differentDomain {
-  return [NSError errorWithDomain:@"RandomDomain" code:random userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"This error doesn't belong", nil)}];
+  return [NSError errorWithDomain:@"RandomDomain" code:random userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"This error doesn't belong", nil)}];
 }
 
 + (NSError*)interloperDomain {
-  return [NSError errorWithDomain:@"RandomDomain" code:InterloperDomainError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"Why not?", nil)}];
+  return [NSError errorWithDomain:@"RandomDomain" code:InterloperDomainError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Why not?", nil)}];
 }
 
 #pragma mark - SecondDomain
 
 + (NSError*)whichError {
-  return [NSError errorWithDomain:@"SecondDomain" code:SecondDomainWhichError userInfo:{NSLocalizedDescriptionKey : NSLocalizedString(@"This should be in second domain", nil)}];
+  return [NSError errorWithDomain:@"SecondDomain" code:SecondDomainWhichError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"This should be in second domain", nil)}];
 }
 
 @end
