@@ -8,9 +8,9 @@ Maintainer  : jhbowen047@gmail.com
 
 module ParseUtil (
   nameParserWithKeyword,
-  floatAttributeParser,
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
+  floatAttributeParser,
   printErrorAndReturnEmpty
 ) where
 
