@@ -78,7 +78,7 @@ codeParser = do
   maybeDots <- optionMaybe (string "...")
   firstLetter <- letter
   rest <- many (alphaNum <|> char '_')
-  let code = (firstLetter:rest)
+  let code = firstLetter:rest
   endOfLine
   case maybeDots of
     Just _ -> return (codeKeyword, PrefixedValue code)
