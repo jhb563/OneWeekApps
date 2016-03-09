@@ -22,7 +22,7 @@ runObjcPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory)
-    . afterAll_ (removeResultsFiles testDirectory) $ do
+    . afterAll_ (ObjcPrintTests.removeResultsFiles testDirectory) $ do
       blockCommentTests testDirectory
       importTests testDirectory
       interfaceTests testDirectory

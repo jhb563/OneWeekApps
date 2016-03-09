@@ -7,6 +7,7 @@ module FontPrintTests (
   runFontPrintTests
 ) where
 
+import OWAObjcAbSyn
 import OWAObjcPrint
 import TestFontObjcObjects
 import TestUtil
@@ -17,8 +18,8 @@ runFontPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/FontTests/FontOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
-    beforeAll_ (createResultsFiles testDirectory) 
-    . afterAll_ (removeResultsFiles testDirectory) $ do
+    beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures) 
+    . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       emptyCategoryTests testDirectory
       fullCategoryTests testDirectory
 
@@ -42,20 +43,17 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
-createResultsFiles :: FilePath -> IO ()
-createResultsFiles outputDirectory = do
-  let testFilePaths = map (outputDirectory ++) resultsFiles
-  let testFileStructures = [emptyFontsHeaderFile, emptyFontsImplementationFile, fontsHeaderFile, fontsImplementationFile]
-  mapM_ (uncurry printStructureToFile) (zip testFileStructures testFilePaths)
-
-removeResultsFiles :: FilePath -> IO ()
-removeResultsFiles outputDirectory = removeFiles (map (outputDirectory ++) resultsFiles)
-
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
   emptyImplementationResultFile,
   headerResultFile,
   implementationResultFile]
+
+testFileStructures :: [ObjcFile]
+testFileStructures = [emptyFontsHeaderFile,
+  emptyFontsImplementationFile, 
+  fontsHeaderFile, 
+  fontsImplementationFile]
 
 emptyHeaderResultFile :: String
 emptyHeaderResultFile = "UIFont+EmptyCategory.h"

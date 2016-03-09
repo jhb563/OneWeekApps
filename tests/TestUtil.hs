@@ -2,11 +2,15 @@ module TestUtil (
   createFileAndClose,
   shouldReturnSorted,
   filesShouldMatch,
+  createResultsFiles,
+  removeResultsFiles,
   removeFiles,
   removeDiffFiles
 ) where
 
 import Data.List
+import OWAObjcAbSyn
+import OWAObjcPrint
 import System.Directory
 import System.IO
 import System.Process
@@ -37,6 +41,14 @@ filesShouldMatch actualFile expectedFile = do
       diffContents <- hGetContents stdOutHandler
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
+
+createResultsFiles :: FilePath -> [String] -> [ObjcFile] -> IO ()
+createResultsFiles outputDirectory extensions structures = do
+  let testFilePaths = map (outputDirectory ++) extensions
+  mapM_ (uncurry printStructureToFile) (zip structures testFilePaths)
+
+removeResultsFiles :: FilePath -> [String] -> IO ()
+removeResultsFiles outputDirectory resultsFiles = removeFiles (map (outputDirectory ++) resultsFiles)
 
 removeFiles :: [FilePath] -> IO ()
 removeFiles = mapM_ removeFile

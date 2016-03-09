@@ -36,6 +36,7 @@ library
                        OWAAlertObjc,
                        OWAError,
                        OWAErrorParser,
+                       OWAErrorObjc,
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,

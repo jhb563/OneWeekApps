@@ -28,8 +28,8 @@ runAlertPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/AlertTests/AlertOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
-    beforeAll_ (createResultsFiles testDirectory)
-    . afterAll_ (removeResultsFiles testDirectory) $ do
+    beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
+    . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       emptyCategoryTests testDirectory
       fullCategoryTests testDirectory
 
@@ -52,14 +52,6 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
   it "The printed implementation file should match" $
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
-
-createResultsFiles :: FilePath -> IO ()
-createResultsFiles outputDirectory = do
-  let testFilePaths = map (outputDirectory ++) resultsFiles
-  mapM_ (uncurry printStructureToFile) (zip testFileStructures testFilePaths)
-
-removeResultsFiles :: FilePath -> IO ()
-removeResultsFiles outputDirectory = removeFiles (map (outputDirectory ++) resultsFiles)
 
 testFileStructures :: [ObjcFile]
 testFileStructures = [objcHeaderFromAlerts "EmptyCategory" [],
