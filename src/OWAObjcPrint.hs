@@ -56,6 +56,9 @@ forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
   parens (text $ '^':name) <>
   parens (hcat $ punctuate (text ", ") (map typeDoc paramTypes)) <>
   semi
+forwardDeclDoc (EnumDecl enumName types) = (indentBlock headerLine enumBody) <> semi
+  where headerLine = text "typedef NS_ENUM(NSInteger," <+> text enumName <> text ")"
+        enumBody = vcat $ punctuate (text ",") (map text types)
 
 categoryInterfaceDoc :: Category -> [FileSection] -> Doc
 categoryInterfaceDoc category sections = text "@interface" <+> 

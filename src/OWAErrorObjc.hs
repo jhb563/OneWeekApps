@@ -38,12 +38,15 @@ objcHeaderFromErrors categoryName errors = ObjcFile
 -- as a list of error objects, and returns the structure for the category's
 -- implementation file in Objective C
 objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
-objcImplementationFromErrors categoryName errors = ObjcFile 
-  [categoryCommentSection originalErrorTypeName categoryName False,
-  categoryMImportsSection originalErrorTypeName categoryName,
-  CategoryImplementationSection category sections]
-    where category = categoryForErrors categoryName errors
-          sections = methodImplementationSectionsForErrors errors
+objcImplementationFromErrors categoryName errors = if length errors > 0
+  then ObjcFile [commentSection, includeSection, enumSect, implSection]
+  else ObjcFile [commentSection, includeSection, implSection]
+  where commentSection = categoryCommentSection originalErrorTypeName categoryName False
+        includeSection = categoryMImportsSection originalErrorTypeName categoryName
+        enumSect = enumSection categoryName errors
+        category = categoryForErrors categoryName errors
+        sections = methodImplementationSectionsForErrors errors
+        implSection = CategoryImplementationSection category sections
 
 --------------------------------------------------------------------------------
 --------------------------CONSTRUCTING CATEGORY---------------------------------
@@ -80,6 +83,12 @@ localizedDictionaryExpr description = DictionaryLit
 --------------------------CONSTRUCTING FILE SECTIONS----------------------------
 --------------------------------------------------------------------------------
 
+enumSection :: String -> [OWAError] -> FileSection
+enumSection categoryName errors = ForwardDeclarationSection [EnumDecl enumName codes]
+  where enumName = categoryName ++ codesSuffix
+        domains = sectionErrorsByDomain errors
+        codes = map errorCode $ concat (map domainErrors domains)
+
 methodHeaderSectionsForErrors :: [OWAError] -> [FileSection]
 methodHeaderSectionsForErrors errors = map headerSectionForDomain domains
   where domains = sectionErrorsByDomain errors
@@ -114,6 +123,9 @@ errorConstructorMethod = LibMethod {
 
 originalErrorTypeName :: String
 originalErrorTypeName = "NSError"
+
+codesSuffix :: String
+codesSuffix = "ErrorCodes"
 
 --------------------------------------------------------------------------------
 --------------------------ERROR SECTIONING--------------------------------------

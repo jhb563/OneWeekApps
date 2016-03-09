@@ -41,9 +41,10 @@ data Import =
   deriving (Show, Eq)
 
 -- | 'ForwardDeclaration' represents a statement declaring something before
--- the main body of a file, such as a typedef, class, or protocol
+-- the main body of a file, such as a block typedef, class, or protocol
 data ForwardDeclaration =
-  TypedefDecl ObjcType Identifier [ObjcType]
+  TypedefDecl ObjcType Identifier [ObjcType] |
+  EnumDecl Identifier [Identifier]
   deriving (Show, Eq)
 
 -- | 'Category' stores the structure of an Objective C class extension.

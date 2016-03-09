@@ -20,12 +20,12 @@ typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
   DisconnectError,
   NetworkingError,
   tears_of_failure,
-  OWALoginAUTHERROR,
+  AUTHERROR,
   UserNotFound,
   random,
   InterloperDomainError,
-  SecondDomainWhichError 
-}
+  SecondDomainWhichError
+};
 
 @implementation NSError (MyAppErrors)
 
