@@ -28,8 +28,9 @@ objcHeaderFromAlerts categoryName alerts = ObjcFile
   [categoryCommentSection originalAlertTypeName categoryName True,
   uiKitImportsSection,
   alertHandlerTypedefSection, 
-  CategoryInterfaceSection $ alertCategoryFromAlerts categoryName sortedAlerts]
+  simpleCategoryInterface category]
     where sortedAlerts = sortBy sortAlertsByName alerts
+          category = alertCategoryFromAlerts categoryName sortedAlerts
 
 -- | 'objcImplementationFromAlerts' takes a name for the new alerts category, as well
 -- as a list of alert objects, and returns the structure for the category's
@@ -38,8 +39,9 @@ objcImplementationFromAlerts :: String -> [OWAAlert] -> ObjcFile
 objcImplementationFromAlerts categoryName alerts = ObjcFile 
   [categoryCommentSection originalAlertTypeName categoryName False,
   categoryMImportsSection originalAlertTypeName categoryName,
-  CategoryImplementationSection $ alertCategoryFromAlerts categoryName sortedAlerts]
+  simpleCategoryImplementation category]
     where sortedAlerts = sortBy sortAlertsByName alerts
+          category = alertCategoryFromAlerts categoryName sortedAlerts
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------

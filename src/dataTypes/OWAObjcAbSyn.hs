@@ -26,8 +26,10 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ForwardDeclarationSection [ForwardDeclaration] |
-  CategoryInterfaceSection Category |
-  CategoryImplementationSection Category 
+  CategoryInterfaceSection Category [FileSection] |
+  CategoryImplementationSection Category [FileSection] |
+  MethodHeaderListSection (Maybe String) [ObjcMethod] |
+  MethodImplementationListSection (Maybe String) [ObjcMethod]
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of an
@@ -39,9 +41,10 @@ data Import =
   deriving (Show, Eq)
 
 -- | 'ForwardDeclaration' represents a statement declaring something before
--- the main body of a file, such as a typedef, class, or protocol
+-- the main body of a file, such as a block typedef, class, or protocol
 data ForwardDeclaration =
-  TypedefDecl ObjcType Identifier [ObjcType]
+  TypedefDecl ObjcType Identifier [ObjcType] |
+  EnumDecl Identifier [Identifier]
   deriving (Show, Eq)
 
 -- | 'Category' stores the structure of an Objective C class extension.
@@ -108,6 +111,7 @@ data ObjcExpression =
   VoidBlock [BlockParam] [ObjcStatement] |
   Var Identifier |
   VarDecl ObjcType Identifier |
+  DictionaryLit [(ObjcExpression, ObjcExpression)] |
   StringLit String |
   FloatLit Float
   deriving (Show, Eq)

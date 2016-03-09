@@ -22,7 +22,7 @@ runObjcPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/ObjcPrintTests/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory)
-    . afterAll_ (removeResultsFiles testDirectory) $ do
+    . afterAll_ (ObjcPrintTests.removeResultsFiles testDirectory) $ do
       blockCommentTests testDirectory
       importTests testDirectory
       interfaceTests testDirectory
@@ -177,16 +177,16 @@ importModuleFile = ObjcFile
   ]
 
 noMethodInterfaceFile :: ObjcFile
-noMethodInterfaceFile = ObjcFile [CategoryInterfaceSection emptyCategory]
+noMethodInterfaceFile = ObjcFile [CategoryInterfaceSection emptyCategory []]
 
 interfaceWithMethodsFile :: ObjcFile
-interfaceWithMethodsFile = ObjcFile [CategoryInterfaceSection categoryWithMethods]
+interfaceWithMethodsFile = ObjcFile [CategoryInterfaceSection categoryWithMethods []]
 
 noMethodImplementationFile :: ObjcFile
-noMethodImplementationFile = ObjcFile [CategoryImplementationSection emptyCategory]
+noMethodImplementationFile = ObjcFile [CategoryImplementationSection emptyCategory []]
 
 implementationWithMethodsFile :: ObjcFile
-implementationWithMethodsFile = ObjcFile [CategoryImplementationSection categoryWithMethods]
+implementationWithMethodsFile = ObjcFile [CategoryImplementationSection categoryWithMethods []]
 
 fullInterfaceFile :: ObjcFile
 fullInterfaceFile = ObjcFile 
@@ -199,7 +199,7 @@ fullInterfaceFile = ObjcFile
     "Copyright (c) 2016 One Week Apps. All Rights Reserved",
     ""],
   ImportsSection [ModuleImport "UIKit"],
-  CategoryInterfaceSection categoryWithMethods]
+  CategoryInterfaceSection categoryWithMethods []]
 
 fullImplementationFile :: ObjcFile
 fullImplementationFile = ObjcFile 
@@ -212,7 +212,7 @@ fullImplementationFile = ObjcFile
     "Copyright (c) 2016 One Week Apps. All Rights Reserved",
     ""],
   ImportsSection [FileImport "UIColor+SampleCategory.h"],
-  CategoryImplementationSection categoryWithMethods]
+  CategoryImplementationSection categoryWithMethods []]
 
 emptyCategory :: Category
 emptyCategory = Category {

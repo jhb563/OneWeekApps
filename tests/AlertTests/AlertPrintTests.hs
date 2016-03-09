@@ -18,7 +18,6 @@ module AlertPrintTests (
 
 import OWAAlertObjc
 import OWAObjcAbSyn
-import OWAObjcPrint
 import TestAlerts
 import TestUtil
 import Test.Hspec
@@ -28,8 +27,8 @@ runAlertPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/AlertTests/AlertOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
-    beforeAll_ (createResultsFiles testDirectory)
-    . afterAll_ (removeResultsFiles testDirectory) $ do
+    beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
+    . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       emptyCategoryTests testDirectory
       fullCategoryTests testDirectory
 
@@ -44,7 +43,7 @@ emptyCategoryTests testDirectory = describe "Print File Structure for Empty Cate
       (testDirectory ++ emptyImplementationTestFile) 
 
 fullCategoryTests :: FilePath -> Spec
-fullCategoryTests testDirectory = describe "Print File Structure for Normal Font Category" $ do
+fullCategoryTests testDirectory = describe "Print File Structure for Normal Alert Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ headerResultFile) `filesShouldMatch`
       (testDirectory ++ headerTestFile) 
@@ -52,14 +51,6 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
   it "The printed implementation file should match" $
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
-
-createResultsFiles :: FilePath -> IO ()
-createResultsFiles outputDirectory = do
-  let testFilePaths = map (outputDirectory ++) resultsFiles
-  mapM_ (uncurry printStructureToFile) (zip testFileStructures testFilePaths)
-
-removeResultsFiles :: FilePath -> IO ()
-removeResultsFiles outputDirectory = removeFiles (map (outputDirectory ++) resultsFiles)
 
 testFileStructures :: [ObjcFile]
 testFileStructures = [objcHeaderFromAlerts "EmptyCategory" [],

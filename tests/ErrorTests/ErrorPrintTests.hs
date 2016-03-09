@@ -1,26 +1,35 @@
--- OWAObjcPrint will expose the method
+-- OWAErrorObjc will expose the methods
+-- objcHeaderFromErrors :: String -> [OWAError] -> ObjcFile
+-- objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
+-- which each take a category name and a list of errors and return a
+-- file structure of objective C statements
+--
+-- OWAObjcPrint will expose the methods
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file
+--
+-- These tests will first create the file structures and then
+-- print them, testing the printed files.
 
-module FontPrintTests (
-  runFontPrintTests
+module ErrorPrintTests (
+  runErrorPrintTests
 ) where
 
-import OWAFontObjc
+import OWAErrorObjc
 import OWAObjcAbSyn
-import TestFonts
+import TestErrors
 import TestUtil
 import Test.Hspec
 
-runFontPrintTests :: FilePath -> IO ()
-runFontPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/FontTests/FontOutputFiles/"
+runErrorPrintTests :: FilePath -> IO ()
+runErrorPrintTests currentDirectory = do
+  let testDirectory = currentDirectory ++ "/tests/ErrorTests/ErrorOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
-      emptyCategoryTests testDirectory 
+      emptyCategoryTests testDirectory
       fullCategoryTests testDirectory
 
 emptyCategoryTests :: FilePath -> Spec
@@ -34,7 +43,7 @@ emptyCategoryTests testDirectory = describe "Print File Structure for Empty Cate
       (testDirectory ++ emptyImplementationTestFile) 
 
 fullCategoryTests :: FilePath -> Spec
-fullCategoryTests testDirectory = describe "Print File Structure for Normal Font Category" $ do
+fullCategoryTests testDirectory = describe "Print File Structure for Normal Error Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ headerResultFile) `filesShouldMatch`
       (testDirectory ++ headerTestFile) 
@@ -43,39 +52,38 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+testFileStructures :: [ObjcFile]
+testFileStructures = [objcHeaderFromErrors "EmptyCategory" [],
+  objcImplementationFromErrors "EmptyCategory" [],
+  objcHeaderFromErrors "MyAppErrors" allTestErrors,
+  objcImplementationFromErrors "MyAppErrors" allTestErrors]
+
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
   emptyImplementationResultFile,
   headerResultFile,
   implementationResultFile]
 
-testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromFonts "EmptyCategory" [],
-  objcImplementationFromFonts "EmptyCategory" [], 
-  objcHeaderFromFonts "MyAppFonts" allTestFonts, 
-  objcImplementationFromFonts "MyAppFonts" allTestFonts]
-
 emptyHeaderResultFile :: String
-emptyHeaderResultFile = "UIFont+EmptyCategory.h"
+emptyHeaderResultFile = "NSError+EmptyCategory.h"
 
 emptyImplementationResultFile :: String
-emptyImplementationResultFile = "UIFont+EmptyCategory.m"
+emptyImplementationResultFile = "NSError+EmptyCategory.m"
 
 headerResultFile :: String
-headerResultFile = "UIFont+MyAppFonts.h"
+headerResultFile = "NSError+MyAppErrors.h"
 
 implementationResultFile :: String
-implementationResultFile = "UIFont+MyAppFonts.m"
+implementationResultFile = "NSError+MyAppErrors.m"
 
 emptyHeaderTestFile :: String
-emptyHeaderTestFile = "UIFont+EmptyCategory.h.test"
+emptyHeaderTestFile = "NSError+EmptyCategory.h.test"
 
 emptyImplementationTestFile :: String
-emptyImplementationTestFile = "UIFont+EmptyCategory.m.test"
+emptyImplementationTestFile = "NSError+EmptyCategory.m.test"
 
 headerTestFile :: String
-headerTestFile = "UIFont+MyAppFonts.h.test"
+headerTestFile = "NSError+MyAppErrors.h.test"
 
 implementationTestFile :: String
-implementationTestFile = "UIFont+MyAppFonts.m.test"
-
+implementationTestFile = "NSError+MyAppErrors.m.test"

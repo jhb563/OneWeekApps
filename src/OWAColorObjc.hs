@@ -27,8 +27,9 @@ objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
 objcHeaderFromColors categoryName colors = ObjcFile 
   [categoryCommentSection originalColorTypeName categoryName True,
   uiKitImportsSection,
-  CategoryInterfaceSection $ colorCategoryFromColors categoryName sortedColors]
+  simpleCategoryInterface category]
     where sortedColors = sortBy sortColorsByName colors 
+          category = colorCategoryFromColors categoryName sortedColors
 
 -- | 'objcImplementationFromColors' takes a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
@@ -37,8 +38,9 @@ objcImplementationFromColors :: String -> [OWAColor] -> ObjcFile
 objcImplementationFromColors categoryName colors = ObjcFile
   [categoryCommentSection originalColorTypeName categoryName False,
   categoryMImportsSection originalColorTypeName categoryName,
-  CategoryImplementationSection $ colorCategoryFromColors categoryName sortedColors]
+  simpleCategoryImplementation category]
     where sortedColors = sortBy sortColorsByName colors
+          category = colorCategoryFromColors categoryName sortedColors
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------
