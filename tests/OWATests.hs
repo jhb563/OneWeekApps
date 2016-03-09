@@ -5,6 +5,7 @@ import AlertPrintTests
 import AppDirectoryTests
 import ColorObjcTests
 import ColorParseTests
+import ErrorParseTests
 import FileSearchTests
 import FontObjcTests
 import FontParseTests
@@ -25,5 +26,6 @@ main = do
   runFontPrintTests currentFilePath
   runAlertParseTests currentFilePath
   runAlertPrintTests currentFilePath
+  runErrorParseTests currentFilePath
   runObjcPrintTests currentFilePath
   runV010IntegrationTests currentFilePath

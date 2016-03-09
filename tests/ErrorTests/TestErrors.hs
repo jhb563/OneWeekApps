@@ -38,7 +38,7 @@ authError :: OWAError
 authError = OWAError {
   errorName = "authError",
   errorDomain = "OWALogin",
-  errorCode = "OWALoginAUTHERROR",
+  errorCode = "AUTHERROR",
   errorDescription = "You can't \\\"Login\\\""
 }
 
@@ -55,14 +55,14 @@ userNotFound = OWAError {
   errorName = "userNotFound",
   errorDomain = "OWALogin",
   errorCode = "UserNotFound",
-  errorDescription = "You didn't \n make an account"
+  errorDescription = "You didn't \\n make an account"
 }
 
 simpleError :: OWAError
 simpleError = OWAError {
   errorName = "simpleError",
   errorDomain = "MyAppErrors",
-  errorCode = "MyAppErrorSimpleError",
+  errorCode = "MyAppErrorsSimpleError",
   errorDescription = "SIMPLE_ERROR"
 }
 
@@ -78,7 +78,7 @@ redundantDomain :: OWAError
 redundantDomain = OWAError {
   errorName = "redundantDomain",
   errorDomain = "MyAppErrors",
-  errorCode = "MyAppErrorredundantCode",
+  errorCode = "MyAppErrorsredundantCode",
   errorDescription = "Domain Respecified"
 }
 

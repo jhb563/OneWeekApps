@@ -3,13 +3,13 @@ Error beforeDomainSpec
   Code ...SoleDomainCode
   Description "This appears before anything with a domain"
 
-Domain FirstDomain
+DefaultDomain FirstDomain
 
 Error whatError
   Description "Wait an error happened?"
   Code belongsToFirstDomain
 
-Domain SecondDomain
+DefaultDomain SecondDomain
   Prefix SecondDomain
 
 Error whichError
@@ -20,14 +20,14 @@ Error interloperDomain
   Description "Why not?"
   Code InterloperDomainError
   Domain RandomDomain
- 
 
-Domain FirstDomain
+
+DefaultDomain FirstDomain
   Prefix First
 
 Error finalError
   Code ...FinalError
   Description "This is the last"
 
-Domain EndWithRandomDomain
+DefaultDomain EndWithRandomDomain
 

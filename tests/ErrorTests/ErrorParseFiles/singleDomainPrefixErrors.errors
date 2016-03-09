@@ -1,4 +1,4 @@
-Domain MyAppErrors
+DefaultDomain MyAppErrors
   Prefix MyApp
 
 Error firstPrefixedError
