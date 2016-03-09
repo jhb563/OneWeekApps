@@ -37,7 +37,7 @@ parseErrorsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes . concat) errorOrOWAErrors
 
 parseErrorContents :: String -> Either ParseError [[Maybe OWAError]]
-parseErrorContents = Text.Parsec.runParser (multiErrorParser `sepBy` domainParser) ("", Nothing) ""
+parseErrorContents = Text.Parsec.runParser (multiErrorParser `sepEndBy` domainParser) ("", Nothing) ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -69,6 +69,7 @@ domainParser :: GenParser Char ErrorParserState (String, Maybe String)
 domainParser = do
   (_,name) <- variableNameParserWithKeyword defaultDomainKeyword
   maybePrefix <- optionMaybe prefixParser
+  spaces
   modifyState (\_ -> (name, maybePrefix))
   return (name, Nothing)
 
