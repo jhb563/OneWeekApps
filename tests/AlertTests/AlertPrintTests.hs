@@ -44,7 +44,7 @@ emptyCategoryTests testDirectory = describe "Print File Structure for Empty Cate
       (testDirectory ++ emptyImplementationTestFile) 
 
 fullCategoryTests :: FilePath -> Spec
-fullCategoryTests testDirectory = describe "Print File Structure for Normal Font Category" $ do
+fullCategoryTests testDirectory = describe "Print File Structure for Normal Alert Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ headerResultFile) `filesShouldMatch`
       (testDirectory ++ headerTestFile) 

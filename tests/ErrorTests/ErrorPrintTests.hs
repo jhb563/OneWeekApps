@@ -26,4 +26,64 @@ import Test.Hspec
 runErrorPrintTests :: FilePath -> IO ()
 runErrorPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/ErrorTests/ErrorOutputFiles/"
-  print testDirectory
+    beforeAll_ (removeDiffFiles testDirectory) $
+    beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
+    . afterAll_ (removeResultsFiles testDirectory resultsFiles) 
+      emptyCategoryTests
+      fullCategoryTests
+
+emptyCategoryTests :: FilePath -> Spec
+emptyCategoryTests testDirectory = describe "Print File Structure for Empty Category" $ do
+  it "The printed header file should match" $
+    (testDirectory ++ emptyHeaderResultFile) `filesShouldMatch` 
+      (testDirectory ++ emptyHeaderTestFile)
+  
+  it "The printed implementation file should match" $
+    (testDirectory ++ emptyImplementationResultFile) `filesShouldMatch`
+      (testDirectory ++ emptyImplementationTestFile) 
+
+fullCategoryTests :: FilePath -> Spec
+fullCategoryTests testDirectory = describe "Print File Structure for Normal Error Category" $ do
+  it "The printed header file should match" $
+    (testDirectory ++ headerResultFile) `filesShouldMatch`
+      (testDirectory ++ headerTestFile) 
+
+  it "The printed implementation file should match" $
+    (testDirectory ++ implementationResultFile) `filesShouldMatch`
+      (testDirectory ++ implementationTestFile)
+
+testFileStructures :: [ObjcFile]
+testFileStructures = [objcHeaderFromErrors "EmptyCategory" [],
+  objcImplementationFromErrors "EmptyCategory" [],
+  objcHeaderFromErrors "MyAppErrors" allTestErrors,
+  objcImplementationFromErrors "MyAppErrors" allTestErrors]
+
+resultsFiles :: [String]
+resultsFiles = [emptyHeaderResultFile,
+  emptyImplementationResultFile,
+  headerResultFile,
+  implementationResultFile]
+
+emptyHeaderResultFile :: String
+emptyHeaderResultFile = "NSError+EmptyCategory.h"
+
+emptyImplementationResultFile :: String
+emptyImplementationResultFile = "NSError+EmptyCategory.m"
+
+headerResultFile :: String
+headerResultFile = "NSError+MyAppErrors.h"
+
+implementationResultFile :: String
+implementationResultFile = "NSError+MyAppErrors.m"
+
+emptyHeaderTestFile :: String
+emptyHeaderTestFile = "NSError+EmptyCategory.h.test"
+
+emptyImplementationTestFile :: String
+emptyImplementationTestFile = "NSError+EmptyCategory.m.test"
+
+headerTestFile :: String
+headerTestFile = "NSError+MyAppErrors.h.test"
+
+implementationTestFile :: String
+implementationTestFile = "NSError+MyAppErrors.m.test"
