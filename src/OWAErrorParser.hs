@@ -38,7 +38,10 @@ parseErrorsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes . concat) errorOrOWAErrors
 
 parseErrorContents :: String -> Either ParseError [[Maybe OWAError]]
-parseErrorContents = Text.Parsec.runParser (multiErrorParser `sepEndBy` defaultDomainParser) ("", Nothing) ""
+parseErrorContents = Text.Parsec.runParser 
+  (multiErrorParser `sepEndBy` defaultDomainParser) 
+  ("", Nothing) 
+  ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -89,18 +92,17 @@ descriptionParser = do
   (_, localKey) <- localizedKeyParserWithKeyword descriptionKeyword
   return (descriptionKeyword, NormalValue localKey)
 
-defaultDomainParser :: GenParser Char ErrorParserState (String, Maybe String)
+defaultDomainParser :: GenParser Char ErrorParserState ()
 defaultDomainParser = do
-  (_,name) <- variableNameParserWithKeyword defaultDomainKeyword
+  (_, name) <- variableNameParserWithKeyword defaultDomainKeyword
   maybePrefix <- optionMaybe prefixParser
   spaces
   putState (name, maybePrefix)
-  return (name, Nothing)
 
 prefixParser :: GenParser Char ErrorParserState String
 prefixParser = do
   string "\t" <|> string "  "
-  (_,prefix) <- variableNameParserWithKeyword prefixKeyword 
+  (_, prefix) <- variableNameParserWithKeyword prefixKeyword 
   return prefix
 
 ---------------------------------------------------------------------------
