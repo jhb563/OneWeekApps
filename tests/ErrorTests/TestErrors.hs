@@ -62,7 +62,7 @@ simpleError :: OWAError
 simpleError = OWAError {
   errorName = "simpleError",
   errorDomain = "MyAppErrors",
-  errorCode = "MyAppErrorSimpleError",
+  errorCode = "MyAppErrorsSimpleError",
   errorDescription = "SIMPLE_ERROR"
 }
 
@@ -78,7 +78,7 @@ redundantDomain :: OWAError
 redundantDomain = OWAError {
   errorName = "redundantDomain",
   errorDomain = "MyAppErrors",
-  errorCode = "MyAppErrorredundantCode",
+  errorCode = "MyAppErrorsredundantCode",
   errorDescription = "Domain Respecified"
 }
 
