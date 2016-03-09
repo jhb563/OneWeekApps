@@ -30,7 +30,6 @@ objcHeaderFromColors categoryName colors = ObjcFile
   simpleCategoryInterface category]
     where sortedColors = sortBy sortColorsByName colors 
           category = colorCategoryFromColors categoryName sortedColors
-          
 
 -- | 'objcImplementationFromColors' takes a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's

@@ -154,4 +154,3 @@ sortErrorsInDomain (domainName, errors) = OWAErrorDomain {
 -- Sort first by domain, then by name
 sortErrorsByName :: OWAError -> OWAError -> Ordering
 sortErrorsByName error1 error2 = errorName error1 `compare` errorName error2
-
