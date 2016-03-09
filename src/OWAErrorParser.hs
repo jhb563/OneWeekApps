@@ -20,8 +20,9 @@ import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
 
 type ErrorAttr = String
-type ErrorVal = String
-type ErrorAttrMap = Map.Map String String
+data ErrorVal = NormalValue String |
+  PrefixedValue String
+type ErrorAttrMap = Map.Map ErrorAttr ErrorVal 
 type ErrorParserState = (String, Maybe String)
 
 ---------------------------------------------------------------------------
@@ -37,7 +38,7 @@ parseErrorsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes . concat) errorOrOWAErrors
 
 parseErrorContents :: String -> Either ParseError [[Maybe OWAError]]
-parseErrorContents = Text.Parsec.runParser (multiErrorParser `sepEndBy` domainParser) ("", Nothing) ""
+parseErrorContents = Text.Parsec.runParser (multiErrorParser `sepEndBy` defaultDomainParser) ("", Nothing) ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -61,23 +62,14 @@ errorAttrLine = do
   choice $ map Text.Parsec.try errorAttrParsers
 
 errorAttrParsers :: [GenParser Char ErrorParserState (ErrorAttr, ErrorVal)]
-errorAttrParsers = [variableNameParserWithKeyword domainKeyword,
+errorAttrParsers = [domainParser,
   codeParser,
-  localizedKeyParserWithKeyword descriptionKeyword]
+  descriptionParser]
 
-domainParser :: GenParser Char ErrorParserState (String, Maybe String)
+domainParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 domainParser = do
-  (_,name) <- variableNameParserWithKeyword defaultDomainKeyword
-  maybePrefix <- optionMaybe prefixParser
-  spaces
-  modifyState (\_ -> (name, maybePrefix))
-  return (name, Nothing)
-
-prefixParser :: GenParser Char ErrorParserState String
-prefixParser = do
-  string "\t" <|> string "  "
-  (_,prefix) <- variableNameParserWithKeyword prefixKeyword 
-  return prefix
+  (_, domainName) <- variableNameParserWithKeyword domainKeyword
+  return (domainKeyword, NormalValue domainName)
 
 codeParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 codeParser = do
@@ -86,10 +78,30 @@ codeParser = do
   maybeDots <- optionMaybe (string "...")
   firstLetter <- letter
   rest <- many (alphaNum <|> char '_')
+  let code = (firstLetter:rest)
   endOfLine
   case maybeDots of
-    Just dots -> return (codeKeyword, dots ++ (firstLetter:rest))
-    _ -> return (codeKeyword, (firstLetter:rest))
+    Just _ -> return (codeKeyword, PrefixedValue code)
+    _ -> return (codeKeyword, NormalValue code)
+
+descriptionParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
+descriptionParser = do
+  (_, localKey) <- localizedKeyParserWithKeyword descriptionKeyword
+  return (descriptionKeyword, NormalValue localKey)
+
+defaultDomainParser :: GenParser Char ErrorParserState (String, Maybe String)
+defaultDomainParser = do
+  (_,name) <- variableNameParserWithKeyword defaultDomainKeyword
+  maybePrefix <- optionMaybe prefixParser
+  spaces
+  putState (name, maybePrefix)
+  return (name, Nothing)
+
+prefixParser :: GenParser Char ErrorParserState String
+prefixParser = do
+  string "\t" <|> string "  "
+  (_,prefix) <- variableNameParserWithKeyword prefixKeyword 
+  return prefix
 
 ---------------------------------------------------------------------------
 --------------------CONSTRUCTING ERRORS------------------------------------
@@ -98,15 +110,17 @@ codeParser = do
 errorFromNameAndAttrMap :: String -> ErrorAttrMap -> ErrorParserState -> Maybe OWAError
 errorFromNameAndAttrMap name attrMap (defaultDomain, maybePrefix) = do 
   domain <- case Map.lookup domainKeyword attrMap of
-    Just domain -> Just domain
+    Just (NormalValue domain) -> Just domain
     Nothing -> if null defaultDomain then Nothing else Just defaultDomain
   code <- case Map.lookup codeKeyword attrMap of
-    Just ('.':'.':'.':rest) -> case maybePrefix of
-      Just prefix -> Just (prefix ++ rest)
-      _ -> Just (domain ++ rest)
-    Just name -> Just name
+    Just (PrefixedValue code) -> case maybePrefix of
+      Just prefix -> Just (prefix ++ code)
+      _ -> Just (domain ++ code)
+    Just (NormalValue code) -> Just code 
     Nothing -> Nothing
-  description <- Map.lookup descriptionKeyword attrMap
+  description <- case Map.lookup descriptionKeyword attrMap of
+    Just (NormalValue description) -> Just description
+    _ -> Nothing
   return OWAError {
     errorName = name,
     errorDomain = domain,
