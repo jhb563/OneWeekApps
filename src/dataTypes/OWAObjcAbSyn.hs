@@ -26,8 +26,10 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ForwardDeclarationSection [ForwardDeclaration] |
-  CategoryInterfaceSection Category |
-  CategoryImplementationSection Category 
+  CategoryInterfaceSection Category [FileSection] |
+  CategoryImplementationSection Category [FileSection] |
+  MethodHeaderListSection (Maybe String) [ObjcMethod] |
+  MethodImplementationListSection (Maybe String) [ObjcMethod]
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of an

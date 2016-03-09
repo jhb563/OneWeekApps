@@ -37,8 +37,10 @@ sectionDoc :: FileSection -> Doc
 sectionDoc (BlockCommentSection commentLines) = vcat (map commentDoc commentLines) PPrint.<$> empty
 sectionDoc (ImportsSection includes) = vcat (map includeDoc includes) PPrint.<$> empty
 sectionDoc (ForwardDeclarationSection forwardDecls) = vcat (map forwardDeclDoc forwardDecls) PPrint.<$> empty
-sectionDoc (CategoryInterfaceSection category) = categoryInterfaceDoc category
-sectionDoc (CategoryImplementationSection category) = categoryImplementationDoc category
+sectionDoc (CategoryInterfaceSection category sections) = categoryInterfaceDoc category sections
+sectionDoc (CategoryImplementationSection category sections) = categoryImplementationDoc category sections
+sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSectionDoc maybeComment methods
+sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
 
 commentDoc :: String -> Doc
 commentDoc [] = text "//"
@@ -55,19 +57,30 @@ forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
   parens (hcat $ punctuate (text ", ") (map typeDoc paramTypes)) <>
   semi
 
-categoryInterfaceDoc :: Category -> Doc
-categoryInterfaceDoc category = text "@interface" <+> 
+categoryInterfaceDoc :: Category -> [FileSection] -> Doc
+categoryInterfaceDoc category sections = text "@interface" <+> 
   text (originalTypeName category) <+> 
   parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map headerFileMethodHeaderDoc $ categoryMethods category) PPrint.<$>
+  vcatWithSpace (map sectionDoc $ sections) PPrint.<$>
   endDoc
 
-categoryImplementationDoc :: Category -> Doc
-categoryImplementationDoc category = text "@implementation" <+>
+categoryImplementationDoc :: Category -> [FileSection] -> Doc
+categoryImplementationDoc category sections = text "@implementation" <+>
   text (originalTypeName category) <+>
   parens (text $ categoryName category) PPrint.<$>
-  spaceOut (map fullMethodDoc $ categoryMethods category) PPrint.<$>
+  vcatWithSpace (map sectionDoc $ sections) PPrint.<$>
   endDoc
+
+methodHeaderListSectionDoc :: Maybe String -> [ObjcMethod] -> Doc
+methodHeaderListSectionDoc Nothing methods = vcat (map headerFileMethodHeaderDoc methods) PPrint.<$> empty
+methodHeaderListSectionDoc (Just comment) methods = text "//" <+> text comment PPrint.<$>
+  vcat (map headerFileMethodHeaderDoc methods) PPrint.<$>
+  empty
+
+methodImplementationListSectionDoc :: Maybe String -> [ObjcMethod] -> Doc
+methodImplementationListSectionDoc Nothing methods = spaceOut (map fullMethodDoc methods)
+methodImplementationListSectionDoc (Just pragma) methods = pragmaDoc pragma PPrint.<$>
+  spaceOut (map fullMethodDoc methods)
 
 headerFileMethodHeaderDoc :: ObjcMethod -> Doc
 headerFileMethodHeaderDoc method = methodHeaderDoc method <> semi
@@ -138,6 +151,9 @@ typeDoc (SimpleType typeName) = text typeName
 opDoc :: Operator -> Doc
 opDoc Assign = equals
 
+pragmaDoc :: String -> Doc
+pragmaDoc sectionName = text "#pragma mark -" <+> text sectionName
+
 -------------------------------------------------------------------------------
 ---------------------------Pretty Print Formatting Helpers --------------------
 -------------------------------------------------------------------------------
@@ -147,12 +163,12 @@ indentBlock doc1 doc2 = nest 2 (doc1 <+> text "{" PPrint.<$> doc2) PPrint.<$> te
 
 vcatWithSpace :: [Doc] -> Doc
 vcatWithSpace [] = empty
-vcatWithSpace docs = empty PPrint.<$> vcat docs PPrint.<$> empty
+vcatWithSpace docs = empty PPrint.<$> vcat docs
 
 spaceOut :: [Doc] -> Doc
 spaceOut [] = empty
-spaceOut (headDoc:restDocs) = empty PPrint.<$> 
-  foldl (\d1 d2 -> d1 PPrint.<$> empty PPrint.<$> d2) headDoc restDocs PPrint.<$> empty
+spaceOut (headDoc:restDocs) = foldl (\d1 d2 -> d1 PPrint.<$> empty PPrint.<$> d2)
+  headDoc restDocs PPrint.<$> empty
 
 endDoc :: Doc
 endDoc = text "@end" PPrint.<$> empty

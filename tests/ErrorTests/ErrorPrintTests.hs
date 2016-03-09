@@ -18,7 +18,6 @@ module ErrorPrintTests (
 
 import OWAErrorObjc
 import OWAObjcAbSyn
-import OWAObjcPrint
 import TestErrors
 import TestUtil
 import Test.Hspec
@@ -26,11 +25,12 @@ import Test.Hspec
 runErrorPrintTests :: FilePath -> IO ()
 runErrorPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/ErrorTests/ErrorOutputFiles/"
+  hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
-    . afterAll_ (removeResultsFiles testDirectory resultsFiles) 
-      emptyCategoryTests
-      fullCategoryTests
+    . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
+      emptyCategoryTests testDirectory
+      fullCategoryTests testDirectory
 
 emptyCategoryTests :: FilePath -> Spec
 emptyCategoryTests testDirectory = describe "Print File Structure for Empty Category" $ do

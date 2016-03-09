@@ -7,20 +7,20 @@ module FontPrintTests (
   runFontPrintTests
 ) where
 
+import OWAFontObjc
 import OWAObjcAbSyn
 import OWAObjcPrint
-import TestFontObjcObjects
+import TestFonts
 import TestUtil
 import Test.Hspec
-
 runFontPrintTests :: FilePath -> IO ()
 runFontPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/FontTests/FontOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
-    beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures) 
+    beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
-      emptyCategoryTests testDirectory
+      emptyCategoryTests testDirectory 
       fullCategoryTests testDirectory
 
 emptyCategoryTests :: FilePath -> Spec
@@ -50,10 +50,10 @@ resultsFiles = [emptyHeaderResultFile,
   implementationResultFile]
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [emptyFontsHeaderFile,
-  emptyFontsImplementationFile, 
-  fontsHeaderFile, 
-  fontsImplementationFile]
+testFileStructures = [objcHeaderFromFonts "EmptyCategory" [],
+  objcImplementationFromFonts "EmptyCategory" [], 
+  objcHeaderFromFonts "MyAppFonts" allTestFonts, 
+  objcImplementationFromFonts "MyAppFonts" allTestFonts]
 
 emptyHeaderResultFile :: String
 emptyHeaderResultFile = "UIFont+EmptyCategory.h"

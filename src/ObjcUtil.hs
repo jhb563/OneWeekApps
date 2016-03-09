@@ -8,9 +8,12 @@ Maintainer  : jhbowen047@gmail.com
 
 module ObjcUtil (
   categoryCommentSection,
+  foundationImportsSection,
   uiKitImportsSection,
   categoryMImportsSection,
   categoryFromNamesAndMethodBuilder,
+  simpleCategoryInterface,
+  simpleCategoryImplementation,
   localizedStringExpr  
 ) where
 
@@ -38,7 +41,11 @@ categoryCommentSection originalTypeName categoryName isHeader = BlockCommentSect
 -------------------IMPORT SECTIONS---------------------------------------------
 -------------------------------------------------------------------------------
 
--- | Returns a imports section which simply imports the UIKit module
+-- | Returns an imports section which simply imports the Foundation module
+foundationImportsSection :: FileSection
+foundationImportsSection = ImportsSection [ModuleImport "Foundation"]
+
+-- | Returns an imports section which simply imports the UIKit module
 uiKitImportsSection :: FileSection
 uiKitImportsSection = ImportsSection [ModuleImport "UIKit"]
 
@@ -65,6 +72,24 @@ categoryFromNamesAndMethodBuilder typeName catName methodBuilder objects = Categ
   categoryName = catName,
   categoryMethods = map methodBuilder objects
 }
+
+-- | Takes a category and returns the interface section where all method headers
+-- are in a single block with no comment.
+simpleCategoryInterface :: Category -> FileSection
+simpleCategoryInterface category = CategoryInterfaceSection
+  category
+  (if length (categoryMethods category) == 0
+    then []
+    else [MethodHeaderListSection Nothing (categoryMethods category)])
+
+-- | Takes a category and returns the implementation section with no pragma marks
+-- and all methods are in that section.
+simpleCategoryImplementation :: Category -> FileSection
+simpleCategoryImplementation category = CategoryImplementationSection
+  category
+  (if length (categoryMethods category) == 0
+    then []
+    else [MethodImplementationListSection Nothing (categoryMethods category)])
 
 -------------------------------------------------------------------------------
 -------------------LOCALIZED STRING HELPER-------------------------------------

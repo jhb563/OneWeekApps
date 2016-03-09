@@ -3,12 +3,10 @@ module Main where
 import AlertParseTests
 import AlertPrintTests
 import AppDirectoryTests
-import ColorObjcTests
 import ColorParseTests
 import ErrorParseTests
 import ErrorPrintTests
 import FileSearchTests
-import FontObjcTests
 import FontParseTests
 import FontPrintTests
 import ObjcPrintTests
@@ -21,13 +19,10 @@ main = do
   runAppDirectoryTests currentFilePath
   runFileSearchTests currentFilePath
   runColorParseTests currentFilePath
-  runColorObjcTests
   runFontParseTests currentFilePath
-  runFontObjcTests
   runFontPrintTests currentFilePath
   runAlertParseTests currentFilePath
   runAlertPrintTests currentFilePath
   runErrorParseTests currentFilePath
   runErrorPrintTests currentFilePath
-  runObjcPrintTests currentFilePath
   runV010IntegrationTests currentFilePath

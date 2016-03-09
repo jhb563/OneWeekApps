@@ -27,8 +27,9 @@ objcHeaderFromFonts :: String -> [OWAFont] -> ObjcFile
 objcHeaderFromFonts categoryName fonts = ObjcFile 
   [categoryCommentSection originalFontTypeName categoryName True,
   uiKitImportsSection,
-  CategoryInterfaceSection $ fontCategoryFromFonts categoryName sortedFonts]
+  simpleCategoryInterface category] 
     where sortedFonts = sortBy sortFontsByName fonts
+          category = fontCategoryFromFonts categoryName sortedFonts
 
 -- | 'objcImplementationFromFonts' takes a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
@@ -37,8 +38,9 @@ objcImplementationFromFonts :: String -> [OWAFont] -> ObjcFile
 objcImplementationFromFonts categoryName fonts = ObjcFile
   [categoryCommentSection originalFontTypeName categoryName False,
   categoryMImportsSection originalFontTypeName categoryName,
-  CategoryImplementationSection $ fontCategoryFromFonts categoryName sortedFonts]
+  simpleCategoryImplementation category]
     where sortedFonts = sortBy sortFontsByName fonts
+          category = fontCategoryFromFonts categoryName sortedFonts
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------
