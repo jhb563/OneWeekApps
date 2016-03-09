@@ -1,11 +1,31 @@
 module Main where
 
-import OWALib
-import Test.Hspec
+import AlertParseTests
+import AlertPrintTests
+import AppDirectoryTests
+import ColorObjcTests
+import ColorParseTests
+import ErrorParseTests
+import FileSearchTests
+import FontObjcTests
+import FontParseTests
+import FontPrintTests
+import ObjcPrintTests
+import System.Directory
+import Version010IntegrationTests
 
 main :: IO ()
-main = hspec $ do
-  describe "Validate titleString" $ do
-    it "titleString should return Running OWA" $ do
-      titleString `shouldBe` "Running OWA!"
-
+main = do
+  currentFilePath <- getCurrentDirectory
+  runAppDirectoryTests currentFilePath
+  runFileSearchTests currentFilePath
+  runColorParseTests currentFilePath
+  runColorObjcTests
+  runFontParseTests currentFilePath
+  runFontObjcTests
+  runFontPrintTests currentFilePath
+  runAlertParseTests currentFilePath
+  runAlertPrintTests currentFilePath
+  runErrorParseTests currentFilePath
+  runObjcPrintTests currentFilePath
+  runV010IntegrationTests currentFilePath

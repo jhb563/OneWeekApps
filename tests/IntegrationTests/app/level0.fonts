@@ -1,0 +1,13 @@
+Font textfieldFont
+  FontFamily Trebuchet
+  Size 0.7
+  Styles Bold, Italic
+
+Font randomFont
+  FontFamily HelveticaNeue
+  Size 13.6
+  Styles Medium, Italic
+
+Font styleInNameFont
+  FontFamily Georgia-BoldItalic
+  Size 13.2

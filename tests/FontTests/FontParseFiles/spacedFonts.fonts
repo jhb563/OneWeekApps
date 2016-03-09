@@ -1,0 +1,14 @@
+
+
+Font placeholderFont
+  FontFamily Verdana
+  Size .5
+  Styles Italic
+
+
+Font buttonFont
+  FontFamily Avenir
+  Size 12
+  Styles Medium
+
+

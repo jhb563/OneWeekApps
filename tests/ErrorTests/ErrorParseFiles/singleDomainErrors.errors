@@ -1,0 +1,20 @@
+DefaultDomain MyAppErrors
+
+Error simpleError
+  Code ...SimpleError
+  Description "SIMPLE_ERROR"
+
+Error noPrefixError
+  Code noPrefix
+  Description "I don't have a prefix"
+
+Error redundantDomain
+  Domain MyAppErrors
+  Code ...redundantCode
+  Description "Domain Respecified"
+
+Error differentDomain
+  Domain RandomDomain
+  Code random
+  Description "This error doesn't belong"
+

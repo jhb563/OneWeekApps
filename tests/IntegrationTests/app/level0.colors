@@ -1,0 +1,13 @@
+
+
+Color testColor1
+  Red 196.0
+  Blue 143.0
+  Green 100.0
+
+
+Color testColor2
+  Green 185.123
+  Red 123.0
+  Blue 96.0
+  Alpha 0.97
