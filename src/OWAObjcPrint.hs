@@ -56,7 +56,7 @@ forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
   parens (text $ '^':name) <>
   parens (hcat $ punctuate (text ", ") (map typeDoc paramTypes)) <>
   semi
-forwardDeclDoc (EnumDecl enumName types) = (indentBlock headerLine enumBody) <> semi
+forwardDeclDoc (EnumDecl enumName types) = indentBlock headerLine enumBody <> semi
   where headerLine = text "typedef NS_ENUM(NSInteger," <+> text enumName <> text ")"
         enumBody = vcat $ punctuate (text ",") (map text types)
 
@@ -64,14 +64,14 @@ categoryInterfaceDoc :: Category -> [FileSection] -> Doc
 categoryInterfaceDoc category sections = text "@interface" <+> 
   text (originalTypeName category) <+> 
   parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map sectionDoc $ sections) PPrint.<$>
+  vcatWithSpace (map sectionDoc sections) PPrint.<$>
   endDoc
 
 categoryImplementationDoc :: Category -> [FileSection] -> Doc
 categoryImplementationDoc category sections = text "@implementation" <+>
   text (originalTypeName category) <+>
   parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map sectionDoc $ sections) PPrint.<$>
+  vcatWithSpace (map sectionDoc sections) PPrint.<$>
   endDoc
 
 methodHeaderListSectionDoc :: Maybe String -> [ObjcMethod] -> Doc
@@ -133,7 +133,7 @@ expressionDoc (VoidBlock params statements) = indentBlock
   (vcat $ map statementDoc statements)
 expressionDoc (Var varName) = text varName
 expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
-expressionDoc (DictionaryLit exprMappings) = text "@{" <> (hcat $ punctuate (text ", ") (map keyValueDoc exprMappings)) <> text "}"
+expressionDoc (DictionaryLit exprMappings) = text "@{" <> hcat (punctuate (text ", ") (map keyValueDoc exprMappings)) <> text "}"
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 

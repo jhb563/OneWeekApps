@@ -78,7 +78,7 @@ categoryFromNamesAndMethodBuilder typeName catName methodBuilder objects = Categ
 simpleCategoryInterface :: Category -> FileSection
 simpleCategoryInterface category = CategoryInterfaceSection
   category
-  (if length (categoryMethods category) == 0
+  (if null (categoryMethods category)
     then []
     else [MethodHeaderListSection Nothing (categoryMethods category)])
 
@@ -87,7 +87,7 @@ simpleCategoryInterface category = CategoryInterfaceSection
 simpleCategoryImplementation :: Category -> FileSection
 simpleCategoryImplementation category = CategoryImplementationSection
   category
-  (if length (categoryMethods category) == 0
+  (if null (categoryMethods category)
     then []
     else [MethodImplementationListSection Nothing (categoryMethods category)])
 

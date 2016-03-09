@@ -38,7 +38,7 @@ objcHeaderFromErrors categoryName errors = ObjcFile
 -- as a list of error objects, and returns the structure for the category's
 -- implementation file in Objective C
 objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
-objcImplementationFromErrors categoryName errors = if length errors > 0
+objcImplementationFromErrors categoryName errors = if not (null errors)
   then ObjcFile [commentSection, includeSection, enumSect, implSection]
   else ObjcFile [commentSection, includeSection, implSection]
   where commentSection = categoryCommentSection originalErrorTypeName categoryName False
@@ -87,7 +87,7 @@ enumSection :: String -> [OWAError] -> FileSection
 enumSection categoryName errors = ForwardDeclarationSection [EnumDecl enumName codes]
   where enumName = categoryName ++ codesSuffix
         domains = sectionErrorsByDomain errors
-        codes = map errorCode $ concat (map domainErrors domains)
+        codes = map errorCode $ concatMap domainErrors domains
 
 methodHeaderSectionsForErrors :: [OWAError] -> [FileSection]
 methodHeaderSectionsForErrors errors = map headerSectionForDomain domains
@@ -153,5 +153,5 @@ sortErrorsInDomain (domainName, errors) = OWAErrorDomain {
 
 -- Sort first by domain, then by name
 sortErrorsByName :: OWAError -> OWAError -> Ordering
-sortErrorsByName error1 error2 = (errorName error1) `compare` (errorName error2)
+sortErrorsByName error1 error2 = errorName error1 `compare` errorName error2
 

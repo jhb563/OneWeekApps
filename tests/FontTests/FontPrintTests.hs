@@ -9,10 +9,10 @@ module FontPrintTests (
 
 import OWAFontObjc
 import OWAObjcAbSyn
-import OWAObjcPrint
 import TestFonts
 import TestUtil
 import Test.Hspec
+
 runFontPrintTests :: FilePath -> IO ()
 runFontPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/FontTests/FontOutputFiles/"
