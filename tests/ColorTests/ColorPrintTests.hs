@@ -1,7 +1,7 @@
--- OWAFontObjc will expose the methods
--- objcHeaderFromFonts :: String -> [OWAFont] -> ObjcFile
--- objcImplementationFromFonts :: String -> [OWAFont] -> ObjcFile
--- which each take a category name and a list of fonts and return a
+-- OWAColorObjc will expose the methods
+-- objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
+-- objcImplementationFromAlerts :: String -> [OWAColor] -> ObjcFile
+-- which each take a category name and a list of colors and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the method
@@ -12,25 +12,27 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module FontPrintTests (
-  runFontPrintTests
+module ObjcPrintTests (
+  runObjcPrintTests
 ) where
 
-import OWAFontObjc
+import ColorTestUtil
+import OWAColor
 import OWAObjcAbSyn
-import TestFonts
+import OWAObjcPrint
+import System.Directory
 import TestUtil
 import Test.Hspec
 
-runFontPrintTests :: FilePath -> IO ()
-runFontPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/FontTests/FontOutputFiles/"
+runObjcPrintTests :: FilePath -> IO ()
+runObjcPrintTests currentDirectory = do
+  let testDirectory = currentDirectory ++ "/tests/ColorTests/ColorOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
-      emptyCategoryTests testDirectory 
-      fullCategoryTests testDirectory
+      emptyCategoryTests
+      fullCategoryTests
 
 emptyCategoryTests :: FilePath -> Spec
 emptyCategoryTests testDirectory = describe "Print File Structure for Empty Category" $ do
@@ -43,7 +45,7 @@ emptyCategoryTests testDirectory = describe "Print File Structure for Empty Cate
       (testDirectory ++ emptyImplementationTestFile) 
 
 fullCategoryTests :: FilePath -> Spec
-fullCategoryTests testDirectory = describe "Print File Structure for Normal Font Category" $ do
+fullCategoryTests testDirectory = describe "Print File Structure for Normal Color Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ headerResultFile) `filesShouldMatch`
       (testDirectory ++ headerTestFile) 
@@ -52,39 +54,38 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+testFileStructures :: [ObjcFile]
+testFileStructures = [objcHeaderFromColors "EmptyCategory" [],
+  objcImplementationFromColors "EmptyColors" [],
+  objcHeaderFromColors "MyAppColors" testColorsToPrint,
+  objcImplementationFromColors "MyAppColors" testColorsToPrint]
+
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
   emptyImplementationResultFile,
   headerResultFile,
   implementationResultFile]
 
-testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromFonts "EmptyCategory" [],
-  objcImplementationFromFonts "EmptyCategory" [], 
-  objcHeaderFromFonts "MyAppFonts" allTestFonts, 
-  objcImplementationFromFonts "MyAppFonts" allTestFonts]
-
 emptyHeaderResultFile :: String
-emptyHeaderResultFile = "UIFont+EmptyCategory.h"
+emptyHeaderResultFile = "UIColor+EmptyCategory.h"
 
 emptyImplementationResultFile :: String
-emptyImplementationResultFile = "UIFont+EmptyCategory.m"
+emptyImplementationResultFile = "UIColor+EmptyCategory.m"
 
 headerResultFile :: String
-headerResultFile = "UIFont+MyAppFonts.h"
+headerResultFile = "UIColor+MyAppColors.h"
 
 implementationResultFile :: String
-implementationResultFile = "UIFont+MyAppFonts.m"
+implementationResultFile = "UIColor+MyAppColors.m"
 
 emptyHeaderTestFile :: String
-emptyHeaderTestFile = "UIFont+EmptyCategory.h.test"
+emptyHeaderTestFile = "UIColor+EmptyCategory.h.test"
 
 emptyImplementationTestFile :: String
-emptyImplementationTestFile = "UIFont+EmptyCategory.m.test"
+emptyImplementationTestFile = "UIColor+EmptyCategory.m.test"
 
 headerTestFile :: String
-headerTestFile = "UIFont+MyAppFonts.h.test"
+headerTestFile = "UIColor+MyAppColors.h.test"
 
 implementationTestFile :: String
-implementationTestFile = "UIFont+MyAppFonts.m.test"
-
+implementationTestFile = "UIColor+MyAppColors.m.test"

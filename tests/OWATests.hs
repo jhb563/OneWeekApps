@@ -9,7 +9,6 @@ import ErrorPrintTests
 import FileSearchTests
 import FontParseTests
 import FontPrintTests
-import ObjcPrintTests
 import System.Directory
 import Version010IntegrationTests
 

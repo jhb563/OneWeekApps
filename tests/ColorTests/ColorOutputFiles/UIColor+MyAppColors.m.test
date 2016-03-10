@@ -1,3 +1,13 @@
+//
+// UIColor+MyAppColors.h
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIColor+MyAppColors.h"
+
 @implementation UIColor (SampleCategory)
 
 + (UIColor*)christmasColor {

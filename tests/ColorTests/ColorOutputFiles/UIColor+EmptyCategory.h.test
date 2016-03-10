@@ -1,5 +1,5 @@
 //
-// UIColor+SampleCategory.h
+// UIColor+EmptyCategory.h
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
@@ -8,10 +8,6 @@
 
 @import UIKit;
 
-@interface UIColor (SampleCategory)
-
-+ (UIColor*)christmasColor;
-+ (UIColor*)darkRed;
-+ (UIColor*)offWhite;
+@interface UIColor (EmptyCategory)
 
 @end

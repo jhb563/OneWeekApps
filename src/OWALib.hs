@@ -108,7 +108,7 @@ alertImplmentationFileExtension :: FilePath
 alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.m"
 
 ---------------------------------------------------------------------------
-------------------------PRODUCING ALERTS FILES-----------------------------
+------------------------PRODUCING ERRORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
 produceErrorsFiles :: FilePath -> IO ()
