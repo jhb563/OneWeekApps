@@ -1,0 +1,33 @@
+Error beforeDomainSpec
+  Domain MyOwnDomain
+  Code ...SoleDomainCode
+  Description "This appears before anything with a domain"
+
+DefaultDomain FirstDomain
+
+Error whatError
+  Description "Wait an error happened?"
+  Code belongsToFirstDomain
+
+DefaultDomain SecondDomain
+  Prefix SecondDomain
+
+Error whichError
+  Description "This should be in second domain"
+  Code ...WhichError
+
+Error interloperDomain
+  Description "Why not?"
+  Code InterloperDomainError
+  Domain RandomDomain
+
+
+DefaultDomain FirstDomain
+  Prefix First
+
+Error finalError
+  Code ...FinalError
+  Description "This is the last"
+
+DefaultDomain EndWithRandomDomain
+

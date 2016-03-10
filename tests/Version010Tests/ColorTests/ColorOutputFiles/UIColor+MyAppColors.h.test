@@ -1,0 +1,25 @@
+//
+// UIColor+MyAppColors.h
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIColor (MyAppColors)
+
++ (UIColor*)aTest12;
++ (UIColor*)black;
++ (UIColor*)christmas;
++ (UIColor*)christmas2;
++ (UIColor*)color1;
++ (UIColor*)color2;
++ (UIColor*)hex2;
++ (UIColor*)hexAlpha2;
++ (UIColor*)hexa2;
++ (UIColor*)purple;
++ (UIColor*)white;
+
+@end

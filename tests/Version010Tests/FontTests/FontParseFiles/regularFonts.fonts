@@ -1,0 +1,21 @@
+Font myFont
+  FontFamily HelveticaNeue
+  Size 16.0
+  Styles Light
+
+Font titleFont
+  FontFamily Helvetica
+  Size 32
+  Styles Bold
+
+Font labelFont
+  FontFamily SanFranciscoDisplay
+  Size 14.5687
+  Styles Regular
+
+Font thinFont
+  FontFamily HelveticaNeue
+  Size 14.02341
+  Styles Thin
+
+

@@ -10,8 +10,11 @@ Stability   : Stable
 module Main where
 
 import System.Environment
+import System.Directory
 import OWALib
 
 -- | 'main' runs the main progream
 main :: IO ()
-main = putStrLn titleString 
+main = do
+  currentFilePath <- getCurrentDirectory
+  runOWA currentFilePath

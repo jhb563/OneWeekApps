@@ -1,0 +1,9 @@
+Font noStyleFont
+  FontFamily GillSans
+  Size 12.0
+
+
+Font thinFont
+  FontFamily HelveticaNeue
+  Size 14.02341
+  Styles Thin

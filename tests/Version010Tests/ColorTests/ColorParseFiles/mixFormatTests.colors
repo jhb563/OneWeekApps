@@ -1,0 +1,20 @@
+Color christmas2
+  Green 164.6
+  Blue 0
+  Red 127.758126
+
+Color aTest12
+  Red 245
+  Green 173
+  Blue 122
+  Alpha 0.94
+
+Color hex2
+  Hex 0xDEADC0
+
+Color hexa2
+  Hex 0xFFDEADC0
+
+Color hexAlpha2
+  Hex 0xDEADC0
+  Alpha 1.0
