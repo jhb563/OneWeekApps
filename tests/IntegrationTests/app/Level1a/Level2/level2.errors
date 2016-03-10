@@ -1,0 +1,10 @@
+DefaultDomain MyAppErrors
+  Prefix MyApp
+
+Error firstPrefixedError
+  Code ...FirstError
+  Description "Use the different prefix"
+
+Error unprefixedError
+  Code SecondError
+  Description "Use no prefix"

@@ -21,6 +21,7 @@ runV010IntegrationTests currentDirectory = do
       checkColorsFiles testDirectory
       checkFontsFiles testDirectory
       checkAlertsFiles testDirectory
+      checkErrorsFiles testDirectory
 
 checkColorsFiles :: FilePath -> Spec
 checkColorsFiles currentDirectory = do
@@ -60,6 +61,19 @@ checkAlertsFiles currentDirectory = do
 
     it "Implementation File Should Match" $
       producedAlertImplementationFilePath `filesShouldMatch` testAlertImplementationFilePath
+
+checkErrorsFiles :: FilePath -> Spec
+checkErrorsFiles currentDirectory = do
+  let producedErrorHeaderFilePath = currentDirectory ++ errorHeaderFileExtension
+  let producedErrorImplementationFilePath = currentDirectory ++ errorImplementationFileExtension
+  let testErrorHeaderFilePath = currentDirectory ++ errorHeaderTestExtension
+  let testErrorImplementationFilePath = currentDirectory ++ errorImplementationTestExtension
+  describe "Compare Produced Errors Files" $ do
+    it "Header File Should Match" $
+      producedErrorHeaderFilePath `filesShouldMatch` testErrorHeaderFilePath
+
+    it "Implementation File Should Match" $
+      producedErrorImplementationFilePath `filesShouldMatch` testErrorImplementationFilePath
 
 removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles currentDirectory = removeFiles $ map (currentDirectory ++) producedFiles
@@ -103,7 +117,20 @@ alertHeaderTestExtension = "/app/UIAlertController+MyAppAlerts.h.test"
 alertImplementationTestExtension :: String
 alertImplementationTestExtension = "/app/UIAlertController+MyAppAlerts.m.test"
 
+errorHeaderFileExtension :: String
+errorHeaderFileExtension = "/app/NSError+MyAppErrors.h"
+
+errorImplementationFileExtension :: String
+errorImplementationFileExtension = "/app/NSError+MyAppErrors.m"
+
+errorHeaderTestExtension :: String
+errorHeaderTestExtension = "/app/NSError+MyAppErrors.h.test"
+
+errorImplementationTestExtension :: String
+errorImplementationTestExtension = "/app/NSError+MyAppErrors.m.test"
+
 producedFiles :: [FilePath]
 producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension,
   fontHeaderFileExtension, fontImplementationFileExtension,
-  alertHeaderFileExtension, alertImplementationFileExtension]
+  alertHeaderFileExtension, alertImplementationFileExtension,
+  errorHeaderFileExtension, errorImplementationFileExtension]
