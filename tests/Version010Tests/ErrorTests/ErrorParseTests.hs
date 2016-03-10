@@ -14,7 +14,7 @@ import Test.Hspec
 
 runErrorParseTests :: FilePath -> IO ()
 runErrorParseTests startFilePath = hspec $ do
-  let parseFilesPath = startFilePath ++ "/tests/ErrorTests/ErrorParseFiles" 
+  let parseFilesPath = startFilePath ++ "/tests/Version010Tests/ErrorTests/ErrorParseFiles" 
   noDefaultDomainTests parseFilesPath
   singleDomainTests parseFilesPath
   singleDomainPrefixTests parseFilesPath

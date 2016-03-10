@@ -24,7 +24,7 @@ import Test.Hspec
 
 runAlertPrintTests :: FilePath -> IO ()
 runAlertPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/AlertTests/AlertOutputFiles/"
+  let testDirectory = currentDirectory ++ "/tests/Version010Tests/AlertTests/AlertOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)

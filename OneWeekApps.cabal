@@ -42,6 +42,8 @@ library
   other-modules:       ParseUtil,
                        ObjcUtil
   hs-source-dirs:      src,
+                       src/Parsers,
+                       src/ObjcConverters,
                        src/dataTypes
   default-language: Haskell2010
 
@@ -60,19 +62,18 @@ executable OneWeekApps
   hs-source-dirs:      src
   default-language:    Haskell2010
 
-test-suite tests
+test-suite Version010Tests
   ghc-options: -Wall
   default-extensions: OverloadedStrings
   type: exitcode-stdio-1.0
-  main-is: OWATests.hs
+  main-is: OWAVersion010Tests.hs
   hs-source-dirs:   tests,
-                    tests/ColorTests,
-                    tests/ColorTests/ColorParseTests,
-                    tests/FontTests,
-                    tests/AlertTests,
-                    tests/ErrorTests,
-                    tests/ObjcPrintTests,
-                    tests/IntegrationTests
+                    tests/Version010Tests,
+                    tests/Version010Tests/ColorTests,
+                    tests/Version010Tests/FontTests,
+                    tests/Version010Tests/AlertTests,
+                    tests/Version010Tests/ErrorTests,
+                    tests/Version010Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

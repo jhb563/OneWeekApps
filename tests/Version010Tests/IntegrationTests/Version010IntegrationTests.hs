@@ -13,7 +13,7 @@ import Test.Hspec
 
 runV010IntegrationTests :: FilePath -> IO ()
 runV010IntegrationTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/IntegrationTests"
+  let testDirectory = currentDirectory ++ "/tests/Version010Tests/IntegrationTests"
   hspec $
     beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
     beforeAll_ (runOWA testDirectory)

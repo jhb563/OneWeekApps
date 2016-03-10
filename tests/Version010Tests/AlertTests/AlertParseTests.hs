@@ -14,7 +14,7 @@ import Test.Hspec
 
 runAlertParseTests :: FilePath -> IO ()
 runAlertParseTests startFilePath = hspec $ do
-  let parseFilesPath = startFilePath ++ "/tests/AlertTests/AlertParseFiles"
+  let parseFilesPath = startFilePath ++ "/tests/Version010Tests/AlertTests/AlertParseFiles"
   oneButtonAlertTests parseFilesPath
   multiButtonAlertTests parseFilesPath
   missingTitleOrMessageAlertTests parseFilesPath

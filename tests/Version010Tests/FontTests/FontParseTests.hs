@@ -14,7 +14,7 @@ import Test.Hspec
 
 runFontParseTests :: FilePath -> IO ()
 runFontParseTests startFilePath = hspec $ do
-  let parseFilesPath = startFilePath ++ "/tests/FontTests/FontParseFiles" 
+  let parseFilesPath = startFilePath ++ "/tests/Version010Tests/FontTests/FontParseFiles" 
   regularFontTests parseFilesPath
   spacedFontTests parseFilesPath
   multiStyleFontTests parseFilesPath
