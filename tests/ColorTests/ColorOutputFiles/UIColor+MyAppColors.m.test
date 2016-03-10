@@ -1,0 +1,57 @@
+//
+// UIColor+MyAppColors.m
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIColor+MyAppColors.h"
+
+@implementation UIColor (MyAppColors)
+
++ (UIColor*)aTest12 {
+  return [UIColor colorWithRed:0.961 green:0.678 blue:0.478 alpha:0.94];
+}
+
++ (UIColor*)black {
+  return [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+}
+
++ (UIColor*)christmas {
+  return [UIColor colorWithRed:0.501 green:0.645 blue:0.0 alpha:1.0];
+}
+
++ (UIColor*)christmas2 {
+  return [UIColor colorWithRed:0.501 green:0.645 blue:0.0 alpha:1.0];
+}
+
++ (UIColor*)color1 {
+  return [UIColor colorWithRed:0.698 green:0.878 blue:0.263 alpha:1.0];
+}
+
++ (UIColor*)color2 {
+  return [UIColor colorWithRed:0.038 green:1.0 blue:0.0 alpha:1.0];
+}
+
++ (UIColor*)hex2 {
+  return [UIColor colorWithRed:0.871 green:0.678 blue:0.753 alpha:1.0];
+}
+
++ (UIColor*)hexAlpha2 {
+  return [UIColor colorWithRed:0.871 green:0.678 blue:0.753 alpha:1.0];
+}
+
++ (UIColor*)hexa2 {
+  return [UIColor colorWithRed:0.871 green:0.678 blue:0.753 alpha:1.0];
+}
+
++ (UIColor*)purple {
+  return [UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+}
+
++ (UIColor*)white {
+  return [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+}
+
+@end

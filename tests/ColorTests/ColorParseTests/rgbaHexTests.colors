@@ -1,17 +1,17 @@
-Color aTest1
+Color cTest1
   Hex 0xFFDEADC0
 
-Color aTest2
+Color cTest2
   Hex 0x34deCb11
 
-Color aTest3
+Color cTest3
   Hex 0xA51d2Bc3
 
-Color aTest4
+Color cTest4
   Hex 0xc3F4f44f
 
-Color aTest5
+Color cTest5
   Hex 0x2DeEf44F
 
-Color aTest6
+Color cTest6
   Hex 0x98350650

@@ -1,7 +1,0 @@
-@interface UIColor (SampleCategory)
-
-+ (UIColor*)christmasColor;
-+ (UIColor*)darkRed;
-+ (UIColor*)offWhite;
-
-@end
