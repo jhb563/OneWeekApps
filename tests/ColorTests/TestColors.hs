@@ -1,5 +1,7 @@
 module TestColors where
 
+import OWAColor
+
 testColorsToPrint :: [OWAColor]
 testColorsToPrint = rgbColorsList ++ mixFormatColorsList
 

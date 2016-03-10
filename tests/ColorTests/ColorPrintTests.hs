@@ -12,27 +12,25 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module ObjcPrintTests (
-  runObjcPrintTests
+module ColorPrintTests (
+  runColorPrintTests
 ) where
 
-import ColorTestUtil
-import OWAColor
+import OWAColorObjc
 import OWAObjcAbSyn
-import OWAObjcPrint
-import System.Directory
+import TestColors
 import TestUtil
 import Test.Hspec
 
-runObjcPrintTests :: FilePath -> IO ()
-runObjcPrintTests currentDirectory = do
+runColorPrintTests :: FilePath -> IO ()
+runColorPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/ColorTests/ColorOutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
-      emptyCategoryTests
-      fullCategoryTests
+      emptyCategoryTests testDirectory
+      fullCategoryTests testDirectory
 
 emptyCategoryTests :: FilePath -> Spec
 emptyCategoryTests testDirectory = describe "Print File Structure for Empty Category" $ do
@@ -56,7 +54,7 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Colo
 
 testFileStructures :: [ObjcFile]
 testFileStructures = [objcHeaderFromColors "EmptyCategory" [],
-  objcImplementationFromColors "EmptyColors" [],
+  objcImplementationFromColors "EmptyCategory" [],
   objcHeaderFromColors "MyAppColors" testColorsToPrint,
   objcImplementationFromColors "MyAppColors" testColorsToPrint]
 

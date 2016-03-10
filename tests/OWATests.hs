@@ -4,6 +4,7 @@ import AlertParseTests
 import AlertPrintTests
 import AppDirectoryTests
 import ColorParseTests
+import ColorPrintTests
 import ErrorParseTests
 import ErrorPrintTests
 import FileSearchTests
@@ -18,6 +19,7 @@ main = do
   runAppDirectoryTests currentFilePath
   runFileSearchTests currentFilePath
   runColorParseTests currentFilePath
+  runColorPrintTests currentFilePath
   runFontParseTests currentFilePath
   runFontPrintTests currentFilePath
   runAlertParseTests currentFilePath

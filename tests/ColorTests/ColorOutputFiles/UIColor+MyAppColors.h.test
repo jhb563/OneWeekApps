@@ -10,8 +10,16 @@
 
 @interface UIColor (MyAppColors)
 
-+ (UIColor*)christmasColor;
-+ (UIColor*)darkRed;
-+ (UIColor*)offWhite;
++ (UIColor*)aTest12;
++ (UIColor*)black;
++ (UIColor*)christmas;
++ (UIColor*)christmas2;
++ (UIColor*)color1;
++ (UIColor*)color2;
++ (UIColor*)hex2;
++ (UIColor*)hexAlpha2;
++ (UIColor*)hexa2;
++ (UIColor*)purple;
++ (UIColor*)white;
 
 @end

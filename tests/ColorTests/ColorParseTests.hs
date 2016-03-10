@@ -7,7 +7,6 @@ module ColorParseTests (
   runColorParseTests
 ) where
 
-import OWAColor
 import OWAColorParser
 import TestColors
 import Test.Hspec
