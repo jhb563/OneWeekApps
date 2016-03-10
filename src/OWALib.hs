@@ -16,6 +16,9 @@ import OWAAlertParser
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
+import OWAError
+import OWAErrorObjc
+import OWAErrorParser
 import OWAFileSearch
 import OWAFont
 import OWAFontObjc
@@ -33,6 +36,7 @@ runOWA filePath = do
       produceColorsFiles appDirectory
       produceFontsFiles appDirectory
       produceAlertsFiles appDirectory
+      produceErrorsFiles appDirectory
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------
@@ -102,3 +106,26 @@ alertHeaderFileExtension = "/UIAlertController+MyAppAlerts.h"
 
 alertImplmentationFileExtension :: FilePath
 alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.m"
+
+---------------------------------------------------------------------------
+------------------------PRODUCING ALERTS FILES-----------------------------
+---------------------------------------------------------------------------
+
+produceErrorsFiles :: FilePath -> IO ()
+produceErrorsFiles appDirectory = do
+  errorFiles <- findErrorsFiles appDirectory
+  listOfErrorLists <- mapM parseErrorsFromFile errorFiles
+  let errors = concat listOfErrorLists
+  let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
+  let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
+  printStructureToFile errorHeaderFileStructure (appDirectory ++ errorHeaderFileExtension)
+  printStructureToFile errorMFileStructure (appDirectory ++ errorImplmentationFileExtension)
+
+errorCategoryName :: String
+errorCategoryName = "MyAppErrors"
+
+errorHeaderFileExtension :: FilePath
+errorHeaderFileExtension = "/NSError+MyAppErrors.h"
+
+errorImplmentationFileExtension :: FilePath
+errorImplmentationFileExtension = "/NSError+MyAppErrors.m"
