@@ -82,7 +82,7 @@ codeParser = do
   firstLetter <- letter
   rest <- many (alphaNum <|> char '_')
   let code = firstLetter:rest
-  endOfLine
+  singleTrailingComment
   case maybeDots of
     Just _ -> return (codeKeyword, PrefixedValue code)
     _ -> return (codeKeyword, NormalValue code)

@@ -7,7 +7,7 @@ Font textfieldFont
 Font randomFont
   FontFamily HelveticaNeue
   Size 13.6 // Size 12.4 (don't parse this!)
-  Styles Medium, Italic
+  Styles Medium, Italic // Needed for coverage
 // In between comment
 Font styleInNameFont
 // Hi

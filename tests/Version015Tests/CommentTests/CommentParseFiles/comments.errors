@@ -15,7 +15,8 @@ Error authError
   Code AUTHERROR
   Description "You can't \"Login\"" // Comment after some strings
 
-
+DefaultDomain OWACommentTest // here's a comment
+  Prefix OWAComment   // Another inline comment
 
 
 Error sadError
@@ -28,5 +29,5 @@ Error userNotFound
   Code UserNotFound // Field
   Description "You didn't \n make an account" // Has a comment
 
-
+DefaultDomain OWACommentTest  // No prefix this time
 

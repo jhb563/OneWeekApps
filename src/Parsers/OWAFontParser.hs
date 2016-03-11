@@ -64,7 +64,7 @@ fontFamilyParser = do
   string fontFamilyKeyword
   char ' '
   familyName <- many (alphaNum <|> char '-')
-  endOfLine
+  singleTrailingComment
   return (fontFamilyKeyword, FamilyVal familyName)
 
 fontSizeParser :: GenParser Char st (FontAttr, FontVal)
@@ -77,7 +77,7 @@ fontStylesParser = do
   string fontStylesKeyword
   char ' '
   attributes <- fontStyleAttributeParser `sepBy1` string ", "
-  endOfLine
+  singleTrailingComment
   return (fontStylesKeyword, StyleAttrs attributes)
 
 fontStyleAttributeParser :: GenParser Char st String

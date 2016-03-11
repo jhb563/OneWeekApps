@@ -89,7 +89,7 @@ hexParser = do
   char ' '
   string "0x"
   hexString <- many hexChar
-  endOfLine
+  singleTrailingComment
   let attrs = attrsFromHexString hexString
   return attrs
 

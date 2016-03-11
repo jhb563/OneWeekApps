@@ -16,3 +16,8 @@ Color testColor2
   Blue 96.0
     // Why not alpha = 1?
   Alpha 0.97
+
+Color commentHexTest
+  Hex 0x54512512  // Need this comment for test coverage
+
+
