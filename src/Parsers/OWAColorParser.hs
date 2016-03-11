@@ -41,7 +41,7 @@ parseColorsFromFile fPath = do
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> Either ParseError [Maybe OWAColor]
-parseColorContents = parse (colorParser `endBy` spaces) ""
+parseColorContents = parse (colorParser `endBy` commentOrSpacesParser) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -49,7 +49,7 @@ parseColorContents = parse (colorParser `endBy` spaces) ""
 
 colorParser :: GenParser Char st (Maybe OWAColor)
 colorParser = do
-  spaces
+  commentOrSpacesParser
   name <- nameParserWithKeyword colorKeyword
   attrs <- many1 attrLine
   let attrMap = Map.fromList (concat attrs)

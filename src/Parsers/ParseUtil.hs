@@ -11,6 +11,7 @@ module ParseUtil (
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
   floatAttributeParser,
+  commentOrSpacesParser,
   printErrorAndReturnEmpty
 ) where
 
@@ -98,6 +99,23 @@ decimalAndFollowing = do
                   then read ('0':'.':following) :: Float 
                   else 0.0
   return asFloat
+
+-------------------------------------------------------------------------------
+-------------------PARSING COMMENTS--------------------------------------------
+-------------------------------------------------------------------------------
+
+-- | Skips over a series of spaces and comments
+commentOrSpacesParser :: GenParser Char st ()
+commentOrSpacesParser = do
+  spaces `sepBy` commentParser
+  return ()
+
+commentParser :: GenParser Char st ()
+commentParser = do
+  string "//"
+  many $ noneOf "\n"
+  endOfLine
+  return ()
 
 -------------------------------------------------------------------------------
 -------------------DEBUGGING ERRORS--------------------------------------------

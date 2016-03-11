@@ -48,11 +48,11 @@ parseErrorContents = Text.Parsec.runParser
 ---------------------------------------------------------------------------
 
 multiErrorParser :: GenParser Char ErrorParserState [Maybe OWAError]
-multiErrorParser = errorParser `endBy` spaces
+multiErrorParser = errorParser `endBy` commentOrSpacesParser
 
 errorParser :: GenParser Char ErrorParserState (Maybe OWAError)
 errorParser = do
-  spaces
+  commentOrSpacesParser
   name <- nameParserWithKeyword errorKeyword
   attrs <- many1 errorAttrLine
   let attrMap = Map.fromList attrs

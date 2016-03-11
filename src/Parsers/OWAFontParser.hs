@@ -37,7 +37,7 @@ parseFontsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents = parse (fontParser `endBy` spaces) ""
+parseFontContents = parse (fontParser `endBy` commentOrSpacesParser) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -45,7 +45,7 @@ parseFontContents = parse (fontParser `endBy` spaces) ""
 
 fontParser :: GenParser Char st (Maybe OWAFont)
 fontParser = do
-  spaces
+  commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
   attrs <- many1 fontAttrLine
   let attrMap = Map.fromList attrs

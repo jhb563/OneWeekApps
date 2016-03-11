@@ -35,7 +35,7 @@ parseAlertsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrAlerts
 
 parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
-parseAlertContents = parse (alertParser `endBy` spaces) ""
+parseAlertContents = parse (alertParser `endBy` commentOrSpacesParser) ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -43,7 +43,7 @@ parseAlertContents = parse (alertParser `endBy` spaces) ""
 
 alertParser :: GenParser Char st (Maybe OWAAlert)
 alertParser = do
-  spaces
+  commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
   attrs <- many1 alertAttrLine
   let attrMap = Map.fromList attrs
