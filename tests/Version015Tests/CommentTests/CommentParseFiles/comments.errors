@@ -1,0 +1,32 @@
+
+Error myError1
+  Domain OWAFirstErrors // This comment is on the end of a line
+  Code NetworkingError
+  Description "DESCRIPTION_KEY"
+
+Error disconnectError     // There's a big space AND this is on the keyword
+  Domain OWAFirstErrors
+  Code DisconnectError
+  Description "DISCONNECTED!.&*"
+
+
+Error authError
+  Domain OWALogin
+  Code AUTHERROR
+  Description "You can't \"Login\"" // Comment after some strings
+
+
+
+
+Error sadError
+  Domain OWAFirstErrors
+  Code tears_of_failure
+  Description "Crying about stuff" // :(
+
+Error userNotFound
+  Domain OWALogin // Every
+  Code UserNotFound // Field
+  Description "You didn't \n make an account" // Has a comment
+
+
+
