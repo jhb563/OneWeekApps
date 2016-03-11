@@ -39,7 +39,7 @@ errorCommentTests :: FilePath -> Spec
 errorCommentTests testDirectory = do
   let errorCommentsTestFile = testDirectory ++ errorCommentsFileExtension
   describe "Parse errors with comments" $
-    context "when comments come after item and attribute lines"
+    context "when comments come after item and attribute lines" $
       it "Should successfully parse, returning a non-empty list" $
         shouldReturnNoneEmpty $ parseErrorsFromFile errorCommentsTestFile
 
@@ -50,8 +50,10 @@ fontCommentTests testDirectory = do
     it "Should successfully parse, returning a non-empty list" $
       shouldReturnNoneEmpty $ parseFontsFromFile fontCommentsTestFile
 
-shouldReturnNoneEmpty :: IO [x] -> Expectation
-shouldReturnNoneEmpty (IO xs) = xs `shouldSatisfy` (not . null)
+shouldReturnNoneEmpty :: Show x => IO [x] -> Expectation
+shouldReturnNoneEmpty wrappedVals = do
+  xs <- wrappedVals
+  xs `shouldSatisfy` (not . null)
 
 alertCommentsFileExtension :: String
 alertCommentsFileExtension = "/comments.alerts"

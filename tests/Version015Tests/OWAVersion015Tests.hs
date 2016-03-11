@@ -1,4 +1,9 @@
 module Main where
 
+import CommentTests
+import System.Directory
+
 main :: IO ()
-main = putStrLn "Running Version 0.1.5 Tests"
+main = do
+  currentDirectory <- getCurrentDirectory
+  runCommentTests currentDirectory
