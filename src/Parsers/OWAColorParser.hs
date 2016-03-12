@@ -51,8 +51,8 @@ colorParser :: GenParser Char st (Maybe OWAColor)
 colorParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword colorKeyword
-  many (Text.Parsec.try $ indentedComment)
-  attrs <- attrLine `sepEndBy1` (many $ Text.Parsec.try indentedComment)
+  many $ Text.Parsec.try indentedComment
+  attrs <- attrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList (concat attrs)
   return (colorFromNameAndAttrMap name attrMap)
 

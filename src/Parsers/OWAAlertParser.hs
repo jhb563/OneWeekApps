@@ -46,7 +46,7 @@ alertParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
   many $ Text.Parsec.try indentedComment
-  attrs <- alertAttrLine `sepEndBy1` (many $ Text.Parsec.try indentedComment)
+  attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   return (alertFromNameAndAttrMap name attrMap)
 

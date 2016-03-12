@@ -55,7 +55,7 @@ errorParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword errorKeyword
   many $ Text.Parsec.try indentedComment
-  attrs <- errorAttrLine `sepEndBy1` (many $ Text.Parsec.try indentedComment)
+  attrs <- errorAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   parserState <- getState
   return (errorFromNameAndAttrMap name attrMap parserState)

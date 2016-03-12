@@ -48,7 +48,7 @@ fontParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
   many $ Text.Parsec.try indentedComment
-  attrs <- fontAttrLine `sepEndBy1` (many $ Text.Parsec.try indentedComment)
+  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   return (fontFromNameAndAttrMap name attrMap)
 
