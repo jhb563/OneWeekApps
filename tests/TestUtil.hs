@@ -1,6 +1,7 @@
 module TestUtil (
   createFileAndClose,
   shouldReturnSorted,
+  shouldReturnNonEmpty,
   filesShouldMatch,
   createResultsFiles,
   removeResultsFiles,
@@ -29,6 +30,11 @@ shouldReturnSorted :: (Show a, Ord a) => IO [a] -> [a] -> Expectation
 shouldReturnSorted returned expected = do
   actual <- returned
   sort actual `shouldBe` expected
+
+shouldReturnNonEmpty :: Show x => IO [x] -> Expectation
+shouldReturnNonEmpty wrappedVals = do
+  xs <- wrappedVals
+  xs `shouldSatisfy` (not . null)
 
 filesShouldMatch :: FilePath -> FilePath -> Expectation
 filesShouldMatch actualFile expectedFile = do

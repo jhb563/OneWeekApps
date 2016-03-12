@@ -9,6 +9,7 @@ import OWAAlertParser
 import OWAColorParser
 import OWAErrorParser
 import OWAFontParser
+import TestUtil
 import Test.Hspec
 
 runCommentTests :: FilePath -> IO ()
@@ -25,7 +26,7 @@ alertCommentTests testDirectory = do
   describe "Parse alerts with comments" $
     context "when the comments exist between alert specification" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNoneEmpty $ parseAlertsFromFile alertCommentsTestFile
+        shouldReturnNonEmpty $ parseAlertsFromFile alertCommentsTestFile
 
 colorCommentTests :: FilePath -> Spec 
 colorCommentTests testDirectory = do
@@ -33,7 +34,7 @@ colorCommentTests testDirectory = do
   describe "Parse colors with comments" $
     context "when commented lines exist among the attributes for colors" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNoneEmpty $ parseColorsFromFile colorCommentsTestFile
+        shouldReturnNonEmpty $ parseColorsFromFile colorCommentsTestFile
       
 errorCommentTests :: FilePath -> Spec 
 errorCommentTests testDirectory = do
@@ -41,19 +42,14 @@ errorCommentTests testDirectory = do
   describe "Parse errors with comments" $
     context "when comments come after item and attribute lines" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNoneEmpty $ parseErrorsFromFile errorCommentsTestFile
+        shouldReturnNonEmpty $ parseErrorsFromFile errorCommentsTestFile
 
 fontCommentTests :: FilePath -> Spec 
 fontCommentTests testDirectory = do
   let fontCommentsTestFile = testDirectory ++ fontCommentsFileExtension
   describe "Parse fonts with comments" $
     it "Should successfully parse, returning a non-empty list" $
-      shouldReturnNoneEmpty $ parseFontsFromFile fontCommentsTestFile
-
-shouldReturnNoneEmpty :: Show x => IO [x] -> Expectation
-shouldReturnNoneEmpty wrappedVals = do
-  xs <- wrappedVals
-  xs `shouldSatisfy` (not . null)
+      shouldReturnNonEmpty $ parseFontsFromFile fontCommentsTestFile
 
 alertCommentsFileExtension :: String
 alertCommentsFileExtension = "/comments.alerts"
