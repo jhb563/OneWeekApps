@@ -11,6 +11,9 @@ module ParseUtil (
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
   floatAttributeParser,
+  commentOrSpacesParser,
+  singleTrailingComment,
+  indentedComment,
   printErrorAndReturnEmpty
 ) where
 
@@ -31,7 +34,7 @@ nameParserWithKeyword keyword = do
   char ' '
   firstLetter <- lower
   restOfName <- many alphaNum 
-  endOfLine
+  singleTrailingComment
   return (firstLetter:restOfName)
 
 -- | Takes a string for a keyword, and returns a parser which parses that keyword,
@@ -43,7 +46,7 @@ variableNameParserWithKeyword keyword = do
   char ' '
   firstLetter <- letter
   restOfName <- many (alphaNum <|> char '_')
-  endOfLine
+  singleTrailingComment
   return (keyword, firstLetter:restOfName)
 
 -- | Takes a string for a keyword, and returns a parser which parses that keyword,
@@ -54,16 +57,26 @@ localizedKeyParserWithKeyword keyword = do
   string keyword
   char ' '
   localizedKey <- parseLocalizedKey
-  endOfLine
   return (keyword, localizedKey)
 
 parseLocalizedKey :: GenParser Char st String
 parseLocalizedKey = do
   char '"'
-  substrings <- many (noneOf "\"\n") `endBy` char '"'
-  case substrings of
-    [] -> return ""
-    (s:ss) -> return $ concat (s:map ('"':) ss)
+  key <- localizedKeyBySection
+  singleTrailingComment
+  return key
+
+localizedKeyBySection :: GenParser Char st String
+localizedKeyBySection = do
+  section <- many (noneOf "\"")
+  if not (null section) && last section == '\\'
+    then do
+      char '"'
+      rest <- localizedKeyBySection
+      return $ section ++ ('"':rest)
+    else do
+      char '"'
+      return section
 
 -------------------------------------------------------------------------------
 -------------------PARSING FLOAT ATTRIBUTES------------------------------------
@@ -76,7 +89,7 @@ floatAttributeParser keyword = do
   string keyword
   char ' '
   value <- parseFloat
-  endOfLine
+  singleTrailingComment
   return (keyword, value)
 
 parseFloat :: GenParser Char st Float 
@@ -98,6 +111,37 @@ decimalAndFollowing = do
                   then read ('0':'.':following) :: Float 
                   else 0.0
   return asFloat
+
+-------------------------------------------------------------------------------
+-------------------PARSING COMMENTS--------------------------------------------
+-------------------------------------------------------------------------------
+
+-- | Skips over a series of spaces and comments
+commentOrSpacesParser :: GenParser Char st ()
+commentOrSpacesParser = do
+  spaces `sepBy` commentParser
+  return ()
+
+-- | Parses a series of spaces, and then a single comment
+singleTrailingComment :: GenParser Char st ()
+singleTrailingComment = do
+  many (oneOf " \t")
+  option () commentParser
+  endOfLine
+  return ()
+
+-- | Parses an indented comment. Will likely be absorbed later once tabbing
+-- is done
+indentedComment :: GenParser Char st ()
+indentedComment = do
+  string "\t" <|> string "  "
+  singleTrailingComment
+
+commentParser :: GenParser Char st ()
+commentParser = do
+  string "//"
+  many $ noneOf "\n"
+  return ()
 
 -------------------------------------------------------------------------------
 -------------------DEBUGGING ERRORS--------------------------------------------

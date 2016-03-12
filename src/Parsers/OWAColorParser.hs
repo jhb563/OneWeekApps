@@ -41,7 +41,7 @@ parseColorsFromFile fPath = do
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> Either ParseError [Maybe OWAColor]
-parseColorContents = parse (colorParser `endBy` spaces) ""
+parseColorContents = parse (colorParser `endBy` commentOrSpacesParser) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -49,9 +49,10 @@ parseColorContents = parse (colorParser `endBy` spaces) ""
 
 colorParser :: GenParser Char st (Maybe OWAColor)
 colorParser = do
-  spaces
+  commentOrSpacesParser
   name <- nameParserWithKeyword colorKeyword
-  attrs <- many1 attrLine
+  many $ Text.Parsec.try indentedComment
+  attrs <- attrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList (concat attrs)
   return (colorFromNameAndAttrMap name attrMap)
 
@@ -61,7 +62,12 @@ attrLine = do
   choice attrParsers
 
 attrParsers :: [GenParser Char st [(ColorAttr, ColorVal)]]
-attrParsers = map Text.Parsec.try [redParser, greenParser, blueParser, alphaParser, hexParser]
+attrParsers = map Text.Parsec.try
+  [redParser, 
+  greenParser,
+  blueParser, 
+  alphaParser,
+  hexParser]
 
 redParser :: GenParser Char st [(ColorAttr, ColorVal)]
 redParser = do
@@ -89,7 +95,7 @@ hexParser = do
   char ' '
   string "0x"
   hexString <- many hexChar
-  endOfLine
+  singleTrailingComment
   let attrs = attrsFromHexString hexString
   return attrs
 

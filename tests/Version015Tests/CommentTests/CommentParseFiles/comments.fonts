@@ -1,0 +1,15 @@
+// Header Comment
+Font textfieldFont
+  FontFamily Trebuchet // Inline with attr
+  Size 0.7
+  Styles Bold, Italic
+
+Font randomFont
+  FontFamily HelveticaNeue
+  Size 13.6 // Size 12.4 (don't parse this!)
+  Styles Medium, Italic // Needed for coverage
+  // In between comment
+Font styleInNameFont
+  // Hi
+  FontFamily Georgia-BoldItalic
+  Size 13.2

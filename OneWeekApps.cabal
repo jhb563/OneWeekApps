@@ -87,7 +87,8 @@ test-suite Version015Tests
   type: exitcode-stdio-1.0
   main-is: OWAVersion015Tests.hs
   hs-source-dirs:   tests,
-                    tests/Version015Tests
+                    tests/Version015Tests,
+                    tests/Version015Tests/CommentTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

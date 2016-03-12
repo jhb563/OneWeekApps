@@ -37,7 +37,7 @@ parseFontsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents = parse (fontParser `endBy` spaces) ""
+parseFontContents = parse (fontParser `endBy` commentOrSpacesParser) ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -45,9 +45,10 @@ parseFontContents = parse (fontParser `endBy` spaces) ""
 
 fontParser :: GenParser Char st (Maybe OWAFont)
 fontParser = do
-  spaces
+  commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
-  attrs <- many1 fontAttrLine
+  many $ Text.Parsec.try indentedComment
+  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   return (fontFromNameAndAttrMap name attrMap)
 
@@ -64,7 +65,7 @@ fontFamilyParser = do
   string fontFamilyKeyword
   char ' '
   familyName <- many (alphaNum <|> char '-')
-  endOfLine
+  singleTrailingComment
   return (fontFamilyKeyword, FamilyVal familyName)
 
 fontSizeParser :: GenParser Char st (FontAttr, FontVal)
@@ -77,7 +78,7 @@ fontStylesParser = do
   string fontStylesKeyword
   char ' '
   attributes <- fontStyleAttributeParser `sepBy1` string ", "
-  endOfLine
+  singleTrailingComment
   return (fontStylesKeyword, StyleAttrs attributes)
 
 fontStyleAttributeParser :: GenParser Char st String
