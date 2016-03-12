@@ -2,11 +2,14 @@
 
 Color testColor1
   // This line shouldn't be observed
+  // Same with this
   Red 196.0
-// This comment isn't indented
+  // This comment 
+  // Multiple comments
   Blue 143.0
   // Green is 100
   Green 100.0
+  // Ending comment
 
 
 Color testColor2

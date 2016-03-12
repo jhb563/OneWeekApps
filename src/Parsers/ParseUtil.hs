@@ -13,6 +13,7 @@ module ParseUtil (
   floatAttributeParser,
   commentOrSpacesParser,
   singleTrailingComment,
+  indentedComment,
   printErrorAndReturnEmpty
 ) where
 
@@ -128,6 +129,13 @@ singleTrailingComment = do
   option () commentParser
   endOfLine
   return ()
+
+-- | Parses an indented comment. Will likely be absorbed later once tabbing
+-- is done
+indentedComment :: GenParser Char st ()
+indentedComment = do
+  string "\t" <|> string "  "
+  singleTrailingComment
 
 commentParser :: GenParser Char st ()
 commentParser = do

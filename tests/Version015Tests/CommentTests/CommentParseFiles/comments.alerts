@@ -16,5 +16,13 @@ Alert otherEscapeCharacters
   NoButton "Whyyyy"
   Message "!./*&()[]15hasdf123\n\r\t"
 
+Alert waaaaaaa
+  // We need some
+  // comments for coverage testing here
+  DismissButton "Hi"
+  // What
+  Message "NUUUUU"
+  Title "YIIIS"
+  // End comment
 
 // This comment just sorta happens down here

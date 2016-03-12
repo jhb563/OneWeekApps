@@ -47,7 +47,8 @@ fontParser :: GenParser Char st (Maybe OWAFont)
 fontParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
-  attrs <- many1 fontAttrLine
+  many $ Text.Parsec.try indentedComment
+  attrs <- fontAttrLine `sepEndBy1` (many $ Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   return (fontFromNameAndAttrMap name attrMap)
 

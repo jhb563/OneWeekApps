@@ -54,7 +54,8 @@ errorParser :: GenParser Char ErrorParserState (Maybe OWAError)
 errorParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword errorKeyword
-  attrs <- many1 errorAttrLine
+  many $ Text.Parsec.try indentedComment
+  attrs <- errorAttrLine `sepEndBy1` (many $ Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   parserState <- getState
   return (errorFromNameAndAttrMap name attrMap parserState)
@@ -95,6 +96,7 @@ descriptionParser = do
 defaultDomainParser :: GenParser Char ErrorParserState ()
 defaultDomainParser = do
   (_, name) <- variableNameParserWithKeyword defaultDomainKeyword
+  many $ Text.Parsec.try indentedComment
   maybePrefix <- optionMaybe prefixParser
   spaces
   putState (name, maybePrefix)

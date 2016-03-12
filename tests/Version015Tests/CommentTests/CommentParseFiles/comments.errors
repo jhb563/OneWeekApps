@@ -16,12 +16,16 @@ Error authError
   Description "You can't \"Login\"" // Comment after some strings
 
 DefaultDomain OWACommentTest // here's a comment
+  // Inlined comment!
   Prefix OWAComment   // Another inline comment
+  // Ahhh
 
 
 Error sadError
+  // Coverage commetn
   Domain OWAFirstErrors
   Code tears_of_failure
+  // More coverage
   Description "Crying about stuff" // :(
 
 Error userNotFound
