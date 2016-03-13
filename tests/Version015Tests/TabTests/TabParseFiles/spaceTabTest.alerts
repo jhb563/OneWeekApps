@@ -27,3 +27,4 @@ Alert twoButtonAlert3
         Message "SHOULD_QUIT_APP"
         YesButton "YES"
         NoButton "NO"
+
