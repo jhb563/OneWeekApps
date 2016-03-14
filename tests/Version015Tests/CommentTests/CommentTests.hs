@@ -26,7 +26,7 @@ alertCommentTests testDirectory = do
   describe "Parse alerts with comments" $
     context "when the comments exist between alert specification" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseAlertsFromFile alertCommentsTestFile
+        shouldReturnWithoutErrors $ parseAlertsFromFile alertCommentsTestFile
 
 colorCommentTests :: FilePath -> Spec 
 colorCommentTests testDirectory = do

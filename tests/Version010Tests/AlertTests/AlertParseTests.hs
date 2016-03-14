@@ -10,6 +10,7 @@ module AlertParseTests (
 import OWAAlert
 import OWAAlertParser
 import TestAlerts
+import TestUtil
 import Test.Hspec
 
 runAlertParseTests :: FilePath -> IO ()
@@ -27,28 +28,28 @@ oneButtonAlertTests testDirectory = do
     context "with any amount of spacing" $
     context "with attributes in any order" $
       it "Should match our list of one button alerts" $
-        parseAlertsFromFile oneButtonAlertTestsFile `shouldReturn` oneButtonAlertsList
+        parseAlertsFromFile oneButtonAlertTestsFile `shouldReturnRights` oneButtonAlertsList
 
 multiButtonAlertTests :: FilePath -> Spec
 multiButtonAlertTests testDirectory = do
   let multiButtonAlertTestsFile = testDirectory ++ multiButtonAlertsExtension
   describe "Parse Alerts with yes/no button format" $
     it "Should match our list of multi button alerts" $
-      parseAlertsFromFile multiButtonAlertTestsFile `shouldReturn` multiButtonAlertsList
+      parseAlertsFromFile multiButtonAlertTestsFile `shouldReturnRights` multiButtonAlertsList
  
 missingTitleOrMessageAlertTests :: FilePath -> Spec
 missingTitleOrMessageAlertTests testDirectory = do
   let missingTitleOrMessageAlertTestsFile = testDirectory ++ missingTitleOrMessageAlertsExtension
   describe "Parse Alerts with missing title or message" $
     it "Should match our list of missing title/message alerts" $
-      parseAlertsFromFile missingTitleOrMessageAlertTestsFile `shouldReturn` missingTitleOrMessageAlertsList
+      parseAlertsFromFile missingTitleOrMessageAlertTestsFile `shouldReturnRights` missingTitleOrMessageAlertsList
 
 characterKeyAlerts :: FilePath -> Spec
 characterKeyAlerts testDirectory = do
   let characterKeyAlertTestsFile = testDirectory ++ characterKeyAlertsExtension 
   describe "Parse Alerts with quotes, escape characters, unusual characters" $
     it "Should match our list of unusual character alerts" $
-      parseAlertsFromFile characterKeyAlertTestsFile `shouldReturn` characterKeyAlertsList
+      parseAlertsFromFile characterKeyAlertTestsFile `shouldReturnRights` characterKeyAlertsList
 
 oneButtonAlertsExtension :: String
 oneButtonAlertsExtension = "/oneButtonAlerts.alerts"

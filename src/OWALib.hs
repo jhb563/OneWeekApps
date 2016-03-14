@@ -93,7 +93,7 @@ produceAlertsFiles :: FilePath -> IO ()
 produceAlertsFiles appDirectory = do
   alertFiles <- findAlertsFiles appDirectory
   listOfAlertLists <- mapM parseAlertsFromFile alertFiles
-  let alerts = concat listOfAlertLists
+  let alerts = concat $ rights listOfAlertLists
   let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
   let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
   printStructureToFile alertHeaderFileStructure (appDirectory ++ alertHeaderFileExtension)

@@ -26,7 +26,7 @@ spaceTabTests testDirectory = do
   describe "Parse alerts with varying lengths of indentation" $
     context "when the indentation is entirely spaces" $
       it "Should successfully parse, returning a non-emtpy list" $
-        shouldReturnNonEmpty $ parseAlertsFromFile spaceTabTestFile
+        shouldReturnWithoutErrors $ parseAlertsFromFile spaceTabTestFile
 
 tabTabTests :: FilePath -> Spec
 tabTabTests testDirectory = do
