@@ -39,10 +39,10 @@ parseFontsFromFile fPath = do
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
 parseFontContents = Text.Parsec.runParser
   (fontParser `endBy` commentOrSpacesParser)
-  (GenericParserState {
+  GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
-  })
+  }
   ""
 
 -------------------------------------------------------------------------------

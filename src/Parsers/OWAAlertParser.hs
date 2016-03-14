@@ -37,10 +37,10 @@ parseAlertsFromFile fPath = do
 parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
 parseAlertContents = Text.Parsec.runParser
   (alertParser `endBy` commentOrSpacesParser)
-  (GenericParserState {
+  GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
-  }) 
+  } 
   ""
 
 ---------------------------------------------------------------------------

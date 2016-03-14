@@ -43,10 +43,10 @@ parseColorsFromFile fPath = do
 parseColorContents :: String -> Either ParseError [Maybe OWAColor]
 parseColorContents = Text.Parsec.runParser
   (colorParser `endBy` commentOrSpacesParser)
-  (GenericParserState {
+  GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
-  })
+  }
   ""
 
 -------------------------------------------------------------------------------

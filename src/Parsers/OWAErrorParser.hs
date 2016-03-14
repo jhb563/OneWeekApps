@@ -62,7 +62,7 @@ instance ParserState ErrorParserState where
   currentIndentLevel = errorIndentationLevel
   shouldUpdateIndentLevel = errorShouldUpdateIndent
   addIndentationLevel newLevel currentState = currentState {
-    errorIndentationLevel = (errorIndentationLevel currentState) ++ [newLevel],
+    errorIndentationLevel = errorIndentationLevel currentState ++ [newLevel],
     errorShouldUpdateIndent = False
   }
   reduceIndentationLevel currentState = currentState {

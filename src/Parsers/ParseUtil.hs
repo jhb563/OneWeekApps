@@ -28,6 +28,9 @@ import Text.ParserCombinators.Parsec
 -------------------PARSER STATE------------------------------------------------
 -------------------------------------------------------------------------------
 
+-- | ParserState is a class type encompassing the basic properties we need from
+-- an object in order for it to be a valid parser state to use some common methods
+-- in this file. It primarily encompasses updating the indentation level.
 class ParserState a where
   currentIndentLevel :: a -> [String]
   shouldUpdateIndentLevel :: a -> Bool
@@ -35,6 +38,8 @@ class ParserState a where
   reduceIndentationLevel :: a -> a
   setShouldUpdateIndentLevel :: a -> a
 
+-- | GenericParserState is a basic object used by most of our parsers which
+-- encompasses only those functions which related to indentation.
 data GenericParserState = GenericParserState {
   indentationLevel :: [String],
   shouldUpdate :: Bool
@@ -44,7 +49,7 @@ instance ParserState GenericParserState where
   currentIndentLevel = indentationLevel
   shouldUpdateIndentLevel = shouldUpdate
   addIndentationLevel newLevel currentState = GenericParserState {
-    indentationLevel = (indentationLevel currentState) ++ [newLevel],
+    indentationLevel = indentationLevel currentState ++ [newLevel],
     shouldUpdate = False
   }
   reduceIndentationLevel currentState = GenericParserState {
@@ -148,6 +153,10 @@ decimalAndFollowing = do
 -------------------INDENTING PARSERS-------------------------------------------
 -------------------------------------------------------------------------------
 
+-- | Takes a parser, reads the current indentation level and, if the current 
+-- parser state indicates that the indentation level should be updated, then
+-- it reads a new level of indentation and saves that to the state. Otherwise,
+-- it just runs the parser.
 indentParser :: ParserState st => GenParser Char st a -> GenParser Char st a
 indentParser parser = do
   parserState <- getState
@@ -159,8 +168,7 @@ indentParser parser = do
       newLevel <- readNewIndentationLevel
       modifyState (addIndentationLevel newLevel)
       parser
-    else do
-      parser
+    else parser
 
 readNewIndentationLevel :: GenParser Char st String
 readNewIndentationLevel = many (oneOf " \t")

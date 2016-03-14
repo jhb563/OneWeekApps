@@ -62,4 +62,3 @@ cominbationTabTestFileExtension = "/combinationTabTest.errors"
 
 multipleFormatTabTestsFileExtension :: String
 multipleFormatTabTestsFileExtension = "/multipleTabTest.fonts"
-
