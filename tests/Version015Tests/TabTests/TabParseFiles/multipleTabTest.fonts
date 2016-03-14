@@ -1,0 +1,20 @@
+Font noStyleFont
+	    FontFamily GillSans
+	    Size 12.0
+
+
+Font thinFont
+	FontFamily HelveticaNeue
+	Size 14.02341
+	Styles Thin
+
+Font thinFont2
+  FontFamily HelveticaNeue
+  Size 14.02341
+  Styles Thin
+
+
+Font thinFont3
+	 	 FontFamily HelveticaNeue
+	 	 Size 14.02341
+	 	 Styles Thin

@@ -35,27 +35,33 @@ parseAlertsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrAlerts
 
 parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
-parseAlertContents = parse (alertParser `endBy` commentOrSpacesParser) ""
+parseAlertContents = Text.Parsec.runParser
+  (alertParser `endBy` commentOrSpacesParser)
+  GenericParserState {
+    indentationLevel = [],
+    shouldUpdate = False
+  } 
+  ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
 ---------------------------------------------------------------------------
 
-alertParser :: GenParser Char st (Maybe OWAAlert)
+alertParser :: GenParser Char GenericParserState (Maybe OWAAlert)
 alertParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
+  modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
   attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   return (alertFromNameAndAttrMap name attrMap)
 
-alertAttrLine :: GenParser Char st (AlertAttr, AlertVal)
-alertAttrLine = do
-  string "\t" <|> string "  "
-  choice alertAttrParsers
+alertAttrLine :: GenParser Char GenericParserState (AlertAttr, AlertVal)
+alertAttrLine = indentParser $ choice alertAttrParsers
 
-alertAttrParsers :: [GenParser Char st (AlertAttr, AlertVal)]
+alertAttrParsers :: [GenParser Char GenericParserState (AlertAttr, AlertVal)]
 alertAttrParsers = map (Text.Parsec.try . localizedKeyParserWithKeyword) attributeKeywords
 
 ---------------------------------------------------------------------------

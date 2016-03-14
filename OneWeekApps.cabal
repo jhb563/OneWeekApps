@@ -88,7 +88,8 @@ test-suite Version015Tests
   main-is: OWAVersion015Tests.hs
   hs-source-dirs:   tests,
                     tests/Version015Tests,
-                    tests/Version015Tests/CommentTests
+                    tests/Version015Tests/CommentTests,
+                    tests/Version015Tests/TabTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
