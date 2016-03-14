@@ -21,7 +21,6 @@ import Text.ParserCombinators.Parsec
 type AlertAttr = String
 type AlertVal = LocalizedKey 
 type AlertAttrMap = Map.Map AlertAttr AlertVal
-type AlertParserState = ([String], Bool)
 
 ---------------------------------------------------------------------------
 --------------------ENTRY METHODS------------------------------------------
@@ -38,53 +37,35 @@ parseAlertsFromFile fPath = do
 parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
 parseAlertContents = Text.Parsec.runParser
   (alertParser `endBy` commentOrSpacesParser)
-  ([], False)
+  (GenericParserState {
+    indentationLevel = [],
+    shouldUpdate = False
+  }) 
   ""
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
 ---------------------------------------------------------------------------
 
-alertParser :: GenParser Char AlertParserState (Maybe OWAAlert)
+alertParser :: GenParser Char GenericParserState (Maybe OWAAlert)
 alertParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
-  (currentIndentLevel, _) <- getState
-  putState (currentIndentLevel, True)
+  modifyState setShouldUpdate
   many $ Text.Parsec.try alertIndentedComment
   attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try alertIndentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   return (alertFromNameAndAttrMap name attrMap)
 
-alertAttrLine :: GenParser Char AlertParserState (AlertAttr, AlertVal)
-alertAttrLine = do
-  (currentIndentLevel, shouldUpdateLevel) <- getState
-  string $ concat currentIndentLevel
-  if shouldUpdateLevel
-    then do 
-      newLevel <- readNewIndentationLevel 
-      putState (currentIndentLevel ++ [newLevel], False)
-      choice alertAttrParsers
-    else do
-      choice alertAttrParsers  
+alertAttrLine :: GenParser Char GenericParserState (AlertAttr, AlertVal)
+alertAttrLine = indentParser $ choice alertAttrParsers
 
-alertAttrParsers :: [GenParser Char AlertParserState (AlertAttr, AlertVal)]
+alertAttrParsers :: [GenParser Char GenericParserState (AlertAttr, AlertVal)]
 alertAttrParsers = map (Text.Parsec.try . localizedKeyParserWithKeyword) attributeKeywords
 
-readNewIndentationLevel :: GenParser Char AlertParserState String
-readNewIndentationLevel = many (oneOf " \t")
-
-alertIndentedComment :: GenParser Char AlertParserState ()
-alertIndentedComment = do
-  (currentIndentLevel, shouldUpdateLevel) <- getState
-  string $ concat currentIndentLevel
-  if shouldUpdateLevel
-    then do
-      newLevel <- readNewIndentationLevel
-      putState (currentIndentLevel ++ [newLevel], False)
-      singleTrailingComment
-    else do
-      singleTrailingComment
+alertIndentedComment :: GenParser Char GenericParserState ()
+alertIndentedComment = indentParser $ singleTrailingComment
 
 ---------------------------------------------------------------------------
 --------------------CONSTRUCTING ALERTS------------------------------------

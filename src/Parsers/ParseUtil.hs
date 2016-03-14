@@ -7,10 +7,13 @@ Maintainer  : jhbowen047@gmail.com
 -}
 
 module ParseUtil (
+  ParserState(..),
+  GenericParserState(..),
   nameParserWithKeyword,
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
   floatAttributeParser,
+  indentParser,
   commentOrSpacesParser,
   singleTrailingComment,
   indentedComment,
@@ -20,6 +23,38 @@ module ParseUtil (
 import Text.Parsec
 import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
+
+-------------------------------------------------------------------------------
+-------------------PARSER STATE------------------------------------------------
+-------------------------------------------------------------------------------
+
+class ParserState a where
+  currentIndentLevel :: a -> [String]
+  shouldUpdateIndentLevel :: a -> Bool
+  addIndentationLevel :: String -> a -> a
+  reduceIndentationLevel :: a -> a
+  setShouldUpdate :: a -> a
+
+data GenericParserState = GenericParserState {
+  indentationLevel :: [String],
+  shouldUpdate :: Bool
+}
+
+instance ParserState GenericParserState where
+  currentIndentLevel = indentationLevel
+  shouldUpdateIndentLevel = shouldUpdate
+  addIndentationLevel newLevel currentState = GenericParserState {
+    indentationLevel = (indentationLevel currentState) ++ [newLevel],
+    shouldUpdate = False
+  }
+  reduceIndentationLevel currentState = GenericParserState {
+    indentationLevel = init $ indentationLevel currentState,
+    shouldUpdate = False
+  }
+  setShouldUpdate currentState = GenericParserState {
+    indentationLevel = (indentationLevel currentState),
+    shouldUpdate = True
+  }
 
 -------------------------------------------------------------------------------
 -------------------PARSING STRING ATTRIBUTES-----------------------------------
@@ -111,6 +146,27 @@ decimalAndFollowing = do
                   then read ('0':'.':following) :: Float 
                   else 0.0
   return asFloat
+
+-------------------------------------------------------------------------------
+-------------------INDENTING PARSERS-------------------------------------------
+-------------------------------------------------------------------------------
+
+indentParser :: ParserState st => GenParser Char st a -> GenParser Char st a
+indentParser parser = do
+  parserState <- getState
+  let indentLevel = currentIndentLevel parserState
+  let shouldUpdate = shouldUpdateIndentLevel parserState
+  string $ concat indentLevel 
+  if shouldUpdate
+    then do
+      newLevel <- readNewIndentationLevel
+      modifyState (addIndentationLevel newLevel)
+      parser
+    else do
+      parser
+
+readNewIndentationLevel :: GenParser Char st String
+readNewIndentationLevel = many (oneOf " \t")
 
 -------------------------------------------------------------------------------
 -------------------PARSING COMMENTS--------------------------------------------

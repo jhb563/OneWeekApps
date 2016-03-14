@@ -37,30 +37,39 @@ parseFontsFromFile fPath = do
   either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
 
 parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents = parse (fontParser `endBy` commentOrSpacesParser) ""
+parseFontContents = Text.Parsec.runParser
+  (fontParser `endBy` commentOrSpacesParser)
+  (GenericParserState {
+    indentationLevel = [],
+    shouldUpdate = False
+  })
+  ""
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
 -------------------------------------------------------------------------------
 
-fontParser :: GenParser Char st (Maybe OWAFont)
+fontParser :: GenParser Char GenericParserState (Maybe OWAFont)
 fontParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
-  many $ Text.Parsec.try indentedComment
-  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState setShouldUpdate
+  many $ Text.Parsec.try fontIndentedComment
+  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try fontIndentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   return (fontFromNameAndAttrMap name attrMap)
 
-fontAttrLine :: GenParser Char st (FontAttr, FontVal)
-fontAttrLine = do
-  string "\t" <|> string "  "
-  choice fontAttrParsers
+fontIndentedComment :: GenParser Char GenericParserState ()
+fontIndentedComment = indentParser singleTrailingComment
 
-fontAttrParsers :: [GenParser Char st (FontAttr, FontVal)]
+fontAttrLine :: GenParser Char GenericParserState (FontAttr, FontVal)
+fontAttrLine = indentParser $ choice fontAttrParsers
+
+fontAttrParsers :: [GenParser Char GenericParserState (FontAttr, FontVal)]
 fontAttrParsers = map Text.Parsec.try [fontFamilyParser, fontSizeParser, fontStylesParser]
 
-fontFamilyParser :: GenParser Char st (FontAttr, FontVal)
+fontFamilyParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontFamilyParser = do
   string fontFamilyKeyword
   char ' '
@@ -68,12 +77,12 @@ fontFamilyParser = do
   singleTrailingComment
   return (fontFamilyKeyword, FamilyVal familyName)
 
-fontSizeParser :: GenParser Char st (FontAttr, FontVal)
+fontSizeParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontSizeParser = do
   (_, floatVal) <- floatAttributeParser fontSizeKeyword
   return (fontSizeKeyword, SizeVal floatVal)
 
-fontStylesParser :: GenParser Char st (FontAttr, FontVal)
+fontStylesParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontStylesParser = do
   string fontStylesKeyword
   char ' '
@@ -81,10 +90,10 @@ fontStylesParser = do
   singleTrailingComment
   return (fontStylesKeyword, StyleAttrs attributes)
 
-fontStyleAttributeParser :: GenParser Char st String
+fontStyleAttributeParser :: GenParser Char GenericParserState String
 fontStyleAttributeParser = choice styleAttributeParsers
 
-styleAttributeParsers :: [GenParser Char st String]
+styleAttributeParsers :: [GenParser Char GenericParserState String]
 styleAttributeParsers = map  (Text.Parsec.try . string) styleAttributeStrings
 
 -------------------------------------------------------------------------------
