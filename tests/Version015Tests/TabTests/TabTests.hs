@@ -49,7 +49,7 @@ multipleFormatTabTests testDirectory = do
   let multipleFormatTabTestsFile = testDirectory ++ multipleFormatTabTestsFileExtension
   describe "Parse fonts with varying lengths and styles of indentation" $
     it "Should successfully parse, returning a non-empty list" $
-      shouldReturnNonEmpty $ parseFontsFromFile multipleFormatTabTestsFile
+      shouldReturnWithoutErrors $ parseFontsFromFile multipleFormatTabTestsFile
 
 spaceTabTestFileExtension :: String
 spaceTabTestFileExtension = "/spaceTabTest.alerts"

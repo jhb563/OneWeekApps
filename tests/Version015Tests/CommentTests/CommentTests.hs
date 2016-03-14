@@ -49,7 +49,7 @@ fontCommentTests testDirectory = do
   let fontCommentsTestFile = testDirectory ++ fontCommentsFileExtension
   describe "Parse fonts with comments" $
     it "Should successfully parse, returning a non-empty list" $
-      shouldReturnNonEmpty $ parseFontsFromFile fontCommentsTestFile
+      shouldReturnWithoutErrors $ parseFontsFromFile fontCommentsTestFile
 
 alertCommentsFileExtension :: String
 alertCommentsFileExtension = "/comments.alerts"

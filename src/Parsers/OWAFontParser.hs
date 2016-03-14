@@ -10,8 +10,11 @@ module OWAFontParser (
   parseFontsFromFile
 ) where
 
+import Data.Either
+import Data.List
 import Data.Maybe
 import OWAFont
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
@@ -30,13 +33,18 @@ type FontAttrMap = Map.Map FontAttr FontVal
 
 -- | 'parseFontsFromFile' takes a file, reads its contents,
 -- and returns a list of fonts contained in the file.
-parseFontsFromFile :: FilePath -> IO [OWAFont]
+parseFontsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAFont])
 parseFontsFromFile fPath = do
   contents <- readFile fPath
   let errorOrFonts = parseFontContents contents
-  either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
+  case errorOrFonts of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right errorsAndFonts -> let (errors, fonts) = partitionEithers errorsAndFonts in
+      if not (null errors)
+        then return $ Left errors
+        else return $ Right fonts
 
-parseFontContents :: String -> Either ParseError [Maybe OWAFont]
+parseFontContents :: String -> Either ParseError [Either OWAParseError OWAFont]
 parseFontContents = Text.Parsec.runParser
   (fontParser `endBy` commentOrSpacesParser)
   GenericParserState {
@@ -49,7 +57,7 @@ parseFontContents = Text.Parsec.runParser
 -----------------------------------PARSERS-------------------------------------
 -------------------------------------------------------------------------------
 
-fontParser :: GenParser Char GenericParserState (Maybe OWAFont)
+fontParser :: GenParser Char GenericParserState (Either OWAParseError OWAFont)
 fontParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
@@ -58,7 +66,13 @@ fontParser = do
   attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
-  return (fontFromNameAndAttrMap name attrMap)
+  let maybeFont = fontFromNameAndAttrMap name attrMap
+  case maybeFont of
+    Nothing -> return $ Left ObjectError {
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap
+    }
+    Just font -> return $ Right font
 
 fontAttrLine :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontAttrLine = indentParser $ choice fontAttrParsers
@@ -116,6 +130,9 @@ fontFromNameAndAttrMap name attrMap = do
     fontStyles = styleAttrs
   }
 
+missingAttrs :: FontAttrMap -> [FontAttr]
+missingAttrs attrMap = requiredAttributes \\ Map.keys attrMap
+
 -------------------------------------------------------------------------------
 -------------------FONT KEYWORDS-----------------------------------------------
 -------------------------------------------------------------------------------
@@ -139,3 +156,6 @@ styleAttributeStrings = ["Thin",
   "Medium",
   "Bold",
   "Italic"]
+
+requiredAttributes :: [FontAttr]
+requiredAttributes = [fontFamilyKeyword, fontSizeKeyword]
