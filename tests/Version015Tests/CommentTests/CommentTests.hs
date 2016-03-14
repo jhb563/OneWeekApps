@@ -34,7 +34,7 @@ colorCommentTests testDirectory = do
   describe "Parse colors with comments" $
     context "when commented lines exist among the attributes for colors" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseColorsFromFile colorCommentsTestFile
+        shouldReturnWithoutErrors $ parseColorsFromFile colorCommentsTestFile
       
 errorCommentTests :: FilePath -> Spec 
 errorCommentTests testDirectory = do

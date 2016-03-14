@@ -34,7 +34,7 @@ tabTabTests testDirectory = do
   describe "Parse colors with varying lengths of indentation" $
     context "when the indentation is entirely tabs" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseColorsFromFile tabTabTestFile
+        shouldReturnWithoutErrors $ parseColorsFromFile tabTabTestFile
 
 cominbationTabTests :: FilePath -> Spec
 cominbationTabTests testDirectory = do

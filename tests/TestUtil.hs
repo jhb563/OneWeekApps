@@ -1,6 +1,8 @@
 module TestUtil (
   createFileAndClose,
   shouldReturnSorted,
+  shouldReturnRights,
+  shouldReturnWithoutErrors,
   shouldReturnNonEmpty,
   filesShouldMatch,
   createResultsFiles,
@@ -31,10 +33,26 @@ shouldReturnSorted returned expected = do
   actual <- returned
   sort actual `shouldBe` expected
 
+-- Unwraps result of parsing and expects that we have a full list of objects
+-- matching the given objects.
+shouldReturnRights :: (Show b, Eq b) => IO (Either [a] [b]) -> [b] -> Expectation
+shouldReturnRights returned expected = do
+  result <- returned
+  case result of
+    Left _ -> fail "Parse Returned Errors"
+    Right xs -> xs `shouldBe` expected
+
 shouldReturnNonEmpty :: Show x => IO [x] -> Expectation
 shouldReturnNonEmpty wrappedVals = do
   xs <- wrappedVals
   xs `shouldSatisfy` (not . null)
+
+shouldReturnWithoutErrors :: Show b => IO (Either [a] [b]) -> Expectation
+shouldReturnWithoutErrors wrappedVals = do
+  result <- wrappedVals
+  case result of
+    Left _ -> fail "Parse Returned Errors"
+    Right xs -> xs `shouldSatisfy` (not . null)
 
 filesShouldMatch :: FilePath -> FilePath -> Expectation
 filesShouldMatch actualFile expectedFile = do

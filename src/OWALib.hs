@@ -10,6 +10,7 @@ module OWALib (
   runOWA
 ) where
 
+import Data.Either
 import OWAAlert
 import OWAAlertObjc
 import OWAAlertParser
@@ -46,7 +47,7 @@ produceColorsFiles :: FilePath -> IO ()
 produceColorsFiles appDirectory = do
   colorFiles <- findColorsFiles appDirectory
   listOfColorLists <- mapM parseColorsFromFile colorFiles
-  let colors = concat listOfColorLists
+  let colors = concat $ rights listOfColorLists
   let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
   let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
   printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
