@@ -3,7 +3,6 @@ module TestUtil (
   shouldReturnSorted,
   shouldReturnRights,
   shouldReturnWithoutErrors,
-  shouldReturnNonEmpty,
   filesShouldMatch,
   createResultsFiles,
   removeResultsFiles,
@@ -41,11 +40,6 @@ shouldReturnRights returned expected = do
   case result of
     Left _ -> fail "Parse Returned Errors"
     Right xs -> xs `shouldBe` expected
-
-shouldReturnNonEmpty :: Show x => IO [x] -> Expectation
-shouldReturnNonEmpty wrappedVals = do
-  xs <- wrappedVals
-  xs `shouldSatisfy` (not . null)
 
 shouldReturnWithoutErrors :: Show b => IO (Either [a] [b]) -> Expectation
 shouldReturnWithoutErrors wrappedVals = do

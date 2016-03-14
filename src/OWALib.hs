@@ -116,7 +116,7 @@ produceErrorsFiles :: FilePath -> IO ()
 produceErrorsFiles appDirectory = do
   errorFiles <- findErrorsFiles appDirectory
   listOfErrorLists <- mapM parseErrorsFromFile errorFiles
-  let errors = concat listOfErrorLists
+  let errors = concat $ rights listOfErrorLists
   let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
   let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
   printStructureToFile errorHeaderFileStructure (appDirectory ++ errorHeaderFileExtension)

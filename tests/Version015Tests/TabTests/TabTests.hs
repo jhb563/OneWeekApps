@@ -42,7 +42,7 @@ cominbationTabTests testDirectory = do
   describe "Parse errors with varying lengths of indentation" $
     context "when the indentation is a combination of spaces and tabs" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseErrorsFromFile cominbationTabTestFile
+        shouldReturnWithoutErrors $ parseErrorsFromFile cominbationTabTestFile
 
 multipleFormatTabTests :: FilePath -> Spec
 multipleFormatTabTests testDirectory = do

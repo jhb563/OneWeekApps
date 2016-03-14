@@ -11,8 +11,11 @@ module OWAErrorParser (
 ) where
 
 import Control.Monad.State.Lazy
+import Data.Either
+import Data.List
 import Data.Maybe
 import OWAError
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
@@ -30,13 +33,18 @@ type ErrorAttrMap = Map.Map ErrorAttr ErrorVal
 
 -- | 'parseErrorsFromFile' takes a file, reads its contents, and returns
 -- a list of errors contained in the file.
-parseErrorsFromFile :: FilePath -> IO [OWAError]
+parseErrorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAError])
 parseErrorsFromFile fPath = do
   contents <- readFile fPath
   let errorOrOWAErrors = parseErrorContents contents
-  either printErrorAndReturnEmpty (return . catMaybes . concat) errorOrOWAErrors
+  case errorOrOWAErrors of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right errorsAndOWAErrors -> let (errors, owaErrors) = partitionEithers (concat errorsAndOWAErrors) in
+      if not (null errors)
+        then return $ Left errors
+        else return $ Right owaErrors
 
-parseErrorContents :: String -> Either ParseError [[Maybe OWAError]]
+parseErrorContents :: String -> Either ParseError [[Either OWAParseError OWAError]]
 parseErrorContents = Text.Parsec.runParser 
   (multiErrorParser `sepEndBy` defaultDomainParser) 
   ErrorParserState {
@@ -92,10 +100,10 @@ updateDefaultDomain defaultDomain (Just prefix) currentState = ErrorParserState 
 --------------------PARSERS------------------------------------------------
 ---------------------------------------------------------------------------
 
-multiErrorParser :: GenParser Char ErrorParserState [Maybe OWAError]
+multiErrorParser :: GenParser Char ErrorParserState [Either OWAParseError OWAError]
 multiErrorParser = errorParser `endBy` commentOrSpacesParser
 
-errorParser :: GenParser Char ErrorParserState (Maybe OWAError)
+errorParser :: GenParser Char ErrorParserState (Either OWAParseError OWAError)
 errorParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword errorKeyword
@@ -105,7 +113,13 @@ errorParser = do
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   parserState <- getState
-  return (errorFromNameAndAttrMap name attrMap parserState)
+  let maybeError = errorFromNameAndAttrMap name attrMap parserState
+  case maybeError of
+    Nothing -> return $ Left ObjectError {
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap parserState
+    }
+    Just err -> return $ Right err
 
 errorAttrLine :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 errorAttrLine = indentParser (choice $ map Text.Parsec.try errorAttrParsers)
@@ -179,6 +193,12 @@ errorFromNameAndAttrMap name attrMap errorState = do
     errorDescription = description
   } 
 
+missingAttrs :: ErrorAttrMap -> ErrorParserState -> [String]
+missingAttrs attrMap state = (requiredAttributes \\ Map.keys attrMap) ++ maybeDomain
+  where domainAvailable = Map.member domainKeyword attrMap ||
+                          not (null $ currentDomain state)
+        maybeDomain = if domainAvailable then [] else [domainKeyword]
+
 ---------------------------------------------------------------------------
 --------------------ERROR KEYWORDS-----------------------------------------
 ---------------------------------------------------------------------------
@@ -194,6 +214,9 @@ codeKeyword = "Code"
 
 descriptionKeyword :: String
 descriptionKeyword = "Description"
+
+requiredAttributes :: [String]
+requiredAttributes = [codeKeyword, descriptionKeyword]
 
 defaultDomainKeyword :: String
 defaultDomainKeyword = "DefaultDomain"

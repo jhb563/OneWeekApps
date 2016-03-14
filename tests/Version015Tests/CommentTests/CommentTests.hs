@@ -42,7 +42,7 @@ errorCommentTests testDirectory = do
   describe "Parse errors with comments" $
     context "when comments come after item and attribute lines" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseErrorsFromFile errorCommentsTestFile
+        shouldReturnWithoutErrors $ parseErrorsFromFile errorCommentsTestFile
 
 fontCommentTests :: FilePath -> Spec 
 fontCommentTests testDirectory = do
