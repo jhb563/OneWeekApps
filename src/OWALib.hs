@@ -10,6 +10,7 @@ module OWALib (
   runOWA
 ) where
 
+import Data.Either
 import OWAAlert
 import OWAAlertObjc
 import OWAAlertParser
@@ -46,7 +47,7 @@ produceColorsFiles :: FilePath -> IO ()
 produceColorsFiles appDirectory = do
   colorFiles <- findColorsFiles appDirectory
   listOfColorLists <- mapM parseColorsFromFile colorFiles
-  let colors = concat listOfColorLists
+  let colors = concat $ rights listOfColorLists
   let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
   let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
   printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
@@ -69,7 +70,7 @@ produceFontsFiles :: FilePath -> IO ()
 produceFontsFiles appDirectory = do
   fontFiles <- findFontsFiles appDirectory
   listOfFontLists <- mapM parseFontsFromFile fontFiles
-  let fonts = concat listOfFontLists
+  let fonts = concat $ rights listOfFontLists
   let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
   let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
   printStructureToFile fontHeaderFileStructure (appDirectory ++ fontHeaderFileExtension)
@@ -92,7 +93,7 @@ produceAlertsFiles :: FilePath -> IO ()
 produceAlertsFiles appDirectory = do
   alertFiles <- findAlertsFiles appDirectory
   listOfAlertLists <- mapM parseAlertsFromFile alertFiles
-  let alerts = concat listOfAlertLists
+  let alerts = concat $ rights listOfAlertLists
   let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
   let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
   printStructureToFile alertHeaderFileStructure (appDirectory ++ alertHeaderFileExtension)
@@ -115,7 +116,7 @@ produceErrorsFiles :: FilePath -> IO ()
 produceErrorsFiles appDirectory = do
   errorFiles <- findErrorsFiles appDirectory
   listOfErrorLists <- mapM parseErrorsFromFile errorFiles
-  let errors = concat listOfErrorLists
+  let errors = concat $ rights listOfErrorLists
   let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
   let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
   printStructureToFile errorHeaderFileStructure (appDirectory ++ errorHeaderFileExtension)

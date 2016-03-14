@@ -10,6 +10,7 @@ module FontParseTests (
 import OWAFont
 import OWAFontParser
 import TestFonts
+import TestUtil
 import Test.Hspec
 
 runFontParseTests :: FilePath -> IO ()
@@ -25,7 +26,7 @@ regularFontTests testDirectory = do
   let regularFontTestsFile = testDirectory ++ regularFontsExtension
   describe "Parse Fonts from Regular Fonts File" $
     it "Should match our list of regular fonts" $
-      parseFontsFromFile regularFontTestsFile `shouldReturn` regularFontsList
+      parseFontsFromFile regularFontTestsFile `shouldReturnRights` regularFontsList
 
 spacedFontTests :: FilePath -> Spec
 spacedFontTests testDirectory = do
@@ -33,14 +34,14 @@ spacedFontTests testDirectory = do
   describe "Parse Fonts in regular format" $
     context "with any amount of spacing between them" $
       it "Should match our list of spaced fonts" $
-        parseFontsFromFile spacedFontTestsFile `shouldReturn` spacedFontsList
+        parseFontsFromFile spacedFontTestsFile `shouldReturnRights` spacedFontsList
 
 multiStyleFontTests :: FilePath -> Spec
 multiStyleFontTests testDirectory = do
   let multiStyleFontTestsFile = testDirectory ++ multiStyleFontsExtension
   describe "Parse Fonts with multiple styles" $
     it "Should match our list of multi-style fonts" $
-      parseFontsFromFile multiStyleFontTestsFile `shouldReturn` multiStyleFontsList
+      parseFontsFromFile multiStyleFontTestsFile `shouldReturnRights` multiStyleFontsList
 
 noStyleFontTests :: FilePath -> Spec
 noStyleFontTests testDirectory = do
@@ -48,7 +49,7 @@ noStyleFontTests testDirectory = do
   describe "Parse Fonts with no style attributes" $
     context "when attributes might be included in the family name" $
       it "Should match our list of no-style fonts" $
-        parseFontsFromFile noStyleFontTestsFile `shouldReturn` noStyleFontsList
+        parseFontsFromFile noStyleFontTestsFile `shouldReturnRights` noStyleFontsList
 
 regularFontsExtension :: String
 regularFontsExtension = "/regularFonts.fonts"

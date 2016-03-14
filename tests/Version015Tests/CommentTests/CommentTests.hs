@@ -26,7 +26,7 @@ alertCommentTests testDirectory = do
   describe "Parse alerts with comments" $
     context "when the comments exist between alert specification" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseAlertsFromFile alertCommentsTestFile
+        shouldReturnWithoutErrors $ parseAlertsFromFile alertCommentsTestFile
 
 colorCommentTests :: FilePath -> Spec 
 colorCommentTests testDirectory = do
@@ -34,7 +34,7 @@ colorCommentTests testDirectory = do
   describe "Parse colors with comments" $
     context "when commented lines exist among the attributes for colors" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseColorsFromFile colorCommentsTestFile
+        shouldReturnWithoutErrors $ parseColorsFromFile colorCommentsTestFile
       
 errorCommentTests :: FilePath -> Spec 
 errorCommentTests testDirectory = do
@@ -42,14 +42,14 @@ errorCommentTests testDirectory = do
   describe "Parse errors with comments" $
     context "when comments come after item and attribute lines" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseErrorsFromFile errorCommentsTestFile
+        shouldReturnWithoutErrors $ parseErrorsFromFile errorCommentsTestFile
 
 fontCommentTests :: FilePath -> Spec 
 fontCommentTests testDirectory = do
   let fontCommentsTestFile = testDirectory ++ fontCommentsFileExtension
   describe "Parse fonts with comments" $
     it "Should successfully parse, returning a non-empty list" $
-      shouldReturnNonEmpty $ parseFontsFromFile fontCommentsTestFile
+      shouldReturnWithoutErrors $ parseFontsFromFile fontCommentsTestFile
 
 alertCommentsFileExtension :: String
 alertCommentsFileExtension = "/comments.alerts"

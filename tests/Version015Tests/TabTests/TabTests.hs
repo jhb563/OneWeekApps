@@ -26,7 +26,7 @@ spaceTabTests testDirectory = do
   describe "Parse alerts with varying lengths of indentation" $
     context "when the indentation is entirely spaces" $
       it "Should successfully parse, returning a non-emtpy list" $
-        shouldReturnNonEmpty $ parseAlertsFromFile spaceTabTestFile
+        shouldReturnWithoutErrors $ parseAlertsFromFile spaceTabTestFile
 
 tabTabTests :: FilePath -> Spec
 tabTabTests testDirectory = do
@@ -34,7 +34,7 @@ tabTabTests testDirectory = do
   describe "Parse colors with varying lengths of indentation" $
     context "when the indentation is entirely tabs" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseColorsFromFile tabTabTestFile
+        shouldReturnWithoutErrors $ parseColorsFromFile tabTabTestFile
 
 cominbationTabTests :: FilePath -> Spec
 cominbationTabTests testDirectory = do
@@ -42,14 +42,14 @@ cominbationTabTests testDirectory = do
   describe "Parse errors with varying lengths of indentation" $
     context "when the indentation is a combination of spaces and tabs" $
       it "Should successfully parse, returning a non-empty list" $
-        shouldReturnNonEmpty $ parseErrorsFromFile cominbationTabTestFile
+        shouldReturnWithoutErrors $ parseErrorsFromFile cominbationTabTestFile
 
 multipleFormatTabTests :: FilePath -> Spec
 multipleFormatTabTests testDirectory = do
   let multipleFormatTabTestsFile = testDirectory ++ multipleFormatTabTestsFileExtension
   describe "Parse fonts with varying lengths and styles of indentation" $
     it "Should successfully parse, returning a non-empty list" $
-      shouldReturnNonEmpty $ parseFontsFromFile multipleFormatTabTestsFile
+      shouldReturnWithoutErrors $ parseFontsFromFile multipleFormatTabTestsFile
 
 spaceTabTestFileExtension :: String
 spaceTabTestFileExtension = "/spaceTabTest.alerts"

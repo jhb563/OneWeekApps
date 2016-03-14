@@ -10,8 +10,11 @@ module OWAAlertParser (
   parseAlertsFromFile
 ) where
 
+import Data.Either
+import Data.List
 import Data.Maybe
 import OWAAlert
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
@@ -28,13 +31,18 @@ type AlertAttrMap = Map.Map AlertAttr AlertVal
 
 -- | 'parseAlertsFromFile' takes a file, reads its contents
 -- and returns a list of alerts contained in the file.
-parseAlertsFromFile :: FilePath -> IO [OWAAlert]
+parseAlertsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAAlert])
 parseAlertsFromFile fPath = do
   contents <- readFile fPath
   let errorOrAlerts = parseAlertContents contents
-  either printErrorAndReturnEmpty (return . catMaybes) errorOrAlerts
+  case errorOrAlerts of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right errorsAndAlerts -> let (errors, alerts) = partitionEithers errorsAndAlerts in
+      if not (null errors)
+        then return $ Left errors
+        else return $ Right alerts
 
-parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
+parseAlertContents :: String -> Either ParseError [Either OWAParseError OWAAlert]
 parseAlertContents = Text.Parsec.runParser
   (alertParser `endBy` commentOrSpacesParser)
   GenericParserState {
@@ -47,7 +55,7 @@ parseAlertContents = Text.Parsec.runParser
 --------------------PARSERS------------------------------------------------
 ---------------------------------------------------------------------------
 
-alertParser :: GenParser Char GenericParserState (Maybe OWAAlert)
+alertParser :: GenParser Char GenericParserState (Either OWAParseError OWAAlert)
 alertParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
@@ -56,7 +64,13 @@ alertParser = do
   attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
-  return (alertFromNameAndAttrMap name attrMap)
+  let maybeAlert = alertFromNameAndAttrMap name attrMap
+  case maybeAlert of
+    Nothing -> return $ Left ObjectError {
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap
+    }
+    Just alert -> return $ Right alert
 
 alertAttrLine :: GenParser Char GenericParserState (AlertAttr, AlertVal)
 alertAttrLine = indentParser $ choice alertAttrParsers
@@ -97,6 +111,14 @@ buttonFormatFromAttrMap attrMap
     noTitle <- Map.lookup noButtonKeyword attrMap
     return $ YesNoButtons yesTitle noTitle
 
+missingAttrs :: AlertAttrMap -> [AlertAttr]
+missingAttrs attrMap = (requiredAttributes \\ Map.keys attrMap) ++ buttonFormat
+  where mapContainsButtonFormat = Map.member dismissButtonKeyword attrMap ||
+                                  Map.member neutralButtonKeyword attrMap ||
+                                  (Map.member yesButtonKeyword attrMap &&
+                                  Map.member noButtonKeyword attrMap)
+        buttonFormat = if mapContainsButtonFormat then [] else [buttonFormatKeywordPlaceholder]
+
 ---------------------------------------------------------------------------
 --------------------ALERT KEYWORDS-----------------------------------------
 ---------------------------------------------------------------------------
@@ -121,6 +143,12 @@ yesButtonKeyword = "YesButton"
 
 noButtonKeyword :: AlertAttr
 noButtonKeyword = "NoButton"
+
+buttonFormatKeywordPlaceholder :: AlertAttr
+buttonFormatKeywordPlaceholder = "ButtonFormat"
+
+requiredAttributes :: [AlertAttr]
+requiredAttributes = [titleKeyword, messageKeyword]
 
 attributeKeywords = [titleKeyword,
   messageKeyword,
