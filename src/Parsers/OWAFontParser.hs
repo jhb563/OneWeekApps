@@ -53,15 +53,12 @@ fontParser :: GenParser Char GenericParserState (Maybe OWAFont)
 fontParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
-  modifyState setShouldUpdate
-  many $ Text.Parsec.try fontIndentedComment
-  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try fontIndentedComment)
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   return (fontFromNameAndAttrMap name attrMap)
-
-fontIndentedComment :: GenParser Char GenericParserState ()
-fontIndentedComment = indentParser singleTrailingComment
 
 fontAttrLine :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontAttrLine = indentParser $ choice fontAttrParsers

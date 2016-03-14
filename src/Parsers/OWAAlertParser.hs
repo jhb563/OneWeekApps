@@ -51,9 +51,9 @@ alertParser :: GenParser Char GenericParserState (Maybe OWAAlert)
 alertParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
-  modifyState setShouldUpdate
-  many $ Text.Parsec.try alertIndentedComment
-  attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try alertIndentedComment)
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   return (alertFromNameAndAttrMap name attrMap)
@@ -63,9 +63,6 @@ alertAttrLine = indentParser $ choice alertAttrParsers
 
 alertAttrParsers :: [GenParser Char GenericParserState (AlertAttr, AlertVal)]
 alertAttrParsers = map (Text.Parsec.try . localizedKeyParserWithKeyword) attributeKeywords
-
-alertIndentedComment :: GenParser Char GenericParserState ()
-alertIndentedComment = indentParser $ singleTrailingComment
 
 ---------------------------------------------------------------------------
 --------------------CONSTRUCTING ALERTS------------------------------------

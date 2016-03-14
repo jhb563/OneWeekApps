@@ -33,7 +33,7 @@ class ParserState a where
   shouldUpdateIndentLevel :: a -> Bool
   addIndentationLevel :: String -> a -> a
   reduceIndentationLevel :: a -> a
-  setShouldUpdate :: a -> a
+  setShouldUpdateIndentLevel :: a -> a
 
 data GenericParserState = GenericParserState {
   indentationLevel :: [String],
@@ -51,10 +51,7 @@ instance ParserState GenericParserState where
     indentationLevel = init $ indentationLevel currentState,
     shouldUpdate = False
   }
-  setShouldUpdate currentState = GenericParserState {
-    indentationLevel = (indentationLevel currentState),
-    shouldUpdate = True
-  }
+  setShouldUpdateIndentLevel currentState = currentState { shouldUpdate = True}
 
 -------------------------------------------------------------------------------
 -------------------PARSING STRING ATTRIBUTES-----------------------------------
@@ -186,12 +183,9 @@ singleTrailingComment = do
   endOfLine
   return ()
 
--- | Parses an indented comment. Will likely be absorbed later once tabbing
--- is done
-indentedComment :: GenParser Char st ()
-indentedComment = do
-  string "\t" <|> string "  "
-  singleTrailingComment
+-- | Parses an indented comment. 
+indentedComment :: ParserState st => GenParser Char st ()
+indentedComment = indentParser singleTrailingComment
 
 commentParser :: GenParser Char st ()
 commentParser = do

@@ -57,15 +57,12 @@ colorParser :: GenParser Char GenericParserState (Maybe OWAColor)
 colorParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword colorKeyword
-  modifyState setShouldUpdate
-  many $ Text.Parsec.try colorIndentedComment
-  attrs <- attrLine `sepEndBy1` many (Text.Parsec.try colorIndentedComment)
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- attrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList (concat attrs)
   return (colorFromNameAndAttrMap name attrMap)
-
-colorIndentedComment :: GenParser Char GenericParserState ()
-colorIndentedComment = indentParser $ singleTrailingComment
 
 attrLine :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 attrLine = indentParser $ choice attrParsers

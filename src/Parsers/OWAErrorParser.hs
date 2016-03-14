@@ -23,7 +23,6 @@ type ErrorAttr = String
 data ErrorVal = NormalValue String |
   PrefixedValue String
 type ErrorAttrMap = Map.Map ErrorAttr ErrorVal 
-type ErrorParserState = (String, Maybe String)
 
 ---------------------------------------------------------------------------
 --------------------ENTRY METHODS------------------------------------------
@@ -40,8 +39,54 @@ parseErrorsFromFile fPath = do
 parseErrorContents :: String -> Either ParseError [[Maybe OWAError]]
 parseErrorContents = Text.Parsec.runParser 
   (multiErrorParser `sepEndBy` defaultDomainParser) 
-  ("", Nothing) 
+  ErrorParserState {
+    currentDomain = "",
+    currentPrefix = Nothing,
+    errorIndentationLevel = [],
+    errorShouldUpdateIndent = False
+  }
   ""
+
+---------------------------------------------------------------------------
+--------------------ERROR STATE--------------------------------------------
+---------------------------------------------------------------------------
+
+data ErrorParserState = ErrorParserState {
+  currentDomain :: String,
+  currentPrefix :: Maybe String,
+  errorIndentationLevel :: [String],
+  errorShouldUpdateIndent :: Bool
+}
+
+instance ParserState ErrorParserState where
+  currentIndentLevel = errorIndentationLevel
+  shouldUpdateIndentLevel = errorShouldUpdateIndent
+  addIndentationLevel newLevel currentState = currentState {
+    errorIndentationLevel = (errorIndentationLevel currentState) ++ [newLevel],
+    errorShouldUpdateIndent = False
+  }
+  reduceIndentationLevel currentState = currentState {
+    errorIndentationLevel = init $ errorIndentationLevel currentState,
+    errorShouldUpdateIndent = False
+  }
+  setShouldUpdateIndentLevel currentState = currentState {
+    errorIndentationLevel = errorIndentationLevel currentState,
+    errorShouldUpdateIndent = True
+  }
+
+updateDefaultDomain :: String -> Maybe String -> ErrorParserState -> ErrorParserState
+updateDefaultDomain defaultDomain Nothing currentState = ErrorParserState {
+  currentDomain = defaultDomain,
+  currentPrefix = Nothing,
+  errorIndentationLevel = errorIndentationLevel currentState,
+  errorShouldUpdateIndent = False
+}
+updateDefaultDomain defaultDomain (Just prefix) currentState = ErrorParserState {
+  currentDomain = defaultDomain,
+  currentPrefix = Just prefix,
+  errorIndentationLevel = init $ errorIndentationLevel currentState,
+  errorShouldUpdateIndent = False
+}
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -54,16 +99,16 @@ errorParser :: GenParser Char ErrorParserState (Maybe OWAError)
 errorParser = do
   commentOrSpacesParser
   name <- nameParserWithKeyword errorKeyword
+  modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
   attrs <- errorAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   parserState <- getState
   return (errorFromNameAndAttrMap name attrMap parserState)
 
 errorAttrLine :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
-errorAttrLine = do
-  string "\t" <|> string "  "
-  choice $ map Text.Parsec.try errorAttrParsers
+errorAttrLine = indentParser (choice $ map Text.Parsec.try errorAttrParsers)
 
 errorAttrParsers :: [GenParser Char ErrorParserState (ErrorAttr, ErrorVal)]
 errorAttrParsers = [domainParser,
@@ -96,14 +141,14 @@ descriptionParser = do
 defaultDomainParser :: GenParser Char ErrorParserState ()
 defaultDomainParser = do
   (_, name) <- variableNameParserWithKeyword defaultDomainKeyword
+  modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  maybePrefix <- optionMaybe prefixParser
+  maybePrefix <-  optionMaybe $ indentParser prefixParser
   spaces
-  putState (name, maybePrefix)
+  modifyState $ updateDefaultDomain name maybePrefix
 
 prefixParser :: GenParser Char ErrorParserState String
 prefixParser = do
-  string "\t" <|> string "  "
   (_, prefix) <- variableNameParserWithKeyword prefixKeyword 
   return prefix
 
@@ -112,7 +157,9 @@ prefixParser = do
 ---------------------------------------------------------------------------
 
 errorFromNameAndAttrMap :: String -> ErrorAttrMap -> ErrorParserState -> Maybe OWAError
-errorFromNameAndAttrMap name attrMap (defaultDomain, maybePrefix) = do 
+errorFromNameAndAttrMap name attrMap errorState = do 
+  let defaultDomain = currentDomain errorState
+  let maybePrefix = currentPrefix errorState
   domain <- case Map.lookup domainKeyword attrMap of
     Just (NormalValue domain) -> Just domain
     Nothing -> if null defaultDomain then Nothing else Just defaultDomain
