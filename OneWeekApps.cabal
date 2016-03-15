@@ -90,7 +90,8 @@ test-suite Version015Tests
   hs-source-dirs:   tests,
                     tests/Version015Tests,
                     tests/Version015Tests/CommentTests,
-                    tests/Version015Tests/TabTests
+                    tests/Version015Tests/TabTests,
+                    tests/Version015Tests/ItemFailureTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

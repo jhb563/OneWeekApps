@@ -2,6 +2,7 @@ module TestUtil (
   createFileAndClose,
   shouldReturnSorted,
   shouldReturnRights,
+  shouldReturnLefts,
   shouldReturnWithoutErrors,
   filesShouldMatch,
   createResultsFiles,
@@ -40,6 +41,15 @@ shouldReturnRights returned expected = do
   case result of
     Left _ -> fail "Parse Returned Errors"
     Right xs -> xs `shouldBe` expected
+
+-- Unwraps result of parsing and expects that we have a full list of failures 
+-- matching the given error objects.
+shouldReturnLefts :: (Show a, Eq a) => IO (Either [a] [b]) -> [a] -> Expectation
+shouldReturnLefts returned expected = do
+  result <- returned
+  case result of
+    Right _ -> fail "Parse Returned Completed objects"
+    Left xs -> xs `shouldBe` expected
 
 shouldReturnWithoutErrors :: Show b => IO (Either [a] [b]) -> Expectation
 shouldReturnWithoutErrors wrappedVals = do

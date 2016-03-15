@@ -1,0 +1,17 @@
+Error noDomain
+  Code ERRORCODE
+  Description "YOYOYO"
+
+Error justDescription
+  Description "THAT_IS_ALL"
+
+Error combo
+  Domain MyName
+
+DefaultDomain HelloErrors
+
+Error noCode
+  Description "DUDE"
+
+Error noDescription
+  Code CodeCode
