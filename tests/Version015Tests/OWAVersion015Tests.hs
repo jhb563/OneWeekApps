@@ -1,5 +1,6 @@
 module Main where
 
+import ColorParseFailureTests
 import CommentTests
 import ItemFailureTests
 import TabTests
@@ -11,3 +12,4 @@ main = do
   runCommentTests currentDirectory
   runTabTests currentDirectory
   runItemFailureTests currentDirectory
+  runColorParseFailureTests currentDirectory

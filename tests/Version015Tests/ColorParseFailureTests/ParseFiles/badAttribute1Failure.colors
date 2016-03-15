@@ -1,0 +1,11 @@
+Color goodColor
+  Red 100
+  Blue 200
+  Green 150.0
+
+Color badColor
+  whatKindOfAttribute 100.0
+  Blue 200
+  Red 100
+  Green 100
+
