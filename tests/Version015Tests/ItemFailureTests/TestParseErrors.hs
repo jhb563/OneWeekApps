@@ -2,22 +2,26 @@ module TestParseErrors where
 
 import OWAParseError
 
+allAlertErrors :: [OWAParseError]
 allAlertErrors = [failureAlertError,
   underSpecYesNoError,
   noYesError]
 
+allColorErrors :: [OWAParseError]
 allColorErrors = [failColor1Error,
   failColor2Error,
   failColor3Error,
   missingCombo1Error,
   missingCombo2Error]
 
+allErrorErrors :: [OWAParseError]
 allErrorErrors = [noDomainError,
   justDescriptionError,
   comboError,
   noCodeError,
   noDescriptionError]
 
+allFontErrors :: [OWAParseError]
 allFontErrors = [missingFamilyError,
   missingSizeError,
   missingComboError]

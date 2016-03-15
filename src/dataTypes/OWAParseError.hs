@@ -17,4 +17,4 @@ data OWAParseError = ParsecError ParseError |
   ObjectError {
     itemName :: String,
     missingRequiredAttributes :: [String]
-  }
+  } deriving (Show, Eq)
