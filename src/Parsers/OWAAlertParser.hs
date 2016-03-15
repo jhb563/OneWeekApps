@@ -113,11 +113,15 @@ buttonFormatFromAttrMap attrMap
 
 missingAttrs :: AlertAttrMap -> [AlertAttr]
 missingAttrs attrMap = (requiredAttributes \\ Map.keys attrMap) ++ buttonFormat
-  where mapContainsButtonFormat = Map.member dismissButtonKeyword attrMap ||
-                                  Map.member neutralButtonKeyword attrMap ||
-                                  (Map.member yesButtonKeyword attrMap &&
-                                  Map.member noButtonKeyword attrMap)
-        buttonFormat = if mapContainsButtonFormat then [] else [buttonFormatKeywordPlaceholder]
+  where containsSingleButtonFormat = Map.member dismissButtonKeyword attrMap ||
+                                  Map.member neutralButtonKeyword attrMap
+        containsYes = Map.member yesButtonKeyword attrMap
+        containsNo = Map.member noButtonKeyword attrMap
+        isValid = containsSingleButtonFormat || (containsYes && containsNo)
+        buttonFormat = if isValid then []
+                        else if containsYes then ["NoButton"]
+                        else if containsNo then ["YesButton"]
+                        else ["Any Button Format"]
 
 ---------------------------------------------------------------------------
 --------------------ALERT KEYWORDS-----------------------------------------

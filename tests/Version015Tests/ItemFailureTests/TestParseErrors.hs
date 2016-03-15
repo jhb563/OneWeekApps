@@ -29,7 +29,7 @@ allFontErrors = [missingFamilyError,
 failureAlertError :: OWAParseError
 failureAlertError = ObjectError {
   itemName = "failureAlert",
-  missingRequiredAttributes = ["ButtonFormat"]
+  missingRequiredAttributes = ["Any Button Format"]
 }
 
 underSpecYesNoError :: OWAParseError

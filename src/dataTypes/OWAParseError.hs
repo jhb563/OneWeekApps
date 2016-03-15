@@ -8,6 +8,7 @@ Maintainer  : jhbowen047@gmail.com
 
 module OWAParseError where
 
+import Data.List
 import Text.Parsec.Error
 
 -- | OWAParseErrors can take two forms. They are either a wrapper
@@ -17,4 +18,9 @@ data OWAParseError = ParsecError ParseError |
   ObjectError {
     itemName :: String,
     missingRequiredAttributes :: [String]
-  } deriving (Show, Eq)
+  } deriving (Show)
+
+instance Eq OWAParseError where
+  (==) error1 error2 = itemName error1 == itemName error2 &&
+                        (sort (missingRequiredAttributes error1) ==
+                        sort (missingRequiredAttributes error2))
