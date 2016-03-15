@@ -6,7 +6,9 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAParseError where
+module OWAParseError (
+  OWAParseError(..)
+) where
 
 import Data.List
 import Text.Parsec.Error

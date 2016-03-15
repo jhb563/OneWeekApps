@@ -118,10 +118,11 @@ missingAttrs attrMap = (requiredAttributes \\ Map.keys attrMap) ++ buttonFormat
         containsYes = Map.member yesButtonKeyword attrMap
         containsNo = Map.member noButtonKeyword attrMap
         isValid = containsSingleButtonFormat || (containsYes && containsNo)
-        buttonFormat = if isValid then []
-                        else if containsYes then ["NoButton"]
-                        else if containsNo then ["YesButton"]
-                        else ["Any Button Format"]
+        buttonFormat 
+          | isValid = []
+          | containsYes = ["NoButton"]
+          | containsNo = ["YesButton"]
+          | otherwise = ["Any Button Format"]
 
 ---------------------------------------------------------------------------
 --------------------ALERT KEYWORDS-----------------------------------------
