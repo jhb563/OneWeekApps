@@ -37,10 +37,13 @@ hex1FailureInfo :: ErrorInfo
 hex1FailureInfo = ("/hex1Failure.colors", 2, 7, validHexAttributeErrorMsg)
 
 hex2FailureInfo :: ErrorInfo
-hex2FailureInfo = ("/hex2Failure.colors", 2, 9, validHexAttributeErrorMsg)
+hex2FailureInfo = ("/hex2Failure.colors", 2, 7, validHexAttributeErrorMsg)
 
 hex3FailureInfo :: ErrorInfo
-hex3FailureInfo = ("/hex3Failure.colors", 2, 9, validHexAttributeErrorMsg)
+hex3FailureInfo = ("/hex3Failure.colors", 2, 7, validHexAttributeErrorMsg)
+
+hex4FailureInfo :: ErrorInfo
+hex4FailureInfo = ("/hex4Failure.colors", 5, 7, validHexAttributeErrorMsg)
 
 newLineFailureInfo :: ErrorInfo
 newLineFailureInfo = ("/newLineFailre.colors", 2, 15, newLineErrorMsg)

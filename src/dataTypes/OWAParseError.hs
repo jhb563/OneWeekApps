@@ -36,8 +36,8 @@ instance Eq OWAParseError where
 
 type ErrorInfo = (SourceName, Line, Column, String)
 
-errorFromInfo :: FilePath -> ErrorInfo -> ParseError
-errorFromInfo filePath (name, line, col, msg) = newErrorMessage message srcPos
+errorFromInfo :: ErrorInfo -> ParseError
+errorFromInfo (name, line, col, msg) = newErrorMessage message srcPos
   where message = Expect msg
-        srcPos = newPos (filePath ++ name) line col
+        srcPos = newPos name line col
 

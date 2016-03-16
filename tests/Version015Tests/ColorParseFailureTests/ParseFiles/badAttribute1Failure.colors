@@ -4,7 +4,7 @@ Color goodColor
   Green 150.0
 
 Color badColor
-  whatKindOfAttribute 100.0
+  WhatKindOfAttribute 100.0
   Blue 200
   Red 100
   Green 100

@@ -3,7 +3,7 @@ module TestUtil (
   shouldReturnRights,
   shouldReturnLefts,
   shouldReturnWithoutErrors,
-  shouldMatchErrorInfo,
+  shouldMatchError,
   filesShouldMatch,
   createFileAndClose,
   createResultsFiles,
@@ -70,8 +70,8 @@ filesShouldMatch actualFile expectedFile = do
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
 
-shouldMatchErrorInfo :: IO (Either [OWAParseError] [b]) -> ParseError -> Expectation
-shouldMatchErrorInfo returned expectedError = do
+shouldMatchError :: IO (Either [OWAParseError] [b]) -> ParseError -> Expectation
+shouldMatchError returned expectedError = do
   result <- returned
   case result of
     Right _ -> fail "Parse Returned Completed Objects"
