@@ -36,7 +36,7 @@ type ColorAttrMap = Map.Map ColorAttr ColorVal
 parseColorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAColor])
 parseColorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrColors = parseColorContents contents
+  let errorOrColors = parseColorContents fPath contents
   case errorOrColors of
     Left parseError -> return (Left [ParsecError parseError])
     Right errorsAndColors -> let (errors, colors) = partitionEithers errorsAndColors in
@@ -47,14 +47,14 @@ parseColorsFromFile fPath = do
 -- 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
-parseColorContents :: String -> Either ParseError [Either OWAParseError OWAColor]
-parseColorContents = Text.Parsec.runParser
+parseColorContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAColor]
+parseColorContents filePath = Text.Parsec.runParser
   (colorParser `endBy` commentOrSpacesParser)
   GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
   }
-  ""
+  (sourceNameFromFile filePath)
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------

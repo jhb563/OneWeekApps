@@ -22,7 +22,8 @@ library
                        parsec,
                        containers,
                        wl-pprint >= 1.2,
-                       mtl
+                       mtl,
+                       text
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColor,
