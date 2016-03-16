@@ -17,9 +17,11 @@ module ParseUtil (
   commentOrSpacesParser,
   singleTrailingComment,
   indentedComment,
-  printErrorAndReturnEmpty
+  printErrorAndReturnEmpty,
+  sourceNameFromFile
 ) where
 
+import qualified Data.Text 
 import Text.Parsec
 import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
@@ -67,7 +69,7 @@ instance ParserState GenericParserState where
 -- lowercase letter.
 nameParserWithKeyword :: String -> GenParser Char st String
 nameParserWithKeyword keyword = do
-  string keyword
+  string keyword 
   char ' '
   firstLetter <- lower
   restOfName <- many alphaNum 
@@ -216,6 +218,11 @@ printErrorAndReturnEmpty e = do
   print $ sourceLine src
   print $ sourceColumn src
   return []
+
+-- | Takes a full file path and returns just the filename.
+sourceNameFromFile :: FilePath -> String
+sourceNameFromFile fullPath = Data.Text.unpack $ 
+  last (Data.Text.split (== '/') (Data.Text.pack fullPath))
 
 showMessage :: Message -> String
 showMessage (SysUnExpect str) = "System Unexpected " ++ str

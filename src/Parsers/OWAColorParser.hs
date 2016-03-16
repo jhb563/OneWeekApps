@@ -36,7 +36,7 @@ type ColorAttrMap = Map.Map ColorAttr ColorVal
 parseColorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAColor])
 parseColorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrColors = parseColorContents contents
+  let errorOrColors = parseColorContents fPath contents
   case errorOrColors of
     Left parseError -> return (Left [ParsecError parseError])
     Right errorsAndColors -> let (errors, colors) = partitionEithers errorsAndColors in
@@ -47,14 +47,18 @@ parseColorsFromFile fPath = do
 -- 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
-parseColorContents :: String -> Either ParseError [Either OWAParseError OWAColor]
-parseColorContents = Text.Parsec.runParser
-  (colorParser `endBy` commentOrSpacesParser)
+parseColorContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAColor]
+parseColorContents filePath = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    result <- colorParser `endBy` commentOrSpacesParser
+    eof
+    return result)
   GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
   }
-  ""
+  (sourceNameFromFile filePath)
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -62,7 +66,6 @@ parseColorContents = Text.Parsec.runParser
 
 colorParser :: GenParser Char GenericParserState (Either OWAParseError OWAColor)
 colorParser = do
-  commentOrSpacesParser
   name <- nameParserWithKeyword colorKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
@@ -113,10 +116,12 @@ hexParser = do
   string hexKeyword
   char ' '
   string "0x"
-  hexString <- many hexChar
+  hexString <- count 6 hexChar
+  maybeExtraChars <- optionMaybe (count 2 hexChar)
   singleTrailingComment
-  let attrs = attrsFromHexString hexString
-  return attrs
+  case maybeExtraChars of
+    Nothing -> return $ attrsFromHexString hexString
+    Just extraChars -> return $ attrsFromHexString (hexString ++ extraChars)
 
 hexChar :: GenParser Char GenericParserState Char
 hexChar = oneOf "0123456789aAbBcCdDeEfF"

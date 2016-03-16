@@ -1,10 +1,11 @@
 module TestUtil (
-  createFileAndClose,
   shouldReturnSorted,
   shouldReturnRights,
   shouldReturnLefts,
   shouldReturnWithoutErrors,
+  shouldMatchError,
   filesShouldMatch,
+  createFileAndClose,
   createResultsFiles,
   removeResultsFiles,
   removeFiles,
@@ -14,17 +15,17 @@ module TestUtil (
 import Data.List
 import OWAObjcAbSyn
 import OWAObjcPrint
+import OWAParseError
 import System.Directory
 import System.IO
 import System.Process
 import Test.Hspec
+import Text.Parsec.Error
+import Text.Parsec.Pos
 
--- Takes a base filePath and a list of relative paths to files. 
--- Creates the empty files.
-createFileAndClose :: FilePath -> FilePath -> IO ()
-createFileAndClose base extension = do
-  handle <- openFile (base ++ extension) WriteMode
-  hClose handle
+--------------------------------------------------------------------------------
+------------------------------EXPECTATION COMBINATORS---------------------------
+--------------------------------------------------------------------------------
 
 -- Same as shouldReturn, but takes a list and sorts the entries first 
 -- for testing consistency
@@ -69,6 +70,26 @@ filesShouldMatch actualFile expectedFile = do
       diffContents <- hGetContents stdOutHandler
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
+
+shouldMatchError :: IO (Either [OWAParseError] [b]) -> SourcePos -> Expectation
+shouldMatchError returned srcPos = do
+  result <- returned
+  case result of
+    Right _ -> fail "Parse Returned Completed Objects"
+    Left [ParsecError parseError] ->
+      errorPos parseError `shouldBe` srcPos
+    _ -> fail "Incorrect number or format of errors"
+
+--------------------------------------------------------------------------------
+------------------------------FILE MANIPULATION---------------------------------
+--------------------------------------------------------------------------------
+
+-- Takes a base filePath and a list of relative paths to files. 
+-- Creates the empty files.
+createFileAndClose :: FilePath -> FilePath -> IO ()
+createFileAndClose base extension = do
+  handle <- openFile (base ++ extension) WriteMode
+  hClose handle
 
 createResultsFiles :: FilePath -> [String] -> [ObjcFile] -> IO ()
 createResultsFiles outputDirectory extensions structures = do
