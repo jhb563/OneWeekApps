@@ -71,13 +71,13 @@ filesShouldMatch actualFile expectedFile = do
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
 
-shouldMatchError :: IO (Either [OWAParseError] [b]) -> ErrorInfo -> Expectation
-shouldMatchError returned (expSrcName, lineNum, colNum) = do
+shouldMatchError :: IO (Either [OWAParseError] [b]) -> SourcePos -> Expectation
+shouldMatchError returned srcPos = do
   result <- returned
   case result of
     Right _ -> fail "Parse Returned Completed Objects"
-    Left [ParsecError parseError] -> do
-      errorPos parseError `shouldBe` newPos expSrcName lineNum colNum
+    Left [ParsecError parseError] ->
+      errorPos parseError `shouldBe` srcPos
     _ -> fail "Incorrect number or format of errors"
 
 --------------------------------------------------------------------------------

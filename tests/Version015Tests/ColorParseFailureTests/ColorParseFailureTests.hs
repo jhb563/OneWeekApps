@@ -104,7 +104,7 @@ hexAttributeTest testDirectory = do
 newLineTest :: FilePath -> Spec
 newLineTest testDirectory = do
   let testFile1 = testDirectory ++ newLineEndExtension
-  describe "Parse color file which does not end in a new line character" $ do
+  describe "Parse color file which does not end in a new line character" $
     it "Should return a parse error highlighting the lack of a new line character" $
       parseColorsFromFile testFile1 `shouldMatchError` newLineFailureInfo
 
