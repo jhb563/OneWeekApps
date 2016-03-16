@@ -21,6 +21,7 @@ import System.IO
 import System.Process
 import Test.Hspec
 import Text.Parsec.Error
+import Text.Parsec.Pos
 
 --------------------------------------------------------------------------------
 ------------------------------EXPECTATION COMBINATORS---------------------------
@@ -70,12 +71,13 @@ filesShouldMatch actualFile expectedFile = do
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
 
-shouldMatchError :: IO (Either [OWAParseError] [b]) -> ParseError -> Expectation
-shouldMatchError returned expectedError = do
+shouldMatchError :: IO (Either [OWAParseError] [b]) -> ErrorInfo -> Expectation
+shouldMatchError returned (expSrcName, lineNum, colNum) = do
   result <- returned
   case result of
     Right _ -> fail "Parse Returned Completed Objects"
-    Left [ParsecError parseError] -> parseError `shouldBe` expectedError
+    Left [ParsecError parseError] -> do
+      errorPos parseError `shouldBe` newPos expSrcName lineNum colNum
     _ -> fail "Incorrect number or format of errors"
 
 --------------------------------------------------------------------------------

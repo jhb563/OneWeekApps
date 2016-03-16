@@ -49,7 +49,11 @@ parseColorsFromFile fPath = do
 -- or a list of parsed colors.
 parseColorContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAColor]
 parseColorContents filePath = Text.Parsec.runParser
-  (colorParser `endBy` commentOrSpacesParser)
+  (do
+    commentOrSpacesParser
+    result <- colorParser `endBy` commentOrSpacesParser
+    eof
+    return result)
   GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
@@ -62,7 +66,6 @@ parseColorContents filePath = Text.Parsec.runParser
 
 colorParser :: GenParser Char GenericParserState (Either OWAParseError OWAColor)
 colorParser = do
-  commentOrSpacesParser
   name <- nameParserWithKeyword colorKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
@@ -113,10 +116,12 @@ hexParser = do
   string hexKeyword
   char ' '
   string "0x"
-  hexString <- many hexChar
+  hexString <- count 6 hexChar
+  maybeExtraChars <- optionMaybe (count 2 hexChar)
   singleTrailingComment
-  let attrs = attrsFromHexString hexString
-  return attrs
+  case maybeExtraChars of
+    Nothing -> return $ attrsFromHexString hexString
+    Just extraChars -> return $ attrsFromHexString (hexString ++ extraChars)
 
 hexChar :: GenParser Char GenericParserState Char
 hexChar = oneOf "0123456789aAbBcCdDeEfF"

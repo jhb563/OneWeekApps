@@ -8,8 +8,7 @@ Maintainer  : jhbowen047@gmail.com
 
 module OWAParseError (
   OWAParseError(..),
-  ErrorInfo,
-  errorFromInfo
+  ErrorInfo
 ) where
 
 import Data.List
@@ -34,10 +33,4 @@ instance Eq OWAParseError where
 -------------------BUILDING PARSE ERRORS---------------------------------------
 -------------------------------------------------------------------------------
 
-type ErrorInfo = (SourceName, Line, Column, String)
-
-errorFromInfo :: ErrorInfo -> ParseError
-errorFromInfo (name, line, col, msg) = newErrorMessage message srcPos
-  where message = Expect msg
-        srcPos = newPos name line col
-
+type ErrorInfo = (SourceName, Line, Column)

@@ -40,8 +40,7 @@ library
                        OWAErrorObjc,
                        OWAParseError,
                        OWAObjcAbSyn,
-                       OWAObjcPrint,
-                       OWAErrorMessages
+                       OWAObjcPrint
   other-modules:       ParseUtil,
                        ObjcUtil
   hs-source-dirs:      src,

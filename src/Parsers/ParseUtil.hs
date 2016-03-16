@@ -69,7 +69,7 @@ instance ParserState GenericParserState where
 -- lowercase letter.
 nameParserWithKeyword :: String -> GenParser Char st String
 nameParserWithKeyword keyword = do
-  string keyword
+  string keyword 
   char ' '
   firstLetter <- lower
   restOfName <- many alphaNum 
