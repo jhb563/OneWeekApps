@@ -39,7 +39,8 @@ library
                        OWAErrorObjc,
                        OWAParseError,
                        OWAObjcAbSyn,
-                       OWAObjcPrint
+                       OWAObjcPrint,
+                       OWAErrorMessages
   other-modules:       ParseUtil,
                        ObjcUtil
   hs-source-dirs:      src,
@@ -79,6 +80,7 @@ test-suite Version010Tests
                  hspec     >= 1.8,
                  directory >= 1.2.5,
                  process,
+                 parsec,
                  OneWeekApps
   default-language: Haskell2010
 
@@ -97,5 +99,6 @@ test-suite Version015Tests
                  hspec     >= 1.8,
                  directory >= 1.2.5,
                  process,
+                 parsec,
                  OneWeekApps
   default-language: Haskell2010

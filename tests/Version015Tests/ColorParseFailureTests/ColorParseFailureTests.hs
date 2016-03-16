@@ -7,6 +7,8 @@ module ColorParseFailureTests (
 ) where
 
 import OWAColorParser
+import OWAParseError
+import TestColorErrors
 import TestUtil
 import Test.Hspec
 
@@ -22,11 +24,11 @@ colorKeywordTest testDirectory = do
   describe "Parse color file which has improper keyword in place of \"Color\"" $ do
     context "when that keyword is at the start of the file" $
       it "Should return a parse error highlighting the improper keyword" $
-        True `shouldBe` False
+        parseColorsFromFile testFile1 `shouldMatchErrorInfo` (errorFromInfo testDirectory colorKeyword1FailureInfo)
 
     context "when the keyword follow a correctly formatted color" $
       it "Should return a parse error highlighting the improper keyword" $
-        True `shouldBe` False
+        parseColorsFromFile testFile2 `shouldMatchErrorInfo` (errorFromInfo testDirectory colorKeyword2FailureInfo)
 
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/tests/Version015Tests/ColorParseFailureTests/ParseFiles"
