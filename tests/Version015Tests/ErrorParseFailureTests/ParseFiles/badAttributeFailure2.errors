@@ -1,0 +1,6 @@
+DefaultDomain thisDomain
+  prefix MyPrefix
+
+Error forFun
+  Code code
+  Description "Hi"

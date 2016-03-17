@@ -1,0 +1,10 @@
+DefaultDomain Default
+  Prefix Hi
+
+BadKeyword what
+
+Error
+  Code Hi
+  Domain Hi
+  Description "Fine"
+

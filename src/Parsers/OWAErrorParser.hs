@@ -36,7 +36,7 @@ type ErrorAttrMap = Map.Map ErrorAttr ErrorVal
 parseErrorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAError])
 parseErrorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrOWAErrors = parseErrorContents contents
+  let errorOrOWAErrors = parseErrorContents fPath contents
   case errorOrOWAErrors of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndOWAErrors -> let (errors, owaErrors) = partitionEithers (concat errorsAndOWAErrors) in
@@ -44,16 +44,19 @@ parseErrorsFromFile fPath = do
         then return $ Left errors
         else return $ Right owaErrors
 
-parseErrorContents :: String -> Either ParseError [[Either OWAParseError OWAError]]
-parseErrorContents = Text.Parsec.runParser 
-  (multiErrorParser `sepEndBy` defaultDomainParser) 
+parseErrorContents :: FilePath -> String -> Either ParseError [[Either OWAParseError OWAError]]
+parseErrorContents filePath = Text.Parsec.runParser 
+  (do
+    results <- multiErrorParser `sepEndBy` defaultDomainParser
+    eof
+    return results) 
   ErrorParserState {
     currentDomain = "",
     currentPrefix = Nothing,
     errorIndentationLevel = [],
     errorShouldUpdateIndent = False
   }
-  ""
+  (sourceNameFromFile filePath) 
 
 ---------------------------------------------------------------------------
 --------------------ERROR STATE--------------------------------------------
@@ -101,11 +104,12 @@ updateDefaultDomain defaultDomain (Just prefix) currentState = ErrorParserState 
 ---------------------------------------------------------------------------
 
 multiErrorParser :: GenParser Char ErrorParserState [Either OWAParseError OWAError]
-multiErrorParser = errorParser `endBy` commentOrSpacesParser
+multiErrorParser = do
+  commentOrSpacesParser
+  errorParser `endBy` commentOrSpacesParser
 
 errorParser :: GenParser Char ErrorParserState (Either OWAParseError OWAError)
 errorParser = do
-  commentOrSpacesParser
   name <- nameParserWithKeyword errorKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
