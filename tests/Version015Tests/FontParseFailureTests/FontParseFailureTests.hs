@@ -110,22 +110,22 @@ testDirectoryExtension :: FilePath
 testDirectoryExtension = "/tests/Version015Tests/FontParseFailureTests/ParseFiles"
 
 fontKeyword1Extension :: FilePath
-fontKeyword1Extension = "/fontKeyword1Failure.fonts"
+fontKeyword1Extension = "/fontKeywordFailure1.fonts"
 
 fontKeyword2Extension :: FilePath
-fontKeyword2Extension = "/fontKeyword2Failure.fonts"
+fontKeyword2Extension = "/fontKeywordFailure2.fonts"
 
 fontName1Extension :: FilePath
-fontName1Extension = "/fontName1Failure.fonts"
+fontName1Extension = "/fontNameFailure1.fonts"
 
 fontName2Extension :: FilePath
-fontName2Extension = "/fontName2Failure.fonts"
+fontName2Extension = "/fontNameFailure2.fonts"
 
 badAttribute1Extension :: FilePath
-badAttribute1Extension = "/badAttribute1Failure.fonts"
+badAttribute1Extension = "/badAttributeFailure1.fonts"
 
 badAttribute2Extension :: FilePath
-badAttribute2Extension = "/badAttribute2Failure.fonts"
+badAttribute2Extension = "/badAttributeFailure2.fonts"
 
 badFontFamilyExtension :: FilePath
 badFontFamilyExtension = "/badFontFamilyFailure.fonts"
