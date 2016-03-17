@@ -1,0 +1,4 @@
+Alert badAlert
+  Title "Yes"
+  message "no"
+  DismissButton "Yes"

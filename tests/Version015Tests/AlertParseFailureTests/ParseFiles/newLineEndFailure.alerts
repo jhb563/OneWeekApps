@@ -1,0 +1,5 @@
+Alert goodTitle
+  Title "GoodTitle"
+  Message "BAD_MESSAGE"
+  YesButton "Hi"
+  NoButton "NO"

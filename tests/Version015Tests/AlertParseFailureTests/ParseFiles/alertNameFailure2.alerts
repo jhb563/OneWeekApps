@@ -1,0 +1,11 @@
+Alert goodAlert
+  Title "Hi"
+  Message "Hi"
+  YesButton "Yes"
+  NoButton "No"
+
+Alert MycapitalizedAlert
+  Title "Yes"
+  YesButton "Yes"
+  NoButton "Yes"
+

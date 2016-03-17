@@ -1,0 +1,10 @@
+Alert goodAlert
+  Title "Yes"
+  Message "No"
+  YesButton "Hi"
+  NoButton "No"
+
+Alert badAlert
+  NeutralButton Fail
+  Title "Hi"
+  Message "Bye"

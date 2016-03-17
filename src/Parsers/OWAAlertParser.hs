@@ -34,7 +34,7 @@ type AlertAttrMap = Map.Map AlertAttr AlertVal
 parseAlertsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAAlert])
 parseAlertsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrAlerts = parseAlertContents contents
+  let errorOrAlerts = parseAlertContents fPath contents
   case errorOrAlerts of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndAlerts -> let (errors, alerts) = partitionEithers errorsAndAlerts in
@@ -42,14 +42,18 @@ parseAlertsFromFile fPath = do
         then return $ Left errors
         else return $ Right alerts
 
-parseAlertContents :: String -> Either ParseError [Either OWAParseError OWAAlert]
-parseAlertContents = Text.Parsec.runParser
-  (alertParser `endBy` commentOrSpacesParser)
+parseAlertContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAAlert]
+parseAlertContents filePath = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    results <- alertParser `endBy` commentOrSpacesParser
+    eof
+    return results)
   GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
   } 
-  ""
+  (sourceNameFromFile filePath)
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -57,7 +61,6 @@ parseAlertContents = Text.Parsec.runParser
 
 alertParser :: GenParser Char GenericParserState (Either OWAParseError OWAAlert)
 alertParser = do
-  commentOrSpacesParser
   name <- nameParserWithKeyword alertKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment

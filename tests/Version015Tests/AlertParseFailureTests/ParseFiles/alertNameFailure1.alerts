@@ -1,0 +1,4 @@
+Alert 123alert
+  Message "Hi"
+  DismissButton "Bye"
+
