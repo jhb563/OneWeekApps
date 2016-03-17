@@ -4,7 +4,7 @@ Alert goodAlert
   YesButton "Hi"
   NoButton "No"
 
-Alert
+Alert badAlert
   NeutralButton Fail
   Title "Hi"
   Message "Bye"

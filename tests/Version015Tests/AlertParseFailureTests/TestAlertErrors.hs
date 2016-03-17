@@ -24,19 +24,19 @@ badLocalizedKeyFailure1 :: SourcePos
 badLocalizedKeyFailure1 = newPos "badLocalizedKeyFailure1.alerts" 2 9 
 
 badLocalizedKeyFailure2 :: SourcePos
-badLocalizedKeyFailure2 = newPos "badLocalizedKeyFailure2.alerts" 3 24
+badLocalizedKeyFailure2 = newPos "badLocalizedKeyFailure2.alerts" 3 25
 
 badButtonKeyFailure1 :: SourcePos
 badButtonKeyFailure1 = newPos "badButtonKeyFailure1.alerts" 8 17
 
 badButtonKeyFailure2 :: SourcePos
-badButtonKeyFailure2 = newPos "badButtonKeyFailure2.alerts" 4 16
+badButtonKeyFailure2 = newPos "badButtonKeyFailure2.alerts" 4 17
 
 badButtonKeyFailure3 :: SourcePos
-badButtonKeyFailure3 = newPos "badButtonKeyFailure3.alerts" 4 12
+badButtonKeyFailure3 = newPos "badButtonKeyFailure3.alerts" 4 13
 
 badButtonKeyFailure4 :: SourcePos
-badButtonKeyFailure4 = newPos "badButtonKeyFailure4.alerts" 2 17
+badButtonKeyFailure4 = newPos "badButtonKeyFailure4.alerts" 2 18
 
 newLineEndFailure :: SourcePos
 newLineEndFailure = newPos "newLineEndFailure.alerts" 5 16
