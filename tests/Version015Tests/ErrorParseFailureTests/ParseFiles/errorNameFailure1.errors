@@ -1,5 +1,5 @@
 DefaultDomain Domain
 
-Error Bad.Error
+Error bad.Error
   Code code
   Description "Hi"
