@@ -1,0 +1,6 @@
+Alert noFail
+  NoButton "dude""
+  YesButton "wtf"
+  Title "Hi"
+  Message "Hi"
+
