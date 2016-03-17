@@ -1,0 +1,10 @@
+Font goodSize
+  FontFamily Arial
+  Size 13.0
+  Styles Bold
+
+Font badSize
+  Size 1.2e1
+  FontFamily TimesNewRomain
+  Styles Italic, Bold
+

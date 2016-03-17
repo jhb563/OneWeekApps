@@ -2,6 +2,7 @@ module Main where
 
 import ColorParseFailureTests
 import CommentTests
+import FontParseFailureTests
 import ItemFailureTests
 import TabTests
 import System.Directory
@@ -13,3 +14,4 @@ main = do
   runTabTests currentDirectory
   runItemFailureTests currentDirectory
   runColorParseFailureTests currentDirectory
+  runFontParseFailureTests currentDirectory

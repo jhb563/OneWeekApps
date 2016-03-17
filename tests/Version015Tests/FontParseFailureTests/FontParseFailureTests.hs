@@ -1,0 +1,149 @@
+-- This will test parseFontsFromFile, out of the module
+-- OWAFontParser, under conditions which should create
+-- a parse failure.
+
+module FontParseFailureTests (
+  runFontParseFailureTests
+) where
+
+import OWAFontParser
+import TestFontErrors
+import TestUtil
+import Test.Hspec
+
+runFontParseFailureTests :: FilePath -> IO ()
+runFontParseFailureTests currentDirectory = hspec $ do
+  let testDirectory = currentDirectory ++ testDirectoryExtension 
+  fontKeywordTest testDirectory
+  fontNameTest testDirectory
+  badAttributeTest testDirectory
+  badFontFamilyTest testDirectory
+  badFontSizeTest testDirectory
+  badFontStylesTest testDirectory
+  newLineTest testDirectory
+
+fontKeywordTest :: FilePath -> Spec
+fontKeywordTest testDirectory = do
+  let testFile1 = testDirectory ++ fontKeyword1Extension
+  let testFile2 = testDirectory ++ fontKeyword2Extension
+  describe "Parse font file which has improper keyword in place of \"Font\"" $ do
+    context "when that keyword is at the start of the file" $
+      it "Should return a parse error highlighting the improper keyword" $
+        parseFontsFromFile testFile1 `shouldMatchError` fontKeywordFailure1
+
+    context "when the keyword follow a correctly formatted font" $
+      it "Should return a parse error highlighting the improper keyword" $
+        parseFontsFromFile testFile2 `shouldMatchError` fontKeywordFailure2
+
+fontNameTest :: FilePath -> Spec
+fontNameTest testDirectory = do
+  let testFile1 = testDirectory ++ fontName1Extension
+  let testFile2 = testDirectory ++ fontName2Extension
+  describe "Parse font file which has improperly named Font" $ do
+    context "when that name contains non alpha-numeric characters" $
+      it "Should return a parse error highlighting the improper name" $
+        parseFontsFromFile testFile1 `shouldMatchError` fontNameFailure1
+
+    context "when that name begins with a uppercase letter" $
+      it "Should return a parse error highlighting the improper name" $
+        parseFontsFromFile testFile2 `shouldMatchError` fontNameFailure2  
+
+badAttributeTest :: FilePath -> Spec
+badAttributeTest testDirectory = do
+  let testFile1 = testDirectory ++ badAttribute1Extension
+  let testFile2 = testDirectory ++ badAttribute2Extension
+  describe "Parse font file which has improperly named attribute" $ do
+    context "when that attribute is a made up word" $
+      it "Should return a parse error highlighting the improper attribute name" $
+        parseFontsFromFile testFile1 `shouldMatchError` badAttributeFailure1
+
+    context "when that attribute matches a correct attribute but has incorrect capitalization" $
+      it "Should return a parse error highlighting the improper attribute name" $
+        parseFontsFromFile testFile2 `shouldMatchError` badAttributeFailure2
+
+badFontFamilyTest :: FilePath -> Spec
+badFontFamilyTest testDirectory = do
+  let testFile1 = testDirectory ++ badFontFamilyExtension
+  describe "Parse font file which has special characters in font family name" $
+    it "Should return a parse error highlighting the improper name" $
+      parseFontsFromFile testFile1 `shouldMatchError` badFontFamilyFailure
+
+badFontSizeTest :: FilePath -> Spec
+badFontSizeTest testDirectory = do
+  let testFile1 = testDirectory ++ badFontSize1Extension
+  let testFile2 = testDirectory ++ badFontSize2Extension
+  describe "Parse font file which has badly formatted bad font sizes" $ do
+    context "when the given size uses scientific notation" $
+      it "Should return a parse error highlighting the improper attribute" $
+        parseFontsFromFile testFile1 `shouldMatchError` badFontSizeFailure1
+
+    context "when the give size is a negative number" $
+      it "Should return a parse error highlighting the improper attribute" $
+        parseFontsFromFile testFile2 `shouldMatchError` badFontSizeFailure2
+
+badFontStylesTest :: FilePath -> Spec
+badFontStylesTest testDirectory = do
+  let testFile1 = testDirectory ++ badFontStyles1Extension
+  let testFile2 = testDirectory ++ badFontStyles2Extension
+  let testFile3 = testDirectory ++ badFontStyles3Extension
+  describe "Parse font file which has badly formatted style attributes" $ do
+    context "when the given styles have no commas between them" $
+      it "Should return a parse error highlighting the improper attribute" $
+        parseFontsFromFile testFile1 `shouldMatchError` badFontStylesFailure1
+
+    context "when the given styles have too much space between them" $
+      it "Should return a parse error highlighting the improper attribute" $
+        parseFontsFromFile testFile2 `shouldMatchError` badFontStylesFailure2
+
+    context "when the given styles use unknown words" $
+      it "Should return a parse error highlighting the improper attribute" $
+        parseFontsFromFile testFile3 `shouldMatchError` badFontStylesFailure3
+
+newLineTest :: FilePath -> Spec
+newLineTest testDirectory = do
+  let testFile1 = testDirectory ++ newLineEndExtension
+  describe "Parse font file which does not end in a new line character" $
+    it "Should return a parse error highlighting the lack of a new line character" $
+      parseFontsFromFile testFile1 `shouldMatchError` newLineEndFailure
+
+testDirectoryExtension :: FilePath
+testDirectoryExtension = "/tests/Version015Tests/FontParseFailureTests/ParseFiles"
+
+fontKeyword1Extension :: FilePath
+fontKeyword1Extension = "/fontKeyword1Failure.fonts"
+
+fontKeyword2Extension :: FilePath
+fontKeyword2Extension = "/fontKeyword2Failure.fonts"
+
+fontName1Extension :: FilePath
+fontName1Extension = "/fontName1Failure.fonts"
+
+fontName2Extension :: FilePath
+fontName2Extension = "/fontName2Failure.fonts"
+
+badAttribute1Extension :: FilePath
+badAttribute1Extension = "/badAttribute1Failure.fonts"
+
+badAttribute2Extension :: FilePath
+badAttribute2Extension = "/badAttribute2Failure.fonts"
+
+badFontFamilyExtension :: FilePath
+badFontFamilyExtension = "/badFontFamilyFailure.fonts"
+
+badFontSize1Extension :: FilePath
+badFontSize1Extension = "/badFontSizeFailure1.fonts"
+
+badFontSize2Extension :: FilePath
+badFontSize2Extension = "/badFontSizeFailure2.fonts"
+
+badFontStyles1Extension :: FilePath
+badFontStyles1Extension = "/badFontStylesFailure1.fonts"
+
+badFontStyles2Extension :: FilePath
+badFontStyles2Extension = "/badFontStylesFailure2.fonts"
+
+badFontStyles3Extension :: FilePath
+badFontStyles3Extension = "/badFontStylesFailure3.fonts"
+
+newLineEndExtension :: FilePath
+newLineEndExtension = "/newLineEndFailure.fonts"
