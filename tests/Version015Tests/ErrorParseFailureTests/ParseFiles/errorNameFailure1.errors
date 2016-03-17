@@ -1,0 +1,5 @@
+DefaultDomain Domain
+
+Error Bad.Error
+  Code code
+  Description "Hi"

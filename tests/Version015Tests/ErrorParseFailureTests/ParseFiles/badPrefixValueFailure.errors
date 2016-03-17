@@ -1,0 +1,3 @@
+DefaultDomain NewDomain
+  Prefix this.is=bad
+

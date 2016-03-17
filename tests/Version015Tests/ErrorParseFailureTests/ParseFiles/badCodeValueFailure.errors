@@ -1,0 +1,10 @@
+Error goodError
+  Code good
+  Domain domain
+  Description "FunFun"
+
+Error badError
+  Domain Fine
+  Code Not=Good
+  Description "What"
+

@@ -1,0 +1,6 @@
+DefaultDomain Fine
+  Prefix Good
+
+Error fineName
+  Code code
+  description "Not good enough"

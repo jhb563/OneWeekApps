@@ -3,6 +3,7 @@ module Main where
 import AlertParseFailureTests
 import ColorParseFailureTests
 import CommentTests
+import ErrorParseFailureTests
 import FontParseFailureTests
 import ItemFailureTests
 import TabTests
@@ -17,3 +18,4 @@ main = do
   runColorParseFailureTests currentDirectory
   runFontParseFailureTests currentDirectory
   runAlertParseFailureTests currentDirectory
+  runErrorParseFailureTests currentDirectory
