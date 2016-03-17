@@ -1,0 +1,9 @@
+Font goodStyles
+  FontFamily Verdana
+  Size 12.0
+  Styles Italic, Bold
+
+Font badStyles
+  FontFamily Verdana
+  Styles Italic,  Bold, Thin
+  Size 12.0

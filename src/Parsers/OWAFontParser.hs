@@ -36,7 +36,7 @@ type FontAttrMap = Map.Map FontAttr FontVal
 parseFontsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAFont])
 parseFontsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrFonts = parseFontContents contents
+  let errorOrFonts = parseFontContents fPath contents
   case errorOrFonts of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndFonts -> let (errors, fonts) = partitionEithers errorsAndFonts in
@@ -44,14 +44,18 @@ parseFontsFromFile fPath = do
         then return $ Left errors
         else return $ Right fonts
 
-parseFontContents :: String -> Either ParseError [Either OWAParseError OWAFont]
-parseFontContents = Text.Parsec.runParser
-  (fontParser `endBy` commentOrSpacesParser)
+parseFontContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAFont]
+parseFontContents filePath = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    results <- fontParser `endBy` commentOrSpacesParser
+    eof
+    return results)
   GenericParserState {
     indentationLevel = [],
     shouldUpdate = False
   }
-  ""
+  (sourceNameFromFile filePath)
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -59,7 +63,6 @@ parseFontContents = Text.Parsec.runParser
 
 fontParser :: GenParser Char GenericParserState (Either OWAParseError OWAFont)
 fontParser = do
-  commentOrSpacesParser
   name <- nameParserWithKeyword fontKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
@@ -105,7 +108,7 @@ fontStyleAttributeParser :: GenParser Char GenericParserState String
 fontStyleAttributeParser = choice styleAttributeParsers
 
 styleAttributeParsers :: [GenParser Char GenericParserState String]
-styleAttributeParsers = map  (Text.Parsec.try . string) styleAttributeStrings
+styleAttributeParsers = map (Text.Parsec.try . string) styleAttributeStrings
 
 -------------------------------------------------------------------------------
 --------------CONSTRUCTING FONTS-----------------------------------------------
