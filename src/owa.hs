@@ -17,4 +17,5 @@ import OWALib
 main :: IO ()
 main = do
   currentFilePath <- getCurrentDirectory
-  runOWA currentFilePath
+  args <- getArgs
+  runOWA currentFilePath args

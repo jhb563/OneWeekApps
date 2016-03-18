@@ -34,16 +34,17 @@ type AlertAttrMap = Map.Map AlertAttr AlertVal
 parseAlertsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAAlert])
 parseAlertsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrAlerts = parseAlertContents fPath contents
+  let sourceName = sourceNameFromFile fPath
+  let errorOrAlerts = parseAlertContents sourceName contents
   case errorOrAlerts of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndAlerts -> let (errors, alerts) = partitionEithers errorsAndAlerts in
       if not (null errors)
-        then return $ Left errors
+        then return $ Left (map (attachFileName sourceName) errors)
         else return $ Right alerts
 
 parseAlertContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAAlert]
-parseAlertContents filePath = Text.Parsec.runParser
+parseAlertContents = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     results <- alertParser `endBy` commentOrSpacesParser
@@ -53,7 +54,6 @@ parseAlertContents filePath = Text.Parsec.runParser
     indentationLevel = [],
     shouldUpdate = False
   } 
-  (sourceNameFromFile filePath)
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -70,6 +70,7 @@ alertParser = do
   let maybeAlert = alertFromNameAndAttrMap name attrMap
   case maybeAlert of
     Nothing -> return $ Left ObjectError {
+      fileName = "",
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap
     }

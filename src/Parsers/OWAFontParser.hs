@@ -36,16 +36,17 @@ type FontAttrMap = Map.Map FontAttr FontVal
 parseFontsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAFont])
 parseFontsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrFonts = parseFontContents fPath contents
+  let sourceName = sourceNameFromFile fPath
+  let errorOrFonts = parseFontContents sourceName contents
   case errorOrFonts of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndFonts -> let (errors, fonts) = partitionEithers errorsAndFonts in
       if not (null errors)
-        then return $ Left errors
+        then return $ Left (map (attachFileName sourceName) errors)
         else return $ Right fonts
 
 parseFontContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAFont]
-parseFontContents filePath = Text.Parsec.runParser
+parseFontContents = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     results <- fontParser `endBy` commentOrSpacesParser
@@ -55,7 +56,6 @@ parseFontContents filePath = Text.Parsec.runParser
     indentationLevel = [],
     shouldUpdate = False
   }
-  (sourceNameFromFile filePath)
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -72,6 +72,7 @@ fontParser = do
   let maybeFont = fontFromNameAndAttrMap name attrMap
   case maybeFont of
     Nothing -> return $ Left ObjectError {
+      fileName = "",
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap
     }

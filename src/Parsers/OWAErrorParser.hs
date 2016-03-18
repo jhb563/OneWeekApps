@@ -36,16 +36,17 @@ type ErrorAttrMap = Map.Map ErrorAttr ErrorVal
 parseErrorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAError])
 parseErrorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrOWAErrors = parseErrorContents fPath contents
+  let sourceName = sourceNameFromFile fPath
+  let errorOrOWAErrors = parseErrorContents sourceName contents
   case errorOrOWAErrors of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndOWAErrors -> let (errors, owaErrors) = partitionEithers (concat errorsAndOWAErrors) in
       if not (null errors)
-        then return $ Left errors
+        then return $ Left (map (attachFileName sourceName) errors)
         else return $ Right owaErrors
 
 parseErrorContents :: FilePath -> String -> Either ParseError [[Either OWAParseError OWAError]]
-parseErrorContents filePath = Text.Parsec.runParser 
+parseErrorContents = Text.Parsec.runParser 
   (do
     results <- multiErrorParser `sepEndBy` defaultDomainParser
     eof
@@ -56,7 +57,6 @@ parseErrorContents filePath = Text.Parsec.runParser
     errorIndentationLevel = [],
     errorShouldUpdateIndent = False
   }
-  (sourceNameFromFile filePath) 
 
 ---------------------------------------------------------------------------
 --------------------ERROR STATE--------------------------------------------
@@ -120,6 +120,7 @@ errorParser = do
   let maybeError = errorFromNameAndAttrMap name attrMap parserState
   case maybeError of
     Nothing -> return $ Left ObjectError {
+      fileName = "",
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap parserState
     }

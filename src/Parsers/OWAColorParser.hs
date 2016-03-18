@@ -36,19 +36,20 @@ type ColorAttrMap = Map.Map ColorAttr ColorVal
 parseColorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAColor])
 parseColorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrColors = parseColorContents fPath contents
+  let sourceName = sourceNameFromFile fPath
+  let errorOrColors = parseColorContents sourceName contents
   case errorOrColors of
     Left parseError -> return (Left [ParsecError parseError])
     Right errorsAndColors -> let (errors, colors) = partitionEithers errorsAndColors in
       if not (null errors)
-        then return $ Left errors
+        then return $ Left (map (attachFileName sourceName) errors)
         else return $ Right colors
 
 -- 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
-parseColorContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAColor]
-parseColorContents filePath = Text.Parsec.runParser
+parseColorContents :: String -> String -> Either ParseError [Either OWAParseError OWAColor]
+parseColorContents = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     result <- colorParser `endBy` commentOrSpacesParser
@@ -58,7 +59,6 @@ parseColorContents filePath = Text.Parsec.runParser
     indentationLevel = [],
     shouldUpdate = False
   }
-  (sourceNameFromFile filePath)
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -75,6 +75,7 @@ colorParser = do
   let maybeColor = colorFromNameAndAttrMap name attrMap
   case maybeColor of
     Nothing -> return $ Left ObjectError {
+      fileName = "",
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap
     }

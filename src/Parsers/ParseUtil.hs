@@ -17,11 +17,12 @@ module ParseUtil (
   commentOrSpacesParser,
   singleTrailingComment,
   indentedComment,
-  printErrorAndReturnEmpty,
-  sourceNameFromFile
+  sourceNameFromFile,
+  attachFileName
 ) where
 
 import qualified Data.Text 
+import OWAParseError
 import Text.Parsec
 import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
@@ -207,26 +208,13 @@ commentParser = do
 -------------------DEBUGGING ERRORS--------------------------------------------
 -------------------------------------------------------------------------------
 
--- | Takes a parse error, prints a representation of that error to the screen,
--- and returns an empty list to signal to other parts of the program that the
--- parse has not turned up any elements.
-printErrorAndReturnEmpty :: ParseError -> IO [a]
-printErrorAndReturnEmpty e = do
-  mapM_ (putStrLn . showMessage) (errorMessages e)
-  let src = errorPos e
-  print $ sourceName src
-  print $ sourceLine src
-  print $ sourceColumn src
-  return []
-
 -- | Takes a full file path and returns just the filename.
 sourceNameFromFile :: FilePath -> String
 sourceNameFromFile fullPath = Data.Text.unpack $ 
   last (Data.Text.split (== '/') (Data.Text.pack fullPath))
 
-showMessage :: Message -> String
-showMessage (SysUnExpect str) = "System Unexpected " ++ str
-showMessage (UnExpect str) = "Unexpected " ++ str
-showMessage (Expect str) = "Expected " ++ str
-showMessage (Message str) = str
-
+-- | Attaches the filename to the error if it is an ObjectError. ParsecErrors
+-- already have the filename attached.
+attachFileName :: String -> OWAParseError -> OWAParseError
+attachFileName _ (ParsecError err) = ParsecError err
+attachFileName sourceName objectError = objectError {fileName = sourceName}
