@@ -25,6 +25,7 @@ import OWAFont
 import OWAFontObjc
 import OWAFontParser
 import OWAObjcPrint
+import OWAParseError
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -67,6 +68,11 @@ printIfVerbose mode str = if mode == Verbose
   then putStrLn str
   else return ()
 
+printErrors :: OutputMode -> [OWAParseError] -> IO ()
+printErrors outputMode [] = return ()
+printErrors outputMode errors = do
+  mapM_ (printIfNotSilent outputMode . show) errors
+
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------
 ---------------------------------------------------------------------------
@@ -78,14 +84,21 @@ produceColorsFiles outputMode appDirectory = do
   colorFiles <- findColorsFiles appDirectory
   printIfVerbose outputMode "Found colors files at: "
   mapM_ (printIfVerbose outputMode) colorFiles
-  listOfColorLists <- mapM parseColorsFromFile colorFiles
-  let colors = concat $ rights listOfColorLists
-  printIfVerbose outputMode ("Found " ++ (show $ length colors) ++ (" colors"))
+  listOfParseResults <- mapM parseColorsFromFile colorFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing colors..."
+      printErrors outputMode errors
+    else do
+      printIfVerbose outputMode "No errors parsing colors!"
+  let colors = concat $ rights listOfParseResults
+  printIfVerbose outputMode ("Successfully parsed " ++ (show $ length colors) ++ (" colors"))
   let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
   let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
   printIfVerbose outputMode "Printing colors files..."
-  let fullHeaderPath = appDirectory ++ fontHeaderFileExtension
-  let fullMPath = appDirectory ++ fontImplementationFileExtension
+  let fullHeaderPath = appDirectory ++ colorHeaderFileExtension
+  let fullMPath = appDirectory ++ colorImplementationFileExtension
   printStructureToFile colorHeaderFileStructure fullHeaderPath
   printStructureToFile colorMFileStructure fullMPath
   printIfVerbose outputMode "Printed colors to files:"
@@ -112,8 +125,15 @@ produceFontsFiles outputMode appDirectory = do
   fontFiles <- findFontsFiles appDirectory
   printIfVerbose outputMode "Found fonts files at: "
   mapM_ (printIfVerbose outputMode) fontFiles
-  listOfFontLists <- mapM parseFontsFromFile fontFiles
-  let fonts = concat $ rights listOfFontLists
+  listOfParseResults <- mapM parseFontsFromFile fontFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing fonts..."
+      printErrors outputMode errors
+    else do
+      printIfVerbose outputMode "No errors parsing fonts!"
+  let fonts = concat $ rights listOfParseResults 
   printIfVerbose outputMode ("Found " ++ (show $ length fonts) ++ (" fonts"))
   let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
   let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
@@ -146,8 +166,15 @@ produceAlertsFiles outputMode appDirectory = do
   alertFiles <- findAlertsFiles appDirectory
   printIfVerbose outputMode "Found alerts files at: "
   mapM_ (printIfVerbose outputMode) alertFiles
-  listOfAlertLists <- mapM parseAlertsFromFile alertFiles
-  let alerts = concat $ rights listOfAlertLists
+  listOfParseResults <- mapM parseAlertsFromFile alertFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing alerts..."
+      printErrors outputMode errors
+    else do
+      printIfVerbose outputMode "No errors parsing alerts!"
+  let alerts = concat $ rights listOfParseResults
   printIfVerbose outputMode ("Found " ++ (show $ length alerts) ++ (" alerts"))
   let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
   let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
@@ -180,8 +207,15 @@ produceErrorsFiles outputMode appDirectory = do
   errorFiles <- findErrorsFiles appDirectory
   printIfVerbose outputMode "Found errors files at: "
   mapM_ (printIfVerbose outputMode) errorFiles
-  listOfErrorLists <- mapM parseErrorsFromFile errorFiles
-  let errors = concat $ rights listOfErrorLists
+  listOfParseResults <- mapM parseErrorsFromFile errorFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing errors..."
+      printErrors outputMode errors
+    else do
+      printIfVerbose outputMode "No errors parsing errors!"
+  let errors = concat $ rights listOfParseResults
   printIfVerbose outputMode ("Found " ++ (show $ length errors) ++ (" errors"))
   let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
   let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors

@@ -18,9 +18,18 @@ import Text.Parsec.Error
 -- an insufficiently attributed item. 
 data OWAParseError = ParsecError ParseError |
   ObjectError {
+    fileName :: String,
     itemName :: String,
     missingRequiredAttributes :: [String]
-  } deriving (Show)
+  }
+
+instance Show OWAParseError where
+  show (ParsecError err) = show err
+  show (ObjectError {fileName = fName, itemName = name, missingRequiredAttributes = attrs}) = 
+    "Error: Insufficient attributes for item " ++ name ++ " in file " ++ fName ++ "\nRequires: " ++ attrString
+      where attrString = case attrs of
+              [] -> ""
+              (a:as) -> foldl (\s newS -> s ++ (',':newS)) a as
 
 instance Eq OWAParseError where
   (==) error1 error2 = itemName error1 == itemName error2 &&
