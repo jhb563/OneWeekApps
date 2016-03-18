@@ -18,13 +18,13 @@ emptyIndentErrors2 :: SourcePos
 emptyIndentErrors2 = newPos "emptyIndentErrors2.errors" 2 1
 
 changingIndentColors :: SourcePos
-changingIndentColors = newPos "changingIndentColors.colors" 3 1 
+changingIndentColors = newPos "changingIndentColors.colors" 3 5
 
 changingIndentFonts :: SourcePos
 changingIndentFonts = newPos "changingIndentFonts.fonts" 3 3 
 
 changingIndentAlerts :: SourcePos
-changingIndentAlerts = newPos "changingIndentAlerts.alerts" 3 3 
+changingIndentAlerts = newPos "changingIndentAlerts.alerts" 3 1 
 
 changingIndentErrors :: SourcePos
-changingIndentErrors = newPos "changingIndentErrors.errors" 3 1 
+changingIndentErrors = newPos "changingIndentErrors.errors" 3 3 

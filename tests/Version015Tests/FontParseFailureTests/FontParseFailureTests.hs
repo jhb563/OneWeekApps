@@ -85,19 +85,14 @@ badFontStylesTest :: FilePath -> Spec
 badFontStylesTest testDirectory = do
   let testFile1 = testDirectory ++ badFontStyles1Extension
   let testFile2 = testDirectory ++ badFontStyles2Extension
-  let testFile3 = testDirectory ++ badFontStyles3Extension
   describe "Parse font file which has badly formatted style attributes" $ do
     context "when the given styles have no commas between them" $
       it "Should return a parse error highlighting the improper attribute" $
         parseFontsFromFile testFile1 `shouldMatchError` badFontStylesFailure1
 
-    context "when the given styles have too much space between them" $
-      it "Should return a parse error highlighting the improper attribute" $
-        parseFontsFromFile testFile2 `shouldMatchError` badFontStylesFailure2
-
     context "when the given styles use unknown words" $
       it "Should return a parse error highlighting the improper attribute" $
-        parseFontsFromFile testFile3 `shouldMatchError` badFontStylesFailure3
+        parseFontsFromFile testFile2 `shouldMatchError` badFontStylesFailure2
 
 newLineTest :: FilePath -> Spec
 newLineTest testDirectory = do
@@ -141,9 +136,6 @@ badFontStyles1Extension = "/badFontStylesFailure1.fonts"
 
 badFontStyles2Extension :: FilePath
 badFontStyles2Extension = "/badFontStylesFailure2.fonts"
-
-badFontStyles3Extension :: FilePath
-badFontStyles3Extension = "/badFontStylesFailure3.fonts"
 
 newLineEndExtension :: FilePath
 newLineEndExtension = "/newLineEndFailure.fonts"

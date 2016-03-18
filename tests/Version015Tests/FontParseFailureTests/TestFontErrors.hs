@@ -33,10 +33,7 @@ badFontStylesFailure1 :: SourcePos
 badFontStylesFailure1 = newPos "badFontStylesFailure1.fonts" 4 15 
 
 badFontStylesFailure2 :: SourcePos
-badFontStylesFailure2 = newPos "badFontStylesFailure2.fonts" 8 18
-
-badFontStylesFailure3 :: SourcePos
-badFontStylesFailure3 = newPos "badFontStylesFailure3.fonts" 2 16
+badFontStylesFailure2 = newPos "badFontStylesFailure2.fonts" 2 16
 
 newLineEndFailure :: SourcePos
 newLineEndFailure = newPos "newLineEndFailure.fonts" 3 12

@@ -115,7 +115,7 @@ alphaParser = do
 hexParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 hexParser = do
   string hexKeyword
-  char ' '
+  spaceTabs
   string "0x"
   hexString <- count 6 hexChar
   maybeExtraChars <- optionMaybe (count 2 hexChar)

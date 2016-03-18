@@ -87,7 +87,7 @@ fontAttrParsers = map Text.Parsec.try [fontFamilyParser, fontSizeParser, fontSty
 fontFamilyParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontFamilyParser = do
   string fontFamilyKeyword
-  char ' '
+  spaceTabs
   familyName <- many (alphaNum <|> char '-')
   singleTrailingComment
   return (fontFamilyKeyword, FamilyVal familyName)
@@ -100,8 +100,8 @@ fontSizeParser = do
 fontStylesParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontStylesParser = do
   string fontStylesKeyword
-  char ' '
-  attributes <- fontStyleAttributeParser `sepBy1` string ", "
+  spaceTabs
+  attributes <- fontStyleAttributeParser `sepBy1` (char ',' >> spaceTabs)
   singleTrailingComment
   return (fontStylesKeyword, StyleAttrs attributes)
 

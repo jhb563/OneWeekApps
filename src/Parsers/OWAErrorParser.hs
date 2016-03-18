@@ -142,7 +142,7 @@ domainParser = do
 codeParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 codeParser = do
   string codeKeyword
-  char ' '
+  spaceTabs
   maybeDots <- optionMaybe (string "...")
   firstLetter <- letter
   rest <- many (alphaNum <|> char '_')
