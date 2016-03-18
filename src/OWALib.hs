@@ -28,30 +28,67 @@ import OWAObjcPrint
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
-runOWA :: FilePath -> IO ()
-runOWA filePath = do
+runOWA :: FilePath -> [String] -> IO ()
+runOWA filePath args = do
+  let outputMode = outputModeFromArgs args
+  printIfNotSilent outputMode ("Searching For app directory from " ++ filePath)
   maybeAppDirectory <- findAppDirectory filePath
   case maybeAppDirectory of 
-    Nothing -> print "Could not find app directory!"
+    Nothing -> printIfNotSilent outputMode "Couldn't find app directory! Exiting"
     Just appDirectory -> do
-      produceColorsFiles appDirectory
-      produceFontsFiles appDirectory
-      produceAlertsFiles appDirectory
-      produceErrorsFiles appDirectory
+      printIfNotSilent outputMode ("Found app directory at " ++ appDirectory) 
+      produceColorsFiles outputMode appDirectory
+      produceFontsFiles outputMode appDirectory
+      produceAlertsFiles outputMode appDirectory
+      produceErrorsFiles outputMode appDirectory
+
+---------------------------------------------------------------------------
+------------------------PROGRAM STATUS PRINTING----------------------------
+---------------------------------------------------------------------------
+
+data OutputMode = Silent | Normal | Verbose deriving (Show, Eq)
+
+outputModeFromArgs :: [String] -> OutputMode
+outputModeFromArgs args = if silentMode 
+  then Silent
+  else if verboseMode
+    then Verbose
+    else Normal
+    where silentMode = elem "-silent" args || elem "-s" args
+          verboseMode = elem "-verbose" args || elem "-v" args
+
+printIfNotSilent :: OutputMode -> String -> IO ()
+printIfNotSilent mode str = if mode /= Silent
+  then putStrLn str
+  else return ()
+
+printIfVerbose :: OutputMode -> String -> IO ()
+printIfVerbose mode str = if mode == Verbose
+  then putStrLn str
+  else return ()
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceColorsFiles :: FilePath -> IO ()
-produceColorsFiles appDirectory = do
+produceColorsFiles :: OutputMode -> FilePath -> IO ()
+produceColorsFiles outputMode appDirectory = do
+  printIfNotSilent outputMode "Generating colors"
+  printIfVerbose outputMode "Searching for colors files"
   colorFiles <- findColorsFiles appDirectory
+  printIfVerbose outputMode "Found colors files at: "
+  mapM_ (printIfVerbose outputMode) colorFiles
   listOfColorLists <- mapM parseColorsFromFile colorFiles
   let colors = concat $ rights listOfColorLists
+  printIfVerbose outputMode ("Found " ++ (show $ length colors) ++ (" colors"))
   let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
   let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
+  printIfVerbose outputMode "Printing colors files..."
   printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
   printStructureToFile colorMFileStructure (appDirectory ++ colorImplementationFileExtension)
+  printIfVerbose outputMode "Printed colors to files:"
+  printIfVerbose outputMode (colorHeaderFileExtension ++ ", " ++ colorImplementationFileExtension)
+  printIfNotSilent outputMode "Finished generating colors!"
 
 colorCategoryName :: String
 colorCategoryName = "MyAppColors"
@@ -66,15 +103,24 @@ colorImplementationFileExtension = "/UIColor+MyAppColors.m"
 ------------------------PRODUCING FONTS FILES------------------------------
 ---------------------------------------------------------------------------
 
-produceFontsFiles :: FilePath -> IO ()
-produceFontsFiles appDirectory = do
+produceFontsFiles :: OutputMode -> FilePath -> IO ()
+produceFontsFiles outputMode appDirectory = do
+  printIfNotSilent outputMode "Generating fonts"
+  printIfVerbose outputMode "Searching for fonts files"
   fontFiles <- findFontsFiles appDirectory
+  printIfVerbose outputMode "Found fonts files at: "
+  mapM_ (printIfVerbose outputMode) fontFiles
   listOfFontLists <- mapM parseFontsFromFile fontFiles
   let fonts = concat $ rights listOfFontLists
+  printIfVerbose outputMode ("Found " ++ (show $ length fonts) ++ (" fonts"))
   let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
   let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
+  printIfVerbose outputMode "Printing fonts files..."
   printStructureToFile fontHeaderFileStructure (appDirectory ++ fontHeaderFileExtension)
   printStructureToFile fontMFileStructure (appDirectory ++ fontImplementationFileExtension)
+  printIfVerbose outputMode "Printed fonts to files:"
+  printIfVerbose outputMode (fontHeaderFileExtension ++ ", " ++ fontImplementationFileExtension)
+  printIfNotSilent outputMode "Finished generating fonts!"
 
 fontCategoryName :: String
 fontCategoryName = "MyAppFonts"
@@ -89,15 +135,24 @@ fontImplementationFileExtension = "/UIFont+MyAppFonts.m"
 ------------------------PRODUCING ALERTS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceAlertsFiles :: FilePath -> IO ()
-produceAlertsFiles appDirectory = do
+produceAlertsFiles :: OutputMode -> FilePath -> IO ()
+produceAlertsFiles outputMode appDirectory = do
+  printIfNotSilent outputMode "Generating alerts"
+  printIfVerbose outputMode "Searching for alerts files"
   alertFiles <- findAlertsFiles appDirectory
+  printIfVerbose outputMode "Found alerts files at: "
+  mapM_ (printIfVerbose outputMode) alertFiles
   listOfAlertLists <- mapM parseAlertsFromFile alertFiles
   let alerts = concat $ rights listOfAlertLists
+  printIfVerbose outputMode ("Found " ++ (show $ length alerts) ++ (" alerts"))
   let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
   let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
+  printIfVerbose outputMode "Printing alerts files..."
   printStructureToFile alertHeaderFileStructure (appDirectory ++ alertHeaderFileExtension)
-  printStructureToFile alertMFileStructure (appDirectory ++ alertImplmentationFileExtension)
+  printStructureToFile alertMFileStructure (appDirectory ++ alertImplementationFileExtension)
+  printIfVerbose outputMode "Printed alerts to files:"
+  printIfVerbose outputMode (alertHeaderFileExtension ++ ", " ++ alertImplementationFileExtension)
+  printIfNotSilent outputMode "Finished generating alerts!"
 
 alertCategoryName :: String
 alertCategoryName = "MyAppAlerts"
@@ -105,22 +160,31 @@ alertCategoryName = "MyAppAlerts"
 alertHeaderFileExtension :: FilePath
 alertHeaderFileExtension = "/UIAlertController+MyAppAlerts.h"
 
-alertImplmentationFileExtension :: FilePath
-alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.m"
+alertImplementationFileExtension :: FilePath
+alertImplementationFileExtension = "/UIAlertController+MyAppAlerts.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ERRORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceErrorsFiles :: FilePath -> IO ()
-produceErrorsFiles appDirectory = do
+produceErrorsFiles :: OutputMode -> FilePath -> IO ()
+produceErrorsFiles outputMode appDirectory = do
+  printIfNotSilent outputMode "Generating errors"
+  printIfVerbose outputMode "Searching for errors files"
   errorFiles <- findErrorsFiles appDirectory
+  printIfVerbose outputMode "Found errors files at: "
+  mapM_ (printIfVerbose outputMode) errorFiles
   listOfErrorLists <- mapM parseErrorsFromFile errorFiles
   let errors = concat $ rights listOfErrorLists
+  printIfVerbose outputMode ("Found " ++ (show $ length errors) ++ (" errors"))
   let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
   let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
+  printIfVerbose outputMode "Printing errors files..."
   printStructureToFile errorHeaderFileStructure (appDirectory ++ errorHeaderFileExtension)
-  printStructureToFile errorMFileStructure (appDirectory ++ errorImplmentationFileExtension)
+  printStructureToFile errorMFileStructure (appDirectory ++ errorImplementationFileExtension)
+  printIfVerbose outputMode "Printed errors to files:"
+  printIfVerbose outputMode (errorHeaderFileExtension ++ ", " ++ errorImplementationFileExtension)
+  printIfNotSilent outputMode "Finished generating errors!"
 
 errorCategoryName :: String
 errorCategoryName = "MyAppErrors"
@@ -128,5 +192,5 @@ errorCategoryName = "MyAppErrors"
 errorHeaderFileExtension :: FilePath
 errorHeaderFileExtension = "/NSError+MyAppErrors.h"
 
-errorImplmentationFileExtension :: FilePath
-errorImplmentationFileExtension = "/NSError+MyAppErrors.m"
+errorImplementationFileExtension :: FilePath
+errorImplementationFileExtension = "/NSError+MyAppErrors.m"
