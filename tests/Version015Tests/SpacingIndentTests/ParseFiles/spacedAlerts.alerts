@@ -1,0 +1,15 @@
+Alert myAlert
+  Title	"MyTITLE"
+  Message		"WHAT_MESSAGE"
+  YesButton "HI"
+  NoButton		"NO"
+
+Alert 		dismissed
+	Title "Hi"
+	Message "Bye"
+	DismissButton 	"WTF"
+
+Alert  	 yoAlert
+	Title 		"Yes"
+	Message "Hi"
+	NeutralButton   "HI"

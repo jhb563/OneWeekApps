@@ -1,0 +1,4 @@
+Alert myAlert
+    Title "MY_TITLE"
+  Message "MY_MESSAGE"
+  DismissButton "DISMISSED"
