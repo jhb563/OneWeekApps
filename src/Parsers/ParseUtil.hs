@@ -216,5 +216,5 @@ sourceNameFromFile fullPath = Data.Text.unpack $
 -- | Attaches the filename to the error if it is an ObjectError. ParsecErrors
 -- already have the filename attached.
 attachFileName :: String -> OWAParseError -> OWAParseError
-attachFileName _ (ParsecError err) = (ParsecError err)
+attachFileName _ (ParsecError err) = ParsecError err
 attachFileName sourceName objectError = objectError {fileName = sourceName}

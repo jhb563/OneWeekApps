@@ -46,7 +46,7 @@ parseFontsFromFile fPath = do
         else return $ Right fonts
 
 parseFontContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAFont]
-parseFontContents sourceName = Text.Parsec.runParser
+parseFontContents = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     results <- fontParser `endBy` commentOrSpacesParser
@@ -56,7 +56,6 @@ parseFontContents sourceName = Text.Parsec.runParser
     indentationLevel = [],
     shouldUpdate = False
   }
-  sourceName
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------

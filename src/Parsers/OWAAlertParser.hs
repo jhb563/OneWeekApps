@@ -44,7 +44,7 @@ parseAlertsFromFile fPath = do
         else return $ Right alerts
 
 parseAlertContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAAlert]
-parseAlertContents sourceName = Text.Parsec.runParser
+parseAlertContents = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     results <- alertParser `endBy` commentOrSpacesParser
@@ -54,7 +54,6 @@ parseAlertContents sourceName = Text.Parsec.runParser
     indentationLevel = [],
     shouldUpdate = False
   } 
-  sourceName
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------

@@ -49,7 +49,7 @@ parseColorsFromFile fPath = do
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> String -> Either ParseError [Either OWAParseError OWAColor]
-parseColorContents srcName = Text.Parsec.runParser
+parseColorContents = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     result <- colorParser `endBy` commentOrSpacesParser
@@ -59,7 +59,6 @@ parseColorContents srcName = Text.Parsec.runParser
     indentationLevel = [],
     shouldUpdate = False
   }
-  srcName
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------

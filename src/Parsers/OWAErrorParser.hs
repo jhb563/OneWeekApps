@@ -46,7 +46,7 @@ parseErrorsFromFile fPath = do
         else return $ Right owaErrors
 
 parseErrorContents :: FilePath -> String -> Either ParseError [[Either OWAParseError OWAError]]
-parseErrorContents sourceName = Text.Parsec.runParser 
+parseErrorContents = Text.Parsec.runParser 
   (do
     results <- multiErrorParser `sepEndBy` defaultDomainParser
     eof
@@ -57,7 +57,6 @@ parseErrorContents sourceName = Text.Parsec.runParser
     errorIndentationLevel = [],
     errorShouldUpdateIndent = False
   }
-  sourceName
 
 ---------------------------------------------------------------------------
 --------------------ERROR STATE--------------------------------------------

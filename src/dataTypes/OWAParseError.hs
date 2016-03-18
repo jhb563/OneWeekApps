@@ -25,7 +25,7 @@ data OWAParseError = ParsecError ParseError |
 
 instance Show OWAParseError where
   show (ParsecError err) = show err
-  show (ObjectError {fileName = fName, itemName = name, missingRequiredAttributes = attrs}) = 
+  show ObjectError {fileName = fName, itemName = name, missingRequiredAttributes = attrs} = 
     "Error: Insufficient attributes for item " ++ name ++ " in file " ++ fName ++ "\nRequires: " ++ attrString
       where attrString = case attrs of
               [] -> ""

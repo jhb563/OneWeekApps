@@ -10,6 +10,7 @@ module OWALib (
   runOWA
 ) where
 
+import Control.Monad
 import Data.Either
 import OWAAlert
 import OWAAlertObjc
@@ -50,28 +51,22 @@ runOWA filePath args = do
 data OutputMode = Silent | Normal | Verbose deriving (Show, Eq)
 
 outputModeFromArgs :: [String] -> OutputMode
-outputModeFromArgs args = if silentMode 
-  then Silent
-  else if verboseMode
-    then Verbose
-    else Normal
+outputModeFromArgs args 
+  | silentMode = Silent
+  | verboseMode = Verbose
+  | otherwise = Normal 
     where silentMode = elem "-silent" args || elem "-s" args
           verboseMode = elem "-verbose" args || elem "-v" args
 
 printIfNotSilent :: OutputMode -> String -> IO ()
-printIfNotSilent mode str = if mode /= Silent
-  then putStrLn str
-  else return ()
+printIfNotSilent mode str = Control.Monad.when (mode /= Silent) $ putStrLn str
 
 printIfVerbose :: OutputMode -> String -> IO ()
-printIfVerbose mode str = if mode == Verbose
-  then putStrLn str
-  else return ()
+printIfVerbose mode str = Control.Monad.when (mode == Verbose) $ putStrLn str
 
 printErrors :: OutputMode -> [OWAParseError] -> IO ()
 printErrors outputMode [] = return ()
-printErrors outputMode errors = do
-  mapM_ (printIfNotSilent outputMode . show) errors
+printErrors outputMode errors = mapM_ (printIfNotSilent outputMode . show) errors
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------
@@ -90,10 +85,9 @@ produceColorsFiles outputMode appDirectory = do
     then do
       printIfNotSilent outputMode "Encountered errors parsing colors..."
       printErrors outputMode errors
-    else do
-      printIfVerbose outputMode "No errors parsing colors!"
+    else printIfVerbose outputMode "No errors parsing colors!"
   let colors = concat $ rights listOfParseResults
-  printIfVerbose outputMode ("Successfully parsed " ++ (show $ length colors) ++ (" colors"))
+  printIfVerbose outputMode ("Successfully parsed " ++ show (length colors) ++ " colors")
   let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
   let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
   printIfVerbose outputMode "Printing colors files..."
@@ -131,10 +125,9 @@ produceFontsFiles outputMode appDirectory = do
     then do
       printIfNotSilent outputMode "Encountered errors parsing fonts..."
       printErrors outputMode errors
-    else do
-      printIfVerbose outputMode "No errors parsing fonts!"
+    else printIfVerbose outputMode "No errors parsing fonts!"
   let fonts = concat $ rights listOfParseResults 
-  printIfVerbose outputMode ("Found " ++ (show $ length fonts) ++ (" fonts"))
+  printIfVerbose outputMode ("Found " ++ show (length fonts) ++ " fonts")
   let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
   let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
   printIfVerbose outputMode "Printing fonts files..."
@@ -172,10 +165,9 @@ produceAlertsFiles outputMode appDirectory = do
     then do
       printIfNotSilent outputMode "Encountered errors parsing alerts..."
       printErrors outputMode errors
-    else do
-      printIfVerbose outputMode "No errors parsing alerts!"
+    else printIfVerbose outputMode "No errors parsing alerts!"
   let alerts = concat $ rights listOfParseResults
-  printIfVerbose outputMode ("Found " ++ (show $ length alerts) ++ (" alerts"))
+  printIfVerbose outputMode ("Found " ++ show (length alerts) ++ " alerts")
   let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
   let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
   printIfVerbose outputMode "Printing alerts files..."
@@ -213,10 +205,9 @@ produceErrorsFiles outputMode appDirectory = do
     then do
       printIfNotSilent outputMode "Encountered errors parsing errors..."
       printErrors outputMode errors
-    else do
-      printIfVerbose outputMode "No errors parsing errors!"
+    else printIfVerbose outputMode "No errors parsing errors!"
   let errors = concat $ rights listOfParseResults
-  printIfVerbose outputMode ("Found " ++ (show $ length errors) ++ (" errors"))
+  printIfVerbose outputMode ("Found " ++ show (length errors) ++ " errors")
   let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
   let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
   printIfVerbose outputMode "Printing errors files..."
