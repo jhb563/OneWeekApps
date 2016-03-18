@@ -6,6 +6,7 @@ import CommentTests
 import ErrorParseFailureTests
 import FontParseFailureTests
 import ItemFailureTests
+import SpacingIndentTests
 import TabTests
 import System.Directory
 
@@ -19,3 +20,4 @@ main = do
   runFontParseFailureTests currentDirectory
   runAlertParseFailureTests currentDirectory
   runErrorParseFailureTests currentDirectory
+  runSpacingIndentTests currentDirectory

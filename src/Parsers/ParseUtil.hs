@@ -14,6 +14,7 @@ module ParseUtil (
   localizedKeyParserWithKeyword,
   floatAttributeParser,
   indentParser,
+  spaceTabs,
   commentOrSpacesParser,
   singleTrailingComment,
   indentedComment,
@@ -71,7 +72,7 @@ instance ParserState GenericParserState where
 nameParserWithKeyword :: String -> GenParser Char st String
 nameParserWithKeyword keyword = do
   string keyword 
-  char ' '
+  spaceTabs
   firstLetter <- lower
   restOfName <- many alphaNum 
   singleTrailingComment
@@ -83,7 +84,7 @@ nameParserWithKeyword keyword = do
 variableNameParserWithKeyword :: String -> GenParser Char st (String, String)
 variableNameParserWithKeyword keyword = do
   string keyword
-  char ' '
+  spaceTabs
   firstLetter <- letter
   restOfName <- many (alphaNum <|> char '_')
   singleTrailingComment
@@ -95,7 +96,7 @@ variableNameParserWithKeyword keyword = do
 localizedKeyParserWithKeyword :: String -> GenParser Char st (String, String)
 localizedKeyParserWithKeyword keyword = do
   string keyword
-  char ' '
+  spaceTabs
   localizedKey <- parseLocalizedKey
   return (keyword, localizedKey)
 
@@ -127,7 +128,7 @@ localizedKeyBySection = do
 floatAttributeParser :: String -> GenParser Char st (String, Float)
 floatAttributeParser keyword = do
   string keyword
-  char ' '
+  spaceTabs
   value <- parseFloat
   singleTrailingComment
   return (keyword, value)
@@ -168,13 +169,14 @@ indentParser parser = do
   string $ concat indentLevel 
   if shouldUpdate
     then do
-      newLevel <- readNewIndentationLevel
+      newLevel <- spaceTabs
       modifyState (addIndentationLevel newLevel)
       parser
     else parser
 
-readNewIndentationLevel :: GenParser Char st String
-readNewIndentationLevel = many (oneOf " \t")
+-- | Reads some kind of spacing composed of spaces and tab characters.
+spaceTabs :: GenParser Char st String
+spaceTabs = many1 (oneOf " \t")
 
 -------------------------------------------------------------------------------
 -------------------PARSING COMMENTS--------------------------------------------

@@ -97,7 +97,8 @@ test-suite Version015Tests
                     tests/Version015Tests/ColorParseFailureTests,
                     tests/Version015Tests/FontParseFailureTests,
                     tests/Version015Tests/AlertParseFailureTests,
-                    tests/Version015Tests/ErrorParseFailureTests
+                    tests/Version015Tests/ErrorParseFailureTests,
+                    tests/Version015Tests/SpacingIndentTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

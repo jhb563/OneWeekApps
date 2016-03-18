@@ -1,0 +1,9 @@
+Color	firstColor
+	Red   255
+	Blue    255
+	Green		255
+	Alpha	 0.5
+
+Color 	spacedHex
+  Hex 	 0x123456
+  Alpha	 	1.0

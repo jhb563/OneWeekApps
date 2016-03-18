@@ -1,0 +1,8 @@
+DefaultDomain   MyDomain
+	Prefix			prefixed
+
+Error   myError
+	Domain 		ThisDomain
+	Code	Code
+	Description		"LOCALIZED"
+
