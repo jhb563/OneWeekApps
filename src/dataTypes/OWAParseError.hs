@@ -33,5 +33,6 @@ instance Show OWAParseError where
 
 instance Eq OWAParseError where
   (==) error1 error2 = itemName error1 == itemName error2 &&
+                       fileName error1 == fileName error2 &&
                         (sort (missingRequiredAttributes error1) ==
                         sort (missingRequiredAttributes error2))
