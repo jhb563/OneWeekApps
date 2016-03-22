@@ -38,6 +38,8 @@ library
                        OWAError,
                        OWAErrorParser,
                        OWAErrorObjc,
+                       OWAAppInfo,
+                       OWAAppInfoParser,
                        OWAParseError,
                        OWAObjcAbSyn,
                        OWAObjcPrint
@@ -98,7 +100,8 @@ test-suite Version015Tests
                     tests/Version015Tests/FontParseFailureTests,
                     tests/Version015Tests/AlertParseFailureTests,
                     tests/Version015Tests/ErrorParseFailureTests,
-                    tests/Version015Tests/SpacingIndentTests
+                    tests/Version015Tests/SpacingIndentTests,
+                    tests/Version015Tests/DefaultFileTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

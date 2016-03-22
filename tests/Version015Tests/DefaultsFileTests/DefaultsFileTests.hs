@@ -2,7 +2,7 @@
 -- findAppInfoFile :: FilePath -> IO (Maybe FilePath)
 -- from OWAFileSearch, which takes a directory and returns the path to
 -- the app.info file, as well as the function:
--- parseAppInfoFromFile :: FilePath -> Either [OWAParseError] OWAAppInfo
+-- parseAppInfoFromFile :: FilePath -> IO Either [OWAParseError] OWAAppInfo
 -- in the module OWAAppInfoParser which will take the possible 
 -- filepath of the app info and returns a structure with the app info, 
 -- with default values filled in if there is no filepath.
@@ -14,6 +14,8 @@ module DefaultsFileTests (
 import OWAAppInfoParser
 import OWAFileSearch
 import System.Directory
+import TestAppInfo
+import TestDefaultErrors
 import TestUtil
 import Test.Hspec
 
@@ -58,19 +60,19 @@ defaultPassTests testDirectory = do
   describe "Parse app info from correctly formatted files" $ do
     context "with a Author, Created date, and Company Name" $
       it "Should return the app info contained in the file" $
-        parseAppInfoFromFile testFile1 `shouldReturn` appInfo1
+        parseAppInfoFromFile testFile1 `shouldReturnRights` appInfo1
 
     context "with a Author, Created date, and Company Name in a different order" $
       it "Should return the app info contained in the file" $
-        parseAppInfoFromFile testFile2 `shouldReturn` appInfo2
+        parseAppInfoFromFile testFile2 `shouldReturnRights` appInfo2
 
     context "with no company name" $
       it "Should return the app info contained in the file but with no company" $
-        parseAppInfoFromFile testFile3 `shouldReturn` appInfo3
+        parseAppInfoFromFile testFile3 `shouldReturnRights` appInfo3
 
     context "with no author name" $
       it "Should return the app info contained in the file but with a blank author name" $
-        parseAppInfoFromFile testFile4 `shouldReturn` appInfo4
+        parseAppInfoFromFile testFile4 `shouldReturnRights` appInfo4
 
 defaultFailTests :: FilePath -> Spec
 defaultFailTests testDirectory = do
@@ -78,6 +80,7 @@ defaultFailTests testDirectory = do
   let testFile2 = testDirectory ++ defaultFailExtension2
   let testFile3 = testDirectory ++ defaultFailExtension3
   let testFile4 = testDirectory ++ defaultFailExtension4
+  let testFile5 = testDirectory ++ defaultFailExtension5
   describe "Parse app info from incorrectly formatted files" $ do
     context "when a keyword is not capitalized" $
       it "Should return a parse error highlighting the keyword" $
@@ -94,6 +97,10 @@ defaultFailTests testDirectory = do
     context "when the date is poorly formatted" $
       it "Should return a parse error highlighting the date" $
         parseAppInfoFromFile testFile4 `shouldMatchError` appError4
+
+    context "when the app name is omitted" $
+      it "Should return an object error highlighting the need for an app name" $
+        parseAppInfoFromFile testFile5 `shouldMatchError` appError5
 
 setupTestEnv :: FilePath -> IO ()
 setupTestEnv currentDirectory = do
@@ -126,6 +133,9 @@ defaultFailExtension3 = "/defaultFailTest3.info"
 
 defaultFailExtension4 :: String
 defaultFailExtension4 = "/defaultFailTest4.info"
+
+defaultFailExtension5 :: String
+defaultFailExtension5 = "/defaultFailTest5.info"
 
 testEnvFolderExtension :: FilePath
 testEnvFolderExtension = "/testenv"

@@ -10,7 +10,8 @@ module OWAFileSearch (
     findColorsFiles,
     findFontsFiles,
     findAlertsFiles,
-    findErrorsFiles
+    findErrorsFiles,
+    findAppInfoFile
 ) where
 
 import System.Directory
@@ -48,6 +49,14 @@ isTargetDir fPath = last components == appString
 -- 'appString' The directory name we are trying to find
 appString :: String
 appString = "app"
+
+
+--------------------------------------------------------------------------------------------------------------------
+-----------------------------------FINDING APP INFO-----------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+
+findAppInfoFile :: FilePath -> IO (Maybe FilePath)
+findAppInfoFile currentFilePath = return Nothing
 
 --------------------------------------------------------------------------------------------------------------------
 -----------------------------------Finding Input Files -------------------------------------------------------------
