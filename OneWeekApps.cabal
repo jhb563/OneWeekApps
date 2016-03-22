@@ -101,7 +101,7 @@ test-suite Version015Tests
                     tests/Version015Tests/AlertParseFailureTests,
                     tests/Version015Tests/ErrorParseFailureTests,
                     tests/Version015Tests/SpacingIndentTests,
-                    tests/Version015Tests/DefaultFileTests
+                    tests/Version015Tests/DefaultsFileTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

@@ -108,7 +108,7 @@ setupTestEnv currentDirectory = do
   mapM_ (createFileAndClose currentDirectory) directorySearchFileExtensions
 
 teardownTestEnv :: FilePath -> IO ()
-teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvExtension)
+teardownTestEnv currentDirectory = removeDirectoryRecursive (currentDirectory ++ testEnvFolderExtension)
 
 defaultPassExtension1 :: String
 defaultPassExtension1 = "/defaultPassTest1.info"
@@ -177,7 +177,7 @@ appInfoFailExtension2 :: FilePath
 appInfoFailExtension2 = "/testenv/app4/orThis/level3/level4"
 
 directorySearchFolderExtensions :: [FilePath]
-directorySearchFolderExtensions = [appInfo1ExtensionFolder,
+directorySearchFolderExtensions = [appInfo1FolderExtension,
   appInfo2FolderEndExtension,
   appInfo3FolderEndExtension,
   appInfo3RandomExtension,
