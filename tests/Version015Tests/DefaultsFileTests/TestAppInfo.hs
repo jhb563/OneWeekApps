@@ -5,7 +5,7 @@ import OWAAppInfo
 appInfo1 :: OWAAppInfo
 appInfo1 = OWAAppInfo {
   appName = "MySampleApp",
-  authorName = "James BoweN",
+  authorName = "James Bowen",
   dateCreatedString = "2/16/2016",
   companyName = Just "One Week Apps"
 }
@@ -33,3 +33,11 @@ appInfo4 = OWAAppInfo {
   dateCreatedString = "3/16/2016",
   companyName = Just "MyCompany"
 } 
+
+appInfo5 :: OWAAppInfo
+appInfo5 = OWAAppInfo {
+  appName = "CommentedApp",
+  authorName = "James",
+  dateCreatedString = "10/10/15",
+  companyName = Just "MyCompany"
+}

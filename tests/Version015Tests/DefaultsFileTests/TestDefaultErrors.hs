@@ -10,7 +10,7 @@ appError2 :: SourcePos
 appError2 = newPos "defaultFailTest2.info" 1 1
 
 appError3 :: SourcePos
-appError3 = newPos "defaultFailTest3.info" 1 9
+appError3 = newPos "defaultFailTest3.info" 1 8
 
 appError4 :: SourcePos
 appError4 = newPos "defaultFailTest4.info" 2 12 

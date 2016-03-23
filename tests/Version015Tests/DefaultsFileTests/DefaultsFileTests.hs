@@ -57,6 +57,7 @@ defaultPassTests testDirectory = do
   let testFile2 = testDirectory ++ defaultPassExtension2
   let testFile3 = testDirectory ++ defaultPassExtension3
   let testFile4 = testDirectory ++ defaultPassExtension4
+  let testFile5 = testDirectory ++ defaultPassExtension5
   describe "Parse app info from correctly formatted files" $ do
     context "with a Author, Created date, and Company Name" $
       it "Should return the app info contained in the file" $
@@ -73,6 +74,10 @@ defaultPassTests testDirectory = do
     context "with no author name" $
       it "Should return the app info contained in the file but with a blank author name" $
         parseAppInfoFromFile testFile4 `shouldReturnRights` appInfo4
+
+    context "with comments both before and inline" $
+      it "Should return the app info contained in the file ignoring the comments" $
+        parseAppInfoFromFile testFile5 `shouldReturnRights` appInfo5
 
 defaultFailTests :: FilePath -> Spec
 defaultFailTests testDirectory = do
@@ -121,6 +126,9 @@ defaultPassExtension3 = "/defaultPassTest3.info"
 
 defaultPassExtension4 :: String
 defaultPassExtension4 = "/defaultPassTest4.info"
+
+defaultPassExtension5 :: String
+defaultPassExtension5 = "/defaultPassTest5.info"
 
 defaultFailExtension1 :: String
 defaultFailExtension1 = "/defaultFailTest1.info"
