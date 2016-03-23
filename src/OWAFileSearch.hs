@@ -10,7 +10,8 @@ module OWAFileSearch (
     findColorsFiles,
     findFontsFiles,
     findAlertsFiles,
-    findErrorsFiles
+    findErrorsFiles,
+    findAppInfoFile
 ) where
 
 import System.Directory
@@ -48,6 +49,26 @@ isTargetDir fPath = last components == appString
 -- 'appString' The directory name we are trying to find
 appString :: String
 appString = "app"
+
+
+--------------------------------------------------------------------------------------------------------------------
+-----------------------------------FINDING APP INFO-----------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+
+-- | 'findAppInfoFile' Locates a single file named 'app.info', searching recursively from
+-- the given directory.
+findAppInfoFile :: FilePath -> IO (Maybe FilePath)
+findAppInfoFile appDirectory = do
+  infoFiles <- searchDirectoryForExtension infoExtension [appDirectory] []
+  let appInfoFiles = filter isAppInfoFile infoFiles
+  return (if not (null appInfoFiles) then Just (head appInfoFiles) else Nothing)
+  
+isAppInfoFile :: FilePath -> Bool
+isAppInfoFile filePath = last components == "app.info"
+  where components = splitOn "/" filePath
+
+infoExtension :: String
+infoExtension = "info"
 
 --------------------------------------------------------------------------------------------------------------------
 -----------------------------------Finding Input Files -------------------------------------------------------------
