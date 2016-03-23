@@ -7,4 +7,4 @@ data OWAAppInfo = OWAAppInfo {
   authorName :: String,
   dateCreatedString :: String,
   companyName :: Maybe String
-}
+} deriving (Show, Eq)

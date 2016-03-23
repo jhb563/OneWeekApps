@@ -36,7 +36,7 @@ shouldReturnSorted returned expected = do
 
 -- Unwraps result of parsing and expects that we have a full list of objects
 -- matching the given objects.
-shouldReturnRights :: (Show b, Eq b) => IO (Either [a] [b]) -> [b] -> Expectation
+shouldReturnRights :: (Show b, Eq b) => IO (Either [a] b) -> b -> Expectation
 shouldReturnRights returned expected = do
   result <- returned
   case result of
@@ -45,7 +45,7 @@ shouldReturnRights returned expected = do
 
 -- Unwraps result of parsing and expects that we have a full list of failures 
 -- matching the given error objects.
-shouldReturnLefts :: (Show a, Eq a) => IO (Either [a] [b]) -> [a] -> Expectation
+shouldReturnLefts :: (Show a, Eq a) => IO (Either a b) -> a -> Expectation
 shouldReturnLefts returned expected = do
   result <- returned
   case result of
@@ -71,7 +71,7 @@ filesShouldMatch actualFile expectedFile = do
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
 
-shouldMatchError :: IO (Either [OWAParseError] [b]) -> SourcePos -> Expectation
+shouldMatchError :: IO (Either [OWAParseError] b) -> SourcePos -> Expectation
 shouldMatchError returned srcPos = do
   result <- returned
   case result of

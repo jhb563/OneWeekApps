@@ -100,7 +100,7 @@ defaultFailTests testDirectory = do
 
     context "when the app name is omitted" $
       it "Should return an object error highlighting the need for an app name" $
-        parseAppInfoFromFile testFile5 `shouldMatchError` appError5
+        parseAppInfoFromFile testFile5 `shouldReturnLefts` [appError5]
 
 setupTestEnv :: FilePath -> IO ()
 setupTestEnv currentDirectory = do
