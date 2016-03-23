@@ -37,15 +37,15 @@ appInfoSearchTests currentDirectory = do
   describe "Find App Info File" $ do
     context "when in the immediate directory being searched" $
       it "Should return the app info file" $
-        findAppInfoFile startPath1 `shouldReturn` (Just appInfo1Extension)
+        findAppInfoFile startPath1 `shouldReturn` (Just $ currentDirectory ++ appInfo1Extension)
     
     context "when one folder below the directory" $
       it "Should return the app info file" $
-        findAppInfoFile startPath2 `shouldReturn` (Just appInfo2Extension)
+        findAppInfoFile startPath2 `shouldReturn` (Just $ currentDirectory ++ appInfo2Extension)
 
     context "when multiple folders below with a red herring directory" $
       it "Should return the app info file" $
-        findAppInfoFile startPath3 `shouldReturn` (Just appInfo3Extension)
+        findAppInfoFile startPath3 `shouldReturn` (Just $ currentDirectory ++ appInfo3Extension)
 
     context "when there is no file" $
       it "Should return Nothing" $
