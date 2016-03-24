@@ -43,7 +43,7 @@ runOWA filePath args = do
       printIfNotSilent outputMode ("Found app directory at " ++ appDirectory) 
       appInfo <- loadAppInfo outputMode appDirectory
       case appInfo of
-        Nothing -> printIfNotSilent outputMode "Failed to parse app.info. Exiting."
+        Nothing -> printIfNotSilent outputMode "Exiting."
         Just appInfo -> do
           produceColorsFiles outputMode appDirectory appInfo
           produceFontsFiles outputMode appDirectory appInfo
@@ -93,6 +93,7 @@ loadAppInfo outputMode appDirectory = do
       case appInfoOrErrors of
         Left errors -> do
           printErrors outputMode errors 
+          printIfNotSilent outputMode "Unable to parse app.info!"
           return Nothing
         Right appInfo -> do
           printIfNotSilent outputMode "Successfully parsed app.info!"
