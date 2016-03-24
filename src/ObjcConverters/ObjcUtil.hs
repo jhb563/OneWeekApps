@@ -17,25 +17,35 @@ module ObjcUtil (
   localizedStringExpr  
 ) where
 
+import Data.List.Split
+import OWAAppInfo
 import OWAObjcAbSyn
 
 -------------------------------------------------------------------------------
 -------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------
 -------------------------------------------------------------------------------
 
--- | Takes strings for the original type name, the category name, and
+-- | Takes and object describing the app info,
+-- strings for the original type name, the category name, and
 -- a boolean signal for whether the comment is for a header or .m file.
 -- Constructs the header comment which goes at the top of a category file.
-categoryCommentSection :: String -> String -> Bool -> FileSection
-categoryCommentSection originalTypeName categoryName isHeader = BlockCommentSection
-  ["",
-  categoryFileName originalTypeName categoryName isHeader,
-  "MySampleApp",
-  "",
-  "Created By James Bowen 2/16/2016",
-  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
-  ""]
-  where ending = if isHeader then ".h" else ".m"
+categoryCommentSection :: OWAAppInfo -> String -> String -> Bool -> FileSection
+categoryCommentSection appInfo originalTypeName categoryName isHeader = BlockCommentSection
+  (definiteSection ++ possibleCompanySection)
+  where dateCreated = dateCreatedString appInfo 
+        createdString = "Created By " ++ authorName appInfo ++
+          " " ++ dateCreatedString appInfo
+        yearCreated = last $ splitOn "/" dateCreated
+        definiteSection = ["",
+          categoryFileName originalTypeName categoryName isHeader,
+          appName appInfo,
+          "",
+          createdString]
+        possibleCompanySection = case companyName appInfo of
+          Nothing -> [""]
+          Just company -> ["Copyright (c) " ++ yearCreated ++ " " ++
+            company ++ ". All Rights Reserved",
+            ""]
 
 -------------------------------------------------------------------------------
 -------------------IMPORT SECTIONS---------------------------------------------

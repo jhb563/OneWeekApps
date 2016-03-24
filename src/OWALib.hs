@@ -15,6 +15,8 @@ import Data.Either
 import OWAAlert
 import OWAAlertObjc
 import OWAAlertParser
+import OWAAppInfo
+import OWAAppInfoParser
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
@@ -39,10 +41,14 @@ runOWA filePath args = do
     Nothing -> printIfNotSilent outputMode "Couldn't find app directory! Exiting"
     Just appDirectory -> do
       printIfNotSilent outputMode ("Found app directory at " ++ appDirectory) 
-      produceColorsFiles outputMode appDirectory
-      produceFontsFiles outputMode appDirectory
-      produceAlertsFiles outputMode appDirectory
-      produceErrorsFiles outputMode appDirectory
+      appInfo <- loadAppInfo outputMode appDirectory
+      case appInfo of
+        Nothing -> printIfNotSilent outputMode "Failed to parse app.info. Exiting."
+        Just appInfo -> do
+          produceColorsFiles outputMode appDirectory appInfo
+          produceFontsFiles outputMode appDirectory appInfo
+          produceAlertsFiles outputMode appDirectory appInfo
+          produceErrorsFiles outputMode appDirectory appInfo
 
 ---------------------------------------------------------------------------
 ------------------------PROGRAM STATUS PRINTING----------------------------
@@ -72,8 +78,32 @@ printErrors outputMode errors = mapM_ (printIfNotSilent outputMode . show) error
 ------------------------PRODUCING COLORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceColorsFiles :: OutputMode -> FilePath -> IO ()
-produceColorsFiles outputMode appDirectory = do
+loadAppInfo :: OutputMode -> FilePath -> IO (Maybe OWAAppInfo)
+loadAppInfo outputMode appDirectory = do
+  printIfNotSilent outputMode "Searching for app.info..."
+  maybeAppFile <- findAppInfoFile appDirectory
+  case maybeAppFile of
+    Nothing -> do
+      printIfNotSilent outputMode "Unable to find app.info. Please create an app.info file"
+      return Nothing 
+    Just appFile -> do
+      printIfVerbose outputMode $ "Found app.info at " ++ appFile
+      printIfNotSilent outputMode "Parsing app.info..."
+      appInfoOrErrors <- parseAppInfoFromFile appFile
+      case appInfoOrErrors of
+        Left errors -> do
+          printErrors outputMode errors 
+          return Nothing
+        Right appInfo -> do
+          printIfNotSilent outputMode "Successfully parsed app.info!"
+          return $ Just appInfo 
+
+---------------------------------------------------------------------------
+------------------------PRODUCING COLORS FILES-----------------------------
+---------------------------------------------------------------------------
+
+produceColorsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceColorsFiles outputMode appDirectory appInfo = do
   printIfNotSilent outputMode "Generating colors..."
   printIfVerbose outputMode "Searching for colors files..."
   colorFiles <- findColorsFiles appDirectory
@@ -88,8 +118,8 @@ produceColorsFiles outputMode appDirectory = do
     else printIfVerbose outputMode "No errors parsing colors!"
   let colors = concat $ rights listOfParseResults
   printIfVerbose outputMode ("Successfully parsed " ++ show (length colors) ++ " colors")
-  let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
-  let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
+  let colorHeaderFileStructure = objcHeaderFromColors appInfo colorCategoryName colors
+  let colorMFileStructure = objcImplementationFromColors appInfo colorCategoryName colors
   printIfVerbose outputMode "Printing colors files..."
   let fullHeaderPath = appDirectory ++ colorHeaderFileExtension
   let fullMPath = appDirectory ++ colorImplementationFileExtension
@@ -112,8 +142,8 @@ colorImplementationFileExtension = "/UIColor+MyAppColors.m"
 ------------------------PRODUCING FONTS FILES------------------------------
 ---------------------------------------------------------------------------
 
-produceFontsFiles :: OutputMode -> FilePath -> IO ()
-produceFontsFiles outputMode appDirectory = do
+produceFontsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceFontsFiles outputMode appDirectory appInfo = do
   printIfNotSilent outputMode "Generating fonts..."
   printIfVerbose outputMode "Searching for fonts files..."
   fontFiles <- findFontsFiles appDirectory
@@ -128,8 +158,8 @@ produceFontsFiles outputMode appDirectory = do
     else printIfVerbose outputMode "No errors parsing fonts!"
   let fonts = concat $ rights listOfParseResults 
   printIfVerbose outputMode ("Found " ++ show (length fonts) ++ " fonts")
-  let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
-  let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
+  let fontHeaderFileStructure = objcHeaderFromFonts appInfo fontCategoryName fonts
+  let fontMFileStructure = objcImplementationFromFonts appInfo fontCategoryName fonts
   printIfVerbose outputMode "Printing fonts files..."
   let fullHeaderPath = appDirectory ++ fontHeaderFileExtension
   let fullMPath = appDirectory ++ fontImplementationFileExtension
@@ -152,8 +182,8 @@ fontImplementationFileExtension = "/UIFont+MyAppFonts.m"
 ------------------------PRODUCING ALERTS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceAlertsFiles :: OutputMode -> FilePath -> IO ()
-produceAlertsFiles outputMode appDirectory = do
+produceAlertsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceAlertsFiles outputMode appDirectory appInfo = do
   printIfNotSilent outputMode "Generating alerts..."
   printIfVerbose outputMode "Searching for alerts files..."
   alertFiles <- findAlertsFiles appDirectory
@@ -168,8 +198,8 @@ produceAlertsFiles outputMode appDirectory = do
     else printIfVerbose outputMode "No errors parsing alerts!"
   let alerts = concat $ rights listOfParseResults
   printIfVerbose outputMode ("Found " ++ show (length alerts) ++ " alerts")
-  let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
-  let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
+  let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alertCategoryName alerts
+  let alertMFileStructure = objcImplementationFromAlerts appInfo alertCategoryName alerts
   printIfVerbose outputMode "Printing alerts files..."
   let fullHeaderPath = appDirectory ++ alertHeaderFileExtension
   let fullMPath = appDirectory ++ alertImplementationFileExtension
@@ -192,8 +222,8 @@ alertImplementationFileExtension = "/UIAlertController+MyAppAlerts.m"
 ------------------------PRODUCING ERRORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceErrorsFiles :: OutputMode -> FilePath -> IO ()
-produceErrorsFiles outputMode appDirectory = do
+produceErrorsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceErrorsFiles outputMode appDirectory appInfo = do
   printIfNotSilent outputMode "Generating errors..."
   printIfVerbose outputMode "Searching for errors files..."
   errorFiles <- findErrorsFiles appDirectory
@@ -208,8 +238,8 @@ produceErrorsFiles outputMode appDirectory = do
     else printIfVerbose outputMode "No errors parsing errors!"
   let errors = concat $ rights listOfParseResults
   printIfVerbose outputMode ("Found " ++ show (length errors) ++ " errors")
-  let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
-  let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
+  let errorHeaderFileStructure = objcHeaderFromErrors appInfo errorCategoryName errors
+  let errorMFileStructure = objcImplementationFromErrors appInfo errorCategoryName errors
   printIfVerbose outputMode "Printing errors files..."
   let fullHeaderPath = appDirectory ++ errorHeaderFileExtension
   let fullMPath = appDirectory ++ errorImplementationFileExtension
