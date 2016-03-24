@@ -16,6 +16,7 @@ module AlertPrintTests (
   runAlertPrintTests
 ) where
 
+import OWAAppInfo
 import OWAAlertObjc
 import OWAObjcAbSyn
 import TestAlerts
@@ -52,11 +53,19 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Aler
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromAlerts "EmptyCategory" [],
-  objcImplementationFromAlerts "EmptyCategory" [],
-  objcHeaderFromAlerts "MyAppAlerts" allTestAlerts,
-  objcImplementationFromAlerts "MyAppAlerts" allTestAlerts]
+testFileStructures = [objcHeaderFromAlerts sampleAppInfo "EmptyCategory" [],
+  objcImplementationFromAlerts sampleAppInfo "EmptyCategory" [],
+  objcHeaderFromAlerts sampleAppInfo "MyAppAlerts" allTestAlerts,
+  objcImplementationFromAlerts sampleAppInfo "MyAppAlerts" allTestAlerts]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

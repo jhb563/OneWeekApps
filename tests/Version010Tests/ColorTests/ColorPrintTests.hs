@@ -16,6 +16,7 @@ module ColorPrintTests (
   runColorPrintTests
 ) where
 
+import OWAAppInfo
 import OWAColorObjc
 import OWAObjcAbSyn
 import TestColors
@@ -52,11 +53,19 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Colo
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromColors "EmptyCategory" [],
-  objcImplementationFromColors "EmptyCategory" [],
-  objcHeaderFromColors "MyAppColors" testColorsToPrint,
-  objcImplementationFromColors "MyAppColors" testColorsToPrint]
+testFileStructures = [objcHeaderFromColors sampleAppInfo "EmptyCategory" [],
+  objcImplementationFromColors sampleAppInfo "EmptyCategory" [],
+  objcHeaderFromColors sampleAppInfo "MyAppColors" testColorsToPrint,
+  objcImplementationFromColors sampleAppInfo "MyAppColors" testColorsToPrint]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

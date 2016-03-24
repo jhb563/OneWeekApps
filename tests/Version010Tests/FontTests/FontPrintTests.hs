@@ -16,6 +16,7 @@ module FontPrintTests (
   runFontPrintTests
 ) where
 
+import OWAAppInfo
 import OWAFontObjc
 import OWAObjcAbSyn
 import TestFonts
@@ -52,6 +53,14 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
   emptyImplementationResultFile,
@@ -59,10 +68,10 @@ resultsFiles = [emptyHeaderResultFile,
   implementationResultFile]
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromFonts "EmptyCategory" [],
-  objcImplementationFromFonts "EmptyCategory" [], 
-  objcHeaderFromFonts "MyAppFonts" allTestFonts, 
-  objcImplementationFromFonts "MyAppFonts" allTestFonts]
+testFileStructures = [objcHeaderFromFonts sampleAppInfo "EmptyCategory" [],
+  objcImplementationFromFonts sampleAppInfo "EmptyCategory" [], 
+  objcHeaderFromFonts sampleAppInfo "MyAppFonts" allTestFonts, 
+  objcImplementationFromFonts sampleAppInfo "MyAppFonts" allTestFonts]
 
 emptyHeaderResultFile :: String
 emptyHeaderResultFile = "UIFont+EmptyCategory.h"
