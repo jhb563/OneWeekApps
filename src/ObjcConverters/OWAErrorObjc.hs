@@ -28,23 +28,25 @@ type DomainMap = Map.Map String [OWAError]
 -- a name for the new errors category, as well
 -- as a list of error objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromErrors :: OWAAppInfo -> String -> [OWAError] -> ObjcFile
-objcHeaderFromErrors appInfo categoryName errors = ObjcFile
+objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+objcHeaderFromErrors appInfo  errors = ObjcFile
   [categoryCommentSection appInfo originalErrorTypeName categoryName True,
   foundationImportsSection,
   CategoryInterfaceSection category sections]
     where category = categoryForErrors categoryName errors
+          categoryName = appPrefix appInfo ++ "Errors"
           sections = methodHeaderSectionsForErrors errors
 
 -- | 'objcImplementationFromErrors' takes the app info,
 -- a name for the new errors category, as well
 -- as a list of error objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromErrors :: OWAAppInfo -> String -> [OWAError] -> ObjcFile
-objcImplementationFromErrors appInfo categoryName errors = if not (null errors)
+objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+objcImplementationFromErrors appInfo errors = if not (null errors)
   then ObjcFile [commentSection, includeSection, enumSect, implSection]
   else ObjcFile [commentSection, includeSection, implSection]
-  where commentSection = categoryCommentSection appInfo originalErrorTypeName categoryName False
+  where categoryName = appPrefix appInfo ++ "Errors" 
+        commentSection = categoryCommentSection appInfo originalErrorTypeName categoryName False
         includeSection = categoryMImportsSection originalErrorTypeName categoryName
         enumSect = enumSection categoryName errors
         category = categoryForErrors categoryName errors
