@@ -1,5 +1,5 @@
 //
-// UIFont+MyAppFonts.h
+// UIFont+IGAFonts.h
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
@@ -8,7 +8,7 @@
 
 @import UIKit;
 
-@interface UIFont (MyAppFonts)
+@interface UIFont (IGAFonts)
 
 + (UIFont*)buttonFont;
 + (UIFont*)labelFont;

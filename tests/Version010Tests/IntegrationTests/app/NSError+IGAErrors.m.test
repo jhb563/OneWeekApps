@@ -1,14 +1,14 @@
 //
-// NSError+MyAppErrors.m
+// NSError+IGAErrors.m
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
 // Copyright (c) 2016 OWA. All Rights Reserved
 //
 
-#import "NSError+MyAppErrors.h"
+#import "NSError+IGAErrors.h"
 
-typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
+typedef NS_ENUM(NSInteger, IGAErrorsErrorCodes) {
   FirstFinalError,
   belongsToFirstDomain,
   MyAppFirstError,
@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
   SecondDomainWhichError
 };
 
-@implementation NSError (MyAppErrors)
+@implementation NSError (IGAErrors)
 
 #pragma mark - FirstDomain
 

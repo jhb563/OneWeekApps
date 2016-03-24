@@ -6,5 +6,6 @@ AppName: CommentedApp // In Line comment!
 Created: 10/10/15 // Comment on date line!
 Company: MyCompany
 Author: James
+Prefix: CMT
 
 // Trailing Comment

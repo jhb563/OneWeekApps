@@ -1,14 +1,14 @@
 //
-// UIAlertController+MyAppAlerts.m
+// UIAlertController+IGAAlerts.m
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
 // Copyright (c) 2016 OWA. All Rights Reserved
 //
 
-#import "UIAlertController+MyAppAlerts.h"
+#import "UIAlertController+IGAAlerts.h"
 
-@implementation UIAlertController (MyAppAlerts)
+@implementation UIAlertController (IGAAlerts)
 
 + (UIAlertController*)blankMessageWithHandler:(AlertHandler)handler {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"", nil) message:NSLocalizedString(@"", nil) preferredStyle:UIAlertControllerStyleAlert];

@@ -1,14 +1,14 @@
 //
-// UIColor+MyAppColors.m
+// UIColor+IGAColors.m
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
 // Copyright (c) 2016 OWA. All Rights Reserved
 //
 
-#import "UIColor+MyAppColors.h"
+#import "UIColor+IGAColors.h"
 
-@implementation UIColor (MyAppColors)
+@implementation UIColor (IGAColors)
 
 + (UIColor*)testColor1 {
   return [UIColor colorWithRed:0.769 green:0.392 blue:0.561 alpha:1.0];

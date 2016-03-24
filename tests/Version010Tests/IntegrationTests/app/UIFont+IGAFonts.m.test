@@ -1,14 +1,14 @@
 //
-// UIFont+MyAppFonts.m
+// UIFont+IGAFonts.m
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
 // Copyright (c) 2016 OWA. All Rights Reserved
 //
 
-#import "UIFont+MyAppFonts.h"
+#import "UIFont+IGAFonts.h"
 
-@implementation UIFont (MyAppFonts)
+@implementation UIFont (IGAFonts)
 
 + (UIFont*)buttonFont {
   return [UIFont fontWithName:@"Avenir-Medium" size:12.0];

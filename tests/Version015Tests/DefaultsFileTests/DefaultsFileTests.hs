@@ -86,6 +86,7 @@ defaultFailTests testDirectory = do
   let testFile3 = testDirectory ++ defaultFailExtension3
   let testFile4 = testDirectory ++ defaultFailExtension4
   let testFile5 = testDirectory ++ defaultFailExtension5
+  let testFile6 = testDirectory ++ defaultFailExtension6
   describe "Parse app info from incorrectly formatted files" $ do
     context "when a keyword is not capitalized" $
       it "Should return a parse error highlighting the keyword" $
@@ -106,6 +107,10 @@ defaultFailTests testDirectory = do
     context "when the app name is omitted" $
       it "Should return an object error highlighting the need for an app name" $
         parseAppInfoFromFile testFile5 `shouldReturnLefts` [appError5]
+
+    context "when the prefix is omitted" $
+      it "Should return an object error highlighting the need for a prefix" $
+        parseAppInfoFromFile testFile6 `shouldReturnLefts` [appError6]
 
 setupTestEnv :: FilePath -> IO ()
 setupTestEnv currentDirectory = do
@@ -144,6 +149,9 @@ defaultFailExtension4 = "/defaultFailTest4.info"
 
 defaultFailExtension5 :: String
 defaultFailExtension5 = "/defaultFailTest5.info"
+
+defaultFailExtension6 :: String
+defaultFailExtension6 = "/defaultFailTest6.info"
 
 testEnvFolderExtension :: FilePath
 testEnvFolderExtension = "/testenv"
