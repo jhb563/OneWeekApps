@@ -16,6 +16,7 @@ module ErrorPrintTests (
   runErrorPrintTests
 ) where
 
+import OWAAppInfo
 import OWAErrorObjc
 import OWAObjcAbSyn
 import TestErrors
@@ -52,11 +53,19 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Erro
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromErrors "EmptyCategory" [],
-  objcImplementationFromErrors "EmptyCategory" [],
-  objcHeaderFromErrors "MyAppErrors" allTestErrors,
-  objcImplementationFromErrors "MyAppErrors" allTestErrors]
+testFileStructures = [objcHeaderFromErrors sampleAppInfo "EmptyCategory" [],
+  objcImplementationFromErrors sampleAppInfo "EmptyCategory" [],
+  objcHeaderFromErrors sampleAppInfo "MyAppErrors" allTestErrors,
+  objcImplementationFromErrors sampleAppInfo "MyAppErrors" allTestErrors]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

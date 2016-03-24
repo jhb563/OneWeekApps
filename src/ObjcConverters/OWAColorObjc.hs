@@ -13,6 +13,7 @@ module OWAColorObjc (
 
 import Data.List
 import ObjcUtil
+import OWAAppInfo
 import OWAColor
 import OWAObjcAbSyn
 
@@ -20,23 +21,25 @@ import OWAObjcAbSyn
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
--- | 'objcHeaderFromColors' takes a name for the new colors category, as well
+-- | 'objcHeaderFromColors' takes the app info,
+-- a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
-objcHeaderFromColors categoryName colors = ObjcFile 
-  [categoryCommentSection originalColorTypeName categoryName True,
+objcHeaderFromColors :: OWAAppInfo -> String -> [OWAColor] -> ObjcFile
+objcHeaderFromColors appInfo categoryName colors = ObjcFile 
+  [categoryCommentSection appInfo originalColorTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category]
     where sortedColors = sortBy sortColorsByName colors 
           category = colorCategoryFromColors categoryName sortedColors
 
--- | 'objcImplementationFromColors' takes a name for the new colors category, as well
+-- | 'objcImplementationFromColors' takes the app info,
+-- a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromColors :: String -> [OWAColor] -> ObjcFile
-objcImplementationFromColors categoryName colors = ObjcFile
-  [categoryCommentSection originalColorTypeName categoryName False,
+objcImplementationFromColors :: OWAAppInfo -> String -> [OWAColor] -> ObjcFile
+objcImplementationFromColors appInfo categoryName colors = ObjcFile
+  [categoryCommentSection appInfo originalColorTypeName categoryName False,
   categoryMImportsSection originalColorTypeName categoryName,
   simpleCategoryImplementation category]
     where sortedColors = sortBy sortColorsByName colors

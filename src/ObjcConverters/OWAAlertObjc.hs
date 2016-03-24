@@ -13,6 +13,7 @@ module OWAAlertObjc (
 
 import Data.List
 import ObjcUtil
+import OWAAppInfo
 import OWAAlert
 import OWAObjcAbSyn
 
@@ -20,24 +21,25 @@ import OWAObjcAbSyn
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
--- | 'objcHeaderFromAlerts' takes a name for the new alerts category, as well
--- as a list of alert objects, and returns the structure for the category's
--- header file in Objective C
-objcHeaderFromAlerts :: String -> [OWAAlert] -> ObjcFile
-objcHeaderFromAlerts categoryName alerts = ObjcFile
-  [categoryCommentSection originalAlertTypeName categoryName True,
+-- | 'objcHeaderFromAlerts' takes the app info, a name for the new
+-- alerts category, as well as a list of alert objects, and returns the 
+-- structure for the category's header file in Objective C
+objcHeaderFromAlerts :: OWAAppInfo -> String -> [OWAAlert] -> ObjcFile
+objcHeaderFromAlerts appInfo categoryName alerts = ObjcFile
+  [categoryCommentSection appInfo originalAlertTypeName categoryName True,
   uiKitImportsSection,
   alertHandlerTypedefSection, 
   simpleCategoryInterface category]
     where sortedAlerts = sortBy sortAlertsByName alerts
           category = alertCategoryFromAlerts categoryName sortedAlerts
 
--- | 'objcImplementationFromAlerts' takes a name for the new alerts category, as well
+-- | 'objcImplementationFromAlerts' takes the app info,
+-- a name for the new alerts category, as well
 -- as a list of alert objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromAlerts :: String -> [OWAAlert] -> ObjcFile
-objcImplementationFromAlerts categoryName alerts = ObjcFile 
-  [categoryCommentSection originalAlertTypeName categoryName False,
+objcImplementationFromAlerts :: OWAAppInfo -> String -> [OWAAlert] -> ObjcFile
+objcImplementationFromAlerts appInfo categoryName alerts = ObjcFile 
+  [categoryCommentSection appInfo originalAlertTypeName categoryName False,
   categoryMImportsSection originalAlertTypeName categoryName,
   simpleCategoryImplementation category]
     where sortedAlerts = sortBy sortAlertsByName alerts
