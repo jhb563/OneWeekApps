@@ -25,14 +25,12 @@ import OWAObjcAbSyn
 -- alerts category, as well as a list of alert objects, and returns the 
 -- structure for the category's header file in Objective C
 objcHeaderFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
-objcHeaderFromAlerts appInfo  alerts = ObjcFile
+objcHeaderFromAlerts appInfo alerts = ObjcFile
   [categoryCommentSection appInfo originalAlertTypeName categoryName True,
   uiKitImportsSection,
   alertHandlerTypedefSection, 
   simpleCategoryInterface category]
-    where sortedAlerts = sortBy sortAlertsByName alerts
-          categoryName = appPrefix appInfo ++ "Alerts"
-          category = alertCategoryFromAlerts categoryName sortedAlerts
+    where (categoryName, category) = builderInfo appInfo alerts
 
 -- | 'objcImplementationFromAlerts' takes the app info,
 -- a name for the new alerts category, as well
@@ -43,9 +41,13 @@ objcImplementationFromAlerts appInfo alerts = ObjcFile
   [categoryCommentSection appInfo originalAlertTypeName categoryName False,
   categoryMImportsSection originalAlertTypeName categoryName,
   simpleCategoryImplementation category]
-    where sortedAlerts = sortBy sortAlertsByName alerts
-          categoryName = appPrefix appInfo ++ "Alerts"
-          category = alertCategoryFromAlerts categoryName sortedAlerts
+    where (categoryName, category) = builderInfo appInfo alerts
+
+builderInfo :: OWAAppInfo -> [OWAAlert] -> (String, Category)
+builderInfo appInfo alerts = (categoryName,
+  alertCategoryFromAlerts categoryName sortedAlerts)
+  where categoryName = appPrefix appInfo ++ "Alerts"
+        sortedAlerts = sortBy sortAlertsByName alerts
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------

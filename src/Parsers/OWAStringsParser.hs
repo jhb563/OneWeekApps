@@ -7,17 +7,58 @@ Maintainer  : jhbowen047@gmail.com
 -}
 
 module OWAStringsParser (
-  parseStringsFromFile
+  parseStringsFromFile,
 ) where
 
+import Control.Monad.Identity
 import OWAParseError
+import ParseUtil
 import qualified Data.Map.Strict as Map
+import Text.Parsec
+import Text.Parsec.Error
+import Text.ParserCombinators.Parsec
 
-type StringMap = Map.Map String String
+type LocalizedStringMap = Map.Map String String
 
 ---------------------------------------------------------------------------
 --------------------ENTRY METHODS------------------------------------------
 ---------------------------------------------------------------------------
 
-parseStringsFromFile :: FilePath -> IO (Either [OWAParseError] StringMap)
-parseStringsFromFile fPath = return $ Right Map.empty
+-- | 'parseStringsFromFile' takes a file, reads its contents, and returns
+-- a mapping between the string keys and the string values in it, or a
+-- parse error.
+parseStringsFromFile :: FilePath -> IO (Either [OWAParseError] (Map.Map String String))
+parseStringsFromFile fPath = do
+  contents <- readFile fPath
+  let sourceName = sourceNameFromFile fPath
+  let errorOrLocalizedStringMap = parseStringContents sourceName contents
+  case errorOrLocalizedStringMap of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right stringMap -> return $ Right stringMap
+
+parseStringContents :: FilePath -> String -> Either ParseError LocalizedStringMap
+parseStringContents = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    stringTuples <- stringParser `endBy` commentOrSpacesParser
+    eof
+    return $ Map.fromList stringTuples)
+  Identity
+
+---------------------------------------------------------------------------
+--------------------PARSERS------------------------------------------------
+---------------------------------------------------------------------------
+
+stringParser :: GenParser Char st (String, String)
+stringParser = do
+  oneLineSpaces
+  key <- parseLocalizedKey
+  oneLineSpaces
+  char '='
+  oneLineSpaces
+  value <- parseLocalizedKey
+  optionMaybe (char ';')
+  return (key, value)
+
+oneLineSpaces :: GenParser Char st String 
+oneLineSpaces = many (oneOf " \t")

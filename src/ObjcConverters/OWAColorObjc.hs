@@ -30,9 +30,7 @@ objcHeaderFromColors appInfo colors = ObjcFile
   [categoryCommentSection appInfo originalColorTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category]
-    where sortedColors = sortBy sortColorsByName colors 
-          categoryName = appPrefix appInfo ++ "Colors"
-          category = colorCategoryFromColors categoryName sortedColors
+    where (categoryName, category) = builderInfo appInfo colors
 
 -- | 'objcImplementationFromColors' takes the app info,
 -- a name for the new colors category, as well
@@ -43,9 +41,13 @@ objcImplementationFromColors appInfo colors = ObjcFile
   [categoryCommentSection appInfo originalColorTypeName categoryName False,
   categoryMImportsSection originalColorTypeName categoryName,
   simpleCategoryImplementation category]
-    where sortedColors = sortBy sortColorsByName colors
-          categoryName = appPrefix appInfo ++ "Colors"
-          category = colorCategoryFromColors categoryName sortedColors
+    where (categoryName, category) = builderInfo appInfo colors
+
+builderInfo :: OWAAppInfo -> [OWAColor] -> (String, Category)
+builderInfo appInfo colors = (categoryName,
+  colorCategoryFromColors categoryName sortedColors)
+    where categoryName = appPrefix appInfo ++ "Colors"
+          sortedColors = sortBy sortColorsByName colors
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------

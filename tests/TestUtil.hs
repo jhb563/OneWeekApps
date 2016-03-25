@@ -36,11 +36,11 @@ shouldReturnSorted returned expected = do
 
 -- Unwraps result of parsing and expects that we have a full list of objects
 -- matching the given objects.
-shouldReturnRights :: (Show b, Eq b) => IO (Either [a] b) -> b -> Expectation
+shouldReturnRights :: (Show a, Show b, Eq b) => IO (Either [a] b) -> b -> Expectation
 shouldReturnRights returned expected = do
   result <- returned
   case result of
-    Left _ -> fail "Parse Returned Errors"
+    Left errors -> fail ("Parse Returned Errors: " ++ show errors)
     Right xs -> xs `shouldBe` expected
 
 -- Unwraps result of parsing and expects that we have a full list of failures 
