@@ -1,13 +1,13 @@
 //
-// UIAlertController+EmptyCategory.m
+// UIAlertController+MSAAlerts.m
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "UIAlertController+EmptyCategory.h"
+#import "UIAlertController+MSAAlerts.h"
 
-@implementation UIAlertController (EmptyCategory)
+@implementation UIAlertController (MSAAlerts)
 
 @end

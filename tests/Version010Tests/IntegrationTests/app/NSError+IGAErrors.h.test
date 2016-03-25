@@ -1,5 +1,5 @@
 //
-// NSError+MyAppErrors.h
+// NSError+IGAErrors.h
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
@@ -8,7 +8,7 @@
 
 @import Foundation;
 
-@interface NSError (MyAppErrors)
+@interface NSError (IGAErrors)
 
 // FirstDomain
 + (NSError*)finalError;

@@ -22,3 +22,18 @@ appError5  = ObjectError {
   missingRequiredAttributes = ["AppName"]
 }
 
+appError6 :: OWAParseError
+appError6  = ObjectError {
+  fileName = "defaultFailTest6.info",
+  itemName = "appInfo",
+  missingRequiredAttributes = ["Prefix"]
+}
+
+appError7 :: SourcePos
+appError7 = newPos "defaultFailTest7.info" 2 11
+
+appError8 :: SourcePos
+appError8 = newPos "defaultFailTest8.info" 2 12
+
+appError9 :: SourcePos
+appError9 = newPos "defaultFailTest9.info" 2 9

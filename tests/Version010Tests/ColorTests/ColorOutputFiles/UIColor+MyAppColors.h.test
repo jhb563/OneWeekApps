@@ -1,5 +1,5 @@
 //
-// UIColor+MyAppColors.h
+// UIColor+MSAColors.h
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
@@ -8,7 +8,7 @@
 
 @import UIKit;
 
-@interface UIColor (MyAppColors)
+@interface UIColor (MSAColors)
 
 + (UIColor*)aTest12;
 + (UIColor*)black;

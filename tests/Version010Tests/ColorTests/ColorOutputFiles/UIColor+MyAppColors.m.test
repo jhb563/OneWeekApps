@@ -1,14 +1,14 @@
 //
-// UIColor+MyAppColors.m
+// UIColor+MSAColors.m
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "UIColor+MyAppColors.h"
+#import "UIColor+MSAColors.h"
 
-@implementation UIColor (MyAppColors)
+@implementation UIColor (MSAColors)
 
 + (UIColor*)aTest12 {
   return [UIColor colorWithRed:0.961 green:0.678 blue:0.478 alpha:0.94];

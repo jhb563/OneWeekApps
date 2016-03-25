@@ -73,12 +73,16 @@ appInfoAttrLine = choice attrParsers
 attrParsers :: [GenParser Char st (AppInfoAttr, AppInfoVal)]
 attrParsers = map Text.Parsec.try
   [appNameParser,
+  appPrefixParser,
   authorNameParser,
   dateCreatedParser,
   companyNameParser]
 
 appNameParser :: GenParser Char st (AppInfoAttr, AppInfoVal)
 appNameParser = colonParserWithKeyword appNameKeyword arbitraryStringParser
+
+appPrefixParser :: GenParser Char st (AppInfoAttr, AppInfoVal)
+appPrefixParser = colonParserWithKeyword appPrefixKeyword prefixParser
 
 authorNameParser :: GenParser Char st (AppInfoAttr, AppInfoVal)
 authorNameParser = colonParserWithKeyword authorNameKeyword arbitraryStringParser
@@ -102,6 +106,9 @@ arbitraryStringParser = do
   totalString <- many1 (noneOf "\n")
   let afterCommentRemoval = head (splitOn "//" totalString)
   return $ reverse (dropWhile (\c -> c == ' ' || c == '\t') (reverse afterCommentRemoval))
+
+prefixParser :: GenParser Char st AppInfoVal
+prefixParser = count 3 upper
 
 dateParser :: GenParser Char st AppInfoVal
 dateParser = do
@@ -127,12 +134,14 @@ optionDigitCountParser numRequired numOptional = do
 appInfoFromAttrMap :: AppInfoAttrMap -> Maybe OWAAppInfo
 appInfoFromAttrMap attrMap = do
   appName <- Map.lookup appNameKeyword attrMap
+  appPrefix <- Map.lookup appPrefixKeyword attrMap
   dateCreatedString <- Map.lookup dateCreatedKeyword attrMap
   authorName <- case Map.lookup authorNameKeyword attrMap of
     Nothing -> Just ""
     Just name -> Just name 
   return OWAAppInfo {
     appName = appName,
+    appPrefix = appPrefix,
     authorName = authorName,
     dateCreatedString = dateCreatedString,
     companyName = Map.lookup companyNameKeyword attrMap
@@ -148,6 +157,9 @@ missingAttrs attrMap = requiredAttributes \\ Map.keys attrMap
 appNameKeyword :: String
 appNameKeyword = "AppName"
 
+appPrefixKeyword :: String
+appPrefixKeyword = "Prefix"
+
 authorNameKeyword :: String
 authorNameKeyword = "Author"
 
@@ -158,4 +170,4 @@ companyNameKeyword :: String
 companyNameKeyword = "Company"
 
 requiredAttributes :: [String]
-requiredAttributes = [appNameKeyword, dateCreatedKeyword]
+requiredAttributes = [appNameKeyword, appPrefixKeyword, dateCreatedKeyword]

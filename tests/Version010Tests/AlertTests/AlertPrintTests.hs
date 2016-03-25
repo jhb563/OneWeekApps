@@ -56,16 +56,17 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Aler
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {
   appName = "MySampleApp",
+  appPrefix = "MSA",
   authorName = "James Bowen",
   dateCreatedString = "2/16/2016",
   companyName = Just "One Week Apps"
 }
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromAlerts sampleAppInfo "EmptyCategory" [],
-  objcImplementationFromAlerts sampleAppInfo "EmptyCategory" [],
-  objcHeaderFromAlerts sampleAppInfo "MyAppAlerts" allTestAlerts,
-  objcImplementationFromAlerts sampleAppInfo "MyAppAlerts" allTestAlerts]
+testFileStructures = [objcHeaderFromAlerts sampleAppInfo [],
+  objcImplementationFromAlerts sampleAppInfo [],
+  objcHeaderFromAlerts sampleAppInfo allTestAlerts,
+  objcImplementationFromAlerts sampleAppInfo allTestAlerts]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

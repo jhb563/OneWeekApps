@@ -1,13 +1,13 @@
 //
-// NSError+EmptyCategory.m
+// NSError+MSAErrors.m
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "NSError+EmptyCategory.h"
+#import "NSError+MSAErrors.h"
 
-@implementation NSError (EmptyCategory)
+@implementation NSError (MSAErrors)
 
 @end

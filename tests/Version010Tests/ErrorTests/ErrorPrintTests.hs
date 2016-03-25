@@ -56,16 +56,17 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Erro
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {
   appName = "MySampleApp",
+  appPrefix = "MSA",
   authorName = "James Bowen",
   dateCreatedString = "2/16/2016",
   companyName = Just "One Week Apps"
 }
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromErrors sampleAppInfo "EmptyCategory" [],
-  objcImplementationFromErrors sampleAppInfo "EmptyCategory" [],
-  objcHeaderFromErrors sampleAppInfo "MyAppErrors" allTestErrors,
-  objcImplementationFromErrors sampleAppInfo "MyAppErrors" allTestErrors]
+testFileStructures = [objcHeaderFromErrors sampleAppInfo [],
+  objcImplementationFromErrors sampleAppInfo [],
+  objcHeaderFromErrors sampleAppInfo allTestErrors,
+  objcImplementationFromErrors sampleAppInfo allTestErrors]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

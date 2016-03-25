@@ -56,6 +56,7 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {
   appName = "MySampleApp",
+  appPrefix = "MSA",
   authorName = "James Bowen",
   dateCreatedString = "2/16/2016",
   companyName = Just "One Week Apps"
@@ -68,10 +69,10 @@ resultsFiles = [emptyHeaderResultFile,
   implementationResultFile]
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromFonts sampleAppInfo "EmptyCategory" [],
-  objcImplementationFromFonts sampleAppInfo "EmptyCategory" [], 
-  objcHeaderFromFonts sampleAppInfo "MyAppFonts" allTestFonts, 
-  objcImplementationFromFonts sampleAppInfo "MyAppFonts" allTestFonts]
+testFileStructures = [objcHeaderFromFonts sampleAppInfo [],
+  objcImplementationFromFonts sampleAppInfo [], 
+  objcHeaderFromFonts sampleAppInfo allTestFonts, 
+  objcImplementationFromFonts sampleAppInfo allTestFonts]
 
 emptyHeaderResultFile :: String
 emptyHeaderResultFile = "UIFont+EmptyCategory.h"

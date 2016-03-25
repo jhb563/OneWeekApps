@@ -75,7 +75,7 @@ printErrors outputMode [] = return ()
 printErrors outputMode errors = mapM_ (printIfNotSilent outputMode . show) errors
 
 ---------------------------------------------------------------------------
-------------------------PRODUCING COLORS FILES-----------------------------
+------------------------LOADING APP INFO-----------------------------------
 ---------------------------------------------------------------------------
 
 loadAppInfo :: OutputMode -> FilePath -> IO (Maybe OWAAppInfo)
@@ -118,26 +118,24 @@ produceColorsFiles outputMode appDirectory appInfo = do
       printErrors outputMode errors
     else printIfVerbose outputMode "No errors parsing colors!"
   let colors = concat $ rights listOfParseResults
+  let prefix = appPrefix appInfo
   printIfVerbose outputMode ("Successfully parsed " ++ show (length colors) ++ " colors")
-  let colorHeaderFileStructure = objcHeaderFromColors appInfo colorCategoryName colors
-  let colorMFileStructure = objcImplementationFromColors appInfo colorCategoryName colors
+  let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
+  let colorMFileStructure = objcImplementationFromColors appInfo colors
   printIfVerbose outputMode "Printing colors files..."
-  let fullHeaderPath = appDirectory ++ colorHeaderFileExtension
-  let fullMPath = appDirectory ++ colorImplementationFileExtension
+  let fullHeaderPath = appDirectory ++ colorHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ colorImplementationFileExtension prefix
   printStructureToFile colorHeaderFileStructure fullHeaderPath
   printStructureToFile colorMFileStructure fullMPath
   printIfVerbose outputMode "Printed colors to files:"
   printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
   printIfNotSilent outputMode "Finished generating colors!"
 
-colorCategoryName :: String
-colorCategoryName = "MyAppColors"
+colorHeaderFileExtension :: String -> FilePath
+colorHeaderFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.h"
 
-colorHeaderFileExtension :: FilePath
-colorHeaderFileExtension = "/UIColor+MyAppColors.h"
-
-colorImplementationFileExtension :: FilePath
-colorImplementationFileExtension = "/UIColor+MyAppColors.m"
+colorImplementationFileExtension :: String -> FilePath
+colorImplementationFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING FONTS FILES------------------------------
@@ -158,26 +156,24 @@ produceFontsFiles outputMode appDirectory appInfo = do
       printErrors outputMode errors
     else printIfVerbose outputMode "No errors parsing fonts!"
   let fonts = concat $ rights listOfParseResults 
+  let prefix = appPrefix appInfo
   printIfVerbose outputMode ("Found " ++ show (length fonts) ++ " fonts")
-  let fontHeaderFileStructure = objcHeaderFromFonts appInfo fontCategoryName fonts
-  let fontMFileStructure = objcImplementationFromFonts appInfo fontCategoryName fonts
+  let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
+  let fontMFileStructure = objcImplementationFromFonts appInfo fonts
   printIfVerbose outputMode "Printing fonts files..."
-  let fullHeaderPath = appDirectory ++ fontHeaderFileExtension
-  let fullMPath = appDirectory ++ fontImplementationFileExtension
+  let fullHeaderPath = appDirectory ++ fontHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ fontImplementationFileExtension prefix
   printStructureToFile fontHeaderFileStructure fullHeaderPath
   printStructureToFile fontMFileStructure fullMPath
   printIfVerbose outputMode "Printed fonts to files:"
   printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
   printIfNotSilent outputMode "Finished generating fonts!"
 
-fontCategoryName :: String
-fontCategoryName = "MyAppFonts"
+fontHeaderFileExtension :: String -> FilePath
+fontHeaderFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.h"
 
-fontHeaderFileExtension :: FilePath
-fontHeaderFileExtension = "/UIFont+MyAppFonts.h"
-
-fontImplementationFileExtension :: FilePath
-fontImplementationFileExtension = "/UIFont+MyAppFonts.m"
+fontImplementationFileExtension :: String -> FilePath
+fontImplementationFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ALERTS FILES-----------------------------
@@ -198,26 +194,24 @@ produceAlertsFiles outputMode appDirectory appInfo = do
       printErrors outputMode errors
     else printIfVerbose outputMode "No errors parsing alerts!"
   let alerts = concat $ rights listOfParseResults
+  let prefix = appPrefix appInfo
   printIfVerbose outputMode ("Found " ++ show (length alerts) ++ " alerts")
-  let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alertCategoryName alerts
-  let alertMFileStructure = objcImplementationFromAlerts appInfo alertCategoryName alerts
+  let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
+  let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
   printIfVerbose outputMode "Printing alerts files..."
-  let fullHeaderPath = appDirectory ++ alertHeaderFileExtension
-  let fullMPath = appDirectory ++ alertImplementationFileExtension
+  let fullHeaderPath = appDirectory ++ alertHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ alertImplementationFileExtension prefix
   printStructureToFile alertHeaderFileStructure fullHeaderPath
   printStructureToFile alertMFileStructure fullMPath
   printIfVerbose outputMode "Printed alerts to files:"
   printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
   printIfNotSilent outputMode "Finished generating alerts!"
 
-alertCategoryName :: String
-alertCategoryName = "MyAppAlerts"
+alertHeaderFileExtension :: String -> FilePath
+alertHeaderFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.h"
 
-alertHeaderFileExtension :: FilePath
-alertHeaderFileExtension = "/UIAlertController+MyAppAlerts.h"
-
-alertImplementationFileExtension :: FilePath
-alertImplementationFileExtension = "/UIAlertController+MyAppAlerts.m"
+alertImplementationFileExtension :: String -> FilePath
+alertImplementationFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ERRORS FILES-----------------------------
@@ -238,23 +232,21 @@ produceErrorsFiles outputMode appDirectory appInfo = do
       printErrors outputMode errors
     else printIfVerbose outputMode "No errors parsing errors!"
   let errors = concat $ rights listOfParseResults
+  let prefix = appPrefix appInfo
   printIfVerbose outputMode ("Found " ++ show (length errors) ++ " errors")
-  let errorHeaderFileStructure = objcHeaderFromErrors appInfo errorCategoryName errors
-  let errorMFileStructure = objcImplementationFromErrors appInfo errorCategoryName errors
+  let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
+  let errorMFileStructure = objcImplementationFromErrors appInfo errors
   printIfVerbose outputMode "Printing errors files..."
-  let fullHeaderPath = appDirectory ++ errorHeaderFileExtension
-  let fullMPath = appDirectory ++ errorImplementationFileExtension
+  let fullHeaderPath = appDirectory ++ errorHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ errorImplementationFileExtension prefix
   printStructureToFile errorHeaderFileStructure fullHeaderPath
   printStructureToFile errorMFileStructure fullMPath
   printIfVerbose outputMode "Printed errors to files:"
   printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
   printIfNotSilent outputMode "Finished generating errors!"
 
-errorCategoryName :: String
-errorCategoryName = "MyAppErrors"
+errorHeaderFileExtension :: String -> FilePath
+errorHeaderFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.h"
 
-errorHeaderFileExtension :: FilePath
-errorHeaderFileExtension = "/NSError+MyAppErrors.h"
-
-errorImplementationFileExtension :: FilePath
-errorImplementationFileExtension = "/NSError+MyAppErrors.m"
+errorImplementationFileExtension :: String -> FilePath
+errorImplementationFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.m"

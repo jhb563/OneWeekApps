@@ -82,52 +82,52 @@ appExtension :: String
 appExtension = "/app"
 
 colorHeaderFileExtension :: String
-colorHeaderFileExtension = "/app/UIColor+MyAppColors.h"
+colorHeaderFileExtension = "/app/UIColor+IGAColors.h"
 
 colorImplementationFileExtension :: String
-colorImplementationFileExtension = "/app/UIColor+MyAppColors.m"
+colorImplementationFileExtension = "/app/UIColor+IGAColors.m"
 
 colorHeaderTestExtension :: String
-colorHeaderTestExtension = "/app/UIColor+MyAppColors.h.test"
+colorHeaderTestExtension = "/app/UIColor+IGAColors.h.test"
 
 colorImplementationTestExtension :: String
-colorImplementationTestExtension = "/app/UIColor+MyAppColors.m.test"
+colorImplementationTestExtension = "/app/UIColor+IGAColors.m.test"
 
 fontHeaderFileExtension :: String
-fontHeaderFileExtension = "/app/UIFont+MyAppFonts.h"
+fontHeaderFileExtension = "/app/UIFont+IGAFonts.h"
 
 fontImplementationFileExtension :: String
-fontImplementationFileExtension = "/app/UIFont+MyAppFonts.m"
+fontImplementationFileExtension = "/app/UIFont+IGAFonts.m"
 
 fontHeaderTestExtension :: String
-fontHeaderTestExtension = "/app/UIFont+MyAppFonts.h.test"
+fontHeaderTestExtension = "/app/UIFont+IGAFonts.h.test"
 
 fontImplementationTestExtension :: String
-fontImplementationTestExtension = "/app/UIFont+MyAppFonts.m.test"
+fontImplementationTestExtension = "/app/UIFont+IGAFonts.m.test"
 
 alertHeaderFileExtension :: String
-alertHeaderFileExtension = "/app/UIAlertController+MyAppAlerts.h"
+alertHeaderFileExtension = "/app/UIAlertController+IGAAlerts.h"
 
 alertImplementationFileExtension :: String
-alertImplementationFileExtension = "/app/UIAlertController+MyAppAlerts.m"
+alertImplementationFileExtension = "/app/UIAlertController+IGAAlerts.m"
 
 alertHeaderTestExtension :: String
-alertHeaderTestExtension = "/app/UIAlertController+MyAppAlerts.h.test"
+alertHeaderTestExtension = "/app/UIAlertController+IGAAlerts.h.test"
 
 alertImplementationTestExtension :: String
-alertImplementationTestExtension = "/app/UIAlertController+MyAppAlerts.m.test"
+alertImplementationTestExtension = "/app/UIAlertController+IGAAlerts.m.test"
 
 errorHeaderFileExtension :: String
-errorHeaderFileExtension = "/app/NSError+MyAppErrors.h"
+errorHeaderFileExtension = "/app/NSError+IGAErrors.h"
 
 errorImplementationFileExtension :: String
-errorImplementationFileExtension = "/app/NSError+MyAppErrors.m"
+errorImplementationFileExtension = "/app/NSError+IGAErrors.m"
 
 errorHeaderTestExtension :: String
-errorHeaderTestExtension = "/app/NSError+MyAppErrors.h.test"
+errorHeaderTestExtension = "/app/NSError+IGAErrors.h.test"
 
 errorImplementationTestExtension :: String
-errorImplementationTestExtension = "/app/NSError+MyAppErrors.m.test"
+errorImplementationTestExtension = "/app/NSError+IGAErrors.m.test"
 
 producedFiles :: [FilePath]
 producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension,

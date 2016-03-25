@@ -1,5 +1,5 @@
 //
-// UIAlertController+MyAppAlerts.h
+// UIAlertController+IGAAlerts.h
 // IntegrationApp
 //
 // Created By James Harold Bowen 3/23/2016
@@ -10,7 +10,7 @@
 
 typedef void (^AlertHandler)();
 
-@interface UIAlertController (MyAppAlerts)
+@interface UIAlertController (IGAAlerts)
 
 + (UIAlertController*)blankMessageWithHandler:(AlertHandler)handler;
 + (UIAlertController*)escapedQuotesWithHandler:(AlertHandler)handler;

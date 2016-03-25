@@ -25,24 +25,26 @@ import OWAObjcAbSyn
 -- a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromColors :: OWAAppInfo -> String -> [OWAColor] -> ObjcFile
-objcHeaderFromColors appInfo categoryName colors = ObjcFile 
+objcHeaderFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
+objcHeaderFromColors appInfo colors = ObjcFile 
   [categoryCommentSection appInfo originalColorTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category]
     where sortedColors = sortBy sortColorsByName colors 
+          categoryName = appPrefix appInfo ++ "Colors"
           category = colorCategoryFromColors categoryName sortedColors
 
 -- | 'objcImplementationFromColors' takes the app info,
 -- a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromColors :: OWAAppInfo -> String -> [OWAColor] -> ObjcFile
-objcImplementationFromColors appInfo categoryName colors = ObjcFile
+objcImplementationFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
+objcImplementationFromColors appInfo colors = ObjcFile
   [categoryCommentSection appInfo originalColorTypeName categoryName False,
   categoryMImportsSection originalColorTypeName categoryName,
   simpleCategoryImplementation category]
     where sortedColors = sortBy sortColorsByName colors
+          categoryName = appPrefix appInfo ++ "Colors"
           category = colorCategoryFromColors categoryName sortedColors
 
 --------------------------------------------------------------------------------

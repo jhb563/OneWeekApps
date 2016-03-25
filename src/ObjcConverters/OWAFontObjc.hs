@@ -25,24 +25,26 @@ import OWAObjcAbSyn
 -- a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromFonts :: OWAAppInfo -> String -> [OWAFont] -> ObjcFile
-objcHeaderFromFonts appInfo categoryName fonts = ObjcFile 
+objcHeaderFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
+objcHeaderFromFonts appInfo fonts = ObjcFile 
   [categoryCommentSection appInfo originalFontTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category] 
     where sortedFonts = sortBy sortFontsByName fonts
+          categoryName = appPrefix appInfo ++ "Fonts"
           category = fontCategoryFromFonts categoryName sortedFonts
 
 -- | 'objcImplementationFromFonts' takes the app info,
 -- a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromFonts :: OWAAppInfo -> String -> [OWAFont] -> ObjcFile
-objcImplementationFromFonts appInfo categoryName fonts = ObjcFile
+objcImplementationFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
+objcImplementationFromFonts appInfo fonts = ObjcFile
   [categoryCommentSection appInfo originalFontTypeName categoryName False,
   categoryMImportsSection originalFontTypeName categoryName,
   simpleCategoryImplementation category]
     where sortedFonts = sortBy sortFontsByName fonts
+          categoryName = appPrefix appInfo ++ "Fonts"
           category = fontCategoryFromFonts categoryName sortedFonts
 
 --------------------------------------------------------------------------------
