@@ -1,5 +1,5 @@
 //
-// UIAlertController+EmptyCategory.h
+// UIAlertController+MSAAlerts.h
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
@@ -10,6 +10,6 @@
 
 typedef void (^AlertHandler)();
 
-@interface UIAlertController (EmptyCategory)
+@interface UIAlertController (MSAAlerts)
 
 @end

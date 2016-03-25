@@ -1,14 +1,14 @@
 //
-// UIFont+MyAppFonts.m
+// UIFont+MSAFonts.m
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "UIFont+MyAppFonts.h"
+#import "UIFont+MSAFonts.h"
 
-@implementation UIFont (MyAppFonts)
+@implementation UIFont (MSAFonts)
 
 + (UIFont*)buttonFont {
   return [UIFont fontWithName:@"Avenir-Medium" size:12.0];

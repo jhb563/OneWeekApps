@@ -63,10 +63,10 @@ sampleAppInfo = OWAAppInfo {
 }
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromColors sampleAppInfo "EmptyCategory" [],
-  objcImplementationFromColors sampleAppInfo "EmptyCategory" [],
-  objcHeaderFromColors sampleAppInfo "MyAppColors" testColorsToPrint,
-  objcImplementationFromColors sampleAppInfo "MyAppColors" testColorsToPrint]
+testFileStructures = [objcHeaderFromColors sampleAppInfo [],
+  objcImplementationFromColors sampleAppInfo [],
+  objcHeaderFromColors sampleAppInfo testColorsToPrint,
+  objcImplementationFromColors sampleAppInfo testColorsToPrint]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

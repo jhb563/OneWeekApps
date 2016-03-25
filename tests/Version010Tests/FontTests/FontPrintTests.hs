@@ -69,10 +69,10 @@ resultsFiles = [emptyHeaderResultFile,
   implementationResultFile]
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromFonts sampleAppInfo "EmptyCategory" [],
-  objcImplementationFromFonts sampleAppInfo "EmptyCategory" [], 
-  objcHeaderFromFonts sampleAppInfo "MyAppFonts" allTestFonts, 
-  objcImplementationFromFonts sampleAppInfo "MyAppFonts" allTestFonts]
+testFileStructures = [objcHeaderFromFonts sampleAppInfo [],
+  objcImplementationFromFonts sampleAppInfo [], 
+  objcHeaderFromFonts sampleAppInfo allTestFonts, 
+  objcImplementationFromFonts sampleAppInfo allTestFonts]
 
 emptyHeaderResultFile :: String
 emptyHeaderResultFile = "UIFont+EmptyCategory.h"

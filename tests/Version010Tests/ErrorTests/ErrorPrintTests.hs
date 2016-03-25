@@ -63,10 +63,10 @@ sampleAppInfo = OWAAppInfo {
 }
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromErrors sampleAppInfo "EmptyCategory" [],
-  objcImplementationFromErrors sampleAppInfo "EmptyCategory" [],
-  objcHeaderFromErrors sampleAppInfo "MyAppErrors" allTestErrors,
-  objcImplementationFromErrors sampleAppInfo "MyAppErrors" allTestErrors]
+testFileStructures = [objcHeaderFromErrors sampleAppInfo [],
+  objcImplementationFromErrors sampleAppInfo [],
+  objcHeaderFromErrors sampleAppInfo allTestErrors,
+  objcImplementationFromErrors sampleAppInfo allTestErrors]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
