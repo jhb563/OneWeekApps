@@ -11,6 +11,8 @@ module OWAStringsParser (
 ) where
 
 import Control.Monad.Identity
+import qualified Data.List.Split as Split
+import OWALocalizedStringSet
 import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
@@ -27,14 +29,17 @@ type LocalizedStringMap = Map.Map String String
 -- | 'parseStringsFromFile' takes a file, reads its contents, and returns
 -- a mapping between the string keys and the string values in it, or a
 -- parse error.
-parseStringsFromFile :: FilePath -> IO (Either [OWAParseError] (Map.Map String String))
+parseStringsFromFile :: FilePath -> IO (Either [OWAParseError] OWALocalizedStringSet)
 parseStringsFromFile fPath = do
   contents <- readFile fPath
   let sourceName = sourceNameFromFile fPath
   let errorOrLocalizedStringMap = parseStringContents sourceName contents
   case errorOrLocalizedStringMap of
     Left parseError -> return $ Left [ParsecError parseError]
-    Right stringMap -> return $ Right stringMap
+    Right stringMap -> return $ Right OWALocalizedStringSet {
+      setName = head (Split.splitOn "." sourceName),
+      setMap = stringMap
+    }
 
 parseStringContents :: FilePath -> String -> Either ParseError LocalizedStringMap
 parseStringContents = Text.Parsec.runParser
