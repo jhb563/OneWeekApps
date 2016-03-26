@@ -21,39 +21,43 @@ runStringsSearchTests currentDirectory = hspec $
     findStringsMultiLevelTest currentDirectory
     findStringsMultiFileTest currentDirectory
     findStringsFailTest currentDirectory
+    findStringsRedHerringTest currentDirectory
 
 findStringsBasicTest :: FilePath -> Spec
 findStringsBasicTest currentDirectory = do
   let basicPath = currentDirectory ++ basicTestExtension
-  describe "Find single strings file in the app directory" $ do
+  let results = map (currentDirectory ++) basicTestResults
+  describe "Find single strings file in the app directory" $ 
     it "Should locate a single file" $ 
-      findStringsFiles basicPath `shouldReturn` basicTestResults
+      findStringsFiles basicPath `shouldReturn` results
 
 findStringsMultiLevelTest :: FilePath -> Spec
 findStringsMultiLevelTest currentDirectory = do
   let multiLevelPath = currentDirectory ++ multiLevelExtension
-  describe "Find strings files located a multiple levels below the app directory" $ do
+  let results = map (currentDirectory ++) multiLevelResults
+  describe "Find strings files located a multiple levels below the app directory" $ 
     it "Should locate several strings files" $
-      findStringsFiles multiLevelPath `shouldReturnSorted` multiLevelResults
+      findStringsFiles multiLevelPath `shouldReturnSorted` results
 
 findStringsMultiFileTest :: FilePath -> Spec
 findStringsMultiFileTest currentDirectory = do
   let multiFilePath = currentDirectory ++ multiFileExtension
-  describe "Find strings files when several are in the same directory" $ do
+  let results = map (currentDirectory ++) multiFileResults
+  describe "Find strings files when several are in the same directory" $ 
     it "Should locate several strings files" $
-      findStringsFiles multiFilePath `shouldReturnSorted` multiFileResults
+      findStringsFiles multiFilePath `shouldReturnSorted` results
 
 findStringsFailTest :: FilePath -> Spec
 findStringsFailTest currentDirectory = do
   let failFilePath = currentDirectory ++ failTestExtension
-  describe "Find strings files when there are none" $ do
+  describe "Find strings files when there are none" $ 
     it "Should return no strings files" $
       findStringsFiles failFilePath `shouldReturn` []
 
 findStringsRedHerringTest :: FilePath -> Spec
 findStringsRedHerringTest currentDirectory = do
   let redHerringFilePath = currentDirectory ++ redHerringTestExtension
-  describe "Find strings when there are red herring files" $ do
+  describe "Find strings when there are red herring files" $
     context "when we have a file called Localizable.strings, and files with other extensions" $
       it "Should return no strings files" $
         findStringsFiles redHerringFilePath `shouldReturn` []
@@ -71,11 +75,11 @@ basicTestResults = [basicTestExtension ++ "/mystrings.strings"]
 
 multiLevelResults :: [FilePath]
 multiLevelResults = map (multiLevelExtension ++)
-  ["/strings0.strings",
+  ["/dir1/dir11/strings2.strings",
   "/dir1/strings1.strings",
-  "/dir1/dir11/strings2.strings",
   "/dir2/strings3.strings",
-  "/dir3/strings4.strings"]
+  "/dir3/strings4.strings",
+  "/strings0.strings"]
 
 multiFileResults :: [FilePath]
 multiFileResults = map (multiFileExtension ++)

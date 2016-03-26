@@ -97,7 +97,9 @@ findErrorsFiles appDirectory = searchDirectoryForExtension errorsExtension [appD
 -- | 'findStringsFiles' Locates all the files with the extension '.strings', searching recursively
 -- from the given directory. It discards any files named 'Localizable.strings'
 findStringsFiles :: FilePath -> IO [FilePath]
-findStringsFiles appDirectory = return []
+findStringsFiles appDirectory = do 
+  allFiles <- searchDirectoryForExtension stringsExtension [appDirectory] []
+  return $ filter (not . fileHasName "Localizable.strings") allFiles
 
 colorsExtension :: String
 colorsExtension = "colors"
@@ -133,3 +135,8 @@ searchDirectoryForExtension extension (nextFilePath:queue) locatedFiles = do
 fileHasTargetExtension :: String -> FilePath -> Bool
 fileHasTargetExtension extension filePath = last components == extension
   where components = splitOn "." filePath
+
+-- 'fileHasName' tells us if the given file has the given name.
+fileHasName :: String -> FilePath -> Bool
+fileHasName name filePath = last components == name
+  where components = splitOn "/" filePath
