@@ -1,7 +1,7 @@
 -- OWAErrorObjc will expose the methods
--- objcHeaderFromErrors :: String -> [OWAError] -> ObjcFile
--- objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
--- which each take a category name and a list of errors and return a
+-- objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+-- objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+-- which each take an appInfo object and a list of errors and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the methods
