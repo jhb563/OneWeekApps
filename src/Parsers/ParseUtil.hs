@@ -12,6 +12,7 @@ module ParseUtil (
   nameParserWithKeyword,
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
+  parseLocalizedKey,
   floatAttributeParser,
   indentParser,
   spaceTabs,
@@ -98,14 +99,14 @@ localizedKeyParserWithKeyword keyword = do
   string keyword
   spaceTabs
   localizedKey <- parseLocalizedKey
+  singleTrailingComment
   return (keyword, localizedKey)
 
+-- | Parses a localized keyword, which is surrounded by quotes.
 parseLocalizedKey :: GenParser Char st String
 parseLocalizedKey = do
   char '"'
-  key <- localizedKeyBySection
-  singleTrailingComment
-  return key
+  localizedKeyBySection
 
 localizedKeyBySection :: GenParser Char st String
 localizedKeyBySection = do

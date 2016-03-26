@@ -30,9 +30,7 @@ objcHeaderFromFonts appInfo fonts = ObjcFile
   [categoryCommentSection appInfo originalFontTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category] 
-    where sortedFonts = sortBy sortFontsByName fonts
-          categoryName = appPrefix appInfo ++ "Fonts"
-          category = fontCategoryFromFonts categoryName sortedFonts
+    where (categoryName, category) = builderInfo appInfo fonts
 
 -- | 'objcImplementationFromFonts' takes the app info,
 -- a name for the new fonts category, as well
@@ -43,9 +41,13 @@ objcImplementationFromFonts appInfo fonts = ObjcFile
   [categoryCommentSection appInfo originalFontTypeName categoryName False,
   categoryMImportsSection originalFontTypeName categoryName,
   simpleCategoryImplementation category]
-    where sortedFonts = sortBy sortFontsByName fonts
-          categoryName = appPrefix appInfo ++ "Fonts"
-          category = fontCategoryFromFonts categoryName sortedFonts
+    where (categoryName, category) = builderInfo appInfo fonts
+
+builderInfo :: OWAAppInfo -> [OWAFont] -> (String, Category)
+builderInfo appInfo fonts = (categoryName,
+  fontCategoryFromFonts categoryName sortedFonts)
+    where categoryName = appPrefix appInfo ++ "Fonts"
+          sortedFonts = sortBy sortFontsByName fonts
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------
