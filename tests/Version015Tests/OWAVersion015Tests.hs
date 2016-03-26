@@ -8,6 +8,7 @@ import ErrorParseFailureTests
 import FontParseFailureTests
 import ItemFailureTests
 import SpacingIndentTests
+import StringsSearchTests
 import StringsParseTests
 import TabTests
 import System.Directory
@@ -25,3 +26,4 @@ main = do
   runSpacingIndentTests currentDirectory
   runDefaultsFileTests currentDirectory
   runStringsParseTests currentDirectory
+  runStringsSearchTests currentDirectory

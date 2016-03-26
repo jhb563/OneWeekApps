@@ -6,12 +6,13 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 module OWAFileSearch (
-    findAppDirectory,
-    findColorsFiles,
-    findFontsFiles,
-    findAlertsFiles,
-    findErrorsFiles,
-    findAppInfoFile
+  findAppDirectory,
+  findAppInfoFile,
+  findColorsFiles,
+  findFontsFiles,
+  findAlertsFiles,
+  findErrorsFiles,
+  findStringsFiles
 ) where
 
 import System.Directory
@@ -49,7 +50,6 @@ isTargetDir fPath = last components == appString
 -- 'appString' The directory name we are trying to find
 appString :: String
 appString = "app"
-
 
 --------------------------------------------------------------------------------------------------------------------
 -----------------------------------FINDING APP INFO-----------------------------------------------------------------
@@ -94,6 +94,11 @@ findAlertsFiles appDirectory = searchDirectoryForExtension alertsExtension [appD
 findErrorsFiles :: FilePath -> IO [FilePath]
 findErrorsFiles appDirectory = searchDirectoryForExtension errorsExtension [appDirectory] []
 
+-- | 'findStringsFiles' Locates all the files with the extension '.strings', searching recursively
+-- from the given directory. It discards any files named 'Localizable.strings'
+findStringsFiles :: FilePath -> IO [FilePath]
+findStringsFiles appDirectory = return []
+
 colorsExtension :: String
 colorsExtension = "colors"
 
@@ -105,6 +110,9 @@ alertsExtension = "alerts"
 
 errorsExtension :: String
 errorsExtension = "errors"
+
+stringsExtension :: String
+stringsExtension = "strings"
 
 -- 'searchDirectoryForExtension' is a common helper method doing most of the work
 -- for searching for the files. It uses BFS on the directory. It includes a queue of unexplored
