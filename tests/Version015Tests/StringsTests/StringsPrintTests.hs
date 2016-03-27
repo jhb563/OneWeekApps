@@ -61,8 +61,8 @@ sampleAppInfo = OWAAppInfo {
   appName = "StringsTestApp",
   appPrefix = "STA",
   authorName = "James Bowen",
-  dateCreatedString = "3/25/2016",
-  companyName = "One Week Apps"
+  dateCreatedString = "3/25/16",
+  companyName = Just "One Week Apps"
 }
 
 testFileStructures :: [ObjcFile]
@@ -71,7 +71,7 @@ testFileStructures = [objcStringsFileFromStringSets sampleAppInfo [basicStrings]
   objcStringsFileFromStringSets sampleAppInfo [spacedStrings],
   objcStringsFileFromStringSets sampleAppInfo [commentedStrings],
   objcStringsFileFromStringSets sampleAppInfo [basicStrings, quotedStrings],
-  objcStringsFileFromStringSets sampleAppInfo [basicStrings, quotedStrings, spacedStrings, comentedStrings]]
+  objcStringsFileFromStringSets sampleAppInfo [basicStrings, quotedStrings, spacedStrings, commentedStrings]]
 
 resultsFiles :: [String]
 resultsFiles = [basicResultFile,
@@ -94,7 +94,7 @@ commentedResultFile :: String
 commentedResultFile = "commentedStrings.strings"
 
 twoFileResultFile :: String
-twoFileResultFile = "twoFile.strings"
+twoFileResultFile = "twoFiles.strings"
 
 allStringsResultFile :: String
 allStringsResultFile = "allStrings.strings"
@@ -112,7 +112,7 @@ commentedTestFile :: String
 commentedTestFile = "commentedStrings.strings.test"
 
 twoFileTestFile :: String
-twoFileTestFile = "twoFile.strings.test"
+twoFileTestFile = "twoFiles.strings.test"
 
 allStringsTestFile :: String
 allStringsTestFile = "allStrings.strings.test"

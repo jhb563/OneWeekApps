@@ -10,6 +10,7 @@ module OWAStringsObjc (
   objcStringsFileFromStringSets
 ) where
 
+import ObjcUtil
 import OWAAppInfo
 import OWALocalizedStringSet
 import OWAObjcAbSyn
@@ -19,4 +20,5 @@ import OWAObjcAbSyn
 --------------------------------------------------------------------------------
 
 objcStringsFileFromStringSets :: OWAAppInfo -> [OWALocalizedStringSet] -> ObjcFile
-objcStringsFileFromStringSets appInfo stringSets = ObjcFile []
+objcStringsFileFromStringSets appInfo stringSets = ObjcFile
+  [topCommentSection "Localizable.strings" appInfo]
