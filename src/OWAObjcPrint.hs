@@ -41,6 +41,8 @@ sectionDoc (CategoryInterfaceSection category sections) = categoryInterfaceDoc c
 sectionDoc (CategoryImplementationSection category sections) = categoryImplementationDoc category sections
 sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSectionDoc maybeComment methods
 sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
+sectionDoc (LocalizedStringListSection name statements) = text "//" <+> text name PPrint.<$>
+  vcat (map statementDoc statements) PPrint.<$> empty
 
 commentDoc :: String -> Doc
 commentDoc [] = text "//"
@@ -135,6 +137,7 @@ expressionDoc (Var varName) = text varName
 expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
 expressionDoc (DictionaryLit exprMappings) = text "@{" <> hcat (punctuate (text ", ") (map keyValueDoc exprMappings)) <> text "}"
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
+expressionDoc (CStringLit stringVal) = text "\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 
 keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc

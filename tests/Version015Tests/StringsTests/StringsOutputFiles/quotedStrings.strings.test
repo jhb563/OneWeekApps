@@ -7,8 +7,8 @@
 //
 
 // quotedStringsTest
+"CONSECUTIVE_QUOTES" = "\"\"Hahaha";
+"Empty String" = "";
+"Key with \"quotes\"" = "Yo";
 "STRING_WITH_QUOTES" = "You have \"great\" style";
 "SecondStringWithQuotes" = "\"What is your name?\"";
-"Empty String" = "";
-"CONSECUTIVE_QUOTES" = "\"\"Hahaha";
-"Key with \"quotes\"" = "Yo";

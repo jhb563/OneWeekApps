@@ -7,16 +7,16 @@
 //
 
 // basicStringsTest
-"ALERT_TITLE" = "First Alert";
 "ALERT_MESSAGE" = "You have a new message";
-"FIRST_SCREEN_TITLE" = "My First VC";
-"FIRST_SCREEN_LABEL_ITEM" = "Hello!";
+"ALERT_TITLE" = "First Alert";
 "DifferentKeyFormat" = "&and|or!not";
+"FIRST_SCREEN_LABEL_ITEM" = "Hello!";
+"FIRST_SCREEN_TITLE" = "My First VC";
 "alllowercase" = "What's up!";
 
 // quotedStringsTest
+"CONSECUTIVE_QUOTES" = "\"\"Hahaha";
+"Empty String" = "";
+"Key with \"quotes\"" = "Yo";
 "STRING_WITH_QUOTES" = "You have \"great\" style";
 "SecondStringWithQuotes" = "\"What is your name?\"";
-"Empty String" = "";
-"CONSECUTIVE_QUOTES" = "\"\"Hahaha";
-"Key with \"quotes\"" = "Yo";
