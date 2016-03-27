@@ -40,7 +40,9 @@ library
                        OWAErrorObjc,
                        OWAAppInfo,
                        OWAAppInfoParser,
+                       OWALocalizedStringSet,
                        OWAStringsParser,
+                       OWAStringsObjc,
                        OWAParseError,
                        OWAObjcAbSyn,
                        OWAObjcPrint

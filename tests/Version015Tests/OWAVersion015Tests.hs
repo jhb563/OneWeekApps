@@ -10,6 +10,7 @@ import ItemFailureTests
 import SpacingIndentTests
 import StringsSearchTests
 import StringsParseTests
+import StringsPrintTests
 import TabTests
 import System.Directory
 
@@ -27,3 +28,4 @@ main = do
   runDefaultsFileTests currentDirectory
   runStringsParseTests currentDirectory
   runStringsSearchTests currentDirectory
+  runStringsPrintTests currentDirectory

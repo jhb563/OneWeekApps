@@ -1,7 +1,7 @@
 -- OWAAlertObjc will expose the methods
--- objcHeaderFromAlerts :: String -> [OWAAlert] -> ObjcFile
--- objcImplementationFromAlerts :: String -> [OWAAlert] -> ObjcFile
--- which each take a category name and a list of alerts and return a
+-- objcHeaderFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
+-- objcImplementationFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
+-- which each take an appInfo object and a list of alerts and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the methods

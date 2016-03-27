@@ -1,7 +1,7 @@
 -- OWAColorObjc will expose the methods
--- objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
--- objcImplementationFromAlerts :: String -> [OWAColor] -> ObjcFile
--- which each take a category name and a list of colors and return a
+-- objcHeaderFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
+-- objcImplementationFromAlerts :: OWAAppInfo -> [OWAColor] -> ObjcFile
+-- which each take an appInfo object and a list of colors and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the method

@@ -7,6 +7,7 @@ Maintainer  : jhbowen047@gmail.com
 -}
 
 module ObjcUtil (
+  topCommentSection,
   categoryCommentSection,
   foundationImportsSection,
   uiKitImportsSection,
@@ -25,19 +26,18 @@ import OWAObjcAbSyn
 -------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------
 -------------------------------------------------------------------------------
 
--- | Takes and object describing the app info,
--- strings for the original type name, the category name, and
--- a boolean signal for whether the comment is for a header or .m file.
--- Constructs the header comment which goes at the top of a category file.
-categoryCommentSection :: OWAAppInfo -> String -> String -> Bool -> FileSection
-categoryCommentSection appInfo originalTypeName categoryName isHeader = BlockCommentSection
+-- | Takes a string for the file name and an app info object and constructs
+-- the header comment which goes at the top of an objective C file.
+topCommentSection :: String -> OWAAppInfo -> FileSection
+topCommentSection filename appInfo = BlockCommentSection
   (definiteSection ++ possibleCompanySection)
   where dateCreated = dateCreatedString appInfo 
         createdString = "Created By " ++ authorName appInfo ++
           " " ++ dateCreatedString appInfo
-        yearCreated = last $ splitOn "/" dateCreated
+        yearGiven = last $ splitOn "/" dateCreated
+        yearCreated = if length yearGiven < 4 then "20" ++ yearGiven else yearGiven
         definiteSection = ["",
-          categoryFileName originalTypeName categoryName isHeader,
+          filename,
           appName appInfo,
           "",
           createdString]
@@ -46,6 +46,14 @@ categoryCommentSection appInfo originalTypeName categoryName isHeader = BlockCom
           Just company -> ["Copyright (c) " ++ yearCreated ++ " " ++
             company ++ ". All Rights Reserved",
             ""]
+
+-- | Takes an object describing the app info,
+-- strings for the original type name, the category name, and
+-- a boolean signal for whether the comment is for a header or .m file.
+-- Constructs the header comment which goes at the top of a category file.
+categoryCommentSection :: OWAAppInfo -> String -> String -> Bool -> FileSection
+categoryCommentSection appInfo originalTypeName categoryName isHeader = topCommentSection
+  (categoryFileName originalTypeName categoryName isHeader) appInfo
 
 -------------------------------------------------------------------------------
 -------------------IMPORT SECTIONS---------------------------------------------
