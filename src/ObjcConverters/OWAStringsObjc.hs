@@ -21,9 +21,12 @@ import qualified Data.Map.Strict as Map
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
+-- | Takes an appInfo object and a list of sets and returns a Objective C
+-- file structure object representing the Localizable.strings file to be 
+-- printed out.
 objcStringsFileFromStringSets :: OWAAppInfo -> [OWALocalizedStringSet] -> ObjcFile
 objcStringsFileFromStringSets appInfo stringSets = ObjcFile $
-  (topCommentSection "Localizable.strings" appInfo):(map setSection sortedSets)
+  topCommentSection "Localizable.strings" appInfo:map setSection sortedSets
     where sortedSets = sortBy sortStringSetsByName stringSets
 
 --------------------------------------------------------------------------------
