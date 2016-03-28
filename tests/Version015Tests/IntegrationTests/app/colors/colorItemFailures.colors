@@ -1,0 +1,20 @@
+Color failColor1
+  Red 165.0
+  Alpha 0.1
+  Blue 122.0
+
+Color failColor2
+  Blue 133.0
+  Green 72.5
+
+Color failColor3
+  Red 233.3312
+  Green 9.1
+
+Color missingCombo1
+  Red 5.0
+  Alpha 1.0
+
+Color missingCombo2
+  Blue 231.2
+

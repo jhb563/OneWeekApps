@@ -1,0 +1,22 @@
+//
+// NSError+IGAErrors.h
+// IntegrationApp
+//
+// Created By James Bowen 3/25/16
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@interface NSError (IGAErrors)
+
+// OWAFirstErrors
++ (NSError*)disconnectError;
++ (NSError*)myError1;
++ (NSError*)sadError;
+
+// OWALogin
++ (NSError*)authError;
++ (NSError*)userNotFound;
+
+@end

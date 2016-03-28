@@ -1,5 +1,5 @@
 -- OWALib will expose a method:
--- runOWA :: IO ()
+-- runOWA :: FilePath -> [String] -> IO ()
 -- which will run the One Week Apps program, searching for
 -- an app directory, finding relevant files, and producing
 -- the correct output files. We will test this on the cases
@@ -16,4 +16,10 @@ import IntegrationTestUtil
 runV015IntegrationTests :: FilePath -> IO ()
 runV015IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/Version015Tests/IntegrationTests"
-  runIntegrationTests testDirectory [checkStringsFiles] []
+  runIntegrationTests testDirectory 
+    [checkColorsFiles,
+    checkFontsFiles,
+    checkAlertsFiles,
+    checkErrorsFiles,
+    checkStringsFiles] 
+    []

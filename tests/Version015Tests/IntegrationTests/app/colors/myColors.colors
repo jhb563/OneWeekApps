@@ -1,0 +1,14 @@
+
+// This color is great
+Color testColor1
+	Red 196.0
+	Blue 143.0
+	// Between comment
+	Green 100.0
+
+
+Color testColor2 // Another inline comment
+   Green 185.123 // Inline comment
+   Red 123.0
+   Blue 96.0
+   Alpha 0.97

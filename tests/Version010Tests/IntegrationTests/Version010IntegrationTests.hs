@@ -1,5 +1,5 @@
 -- OWALib will expose a method:
--- runOWA :: IO ()
+-- runOWA :: FilePath -> [String] -> IO ()
 -- which will run the One Week Apps program, searching for
 -- an app directory, finding relevant files, and producing
 -- the correct output files. 

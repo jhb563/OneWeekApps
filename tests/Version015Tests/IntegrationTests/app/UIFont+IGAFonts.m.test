@@ -1,0 +1,25 @@
+//
+// UIFont+IGAFonts.m
+// IntegrationApp
+//
+// Created By James Bowen 3/25/16
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIFont+IGAFonts.h"
+
+@implementation UIFont (IGAFonts)
+
++ (UIFont*)randomFont {
+  return [UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:13.6];
+}
+
++ (UIFont*)styleInNameFont {
+  return [UIFont fontWithName:@"Georgia-BoldItalic" size:13.2];
+}
+
++ (UIFont*)textfieldFont {
+  return [UIFont fontWithName:@"Trebuchet-BoldItalic" size:0.7];
+}
+
+@end
