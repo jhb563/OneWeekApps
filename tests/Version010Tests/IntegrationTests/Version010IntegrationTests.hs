@@ -13,4 +13,3 @@ runV010IntegrationTests :: FilePath -> IO ()
 runV010IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/Version010Tests/IntegrationTests"
   runIntegrationTests testDirectory [checkColorsFiles, checkFontsFiles, checkAlertsFiles, checkErrorsFiles] []
-
