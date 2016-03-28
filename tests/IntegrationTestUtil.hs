@@ -14,12 +14,12 @@ import OWALib
 import TestUtil
 import Test.Hspec
 
-runIntegrationTests :: FilePath -> [(FilePath -> Spec)] -> [String] -> IO ()
+runIntegrationTests :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()
 runIntegrationTests testDirectory specs additionalFiles = hspec $
   beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
   beforeAll_ (runOWA testDirectory [])
-  . afterAll_ (removeProducedFiles testDirectory additionalFiles) $ do
-    sequence_ $ map (\specFun -> specFun testDirectory) specs
+  . afterAll_ (removeProducedFiles testDirectory additionalFiles) $
+    mapM_ (\specFun -> specFun testDirectory) specs
 
 checkColorsFiles :: FilePath -> Spec
 checkColorsFiles testDirectory = do
@@ -77,7 +77,7 @@ checkStringsFiles :: FilePath -> Spec
 checkStringsFiles testDirectory = do
   let producedStringsFilePath = testDirectory ++ localizedStringFileExtension
   let testStringsFilePath = testDirectory ++ localizedStringsTestExtension
-  describe "Compare Produced Strings Files" $ do
+  describe "Compare Produced Strings Files" $
     it "The Localizable.strings file should match" $
       producedStringsFilePath `filesShouldMatch` testStringsFilePath
 
