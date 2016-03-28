@@ -11,38 +11,9 @@ module Version015IntegrationTests (
   runV015IntegrationTests
 ) where
 
-import OWALib
-import TestUtil
-import Test.Hspec
+import IntegrationTestUtil
 
 runV015IntegrationTests :: FilePath -> IO ()
 runV015IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/Version015Tests/IntegrationTests"
-  hspec $
-  beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
-  beforeAll_ (runOWA testDirectory [])
-  .afterAll_ (removeProducedFiles testDirectory) $ do
-    checkStringsFiles testDirectory
-
-checkStringsFiles :: FilePath -> Spec
-checkStringsFiles testDirectory = do
-  let producedStringsFilePath = testDirectory ++ localizableStringsFileExtension
-  let testStringsFilePath = testDirectory ++ localizableStringsTestExtension
-  describe "Compare Produced Strings Files" $ do
-    it "The Localizable.strings file should match" $
-      producedStringsFilePath `filesShouldMatch` testStringsFilePath
-
-removeProducedFiles :: FilePath -> IO ()
-removeProducedFiles testDirectory = removeFiles $ map (testDirectory ++) producedFiles
-
-appExtension :: String
-appExtension = "/app"
-
-localizableStringsFileExtension :: String
-localizableStringsFileExtension = "/app/Localizable.strings"
-
-localizableStringsTestExtension :: String
-localizableStringsTestExtension = "/app/Localizable.strings.test"
-
-producedFiles :: [String]
-producedFiles = ["/app/Localizable.strings"]
+  runIntegrationTests testDirectory [checkStringsFiles] []

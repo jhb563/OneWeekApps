@@ -6,7 +6,8 @@ module IntegrationTestUtil (
   checkAlertsFiles,
   checkColorsFiles,
   checkErrorsFiles,
-  checkFontsFiles
+  checkFontsFiles,
+  checkStringsFiles
 ) where
 
 import OWALib
@@ -71,6 +72,14 @@ checkErrorsFiles testDirectory = do
 
     it "Implementation File Should Match" $
       producedErrorImplementationFilePath `filesShouldMatch` testErrorImplementationFilePath
+
+checkStringsFiles :: FilePath -> Spec
+checkStringsFiles testDirectory = do
+  let producedStringsFilePath = testDirectory ++ localizableStringsFileExtension
+  let testStringsFilePath = testDirectory ++ localizableStringsTestExtension
+  describe "Compare Produced Strings Files" $ do
+    it "The Localizable.strings file should match" $
+      producedStringsFilePath `filesShouldMatch` testStringsFilePath
 
 removeProducedFiles :: FilePath -> [String] -> IO ()
 removeProducedFiles testDirectory additionalFiles = removeFiles $ map (testDirectory ++) (producedFiles ++ additionalFiles)
