@@ -75,8 +75,8 @@ checkErrorsFiles testDirectory = do
 
 checkStringsFiles :: FilePath -> Spec
 checkStringsFiles testDirectory = do
-  let producedStringsFilePath = testDirectory ++ localizableStringsFileExtension
-  let testStringsFilePath = testDirectory ++ localizableStringsTestExtension
+  let producedStringsFilePath = testDirectory ++ localizedStringFileExtension
+  let testStringsFilePath = testDirectory ++ localizedStringsTestExtension
   describe "Compare Produced Strings Files" $ do
     it "The Localizable.strings file should match" $
       producedStringsFilePath `filesShouldMatch` testStringsFilePath

@@ -30,4 +30,4 @@ main = do
   runStringsParseTests currentDirectory
   runStringsSearchTests currentDirectory
   runStringsPrintTests currentDirectory
-  runVersion015IntegrationTests currentDirectory
+  runV015IntegrationTests currentDirectory

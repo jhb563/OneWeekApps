@@ -1,5 +1,12 @@
-"STRING_WITH_QUOTES" = "You have \"great\" style";
-"SecondStringWithQuotes" = "\"What is your name?\""
-"Empty String" = ""
-"CONSECUTIVE_QUOTES" = "\"\"Hahaha";
-"Key with \"quotes\"" = "Yo"
+
+
+  "FIRST_VC_STRING1"   =   "String 1"
+	"FIRST_VC_STRING2" =  "String_2"
+
+
+"SECOND_VC_STRING1" =		"  Hello"
+"SECOND_VC_STRING2" =      "Yo  ";
+
+"THIRD_VC_STRING1" = "Title and Name"
+"THIRD_VC_STRING2" = "What's app"
+"THIRD_VC_STRING3" = "Didn't see that coming"
