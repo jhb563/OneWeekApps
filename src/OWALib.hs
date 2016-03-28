@@ -115,19 +115,20 @@ produceStringsFile outputMode appDirectory appInfo = do
   printIfVerbose outputMode "Found strings files at: "
   mapM_ (printIfVerbose outputMode) stringsFiles
   listOfParseResults <- mapM parseStringsFromFile stringsFiles
-  let errors = concat $ lets listOfParseResults
+  let errors = concat $ lefts listOfParseResults
   if not (null errors)
     then do
       printIfNotSilent outputMode "Encountered errors parsing strings..."
       printErrors outputMode errors
-    else printIfVerbose "No errors parsing strings!"
+    else printIfVerbose outputMode "No errors parsing strings!"
   let stringSets = rights listOfParseResults
   printIfVerbose outputMode ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
   let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
-  printIfVerbose "Printing strings file..."
+  printIfVerbose outputMode "Printing strings file..."
   let fullStringsPath = appDirectory ++ stringsFileExtension
-  printStructureToFile stringsFileStructure stringsFileExtension
-  printIfVerbose outputMode "Printed strings to : " ++ fullStringsPath
+  printStructureToFile stringsFileStructure fullStringsPath
+  printIfVerbose outputMode "Printed strings to :" 
+  printIfVerbose outputMode fullStringsPath
   printIfNotSilent outputMode "Finished generating strings!"
 
 stringsFileExtension :: String
