@@ -1,0 +1,17 @@
+//
+// UIFont+IGAFonts.h
+// IntegrationApp
+//
+// Created By James Bowen 3/25/16
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIFont (IGAFonts)
+
++ (UIFont*)randomFont;
++ (UIFont*)styleInNameFont;
++ (UIFont*)textfieldFont;
+
+@end

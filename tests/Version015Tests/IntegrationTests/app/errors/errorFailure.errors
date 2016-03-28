@@ -1,0 +1,12 @@
+Error fineError
+  Code goodCode
+  Domain domain
+  Description "Happy"
+
+DefaultDomain FineName
+  MadeUpThing what
+
+Error otherError
+  Code good
+  Description "Yes"
+

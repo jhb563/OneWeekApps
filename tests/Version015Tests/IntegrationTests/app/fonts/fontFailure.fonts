@@ -1,0 +1,10 @@
+Font badFont
+  FirstAttributeIsBad what
+  FontFamily Georgiana
+  Size 14.0
+
+Font goodFont
+  FontFamily Times
+  Size 14.0
+  Styles Bold
+

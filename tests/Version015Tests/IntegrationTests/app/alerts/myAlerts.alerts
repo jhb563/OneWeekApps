@@ -1,0 +1,14 @@
+Alert escapedQuotes
+	 	Title "KEY_TITLE" // Yo
+	 	Message "This message has \"quotes\" in it"
+	 	NeutralButton "\"Hi\""
+
+// Hi
+// Bye
+Alert otherEscapeCharacters
+  // Comment
+  Title "2TITLE"
+  YesButton "..."
+  NoButton "Whyyyy"
+  Message "!./*&()[]15hasdf123\n\r\t"
+

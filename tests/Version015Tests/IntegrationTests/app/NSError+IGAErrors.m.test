@@ -1,0 +1,45 @@
+//
+// NSError+IGAErrors.m
+// IntegrationApp
+//
+// Created By James Bowen 3/25/16
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "NSError+IGAErrors.h"
+
+typedef NS_ENUM(NSInteger, IGAErrorsErrorCodes) {
+  DisconnectError,
+  NetworkingError,
+  tears_of_failure,
+  AUTHERROR,
+  UserNotFound
+};
+
+@implementation NSError (IGAErrors)
+
+#pragma mark - OWAFirstErrors
+
++ (NSError*)disconnectError {
+  return [NSError errorWithDomain:@"OWAFirstErrors" code:DisconnectError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"DISCONNECTED!.&*", nil)}];
+}
+
++ (NSError*)myError1 {
+  return [NSError errorWithDomain:@"OWAFirstErrors" code:NetworkingError userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"DESCRIPTION_KEY", nil)}];
+}
+
++ (NSError*)sadError {
+  return [NSError errorWithDomain:@"OWAFirstErrors" code:tears_of_failure userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"Crying about stuff", nil)}];
+}
+
+#pragma mark - OWALogin
+
++ (NSError*)authError {
+  return [NSError errorWithDomain:@"OWALogin" code:AUTHERROR userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"You can't \"Login\"", nil)}];
+}
+
++ (NSError*)userNotFound {
+  return [NSError errorWithDomain:@"OWALogin" code:UserNotFound userInfo:@{NSLocalizedDescriptionKey : NSLocalizedString(@"You didn't \n make an account", nil)}];
+}
+
+@end

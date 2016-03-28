@@ -1,0 +1,34 @@
+
+Error myError1 // comment
+  Domain OWAFirstErrors
+  Code NetworkingError
+  Description "DESCRIPTION_KEY"
+
+Error disconnectError
+   Domain OWAFirstErrors // comment
+   Code DisconnectError
+   Description "DISCONNECTED!.&*"
+
+// comment
+Error authError
+  Domain OWALogin
+  Code AUTHERROR
+  Description "You can't \"Login\""
+
+
+// comment
+// comment
+
+Error sadError
+ Domain OWAFirstErrors
+ // Comment
+ Code tears_of_failure
+ Description "Crying about stuff"
+
+Error userNotFound
+  Domain OWALogin
+  Code UserNotFound
+  Description "You didn't \n make an account"
+
+
+
