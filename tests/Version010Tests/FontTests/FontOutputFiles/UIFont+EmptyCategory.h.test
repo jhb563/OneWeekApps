@@ -1,5 +1,5 @@
 //
-// UIFont+EmptyCategory.h
+// UIFont+MSAFonts.h
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
@@ -8,6 +8,6 @@
 
 @import UIKit;
 
-@interface UIFont (EmptyCategory)
+@interface UIFont (MSAFonts)
 
 @end

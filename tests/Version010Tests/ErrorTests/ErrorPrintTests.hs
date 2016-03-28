@@ -1,7 +1,7 @@
 -- OWAErrorObjc will expose the methods
--- objcHeaderFromErrors :: String -> [OWAError] -> ObjcFile
--- objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
--- which each take a category name and a list of errors and return a
+-- objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+-- objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+-- which each take an appInfo object and a list of errors and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the methods
@@ -16,6 +16,7 @@ module ErrorPrintTests (
   runErrorPrintTests
 ) where
 
+import OWAAppInfo
 import OWAErrorObjc
 import OWAObjcAbSyn
 import TestErrors
@@ -52,11 +53,20 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Erro
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  appPrefix = "MSA",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromErrors "EmptyCategory" [],
-  objcImplementationFromErrors "EmptyCategory" [],
-  objcHeaderFromErrors "MyAppErrors" allTestErrors,
-  objcImplementationFromErrors "MyAppErrors" allTestErrors]
+testFileStructures = [objcHeaderFromErrors sampleAppInfo [],
+  objcImplementationFromErrors sampleAppInfo [],
+  objcHeaderFromErrors sampleAppInfo allTestErrors,
+  objcImplementationFromErrors sampleAppInfo allTestErrors]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

@@ -1,0 +1,3 @@
+DefaultDomain domain.domain
+  Prefix myDomain
+

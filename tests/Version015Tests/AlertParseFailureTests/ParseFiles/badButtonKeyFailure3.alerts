@@ -1,0 +1,6 @@
+Alert yesFail
+  Title "YES"
+  Message "YES"
+  YesButton NO
+  NoButton "What"
+

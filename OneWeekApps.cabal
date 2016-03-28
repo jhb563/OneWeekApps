@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                OneWeekApps
-version:             0.1.0
+version:             0.1.5
 synopsis:            Haskell platform for rapidly developing mobile apps
 -- description:         
 license:             MIT
@@ -22,7 +22,8 @@ library
                        parsec,
                        containers,
                        wl-pprint >= 1.2,
-                       mtl
+                       mtl,
+                       text
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColor,
@@ -37,6 +38,12 @@ library
                        OWAError,
                        OWAErrorParser,
                        OWAErrorObjc,
+                       OWAAppInfo,
+                       OWAAppInfoParser,
+                       OWALocalizedStringSet,
+                       OWAStringsParser,
+                       OWAStringsObjc,
+                       OWAParseError,
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,
@@ -78,5 +85,33 @@ test-suite Version010Tests
                  hspec     >= 1.8,
                  directory >= 1.2.5,
                  process,
+                 parsec,
+                 OneWeekApps
+  default-language: Haskell2010
+
+test-suite Version015Tests
+  ghc-options: -Wall
+  default-extensions: OverloadedStrings
+  type: exitcode-stdio-1.0
+  main-is: OWAVersion015Tests.hs
+  hs-source-dirs:   tests,
+                    tests/Version015Tests,
+                    tests/Version015Tests/CommentTests,
+                    tests/Version015Tests/TabTests,
+                    tests/Version015Tests/ItemFailureTests,
+                    tests/Version015Tests/ColorParseFailureTests,
+                    tests/Version015Tests/FontParseFailureTests,
+                    tests/Version015Tests/AlertParseFailureTests,
+                    tests/Version015Tests/ErrorParseFailureTests,
+                    tests/Version015Tests/SpacingIndentTests,
+                    tests/Version015Tests/DefaultsFileTests,
+                    tests/Version015Tests/StringsTests,
+                    tests/Version015Tests/IntegrationTests
+  build-depends: base,
+                 hspec     >= 1.8,
+                 directory >= 1.2.5,
+                 process,
+                 parsec,
+                 containers,
                  OneWeekApps
   default-language: Haskell2010

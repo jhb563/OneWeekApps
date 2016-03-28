@@ -1,0 +1,10 @@
+Error myError
+  Code Why
+  Domain domain
+  Description "Fine"
+
+NewError badKeyword
+  Code Why
+  Domain domain
+  Description "Fine"
+

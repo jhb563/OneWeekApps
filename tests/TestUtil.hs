@@ -1,7 +1,11 @@
 module TestUtil (
-  createFileAndClose,
   shouldReturnSorted,
+  shouldReturnRights,
+  shouldReturnLefts,
+  shouldReturnWithoutErrors,
+  shouldMatchError,
   filesShouldMatch,
+  createFileAndClose,
   createResultsFiles,
   removeResultsFiles,
   removeFiles,
@@ -11,17 +15,17 @@ module TestUtil (
 import Data.List
 import OWAObjcAbSyn
 import OWAObjcPrint
+import OWAParseError
 import System.Directory
 import System.IO
 import System.Process
 import Test.Hspec
+import Text.Parsec.Error
+import Text.Parsec.Pos
 
--- Takes a base filePath and a list of relative paths to files. 
--- Creates the empty files.
-createFileAndClose :: FilePath -> FilePath -> IO ()
-createFileAndClose base extension = do
-  handle <- openFile (base ++ extension) WriteMode
-  hClose handle
+--------------------------------------------------------------------------------
+------------------------------EXPECTATION COMBINATORS---------------------------
+--------------------------------------------------------------------------------
 
 -- Same as shouldReturn, but takes a list and sorts the entries first 
 -- for testing consistency
@@ -29,6 +33,31 @@ shouldReturnSorted :: (Show a, Ord a) => IO [a] -> [a] -> Expectation
 shouldReturnSorted returned expected = do
   actual <- returned
   sort actual `shouldBe` expected
+
+-- Unwraps result of parsing and expects that we have a full list of objects
+-- matching the given objects.
+shouldReturnRights :: (Show a, Show b, Eq b) => IO (Either [a] b) -> b -> Expectation
+shouldReturnRights returned expected = do
+  result <- returned
+  case result of
+    Left errors -> fail ("Parse Returned Errors: " ++ show errors)
+    Right xs -> xs `shouldBe` expected
+
+-- Unwraps result of parsing and expects that we have a full list of failures 
+-- matching the given error objects.
+shouldReturnLefts :: (Show a, Eq a) => IO (Either a b) -> a -> Expectation
+shouldReturnLefts returned expected = do
+  result <- returned
+  case result of
+    Right _ -> fail "Parse Returned Completed objects"
+    Left xs -> xs `shouldBe` expected
+
+shouldReturnWithoutErrors :: Show b => IO (Either [a] [b]) -> Expectation
+shouldReturnWithoutErrors wrappedVals = do
+  result <- wrappedVals
+  case result of
+    Left _ -> fail "Parse Returned Errors"
+    Right xs -> xs `shouldSatisfy` (not . null)
 
 filesShouldMatch :: FilePath -> FilePath -> Expectation
 filesShouldMatch actualFile expectedFile = do
@@ -41,6 +70,26 @@ filesShouldMatch actualFile expectedFile = do
       diffContents <- hGetContents stdOutHandler
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
+
+shouldMatchError :: IO (Either [OWAParseError] b) -> SourcePos -> Expectation
+shouldMatchError returned srcPos = do
+  result <- returned
+  case result of
+    Right _ -> fail "Parse Returned Completed Objects"
+    Left [ParsecError parseError] ->
+      errorPos parseError `shouldBe` srcPos
+    _ -> fail "Incorrect number or format of errors"
+
+--------------------------------------------------------------------------------
+------------------------------FILE MANIPULATION---------------------------------
+--------------------------------------------------------------------------------
+
+-- Takes a base filePath and a list of relative paths to files. 
+-- Creates the empty files.
+createFileAndClose :: FilePath -> FilePath -> IO ()
+createFileAndClose base extension = do
+  handle <- openFile (base ++ extension) WriteMode
+  hClose handle
 
 createResultsFiles :: FilePath -> [String] -> [ObjcFile] -> IO ()
 createResultsFiles outputDirectory extensions structures = do

@@ -1,0 +1,43 @@
+//
+// NSError+IGAErrors.h
+// IntegrationApp
+//
+// Created By James Harold Bowen 3/23/2016
+// Copyright (c) 2016 OWA. All Rights Reserved
+//
+
+@import Foundation;
+
+@interface NSError (IGAErrors)
+
+// FirstDomain
++ (NSError*)finalError;
++ (NSError*)whatError;
+
+// MyAppErrors
++ (NSError*)firstPrefixedError;
++ (NSError*)noPrefixError;
++ (NSError*)redundantDomain;
++ (NSError*)simpleError;
++ (NSError*)unprefixedError;
+
+// MyOwnDomain
++ (NSError*)beforeDomainSpec;
+
+// OWAFirstErrors
++ (NSError*)disconnectError;
++ (NSError*)myError1;
++ (NSError*)sadError;
+
+// OWALogin
++ (NSError*)authError;
++ (NSError*)userNotFound;
+
+// RandomDomain
++ (NSError*)differentDomain;
++ (NSError*)interloperDomain;
+
+// SecondDomain
++ (NSError*)whichError;
+
+@end

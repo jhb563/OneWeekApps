@@ -13,6 +13,7 @@ module OWAErrorObjc (
 
 import Data.List
 import ObjcUtil
+import OWAAppInfo
 import OWAError
 import OWAObjcAbSyn
 import qualified Data.Map.Strict as Map
@@ -23,25 +24,29 @@ type DomainMap = Map.Map String [OWAError]
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
--- | 'objcHeaderFromErrors' takes a name for the new errors category, as well
+-- | 'objcHeaderFromErrors' takes the app info,
+-- a name for the new errors category, as well
 -- as a list of error objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromErrors :: String -> [OWAError] -> ObjcFile
-objcHeaderFromErrors categoryName errors = ObjcFile
-  [categoryCommentSection originalErrorTypeName categoryName True,
+objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+objcHeaderFromErrors appInfo  errors = ObjcFile
+  [categoryCommentSection appInfo originalErrorTypeName categoryName True,
   foundationImportsSection,
   CategoryInterfaceSection category sections]
     where category = categoryForErrors categoryName errors
+          categoryName = appPrefix appInfo ++ "Errors"
           sections = methodHeaderSectionsForErrors errors
 
--- | 'objcImplementationFromErrors' takes a name for the new errors category, as well
+-- | 'objcImplementationFromErrors' takes the app info,
+-- a name for the new errors category, as well
 -- as a list of error objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromErrors :: String -> [OWAError] -> ObjcFile
-objcImplementationFromErrors categoryName errors = if not (null errors)
+objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+objcImplementationFromErrors appInfo errors = if not (null errors)
   then ObjcFile [commentSection, includeSection, enumSect, implSection]
   else ObjcFile [commentSection, includeSection, implSection]
-  where commentSection = categoryCommentSection originalErrorTypeName categoryName False
+  where categoryName = appPrefix appInfo ++ "Errors" 
+        commentSection = categoryCommentSection appInfo originalErrorTypeName categoryName False
         includeSection = categoryMImportsSection originalErrorTypeName categoryName
         enumSect = enumSection categoryName errors
         category = categoryForErrors categoryName errors

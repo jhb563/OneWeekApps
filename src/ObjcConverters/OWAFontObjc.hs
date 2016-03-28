@@ -13,6 +13,7 @@ module OWAFontObjc (
 
 import Data.List
 import ObjcUtil
+import OWAAppInfo
 import OWAFont
 import OWAObjcAbSyn
 
@@ -20,27 +21,33 @@ import OWAObjcAbSyn
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
--- | 'objcHeaderFromFonts' takes a name for the new fonts category, as well
+-- | 'objcHeaderFromFonts' takes the app info, 
+-- a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromFonts :: String -> [OWAFont] -> ObjcFile
-objcHeaderFromFonts categoryName fonts = ObjcFile 
-  [categoryCommentSection originalFontTypeName categoryName True,
+objcHeaderFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
+objcHeaderFromFonts appInfo fonts = ObjcFile 
+  [categoryCommentSection appInfo originalFontTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category] 
-    where sortedFonts = sortBy sortFontsByName fonts
-          category = fontCategoryFromFonts categoryName sortedFonts
+    where (categoryName, category) = builderInfo appInfo fonts
 
--- | 'objcImplementationFromFonts' takes a name for the new fonts category, as well
+-- | 'objcImplementationFromFonts' takes the app info,
+-- a name for the new fonts category, as well
 -- as a list of font objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromFonts :: String -> [OWAFont] -> ObjcFile
-objcImplementationFromFonts categoryName fonts = ObjcFile
-  [categoryCommentSection originalFontTypeName categoryName False,
+objcImplementationFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
+objcImplementationFromFonts appInfo fonts = ObjcFile
+  [categoryCommentSection appInfo originalFontTypeName categoryName False,
   categoryMImportsSection originalFontTypeName categoryName,
   simpleCategoryImplementation category]
-    where sortedFonts = sortBy sortFontsByName fonts
-          category = fontCategoryFromFonts categoryName sortedFonts
+    where (categoryName, category) = builderInfo appInfo fonts
+
+builderInfo :: OWAAppInfo -> [OWAFont] -> (String, Category)
+builderInfo appInfo fonts = (categoryName,
+  fontCategoryFromFonts categoryName sortedFonts)
+    where categoryName = appPrefix appInfo ++ "Fonts"
+          sortedFonts = sortBy sortFontsByName fonts
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------

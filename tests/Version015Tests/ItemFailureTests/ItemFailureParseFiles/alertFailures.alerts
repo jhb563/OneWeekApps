@@ -1,0 +1,14 @@
+Alert failureAlert
+  Title "HELLO"
+  Message "YOU_ARE_GOOD"
+
+Alert underSpecYesNo
+  Title "ONLY_ONE_BUTTON"
+  Message "WHAT_IS_UP"
+  YesButton "Hi"
+
+Alert noYes
+  Title "Error"
+  Message "This is great"
+  NoButton "This"
+

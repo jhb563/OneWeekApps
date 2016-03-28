@@ -1,0 +1,16 @@
+//
+// Localizable.strings
+// StringsTestApp
+//
+// Created By James Bowen 3/25/16
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+// spacedStringsTest
+"FIRST_VC_STRING1" = "String 1";
+"FIRST_VC_STRING2" = "String_2";
+"SECOND_VC_STRING1" = "  Hello";
+"SECOND_VC_STRING2" = "Yo  ";
+"THIRD_VC_STRING1" = "Title and Name";
+"THIRD_VC_STRING2" = "What's app";
+"THIRD_VC_STRING3" = "Didn't see that coming";

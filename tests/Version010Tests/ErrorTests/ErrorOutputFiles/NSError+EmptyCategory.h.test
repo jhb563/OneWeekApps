@@ -1,5 +1,5 @@
 //
-// NSError+EmptyCategory.h
+// NSError+MSAErrors.h
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
@@ -8,6 +8,6 @@
 
 @import Foundation;
 
-@interface NSError (EmptyCategory)
+@interface NSError (MSAErrors)
 
 @end

@@ -6,11 +6,13 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 module OWAFileSearch (
-    findAppDirectory,
-    findColorsFiles,
-    findFontsFiles,
-    findAlertsFiles,
-    findErrorsFiles
+  findAppDirectory,
+  findAppInfoFile,
+  findColorsFiles,
+  findFontsFiles,
+  findAlertsFiles,
+  findErrorsFiles,
+  findStringsFiles
 ) where
 
 import System.Directory
@@ -50,6 +52,25 @@ appString :: String
 appString = "app"
 
 --------------------------------------------------------------------------------------------------------------------
+-----------------------------------FINDING APP INFO-----------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+
+-- | 'findAppInfoFile' Locates a single file named 'app.info', searching recursively from
+-- the given directory.
+findAppInfoFile :: FilePath -> IO (Maybe FilePath)
+findAppInfoFile appDirectory = do
+  infoFiles <- searchDirectoryForExtension infoExtension [appDirectory] []
+  let appInfoFiles = filter isAppInfoFile infoFiles
+  return (if not (null appInfoFiles) then Just (head appInfoFiles) else Nothing)
+  
+isAppInfoFile :: FilePath -> Bool
+isAppInfoFile filePath = last components == "app.info"
+  where components = splitOn "/" filePath
+
+infoExtension :: String
+infoExtension = "info"
+
+--------------------------------------------------------------------------------------------------------------------
 -----------------------------------Finding Input Files -------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------
 
@@ -73,6 +94,13 @@ findAlertsFiles appDirectory = searchDirectoryForExtension alertsExtension [appD
 findErrorsFiles :: FilePath -> IO [FilePath]
 findErrorsFiles appDirectory = searchDirectoryForExtension errorsExtension [appDirectory] []
 
+-- | 'findStringsFiles' Locates all the files with the extension '.strings', searching recursively
+-- from the given directory. It discards any files named 'Localizable.strings'
+findStringsFiles :: FilePath -> IO [FilePath]
+findStringsFiles appDirectory = do 
+  allFiles <- searchDirectoryForExtension stringsExtension [appDirectory] []
+  return $ filter (not . fileHasName "Localizable.strings") allFiles
+
 colorsExtension :: String
 colorsExtension = "colors"
 
@@ -84,6 +112,9 @@ alertsExtension = "alerts"
 
 errorsExtension :: String
 errorsExtension = "errors"
+
+stringsExtension :: String
+stringsExtension = "strings"
 
 -- 'searchDirectoryForExtension' is a common helper method doing most of the work
 -- for searching for the files. It uses BFS on the directory. It includes a queue of unexplored
@@ -104,3 +135,8 @@ searchDirectoryForExtension extension (nextFilePath:queue) locatedFiles = do
 fileHasTargetExtension :: String -> FilePath -> Bool
 fileHasTargetExtension extension filePath = last components == extension
   where components = splitOn "." filePath
+
+-- 'fileHasName' tells us if the given file has the given name.
+fileHasName :: String -> FilePath -> Bool
+fileHasName name filePath = last components == name
+  where components = splitOn "/" filePath

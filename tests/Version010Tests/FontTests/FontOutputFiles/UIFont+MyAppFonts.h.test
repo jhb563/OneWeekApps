@@ -1,5 +1,5 @@
 //
-// UIFont+MyAppFonts.h
+// UIFont+MSAFonts.h
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
@@ -8,7 +8,7 @@
 
 @import UIKit;
 
-@interface UIFont (MyAppFonts)
+@interface UIFont (MSAFonts)
 
 + (UIFont*)buttonFont;
 + (UIFont*)labelFont;

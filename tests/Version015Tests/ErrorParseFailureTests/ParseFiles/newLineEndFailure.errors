@@ -1,0 +1,4 @@
+Error myError
+  Code ErrorCode
+  Domain IsADomain
+  Description "All_GOOD"

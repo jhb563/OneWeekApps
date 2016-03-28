@@ -1,0 +1,7 @@
+Alert goodAlert
+  DismissButton "Bye"
+
+Alert badAlert
+  DismissHandler "Go Home"
+  DismissButton "Hi"
+  Title "Yes"

@@ -10,6 +10,7 @@ module ErrorParseTests (
 import OWAError
 import OWAErrorParser
 import TestErrors
+import TestUtil
 import Test.Hspec
 
 runErrorParseTests :: FilePath -> IO ()
@@ -25,28 +26,28 @@ noDefaultDomainTests testDirectory = do
   let noDefaultDomainTestsFile = testDirectory ++ noDefaultDomainExtension
   describe "Parse Errors with no default domains" $
     it "Should match our list of regular errors" $
-      parseErrorsFromFile noDefaultDomainTestsFile `shouldReturn` regularErrorsList
+      parseErrorsFromFile noDefaultDomainTestsFile `shouldReturnRights` regularErrorsList
 
 singleDomainTests :: FilePath -> Spec
 singleDomainTests testDirectory = do
   let singleDomainTestsFile = testDirectory ++ singleDomainExtension
   describe "Parse Errors with a single default domain" $
     it "Should match our list of single default domain errors" $
-      parseErrorsFromFile singleDomainTestsFile `shouldReturn` singleDomainErrorsList
+      parseErrorsFromFile singleDomainTestsFile `shouldReturnRights` singleDomainErrorsList
 
 singleDomainPrefixTests :: FilePath -> Spec
 singleDomainPrefixTests testDirectory = do
   let singleDomainPrefixTestsFile = testDirectory ++ singleDomainPrefixExtension
   describe "Parse Errors with a prefixed domain" $
     it "Should match our list of prefixed domain errors" $
-      parseErrorsFromFile singleDomainPrefixTestsFile `shouldReturn` singleDomainPrefixErrorsList
+      parseErrorsFromFile singleDomainPrefixTestsFile `shouldReturnRights` singleDomainPrefixErrorsList
 
 multiDomainTests :: FilePath -> Spec
 multiDomainTests testDirectory = do
   let multiDomainTestsFile = testDirectory ++ multiDomainExtension
   describe "Parse Errors with multiple domains in the file" $
     it "Should match our list of multi-domain errors" $
-      parseErrorsFromFile multiDomainTestsFile `shouldReturn` multiDomainErrorsList
+      parseErrorsFromFile multiDomainTestsFile `shouldReturnRights` multiDomainErrorsList
 
 noDefaultDomainExtension :: String
 noDefaultDomainExtension = "/noDefaultDomainErrors.errors"

@@ -1,0 +1,28 @@
+// All my alerts
+
+// Look at this alert!
+Alert escapedQuotes
+  Title "KEY_TITLE"
+  Message "This message has \"quotes\" in it"
+  NeutralButton "\"Hi\""
+
+// This comment is pretty random
+
+// This one has some crazy characters
+// You should check it out!
+Alert otherEscapeCharacters
+  Title "2TITLE"
+  YesButton "..."
+  NoButton "Whyyyy"
+  Message "!./*&()[]15hasdf123\n\r\t"
+
+Alert waaaaaaa
+  // We need some
+  // comments for coverage testing here
+  DismissButton "Hi"
+  // What
+  Message "NUUUUU"
+  Title "YIIIS"
+  // End comment
+
+// This comment just sorta happens down here

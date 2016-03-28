@@ -13,6 +13,7 @@ module OWAColorObjc (
 
 import Data.List
 import ObjcUtil
+import OWAAppInfo
 import OWAColor
 import OWAObjcAbSyn
 
@@ -20,27 +21,33 @@ import OWAObjcAbSyn
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
--- | 'objcHeaderFromColors' takes a name for the new colors category, as well
+-- | 'objcHeaderFromColors' takes the app info,
+-- a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- header file in Objective C
-objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
-objcHeaderFromColors categoryName colors = ObjcFile 
-  [categoryCommentSection originalColorTypeName categoryName True,
+objcHeaderFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
+objcHeaderFromColors appInfo colors = ObjcFile 
+  [categoryCommentSection appInfo originalColorTypeName categoryName True,
   uiKitImportsSection,
   simpleCategoryInterface category]
-    where sortedColors = sortBy sortColorsByName colors 
-          category = colorCategoryFromColors categoryName sortedColors
+    where (categoryName, category) = builderInfo appInfo colors
 
--- | 'objcImplementationFromColors' takes a name for the new colors category, as well
+-- | 'objcImplementationFromColors' takes the app info,
+-- a name for the new colors category, as well
 -- as a list of color objects, and returns the structure for the category's
 -- implementation file in Objective C
-objcImplementationFromColors :: String -> [OWAColor] -> ObjcFile
-objcImplementationFromColors categoryName colors = ObjcFile
-  [categoryCommentSection originalColorTypeName categoryName False,
+objcImplementationFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
+objcImplementationFromColors appInfo colors = ObjcFile
+  [categoryCommentSection appInfo originalColorTypeName categoryName False,
   categoryMImportsSection originalColorTypeName categoryName,
   simpleCategoryImplementation category]
-    where sortedColors = sortBy sortColorsByName colors
-          category = colorCategoryFromColors categoryName sortedColors
+    where (categoryName, category) = builderInfo appInfo colors
+
+builderInfo :: OWAAppInfo -> [OWAColor] -> (String, Category)
+builderInfo appInfo colors = (categoryName,
+  colorCategoryFromColors categoryName sortedColors)
+    where categoryName = appPrefix appInfo ++ "Colors"
+          sortedColors = sortBy sortColorsByName colors
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------

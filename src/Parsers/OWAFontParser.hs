@@ -10,8 +10,11 @@ module OWAFontParser (
   parseFontsFromFile
 ) where
 
+import Data.Either
+import Data.List
 import Data.Maybe
 import OWAFont
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
@@ -30,61 +33,83 @@ type FontAttrMap = Map.Map FontAttr FontVal
 
 -- | 'parseFontsFromFile' takes a file, reads its contents,
 -- and returns a list of fonts contained in the file.
-parseFontsFromFile :: FilePath -> IO [OWAFont]
+parseFontsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAFont])
 parseFontsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrFonts = parseFontContents contents
-  either printErrorAndReturnEmpty (return . catMaybes) errorOrFonts
+  let sourceName = sourceNameFromFile fPath
+  let errorOrFonts = parseFontContents sourceName contents
+  case errorOrFonts of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right errorsAndFonts -> let (errors, fonts) = partitionEithers errorsAndFonts in
+      if not (null errors)
+        then return $ Left (map (attachFileName sourceName) errors)
+        else return $ Right fonts
 
-parseFontContents :: String -> Either ParseError [Maybe OWAFont]
-parseFontContents = parse (fontParser `endBy` spaces) ""
+parseFontContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAFont]
+parseFontContents = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    results <- fontParser `endBy` commentOrSpacesParser
+    eof
+    return results)
+  GenericParserState {
+    indentationLevel = [],
+    shouldUpdate = False
+  }
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
 -------------------------------------------------------------------------------
 
-fontParser :: GenParser Char st (Maybe OWAFont)
+fontParser :: GenParser Char GenericParserState (Either OWAParseError OWAFont)
 fontParser = do
-  spaces
   name <- nameParserWithKeyword fontKeyword
-  attrs <- many1 fontAttrLine
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
-  return (fontFromNameAndAttrMap name attrMap)
+  let maybeFont = fontFromNameAndAttrMap name attrMap
+  case maybeFont of
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap
+    }
+    Just font -> return $ Right font
 
-fontAttrLine :: GenParser Char st (FontAttr, FontVal)
-fontAttrLine = do
-  string "\t" <|> string "  "
-  choice fontAttrParsers
+fontAttrLine :: GenParser Char GenericParserState (FontAttr, FontVal)
+fontAttrLine = indentParser $ choice fontAttrParsers
 
-fontAttrParsers :: [GenParser Char st (FontAttr, FontVal)]
+fontAttrParsers :: [GenParser Char GenericParserState (FontAttr, FontVal)]
 fontAttrParsers = map Text.Parsec.try [fontFamilyParser, fontSizeParser, fontStylesParser]
 
-fontFamilyParser :: GenParser Char st (FontAttr, FontVal)
+fontFamilyParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontFamilyParser = do
   string fontFamilyKeyword
-  char ' '
+  spaceTabs
   familyName <- many (alphaNum <|> char '-')
-  endOfLine
+  singleTrailingComment
   return (fontFamilyKeyword, FamilyVal familyName)
 
-fontSizeParser :: GenParser Char st (FontAttr, FontVal)
+fontSizeParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontSizeParser = do
   (_, floatVal) <- floatAttributeParser fontSizeKeyword
   return (fontSizeKeyword, SizeVal floatVal)
 
-fontStylesParser :: GenParser Char st (FontAttr, FontVal)
+fontStylesParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontStylesParser = do
   string fontStylesKeyword
-  char ' '
-  attributes <- fontStyleAttributeParser `sepBy1` string ", "
-  endOfLine
+  spaceTabs
+  attributes <- fontStyleAttributeParser `sepBy1` (char ',' >> spaceTabs)
+  singleTrailingComment
   return (fontStylesKeyword, StyleAttrs attributes)
 
-fontStyleAttributeParser :: GenParser Char st String
+fontStyleAttributeParser :: GenParser Char GenericParserState String
 fontStyleAttributeParser = choice styleAttributeParsers
 
-styleAttributeParsers :: [GenParser Char st String]
-styleAttributeParsers = map  (Text.Parsec.try . string) styleAttributeStrings
+styleAttributeParsers :: [GenParser Char GenericParserState String]
+styleAttributeParsers = map (Text.Parsec.try . string) styleAttributeStrings
 
 -------------------------------------------------------------------------------
 --------------CONSTRUCTING FONTS-----------------------------------------------
@@ -109,6 +134,9 @@ fontFromNameAndAttrMap name attrMap = do
     fontStyles = styleAttrs
   }
 
+missingAttrs :: FontAttrMap -> [FontAttr]
+missingAttrs attrMap = requiredAttributes \\ Map.keys attrMap
+
 -------------------------------------------------------------------------------
 -------------------FONT KEYWORDS-----------------------------------------------
 -------------------------------------------------------------------------------
@@ -132,3 +160,6 @@ styleAttributeStrings = ["Thin",
   "Medium",
   "Bold",
   "Italic"]
+
+requiredAttributes :: [FontAttr]
+requiredAttributes = [fontFamilyKeyword, fontSizeKeyword]

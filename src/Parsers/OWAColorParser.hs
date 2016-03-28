@@ -11,8 +11,10 @@ module OWAColorParser (
 ) where
 
 import Data.Either
+import Data.List
 import Data.Maybe
 import OWAColor
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import System.IO
@@ -31,69 +33,98 @@ type ColorAttrMap = Map.Map ColorAttr ColorVal
 
 -- | 'parseColorsFromFile' takes a file, reads its contents,
 -- and returns a list of colors contained in the file.
-parseColorsFromFile :: FilePath -> IO [OWAColor]
+parseColorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAColor])
 parseColorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrColors = parseColorContents contents
-  either printErrorAndReturnEmpty (return . catMaybes) errorOrColors
+  let sourceName = sourceNameFromFile fPath
+  let errorOrColors = parseColorContents sourceName contents
+  case errorOrColors of
+    Left parseError -> return (Left [ParsecError parseError])
+    Right errorsAndColors -> let (errors, colors) = partitionEithers errorsAndColors in
+      if not (null errors)
+        then return $ Left (map (attachFileName sourceName) errors)
+        else return $ Right colors
 
 -- 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
-parseColorContents :: String -> Either ParseError [Maybe OWAColor]
-parseColorContents = parse (colorParser `endBy` spaces) ""
+parseColorContents :: String -> String -> Either ParseError [Either OWAParseError OWAColor]
+parseColorContents = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    result <- colorParser `endBy` commentOrSpacesParser
+    eof
+    return result)
+  GenericParserState {
+    indentationLevel = [],
+    shouldUpdate = False
+  }
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
 -------------------------------------------------------------------------------
 
-colorParser :: GenParser Char st (Maybe OWAColor)
+colorParser :: GenParser Char GenericParserState (Either OWAParseError OWAColor)
 colorParser = do
-  spaces
   name <- nameParserWithKeyword colorKeyword
-  attrs <- many1 attrLine
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- attrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList (concat attrs)
-  return (colorFromNameAndAttrMap name attrMap)
+  let maybeColor = colorFromNameAndAttrMap name attrMap
+  case maybeColor of
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap
+    }
+    Just color -> return $ Right color
 
-attrLine :: GenParser Char st [(ColorAttr, ColorVal)]
-attrLine = do
-  string "\t" <|> string "  "
-  choice attrParsers
+attrLine :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
+attrLine = indentParser $ choice attrParsers
 
-attrParsers :: [GenParser Char st [(ColorAttr, ColorVal)]]
-attrParsers = map Text.Parsec.try [redParser, greenParser, blueParser, alphaParser, hexParser]
+attrParsers :: [GenParser Char GenericParserState [(ColorAttr, ColorVal)]]
+attrParsers = map Text.Parsec.try
+  [redParser, 
+  greenParser,
+  blueParser, 
+  alphaParser,
+  hexParser]
 
-redParser :: GenParser Char st [(ColorAttr, ColorVal)]
+redParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 redParser = do
   tuple <- floatAttributeParser redKeyword
   return [tuple]
 
-greenParser :: GenParser Char st [(ColorAttr, ColorVal)]
+greenParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 greenParser = do
   tuple <- floatAttributeParser greenKeyword
   return [tuple]
 
-blueParser :: GenParser Char st [(ColorAttr, ColorVal)]
+blueParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 blueParser = do
   tuple <- floatAttributeParser bluekeyword
   return [tuple]
 
-alphaParser :: GenParser Char st [(ColorAttr, ColorVal)]
+alphaParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 alphaParser = do
   tuple <- floatAttributeParser alphaKeyword
   return [tuple]
 
-hexParser :: GenParser Char st [(ColorAttr, ColorVal)]
+hexParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 hexParser = do
   string hexKeyword
-  char ' '
+  spaceTabs
   string "0x"
-  hexString <- many hexChar
-  endOfLine
-  let attrs = attrsFromHexString hexString
-  return attrs
+  hexString <- count 6 hexChar
+  maybeExtraChars <- optionMaybe (count 2 hexChar)
+  singleTrailingComment
+  case maybeExtraChars of
+    Nothing -> return $ attrsFromHexString hexString
+    Just extraChars -> return $ attrsFromHexString (hexString ++ extraChars)
 
-hexChar :: GenParser Char st Char
+hexChar :: GenParser Char GenericParserState Char
 hexChar = oneOf "0123456789aAbBcCdDeEfF"
 
 -------------------------------------------------------------------------------
@@ -109,6 +140,9 @@ colorFromNameAndAttrMap name attrMap = do
     Just a -> Just a
     Nothing -> Just 1.0
   return $ colorFromTuple (name, red, green, blue, alpha)
+
+missingAttrs :: ColorAttrMap -> [ColorAttr]
+missingAttrs attrMap = requiredAttributes \\ Map.keys attrMap
 
 attrsFromHexString :: String -> [(ColorAttr, ColorVal)]
 attrsFromHexString [r1,r2,g1,g2,b1,b2] = [(redKeyword, hexValFromChars r1 r2),
@@ -170,3 +204,5 @@ alphaKeyword = "Alpha"
 hexKeyword :: ColorAttr
 hexKeyword = "Hex"
 
+requiredAttributes :: [ColorAttr]
+requiredAttributes = [redKeyword, greenKeyword, bluekeyword]

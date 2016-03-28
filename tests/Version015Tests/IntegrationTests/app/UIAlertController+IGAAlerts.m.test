@@ -1,0 +1,41 @@
+//
+// UIAlertController+IGAAlerts.m
+// IntegrationApp
+//
+// Created By James Bowen 3/25/16
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIAlertController+IGAAlerts.h"
+
+@implementation UIAlertController (IGAAlerts)
+
++ (UIAlertController*)escapedQuotesWithHandler:(AlertHandler)handler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"KEY_TITLE", nil) message:NSLocalizedString(@"This message has \"quotes\" in it", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* neutralAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"\"Hi\"", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (handler) {
+      handler();
+    }
+  }];
+  [alert addAction:neutralAction];
+  return alert;
+}
+
++ (UIAlertController*)otherEscapeCharactersWithYesHandler:(AlertHandler)yesHandler noHandler:(AlertHandler)noHandler {
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"2TITLE", nil) message:NSLocalizedString(@"!./*&()[]15hasdf123\n\r\t", nil) preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction* yesAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"...", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (yesHandler) {
+      yesHandler();
+    }
+  }];
+  [alert addAction:yesAction];
+  UIAlertAction* noAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Whyyyy", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    if (noHandler) {
+      noHandler();
+    }
+  }];
+  [alert addAction:noAction];
+  return alert;
+}
+
+@end

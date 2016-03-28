@@ -1,0 +1,20 @@
+//
+// UIColor+IGAColors.h
+// IntegrationApp
+//
+// Created By James Harold Bowen 3/23/2016
+// Copyright (c) 2016 OWA. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIColor (IGAColors)
+
++ (UIColor*)testColor1;
++ (UIColor*)testColor2;
++ (UIColor*)testColor3;
++ (UIColor*)testColor4;
++ (UIColor*)testColor5;
++ (UIColor*)testColor6;
+
+@end

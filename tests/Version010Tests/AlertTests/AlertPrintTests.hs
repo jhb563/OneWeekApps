@@ -1,7 +1,7 @@
 -- OWAAlertObjc will expose the methods
--- objcHeaderFromAlerts :: String -> [OWAAlert] -> ObjcFile
--- objcImplementationFromAlerts :: String -> [OWAAlert] -> ObjcFile
--- which each take a category name and a list of alerts and return a
+-- objcHeaderFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
+-- objcImplementationFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
+-- which each take an appInfo object and a list of alerts and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the methods
@@ -16,6 +16,7 @@ module AlertPrintTests (
   runAlertPrintTests
 ) where
 
+import OWAAppInfo
 import OWAAlertObjc
 import OWAObjcAbSyn
 import TestAlerts
@@ -52,11 +53,20 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Aler
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  appPrefix = "MSA",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromAlerts "EmptyCategory" [],
-  objcImplementationFromAlerts "EmptyCategory" [],
-  objcHeaderFromAlerts "MyAppAlerts" allTestAlerts,
-  objcImplementationFromAlerts "MyAppAlerts" allTestAlerts]
+testFileStructures = [objcHeaderFromAlerts sampleAppInfo [],
+  objcImplementationFromAlerts sampleAppInfo [],
+  objcHeaderFromAlerts sampleAppInfo allTestAlerts,
+  objcImplementationFromAlerts sampleAppInfo allTestAlerts]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

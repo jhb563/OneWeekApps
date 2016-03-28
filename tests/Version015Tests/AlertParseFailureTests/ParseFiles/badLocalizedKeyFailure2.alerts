@@ -1,0 +1,5 @@
+Alert badMessage
+  Title "TITLE_IS_FINE"
+  Message "Message has "problems" due to quotes"
+  DismissButton "YES"
+

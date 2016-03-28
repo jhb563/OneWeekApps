@@ -10,8 +10,11 @@ module OWAAlertParser (
   parseAlertsFromFile
 ) where
 
+import Data.Either
+import Data.List
 import Data.Maybe
 import OWAAlert
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
@@ -28,33 +31,55 @@ type AlertAttrMap = Map.Map AlertAttr AlertVal
 
 -- | 'parseAlertsFromFile' takes a file, reads its contents
 -- and returns a list of alerts contained in the file.
-parseAlertsFromFile :: FilePath -> IO [OWAAlert]
+parseAlertsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAAlert])
 parseAlertsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrAlerts = parseAlertContents contents
-  either printErrorAndReturnEmpty (return . catMaybes) errorOrAlerts
+  let sourceName = sourceNameFromFile fPath
+  let errorOrAlerts = parseAlertContents sourceName contents
+  case errorOrAlerts of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right errorsAndAlerts -> let (errors, alerts) = partitionEithers errorsAndAlerts in
+      if not (null errors)
+        then return $ Left (map (attachFileName sourceName) errors)
+        else return $ Right alerts
 
-parseAlertContents :: String -> Either ParseError [Maybe OWAAlert]
-parseAlertContents = parse (alertParser `endBy` spaces) ""
+parseAlertContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAAlert]
+parseAlertContents = Text.Parsec.runParser
+  (do
+    commentOrSpacesParser
+    results <- alertParser `endBy` commentOrSpacesParser
+    eof
+    return results)
+  GenericParserState {
+    indentationLevel = [],
+    shouldUpdate = False
+  } 
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
 ---------------------------------------------------------------------------
 
-alertParser :: GenParser Char st (Maybe OWAAlert)
+alertParser :: GenParser Char GenericParserState (Either OWAParseError OWAAlert)
 alertParser = do
-  spaces
   name <- nameParserWithKeyword alertKeyword
-  attrs <- many1 alertAttrLine
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
-  return (alertFromNameAndAttrMap name attrMap)
+  let maybeAlert = alertFromNameAndAttrMap name attrMap
+  case maybeAlert of
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap
+    }
+    Just alert -> return $ Right alert
 
-alertAttrLine :: GenParser Char st (AlertAttr, AlertVal)
-alertAttrLine = do
-  string "\t" <|> string "  "
-  choice alertAttrParsers
+alertAttrLine :: GenParser Char GenericParserState (AlertAttr, AlertVal)
+alertAttrLine = indentParser $ choice alertAttrParsers
 
-alertAttrParsers :: [GenParser Char st (AlertAttr, AlertVal)]
+alertAttrParsers :: [GenParser Char GenericParserState (AlertAttr, AlertVal)]
 alertAttrParsers = map (Text.Parsec.try . localizedKeyParserWithKeyword) attributeKeywords
 
 ---------------------------------------------------------------------------
@@ -90,6 +115,19 @@ buttonFormatFromAttrMap attrMap
     noTitle <- Map.lookup noButtonKeyword attrMap
     return $ YesNoButtons yesTitle noTitle
 
+missingAttrs :: AlertAttrMap -> [AlertAttr]
+missingAttrs attrMap = (requiredAttributes \\ Map.keys attrMap) ++ buttonFormat
+  where containsSingleButtonFormat = Map.member dismissButtonKeyword attrMap ||
+                                  Map.member neutralButtonKeyword attrMap
+        containsYes = Map.member yesButtonKeyword attrMap
+        containsNo = Map.member noButtonKeyword attrMap
+        isValid = containsSingleButtonFormat || (containsYes && containsNo)
+        buttonFormat 
+          | isValid = []
+          | containsYes = ["NoButton"]
+          | containsNo = ["YesButton"]
+          | otherwise = ["Any Button Format"]
+
 ---------------------------------------------------------------------------
 --------------------ALERT KEYWORDS-----------------------------------------
 ---------------------------------------------------------------------------
@@ -114,6 +152,12 @@ yesButtonKeyword = "YesButton"
 
 noButtonKeyword :: AlertAttr
 noButtonKeyword = "NoButton"
+
+buttonFormatKeywordPlaceholder :: AlertAttr
+buttonFormatKeywordPlaceholder = "ButtonFormat"
+
+requiredAttributes :: [AlertAttr]
+requiredAttributes = [titleKeyword, messageKeyword]
 
 attributeKeywords = [titleKeyword,
   messageKeyword,

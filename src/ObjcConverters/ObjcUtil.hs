@@ -7,6 +7,7 @@ Maintainer  : jhbowen047@gmail.com
 -}
 
 module ObjcUtil (
+  topCommentSection,
   categoryCommentSection,
   foundationImportsSection,
   uiKitImportsSection,
@@ -17,25 +18,42 @@ module ObjcUtil (
   localizedStringExpr  
 ) where
 
+import Data.List.Split
+import OWAAppInfo
 import OWAObjcAbSyn
 
 -------------------------------------------------------------------------------
 -------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------
 -------------------------------------------------------------------------------
 
--- | Takes strings for the original type name, the category name, and
+-- | Takes a string for the file name and an app info object and constructs
+-- the header comment which goes at the top of an objective C file.
+topCommentSection :: String -> OWAAppInfo -> FileSection
+topCommentSection filename appInfo = BlockCommentSection
+  (definiteSection ++ possibleCompanySection)
+  where dateCreated = dateCreatedString appInfo 
+        createdString = "Created By " ++ authorName appInfo ++
+          " " ++ dateCreatedString appInfo
+        yearGiven = last $ splitOn "/" dateCreated
+        yearCreated = if length yearGiven < 4 then "20" ++ yearGiven else yearGiven
+        definiteSection = ["",
+          filename,
+          appName appInfo,
+          "",
+          createdString]
+        possibleCompanySection = case companyName appInfo of
+          Nothing -> [""]
+          Just company -> ["Copyright (c) " ++ yearCreated ++ " " ++
+            company ++ ". All Rights Reserved",
+            ""]
+
+-- | Takes an object describing the app info,
+-- strings for the original type name, the category name, and
 -- a boolean signal for whether the comment is for a header or .m file.
 -- Constructs the header comment which goes at the top of a category file.
-categoryCommentSection :: String -> String -> Bool -> FileSection
-categoryCommentSection originalTypeName categoryName isHeader = BlockCommentSection
-  ["",
-  categoryFileName originalTypeName categoryName isHeader,
-  "MySampleApp",
-  "",
-  "Created By James Bowen 2/16/2016",
-  "Copyright (c) 2016 One Week Apps. All Rights Reserved",
-  ""]
-  where ending = if isHeader then ".h" else ".m"
+categoryCommentSection :: OWAAppInfo -> String -> String -> Bool -> FileSection
+categoryCommentSection appInfo originalTypeName categoryName isHeader = topCommentSection
+  (categoryFileName originalTypeName categoryName isHeader) appInfo
 
 -------------------------------------------------------------------------------
 -------------------IMPORT SECTIONS---------------------------------------------

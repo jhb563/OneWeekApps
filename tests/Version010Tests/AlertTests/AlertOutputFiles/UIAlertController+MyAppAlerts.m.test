@@ -1,14 +1,14 @@
 //
-// UIAlertController+MyAppAlerts.m
+// UIAlertController+MSAAlerts.m
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "UIAlertController+MyAppAlerts.h"
+#import "UIAlertController+MSAAlerts.h"
 
-@implementation UIAlertController (MyAppAlerts)
+@implementation UIAlertController (MSAAlerts)
 
 + (UIAlertController*)blankMessageWithHandler:(AlertHandler)handler {
   UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"", nil) message:NSLocalizedString(@"", nil) preferredStyle:UIAlertControllerStyleAlert];

@@ -1,7 +1,7 @@
 -- OWAColorObjc will expose the methods
--- objcHeaderFromColors :: String -> [OWAColor] -> ObjcFile
--- objcImplementationFromAlerts :: String -> [OWAColor] -> ObjcFile
--- which each take a category name and a list of colors and return a
+-- objcHeaderFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
+-- objcImplementationFromAlerts :: OWAAppInfo -> [OWAColor] -> ObjcFile
+-- which each take an appInfo object and a list of colors and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the method
@@ -16,6 +16,7 @@ module ColorPrintTests (
   runColorPrintTests
 ) where
 
+import OWAAppInfo
 import OWAColorObjc
 import OWAObjcAbSyn
 import TestColors
@@ -52,11 +53,20 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Colo
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  appPrefix = "MSA",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromColors "EmptyCategory" [],
-  objcImplementationFromColors "EmptyCategory" [],
-  objcHeaderFromColors "MyAppColors" testColorsToPrint,
-  objcImplementationFromColors "MyAppColors" testColorsToPrint]
+testFileStructures = [objcHeaderFromColors sampleAppInfo [],
+  objcImplementationFromColors sampleAppInfo [],
+  objcHeaderFromColors sampleAppInfo testColorsToPrint,
+  objcImplementationFromColors sampleAppInfo testColorsToPrint]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,

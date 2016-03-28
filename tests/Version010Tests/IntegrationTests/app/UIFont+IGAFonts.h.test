@@ -1,0 +1,25 @@
+//
+// UIFont+IGAFonts.h
+// IntegrationApp
+//
+// Created By James Harold Bowen 3/23/2016
+// Copyright (c) 2016 OWA. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIFont (IGAFonts)
+
++ (UIFont*)buttonFont;
++ (UIFont*)labelFont;
++ (UIFont*)myFont;
++ (UIFont*)noStyleFont;
++ (UIFont*)placeholderFont;
++ (UIFont*)randomFont;
++ (UIFont*)styleInNameFont;
++ (UIFont*)textfieldFont;
++ (UIFont*)thinFont;
++ (UIFont*)timesFont;
++ (UIFont*)titleFont;
+
+@end

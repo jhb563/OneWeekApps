@@ -1,0 +1,6 @@
+Color goodColor
+  Hex 0x123456
+
+Color badColor
+  Hex 0x123456789A
+

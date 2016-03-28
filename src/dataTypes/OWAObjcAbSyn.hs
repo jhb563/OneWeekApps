@@ -29,7 +29,8 @@ data FileSection =
   CategoryInterfaceSection Category [FileSection] |
   CategoryImplementationSection Category [FileSection] |
   MethodHeaderListSection (Maybe String) [ObjcMethod] |
-  MethodImplementationListSection (Maybe String) [ObjcMethod]
+  MethodImplementationListSection (Maybe String) [ObjcMethod] |
+  LocalizedStringListSection String [ObjcStatement]
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of an
@@ -113,6 +114,7 @@ data ObjcExpression =
   VarDecl ObjcType Identifier |
   DictionaryLit [(ObjcExpression, ObjcExpression)] |
   StringLit String |
+  CStringLit String |
   FloatLit Float
   deriving (Show, Eq)
 

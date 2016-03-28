@@ -1,7 +1,7 @@
 -- OWAFontObjc will expose the methods
--- objcHeaderFromFonts :: String -> [OWAFont] -> ObjcFile
--- objcImplementationFromFonts :: String -> [OWAFont] -> ObjcFile
--- which each take a category name and a list of fonts and return a
+-- objcHeaderFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
+-- objcImplementationFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
+-- which each take an appInfo object and a list of fonts and return a
 -- file structure of objective C statements
 --
 -- OWAObjcPrint will expose the method
@@ -16,6 +16,7 @@ module FontPrintTests (
   runFontPrintTests
 ) where
 
+import OWAAppInfo
 import OWAFontObjc
 import OWAObjcAbSyn
 import TestFonts
@@ -52,6 +53,15 @@ fullCategoryTests testDirectory = describe "Print File Structure for Normal Font
     (testDirectory ++ implementationResultFile) `filesShouldMatch`
       (testDirectory ++ implementationTestFile)
 
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  appPrefix = "MSA",
+  authorName = "James Bowen",
+  dateCreatedString = "2/16/2016",
+  companyName = Just "One Week Apps"
+}
+
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
   emptyImplementationResultFile,
@@ -59,10 +69,10 @@ resultsFiles = [emptyHeaderResultFile,
   implementationResultFile]
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromFonts "EmptyCategory" [],
-  objcImplementationFromFonts "EmptyCategory" [], 
-  objcHeaderFromFonts "MyAppFonts" allTestFonts, 
-  objcImplementationFromFonts "MyAppFonts" allTestFonts]
+testFileStructures = [objcHeaderFromFonts sampleAppInfo [],
+  objcImplementationFromFonts sampleAppInfo [], 
+  objcHeaderFromFonts sampleAppInfo allTestFonts, 
+  objcImplementationFromFonts sampleAppInfo allTestFonts]
 
 emptyHeaderResultFile :: String
 emptyHeaderResultFile = "UIFont+EmptyCategory.h"

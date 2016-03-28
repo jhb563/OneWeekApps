@@ -11,8 +11,11 @@ module OWAErrorParser (
 ) where
 
 import Control.Monad.State.Lazy
+import Data.Either
+import Data.List
 import Data.Maybe
 import OWAError
+import OWAParseError
 import ParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
@@ -23,7 +26,6 @@ type ErrorAttr = String
 data ErrorVal = NormalValue String |
   PrefixedValue String
 type ErrorAttrMap = Map.Map ErrorAttr ErrorVal 
-type ErrorParserState = (String, Maybe String)
 
 ---------------------------------------------------------------------------
 --------------------ENTRY METHODS------------------------------------------
@@ -31,38 +33,101 @@ type ErrorParserState = (String, Maybe String)
 
 -- | 'parseErrorsFromFile' takes a file, reads its contents, and returns
 -- a list of errors contained in the file.
-parseErrorsFromFile :: FilePath -> IO [OWAError]
+parseErrorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAError])
 parseErrorsFromFile fPath = do
   contents <- readFile fPath
-  let errorOrOWAErrors = parseErrorContents contents
-  either printErrorAndReturnEmpty (return . catMaybes . concat) errorOrOWAErrors
+  let sourceName = sourceNameFromFile fPath
+  let errorOrOWAErrors = parseErrorContents sourceName contents
+  case errorOrOWAErrors of
+    Left parseError -> return $ Left [ParsecError parseError]
+    Right errorsAndOWAErrors -> let (errors, owaErrors) = partitionEithers (concat errorsAndOWAErrors) in
+      if not (null errors)
+        then return $ Left (map (attachFileName sourceName) errors)
+        else return $ Right owaErrors
 
-parseErrorContents :: String -> Either ParseError [[Maybe OWAError]]
+parseErrorContents :: FilePath -> String -> Either ParseError [[Either OWAParseError OWAError]]
 parseErrorContents = Text.Parsec.runParser 
-  (multiErrorParser `sepEndBy` defaultDomainParser) 
-  ("", Nothing) 
-  ""
+  (do
+    results <- multiErrorParser `sepEndBy` defaultDomainParser
+    eof
+    return results) 
+  ErrorParserState {
+    currentDomain = "",
+    currentPrefix = Nothing,
+    errorIndentationLevel = [],
+    errorShouldUpdateIndent = False
+  }
+
+---------------------------------------------------------------------------
+--------------------ERROR STATE--------------------------------------------
+---------------------------------------------------------------------------
+
+data ErrorParserState = ErrorParserState {
+  currentDomain :: String,
+  currentPrefix :: Maybe String,
+  errorIndentationLevel :: [String],
+  errorShouldUpdateIndent :: Bool
+}
+
+instance ParserState ErrorParserState where
+  currentIndentLevel = errorIndentationLevel
+  shouldUpdateIndentLevel = errorShouldUpdateIndent
+  addIndentationLevel newLevel currentState = currentState {
+    errorIndentationLevel = errorIndentationLevel currentState ++ [newLevel],
+    errorShouldUpdateIndent = False
+  }
+  reduceIndentationLevel currentState = currentState {
+    errorIndentationLevel = init $ errorIndentationLevel currentState,
+    errorShouldUpdateIndent = False
+  }
+  setShouldUpdateIndentLevel currentState = currentState {
+    errorIndentationLevel = errorIndentationLevel currentState,
+    errorShouldUpdateIndent = True
+  }
+
+updateDefaultDomain :: String -> Maybe String -> ErrorParserState -> ErrorParserState
+updateDefaultDomain defaultDomain Nothing currentState = ErrorParserState {
+  currentDomain = defaultDomain,
+  currentPrefix = Nothing,
+  errorIndentationLevel = errorIndentationLevel currentState,
+  errorShouldUpdateIndent = False
+}
+updateDefaultDomain defaultDomain (Just prefix) currentState = ErrorParserState {
+  currentDomain = defaultDomain,
+  currentPrefix = Just prefix,
+  errorIndentationLevel = init $ errorIndentationLevel currentState,
+  errorShouldUpdateIndent = False
+}
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
 ---------------------------------------------------------------------------
 
-multiErrorParser :: GenParser Char ErrorParserState [Maybe OWAError]
-multiErrorParser = errorParser `endBy` spaces
+multiErrorParser :: GenParser Char ErrorParserState [Either OWAParseError OWAError]
+multiErrorParser = do
+  commentOrSpacesParser
+  errorParser `endBy` commentOrSpacesParser
 
-errorParser :: GenParser Char ErrorParserState (Maybe OWAError)
+errorParser :: GenParser Char ErrorParserState (Either OWAParseError OWAError)
 errorParser = do
-  spaces
   name <- nameParserWithKeyword errorKeyword
-  attrs <- many1 errorAttrLine
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  attrs <- errorAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   parserState <- getState
-  return (errorFromNameAndAttrMap name attrMap parserState)
+  let maybeError = errorFromNameAndAttrMap name attrMap parserState
+  case maybeError of
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      missingRequiredAttributes = missingAttrs attrMap parserState
+    }
+    Just err -> return $ Right err
 
 errorAttrLine :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
-errorAttrLine = do
-  string "\t" <|> string "  "
-  choice $ map Text.Parsec.try errorAttrParsers
+errorAttrLine = indentParser (choice $ map Text.Parsec.try errorAttrParsers)
 
 errorAttrParsers :: [GenParser Char ErrorParserState (ErrorAttr, ErrorVal)]
 errorAttrParsers = [domainParser,
@@ -77,12 +142,12 @@ domainParser = do
 codeParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 codeParser = do
   string codeKeyword
-  char ' '
+  spaceTabs
   maybeDots <- optionMaybe (string "...")
   firstLetter <- letter
   rest <- many (alphaNum <|> char '_')
   let code = firstLetter:rest
-  endOfLine
+  singleTrailingComment
   case maybeDots of
     Just _ -> return (codeKeyword, PrefixedValue code)
     _ -> return (codeKeyword, NormalValue code)
@@ -95,13 +160,14 @@ descriptionParser = do
 defaultDomainParser :: GenParser Char ErrorParserState ()
 defaultDomainParser = do
   (_, name) <- variableNameParserWithKeyword defaultDomainKeyword
-  maybePrefix <- optionMaybe prefixParser
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  maybePrefix <-  optionMaybe $ indentParser prefixParser
   spaces
-  putState (name, maybePrefix)
+  modifyState $ updateDefaultDomain name maybePrefix
 
 prefixParser :: GenParser Char ErrorParserState String
 prefixParser = do
-  string "\t" <|> string "  "
   (_, prefix) <- variableNameParserWithKeyword prefixKeyword 
   return prefix
 
@@ -110,7 +176,9 @@ prefixParser = do
 ---------------------------------------------------------------------------
 
 errorFromNameAndAttrMap :: String -> ErrorAttrMap -> ErrorParserState -> Maybe OWAError
-errorFromNameAndAttrMap name attrMap (defaultDomain, maybePrefix) = do 
+errorFromNameAndAttrMap name attrMap errorState = do 
+  let defaultDomain = currentDomain errorState
+  let maybePrefix = currentPrefix errorState
   domain <- case Map.lookup domainKeyword attrMap of
     Just (NormalValue domain) -> Just domain
     Nothing -> if null defaultDomain then Nothing else Just defaultDomain
@@ -130,6 +198,12 @@ errorFromNameAndAttrMap name attrMap (defaultDomain, maybePrefix) = do
     errorDescription = description
   } 
 
+missingAttrs :: ErrorAttrMap -> ErrorParserState -> [String]
+missingAttrs attrMap state = (requiredAttributes \\ Map.keys attrMap) ++ maybeDomain
+  where domainAvailable = Map.member domainKeyword attrMap ||
+                          not (null $ currentDomain state)
+        maybeDomain = if domainAvailable then [] else [domainKeyword]
+
 ---------------------------------------------------------------------------
 --------------------ERROR KEYWORDS-----------------------------------------
 ---------------------------------------------------------------------------
@@ -145,6 +219,9 @@ codeKeyword = "Code"
 
 descriptionKeyword :: String
 descriptionKeyword = "Description"
+
+requiredAttributes :: [String]
+requiredAttributes = [codeKeyword, descriptionKeyword]
 
 defaultDomainKeyword :: String
 defaultDomainKeyword = "DefaultDomain"

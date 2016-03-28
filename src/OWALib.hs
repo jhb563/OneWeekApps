@@ -4,16 +4,19 @@ Description : Main Library Entry point for OneWeekApps
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
-Stability   : Stable
 -}
 
 module OWALib (
   runOWA
 ) where
 
+import Control.Monad
+import Data.Either
 import OWAAlert
 import OWAAlertObjc
 import OWAAlertParser
+import OWAAppInfo
+import OWAAppInfoParser
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
@@ -24,109 +27,261 @@ import OWAFileSearch
 import OWAFont
 import OWAFontObjc
 import OWAFontParser
+import OWALocalizedStringSet
 import OWAObjcPrint
+import OWAParseError
+import OWAStringsParser
+import OWAStringsObjc
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
-runOWA :: FilePath -> IO ()
-runOWA filePath = do
+runOWA :: FilePath -> [String] -> IO ()
+runOWA filePath args = do
+  let outputMode = outputModeFromArgs args
+  printIfNotSilent outputMode ("Searching For app directory from " ++ filePath)
   maybeAppDirectory <- findAppDirectory filePath
   case maybeAppDirectory of 
-    Nothing -> print "Could not find app directory!"
+    Nothing -> printIfNotSilent outputMode "Couldn't find app directory! Exiting"
     Just appDirectory -> do
-      produceColorsFiles appDirectory
-      produceFontsFiles appDirectory
-      produceAlertsFiles appDirectory
-      produceErrorsFiles appDirectory
+      printIfNotSilent outputMode ("Found app directory at " ++ appDirectory) 
+      appInfo <- loadAppInfo outputMode appDirectory
+      case appInfo of
+        Nothing -> printIfNotSilent outputMode "Exiting."
+        Just appInfo -> do
+          produceColorsFiles outputMode appDirectory appInfo
+          produceFontsFiles outputMode appDirectory appInfo
+          produceAlertsFiles outputMode appDirectory appInfo
+          produceErrorsFiles outputMode appDirectory appInfo
+          produceStringsFile outputMode appDirectory appInfo
+
+---------------------------------------------------------------------------
+------------------------PROGRAM STATUS PRINTING----------------------------
+---------------------------------------------------------------------------
+
+data OutputMode = Silent | Normal | Verbose deriving (Show, Eq)
+
+outputModeFromArgs :: [String] -> OutputMode
+outputModeFromArgs args 
+  | silentMode = Silent
+  | verboseMode = Verbose
+  | otherwise = Normal 
+    where silentMode = elem "-silent" args || elem "-s" args
+          verboseMode = elem "-verbose" args || elem "-v" args
+
+printIfNotSilent :: OutputMode -> String -> IO ()
+printIfNotSilent mode str = Control.Monad.when (mode /= Silent) $ putStrLn str
+
+printIfVerbose :: OutputMode -> String -> IO ()
+printIfVerbose mode str = Control.Monad.when (mode == Verbose) $ putStrLn str
+
+printErrors :: OutputMode -> [OWAParseError] -> IO ()
+printErrors outputMode [] = return ()
+printErrors outputMode errors = mapM_ (printIfNotSilent outputMode . show) errors
+
+---------------------------------------------------------------------------
+------------------------LOADING APP INFO-----------------------------------
+---------------------------------------------------------------------------
+
+loadAppInfo :: OutputMode -> FilePath -> IO (Maybe OWAAppInfo)
+loadAppInfo outputMode appDirectory = do
+  printIfNotSilent outputMode "Searching for app.info..."
+  maybeAppFile <- findAppInfoFile appDirectory
+  case maybeAppFile of
+    Nothing -> do
+      printIfNotSilent outputMode "Unable to find app.info. Please create an app.info file"
+      return Nothing 
+    Just appFile -> do
+      printIfVerbose outputMode $ "Found app.info at " ++ appFile
+      printIfNotSilent outputMode "Parsing app.info..."
+      appInfoOrErrors <- parseAppInfoFromFile appFile
+      case appInfoOrErrors of
+        Left errors -> do
+          printErrors outputMode errors 
+          printIfNotSilent outputMode "Unable to parse app.info!"
+          return Nothing
+        Right appInfo -> do
+          printIfNotSilent outputMode "Successfully parsed app.info!"
+          return $ Just appInfo 
+
+---------------------------------------------------------------------------
+------------------------PRODUCING STRINGS FILES----------------------------
+---------------------------------------------------------------------------
+
+produceStringsFile :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceStringsFile outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating strings..."
+  printIfVerbose outputMode "Searching for strings files..."
+  stringsFiles <- findStringsFiles appDirectory
+  printIfVerbose outputMode "Found strings files at: "
+  mapM_ (printIfVerbose outputMode) stringsFiles
+  listOfParseResults <- mapM parseStringsFromFile stringsFiles
+  let errors = concat $ lefts listOfParseResults
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing strings..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing strings!"
+  let stringSets = rights listOfParseResults
+  printIfVerbose outputMode ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
+  let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
+  printIfVerbose outputMode "Printing strings file..."
+  let fullStringsPath = appDirectory ++ stringsFileExtension
+  printStructureToFile stringsFileStructure fullStringsPath
+  printIfVerbose outputMode "Printed strings to :" 
+  printIfVerbose outputMode fullStringsPath
+  printIfNotSilent outputMode "Finished generating strings!"
+
+stringsFileExtension :: String
+stringsFileExtension = "/Localizable.strings"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceColorsFiles :: FilePath -> IO ()
-produceColorsFiles appDirectory = do
+produceColorsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceColorsFiles outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating colors..."
+  printIfVerbose outputMode "Searching for colors files..."
   colorFiles <- findColorsFiles appDirectory
-  listOfColorLists <- mapM parseColorsFromFile colorFiles
-  let colors = concat listOfColorLists
-  let colorHeaderFileStructure = objcHeaderFromColors colorCategoryName colors
-  let colorMFileStructure = objcImplementationFromColors colorCategoryName colors
-  printStructureToFile colorHeaderFileStructure (appDirectory ++ colorHeaderFileExtension)
-  printStructureToFile colorMFileStructure (appDirectory ++ colorImplementationFileExtension)
+  printIfVerbose outputMode "Found colors files at: "
+  mapM_ (printIfVerbose outputMode) colorFiles
+  listOfParseResults <- mapM parseColorsFromFile colorFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing colors..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing colors!"
+  let colors = concat $ rights listOfParseResults
+  let prefix = appPrefix appInfo
+  printIfVerbose outputMode ("Successfully parsed " ++ show (length colors) ++ " colors")
+  let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
+  let colorMFileStructure = objcImplementationFromColors appInfo colors
+  printIfVerbose outputMode "Printing colors files..."
+  let fullHeaderPath = appDirectory ++ colorHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ colorImplementationFileExtension prefix
+  printStructureToFile colorHeaderFileStructure fullHeaderPath
+  printStructureToFile colorMFileStructure fullMPath
+  printIfVerbose outputMode "Printed colors to files:"
+  printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
+  printIfNotSilent outputMode "Finished generating colors!"
 
-colorCategoryName :: String
-colorCategoryName = "MyAppColors"
+colorHeaderFileExtension :: String -> FilePath
+colorHeaderFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.h"
 
-colorHeaderFileExtension :: FilePath
-colorHeaderFileExtension = "/UIColor+MyAppColors.h"
-
-colorImplementationFileExtension :: FilePath
-colorImplementationFileExtension = "/UIColor+MyAppColors.m"
+colorImplementationFileExtension :: String -> FilePath
+colorImplementationFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING FONTS FILES------------------------------
 ---------------------------------------------------------------------------
 
-produceFontsFiles :: FilePath -> IO ()
-produceFontsFiles appDirectory = do
+produceFontsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceFontsFiles outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating fonts..."
+  printIfVerbose outputMode "Searching for fonts files..."
   fontFiles <- findFontsFiles appDirectory
-  listOfFontLists <- mapM parseFontsFromFile fontFiles
-  let fonts = concat listOfFontLists
-  let fontHeaderFileStructure = objcHeaderFromFonts fontCategoryName fonts
-  let fontMFileStructure = objcImplementationFromFonts fontCategoryName fonts
-  printStructureToFile fontHeaderFileStructure (appDirectory ++ fontHeaderFileExtension)
-  printStructureToFile fontMFileStructure (appDirectory ++ fontImplementationFileExtension)
+  printIfVerbose outputMode "Found fonts files at: "
+  mapM_ (printIfVerbose outputMode) fontFiles
+  listOfParseResults <- mapM parseFontsFromFile fontFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing fonts..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing fonts!"
+  let fonts = concat $ rights listOfParseResults 
+  let prefix = appPrefix appInfo
+  printIfVerbose outputMode ("Found " ++ show (length fonts) ++ " fonts")
+  let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
+  let fontMFileStructure = objcImplementationFromFonts appInfo fonts
+  printIfVerbose outputMode "Printing fonts files..."
+  let fullHeaderPath = appDirectory ++ fontHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ fontImplementationFileExtension prefix
+  printStructureToFile fontHeaderFileStructure fullHeaderPath
+  printStructureToFile fontMFileStructure fullMPath
+  printIfVerbose outputMode "Printed fonts to files:"
+  printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
+  printIfNotSilent outputMode "Finished generating fonts!"
 
-fontCategoryName :: String
-fontCategoryName = "MyAppFonts"
+fontHeaderFileExtension :: String -> FilePath
+fontHeaderFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.h"
 
-fontHeaderFileExtension :: FilePath
-fontHeaderFileExtension = "/UIFont+MyAppFonts.h"
-
-fontImplementationFileExtension :: FilePath
-fontImplementationFileExtension = "/UIFont+MyAppFonts.m"
+fontImplementationFileExtension :: String -> FilePath
+fontImplementationFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ALERTS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceAlertsFiles :: FilePath -> IO ()
-produceAlertsFiles appDirectory = do
+produceAlertsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceAlertsFiles outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating alerts..."
+  printIfVerbose outputMode "Searching for alerts files..."
   alertFiles <- findAlertsFiles appDirectory
-  listOfAlertLists <- mapM parseAlertsFromFile alertFiles
-  let alerts = concat listOfAlertLists
-  let alertHeaderFileStructure = objcHeaderFromAlerts alertCategoryName alerts
-  let alertMFileStructure = objcImplementationFromAlerts alertCategoryName alerts
-  printStructureToFile alertHeaderFileStructure (appDirectory ++ alertHeaderFileExtension)
-  printStructureToFile alertMFileStructure (appDirectory ++ alertImplmentationFileExtension)
+  printIfVerbose outputMode "Found alerts files at: "
+  mapM_ (printIfVerbose outputMode) alertFiles
+  listOfParseResults <- mapM parseAlertsFromFile alertFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing alerts..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing alerts!"
+  let alerts = concat $ rights listOfParseResults
+  let prefix = appPrefix appInfo
+  printIfVerbose outputMode ("Found " ++ show (length alerts) ++ " alerts")
+  let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
+  let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
+  printIfVerbose outputMode "Printing alerts files..."
+  let fullHeaderPath = appDirectory ++ alertHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ alertImplementationFileExtension prefix
+  printStructureToFile alertHeaderFileStructure fullHeaderPath
+  printStructureToFile alertMFileStructure fullMPath
+  printIfVerbose outputMode "Printed alerts to files:"
+  printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
+  printIfNotSilent outputMode "Finished generating alerts!"
 
-alertCategoryName :: String
-alertCategoryName = "MyAppAlerts"
+alertHeaderFileExtension :: String -> FilePath
+alertHeaderFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.h"
 
-alertHeaderFileExtension :: FilePath
-alertHeaderFileExtension = "/UIAlertController+MyAppAlerts.h"
-
-alertImplmentationFileExtension :: FilePath
-alertImplmentationFileExtension = "/UIAlertController+MyAppAlerts.m"
+alertImplementationFileExtension :: String -> FilePath
+alertImplementationFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.m"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ERRORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
-produceErrorsFiles :: FilePath -> IO ()
-produceErrorsFiles appDirectory = do
+produceErrorsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceErrorsFiles outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating errors..."
+  printIfVerbose outputMode "Searching for errors files..."
   errorFiles <- findErrorsFiles appDirectory
-  listOfErrorLists <- mapM parseErrorsFromFile errorFiles
-  let errors = concat listOfErrorLists
-  let errorHeaderFileStructure = objcHeaderFromErrors errorCategoryName errors
-  let errorMFileStructure = objcImplementationFromErrors errorCategoryName errors
-  printStructureToFile errorHeaderFileStructure (appDirectory ++ errorHeaderFileExtension)
-  printStructureToFile errorMFileStructure (appDirectory ++ errorImplmentationFileExtension)
+  printIfVerbose outputMode "Found errors files at: "
+  mapM_ (printIfVerbose outputMode) errorFiles
+  listOfParseResults <- mapM parseErrorsFromFile errorFiles
+  let errors = concat $ lefts listOfParseResults 
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing errors..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing errors!"
+  let errors = concat $ rights listOfParseResults
+  let prefix = appPrefix appInfo
+  printIfVerbose outputMode ("Found " ++ show (length errors) ++ " errors")
+  let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
+  let errorMFileStructure = objcImplementationFromErrors appInfo errors
+  printIfVerbose outputMode "Printing errors files..."
+  let fullHeaderPath = appDirectory ++ errorHeaderFileExtension prefix
+  let fullMPath = appDirectory ++ errorImplementationFileExtension prefix
+  printStructureToFile errorHeaderFileStructure fullHeaderPath
+  printStructureToFile errorMFileStructure fullMPath
+  printIfVerbose outputMode "Printed errors to files:"
+  printIfVerbose outputMode (fullHeaderPath ++ ", " ++ fullMPath)
+  printIfNotSilent outputMode "Finished generating errors!"
 
-errorCategoryName :: String
-errorCategoryName = "MyAppErrors"
+errorHeaderFileExtension :: String -> FilePath
+errorHeaderFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.h"
 
-errorHeaderFileExtension :: FilePath
-errorHeaderFileExtension = "/NSError+MyAppErrors.h"
-
-errorImplmentationFileExtension :: FilePath
-errorImplmentationFileExtension = "/NSError+MyAppErrors.m"
+errorImplementationFileExtension :: String -> FilePath
+errorImplementationFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.m"

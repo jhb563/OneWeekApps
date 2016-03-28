@@ -1,14 +1,14 @@
 //
-// NSError+MyAppErrors.m
+// NSError+MSAErrors.m
 // MySampleApp
 //
 // Created By James Bowen 2/16/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "NSError+MyAppErrors.h"
+#import "NSError+MSAErrors.h"
 
-typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
+typedef NS_ENUM(NSInteger, MSAErrorsErrorCodes) {
   FirstFinalError,
   belongsToFirstDomain,
   MyAppFirstError,
@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, MyAppErrorsErrorCodes) {
   SecondDomainWhichError
 };
 
-@implementation NSError (MyAppErrors)
+@implementation NSError (MSAErrors)
 
 #pragma mark - FirstDomain
 

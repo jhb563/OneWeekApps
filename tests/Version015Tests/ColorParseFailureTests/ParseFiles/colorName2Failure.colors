@@ -1,0 +1,9 @@
+Color goodColor
+  Red 100
+  Blue 135
+  Green 13.0
+
+Color BadColor
+  Red 100
+  Blue 1231
+  Green 0.0
