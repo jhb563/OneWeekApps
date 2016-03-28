@@ -136,4 +136,5 @@ producedFiles :: [FilePath]
 producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension,
   fontHeaderFileExtension, fontImplementationFileExtension,
   alertHeaderFileExtension, alertImplementationFileExtension,
-  errorHeaderFileExtension, errorImplementationFileExtension]
+  errorHeaderFileExtension, errorImplementationFileExtension,
+  localizedStringFileExtension]
