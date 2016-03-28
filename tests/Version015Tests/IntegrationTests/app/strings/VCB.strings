@@ -1,0 +1,11 @@
+// Top comment
+// Second Comment
+"STRING1" = "Hi"; // Trailing comment
+// In between comment
+"STRING2" = "Bye" // Trail
+
+"STRING3" = "Yo"
+// In between again
+"STRING4" = "Yes"
+
+// Ending comment
