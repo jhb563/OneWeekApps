@@ -27,8 +27,11 @@ import OWAFileSearch
 import OWAFont
 import OWAFontObjc
 import OWAFontParser
+import OWALocalizedStringSet
 import OWAObjcPrint
 import OWAParseError
+import OWAStringsParser
+import OWAStringsObjc
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -49,6 +52,7 @@ runOWA filePath args = do
           produceFontsFiles outputMode appDirectory appInfo
           produceAlertsFiles outputMode appDirectory appInfo
           produceErrorsFiles outputMode appDirectory appInfo
+          produceStringsFile outputMode appDirectory appInfo
 
 ---------------------------------------------------------------------------
 ------------------------PROGRAM STATUS PRINTING----------------------------
@@ -98,6 +102,37 @@ loadAppInfo outputMode appDirectory = do
         Right appInfo -> do
           printIfNotSilent outputMode "Successfully parsed app.info!"
           return $ Just appInfo 
+
+---------------------------------------------------------------------------
+------------------------PRODUCING STRINGS FILES----------------------------
+---------------------------------------------------------------------------
+
+produceStringsFile :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceStringsFile outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating strings..."
+  printIfVerbose outputMode "Searching for strings files..."
+  stringsFiles <- findStringsFiles appDirectory
+  printIfVerbose outputMode "Found strings files at: "
+  mapM_ (printIfVerbose outputMode) stringsFiles
+  listOfParseResults <- mapM parseStringsFromFile stringsFiles
+  let errors = concat $ lefts listOfParseResults
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing strings..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing strings!"
+  let stringSets = rights listOfParseResults
+  printIfVerbose outputMode ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
+  let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
+  printIfVerbose outputMode "Printing strings file..."
+  let fullStringsPath = appDirectory ++ stringsFileExtension
+  printStructureToFile stringsFileStructure fullStringsPath
+  printIfVerbose outputMode "Printed strings to :" 
+  printIfVerbose outputMode fullStringsPath
+  printIfNotSilent outputMode "Finished generating strings!"
+
+stringsFileExtension :: String
+stringsFileExtension = "/Localizable.strings"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING COLORS FILES-----------------------------

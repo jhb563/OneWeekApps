@@ -13,6 +13,7 @@ import StringsParseTests
 import StringsPrintTests
 import TabTests
 import System.Directory
+import Version015IntegrationTests
 
 main :: IO ()
 main = do
@@ -29,3 +30,4 @@ main = do
   runStringsParseTests currentDirectory
   runStringsSearchTests currentDirectory
   runStringsPrintTests currentDirectory
+  runV015IntegrationTests currentDirectory
