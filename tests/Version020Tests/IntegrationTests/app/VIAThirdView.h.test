@@ -1,0 +1,10 @@
+@import UIKit;
+
+@interface VIAThirdView : UIView
+
+@property (nonatomic, strong, readonly) UITextField* firstField;
+@property (nonatomic, strong, readonly) UITextField* secondField;
+@property (nonatomic, strong, readonly) UIImageView* firstImage;
+@property (nonatomic, strong, readonly) UIImageView* secondImage;
+
+@end

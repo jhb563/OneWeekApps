@@ -1,0 +1,89 @@
+#import "VIASecondView.h"
+#import "UIColor+VIAColors.h"
+#import "UIFont+VIAFonts.h"
+
+@interface VIASecondView ()
+
+@property (nonatomic, strong) UILabel* firstLabel;
+@property (nonatomic, strong) UILabel* secondLabel;
+@property (nonatomic, strong) UIButton* firstButton;
+@property (nonatomic, strong) UIButton* secondButton;
+
+@end
+
+@implementation VIASecondView
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.firstLabel, self.secondLabel, self.firstButton, self.secondButton];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+
+}
+
+#pragma mark - Lazy Getters
+
+- (UILabel*)firstLabel {
+  if (_firstLabel) {
+    return _firstLabel;
+  }
+  _firstLabel = [[UILabel alloc] init];
+  _firstLabel.text = NSLocalizedString(@"OPTION_1", nil);
+  _firstLabel.textColor = [UIColor view2TextColor];
+  _firstLabel.font = [UIFont standardFont];
+  _firstLabel.backgroundColor = [UIColor elementBackgroundColor];
+  return _firstLabel;
+}
+
+- (UILabel*)secondLabel {
+  if (_secondLabel) {
+    return _secondLabel;
+  }
+  _secondLabel = [[UILabel alloc] init];
+  _secondLabel.text = NSLocalizedString(@"OPTION_2", nil);
+  _secondLabel.textColor = [UIColor view2TextColor];
+  _secondLabel.font = [UIFont standardFont];
+  return _secondLabel;
+}
+
+- (UIButton*)firstButton {
+  if (_firstButton) {
+    return _firstButton;
+  }
+  _firstButton = [[UIButton alloc] init];
+  [_firstButton setTitle:NSLocalizedString(@"SELECT_OPTION_1", nil) forState:UIControlStateNormal];
+  [_firstButton setTitleColor:[UIColor view2TextColor] forState:UIControlStateNormal];
+  _firstButton.titleLabel.font = [UIFont buttonFont];
+  _firstButton.backgroundColor = [UIColor elementBackgroundColor];
+  return _firstButton;
+}
+
+- (UIButton*)secondButton {
+  if (_secondButton) {
+    return _secondButton;
+  }
+  _secondButton = [[UIButton alloc] init];
+  [_secondButton setTitle:NSLocalizedString(@"SELECT_OPTION_2", nil) forState:UIControlStateNormal];
+  [_secondButton setTitleColor:[UIColor view2TextColor] forState:UIControlStateNormal];
+  _secondButton.titleLabel.font = [UIFont buttonFont];
+  return _secondButton;
+}
+
+@end

@@ -1,0 +1,88 @@
+#import "VIAThirdView.h"
+#import "UIColor+VIAColors.h"
+#import "UIFont+VIAFonts.h"
+
+@interface VIAThirdView ()
+
+@property (nonatomic, strong) UITextField* firstField;
+@property (nonatomic, strong) UITextField* secondField;
+@property (nonatomic, strong) UIImageView* firstImage;
+@property (nonatomic, strong) UIImageView* secondImage;
+
+@end
+
+@implementation VIAThirdView
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.firstField, self.secondField, self.firstImage, self.secondImage];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+
+}
+
+#pragma mark - Lazy Getters
+
+- (UITextField*)firstField {
+  if (_firstField) {
+    return _firstField;
+  }
+  _firstField = [[UITextField alloc] init];
+  _firstField.textColor = [UIColor view3TextColor];
+  _firstField.font = [UIFont standardFont];
+  NSDictionary* placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor placeholderTextFieldColor], NSFontAttributeName : [UIFont placeholderFont]};
+  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"VIEW_3_PLACEHOLDER1", nil) attributes:placeholderAttributes];
+  _firstField.attributedPlaceholder = placeholder;
+  return _firstField;
+}
+
+- (UITextField*)secondField {
+  if (_secondField) {
+    return _secondField;
+  }
+  _secondField = [[UITextField alloc] init];
+  _secondField.textColor = [UIColor view3TextColor];
+  _secondField.font = [UIFont standardFont];
+  NSDictionary* placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor placeholderTextFieldColor], NSFontAttributeName : [UIFont placeholderFont]};
+  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"VIEW_3_PLACEHOLDER1", nil) attributes:placeholderAttributes];
+  _secondField.attributedPlaceholder = placeholder;
+  _secondField.backgroundColor = [UIColor elementBackgroundColor];
+  return _secondField;
+}
+
+- (UIImageView*)firstImage {
+  if (_firstImage) {
+    return _firstImage;
+  }
+  _firstImage = [[UIImageView alloc] init];
+  _firstImage.imageView = [UIImage imageNamed:@"Image31"];
+  return _firstImage;
+}
+
+- (UIImageView*)secondImage {
+  if (_secondImage) {
+    return _secondImage;
+  }
+  _secondImage = [[UIImageView alloc] init];
+  _secondImage.imageView = [UIImage imageNamed:@"Image32"];
+  return _secondImage;
+}
+
+@end

@@ -1,0 +1,10 @@
+@import UIKit;
+
+@interface VIAFirstView : UIView
+
+@property (nonatomic, strong, readonly) UILabel* view1Label;
+@property (nonatomic, strong, readonly) UITextField* view1Field;
+@property (nonatomic, strong, readonly) UIButton* view1Button;
+@property (nonatomic, strong, readonly) UIImageView* view1Image;
+
+@end

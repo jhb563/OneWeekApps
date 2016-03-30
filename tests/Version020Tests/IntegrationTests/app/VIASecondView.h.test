@@ -1,0 +1,10 @@
+@import UIKit
+
+@interface VIASecondView : UIView
+
+@property (nonatomic, strong, readonly) UILabel* firstLabel;
+@property (nonatomic, strong, readonly) UILabel* secondLabel;
+@property (nonatomic, strong, readonly) UIButton* firstButton;
+@property (nonatomic, strong, readonly) UIButton* secondButton;
+
+@end
