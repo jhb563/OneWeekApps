@@ -1,3 +1,11 @@
+//
+// VIAThirdView.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
 #import "VIAThirdView.h"
 #import "UIColor+VIAColors.h"
 #import "UIFont+VIAFonts.h"
@@ -35,7 +43,38 @@
 }
 
 - (void)setupConstraints {
-
+  NSLayoutAttribute* firstFieldHeight = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  [self addConstraint:firstFieldHeight];
+  NSLayoutAttribute* firstFieldWidth = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200];
+  [self addConstraint:firstFieldWidth];
+  NSLayoutAttribute* firstFieldCenterX = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+  [self addConstraint:firstFieldCenterX];
+  NSLayoutAttribute* firstFieldTop = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40];
+  [self addConstraint:firstFieldTop];
+  NSLayoutAttribute* secondFieldHeight = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  [self addConstraint:secondFieldHeight];
+  NSLayoutAttribute* secondFieldWidth = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200];
+  [self addConstraint:secondFieldWidth];
+  NSLayoutAttribute* secondFieldCenterX = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+  [self addConstraint:secondFieldCenterX];
+  NSLayoutAttribute* secondFieldTop = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.firstField attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20];
+  [self addConstraint:secondFieldTop];
+  NSLayoutAttribute* firstImageHeight = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  [self addConstraint:firstImageHeight];
+  NSLayoutAttribute* firstImageWidth = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  [self addConstraint:firstImageWidth];
+  NSLayoutAttribute* firstImageLeft = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20];
+  [self addConstraint:firstImageLeft];
+  NSLayoutAttribute* firstImageTop = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.secondField attribute:NSLayoutAttributeBottom multiplier:1.0 constant:40];
+  [self addConstraint:firstImageTop];
+  NSLayoutAttribute* secondImageHeight = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  [self addConstraint:secondImageHeight];
+  NSLayoutAttribute* secondImageWidth = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  [self addConstraint:secondImageWidth];
+  NSLayoutAttribute* secondImageLeft = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstImage attribute:NSLayoutAttributeRight multiplier:1.0 constant:40];
+  [self addConstraint:secondImageLeft];
+  NSLayoutAttribute* secondImageCenterY = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.firstImage attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+  [self addConstraint:secondImageCenterY];
 }
 
 #pragma mark - Lazy Getters
@@ -61,7 +100,7 @@
   _secondField.textColor = [UIColor view3TextColor];
   _secondField.font = [UIFont standardFont];
   NSDictionary* placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor placeholderTextFieldColor], NSFontAttributeName : [UIFont placeholderFont]};
-  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"VIEW_3_PLACEHOLDER1", nil) attributes:placeholderAttributes];
+  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"VIEW_3_PLACEHOLDER2", nil) attributes:placeholderAttributes];
   _secondField.attributedPlaceholder = placeholder;
   _secondField.backgroundColor = [UIColor elementBackgroundColor];
   return _secondField;
@@ -72,7 +111,7 @@
     return _firstImage;
   }
   _firstImage = [[UIImageView alloc] init];
-  _firstImage.imageView = [UIImage imageNamed:@"Image31"];
+  _firstImage.image = [UIImage imageNamed:@"Image31"];
   return _firstImage;
 }
 
@@ -81,7 +120,7 @@
     return _secondImage;
   }
   _secondImage = [[UIImageView alloc] init];
-  _secondImage.imageView = [UIImage imageNamed:@"Image32"];
+  _secondImage.image = [UIImage imageNamed:@"Image32"];
   return _secondImage;
 }
 

@@ -1,3 +1,11 @@
+//
+// VIAFirstView.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
 #import "VIAFirstView.h"
 #import "UIColor+VIAColors.h"
 #import "UIFont+VIAFonts.h"
@@ -111,7 +119,7 @@
     return _view1Image;
   }
   _view1Image = [[UIImageView alloc] init];
-  _view1Image.imageView = [UIImage imageNamed:@"firstImage"];
+  _view1Image.image = [UIImage imageNamed:@"firstImage"];
   return _view1Image;
 }
 

@@ -1,0 +1,39 @@
+View secondView
+  Elements
+    Label firstLabel
+      Text "OPTION_1"
+      TextColor view2TextColor
+      Font standardFont
+      Layout
+        Height 30
+        Width 100
+        AlignLeft 40
+        AlignTop 40
+    Label secondLabel
+      Text "OPTION_2"
+      TextColor view2TextColor
+      Font standardFont
+      Layout
+        Height 30
+        Width 100
+        AlignLeft firstLabel
+        Below firstLabel 20
+    Button firstButton
+      Text "SELECT_OPTION_1"
+      TextColor view2TextColor
+      Font buttonFont
+      BackgroundColor elementBackgroundColor
+      Layout
+        Height 50
+        Width 100
+        ToRightOf firstLabel 50
+        AlignCenterY firstLabel
+    Button secondButton
+      Text "SELECT_OPTION_2"
+      TextColor view2TextColor
+      Font buttonFont
+      Layout
+        Height 50
+        Width 100
+        ToRightOf secondLabel 50
+        AlignCenterY secondLabel

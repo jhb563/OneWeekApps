@@ -1,3 +1,11 @@
+//
+// VIASecondView.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
 #import "VIASecondView.h"
 #import "UIColor+VIAColors.h"
 #import "UIFont+VIAFonts.h"
@@ -35,7 +43,38 @@
 }
 
 - (void)setupConstraints {
-
+  NSLayoutAttribute* firstLabelHeight = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  [self addConstraint:firstLabelHeight];
+  NSLayoutAttribute* firstLabelWidth = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  [self addConstraint:firstLabelWidth];
+  NSLayoutAttribute* firstLabelLeft = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:40];
+  [self addConstraint:firstLabelLeft];
+  NSLayoutAttribute* firstLabelTop = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40];
+  [self addConstraint:firstLabelTop];
+  NSLayoutAttribute* secondLabelHeight = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  [self addConstraint:secondLabelHeight];
+  NSLayoutAttribute* secondLabelWidth = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  [self addConstraint:secondLabelWidth];
+  NSLayoutAttribute* secondLabelLeft = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
+  [self addConstraint:secondLabelLeft];
+  NSLayoutAttribute* secondLabelTop = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20];
+  [self addConstraint:secondLabelTop];
+  NSLayoutAttribute* firstButtonHeight = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50];
+  [self addConstraint:firstButtonHeight];
+  NSLayoutAttribute* firstButtonWidth = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  [self addConstraint:firstButtonWidth];
+  NSLayoutAttribute* firstButtonLeft = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:50];
+  [self addConstraint:firstButtonLeft];
+  NSLayoutAttribute* firstButtonCenterY = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+  [self addConstraint:firstButtonCenterY];
+  NSLayoutAttribute* secondButtonHeight = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50];
+  [self addConstraint:secondButtonHeight];
+  NSLayoutAttribute* secondButtonWidth = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  [self addConstraint:secondButtonWidth];
+  NSLayoutAttribute* secondButtonLeft = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.secondLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:50];
+  [self addConstraint:secondButtonLeft];
+  NSLayoutAttribute* secondButtonCenterY = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.secondLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+  [self addConstraint:secondButtonCenterY];
 }
 
 #pragma mark - Lazy Getters

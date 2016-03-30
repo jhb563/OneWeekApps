@@ -1,3 +1,11 @@
+//
+// VIAThirdView.h
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
 @import UIKit;
 
 @interface VIAThirdView : UIView

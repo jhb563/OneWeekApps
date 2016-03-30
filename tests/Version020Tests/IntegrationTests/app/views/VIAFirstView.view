@@ -1,0 +1,38 @@
+View firstView
+  Elements
+    Label view1label
+      Text "GREETING"
+      TextColor view1labelColor
+      Font standardFont
+      Layout
+        Height 50
+        Width 100
+        AlignLeft 40
+        AlignTop 40
+    TextField view1Field
+      TextColor view1TextFieldColor
+      Font standardFont
+      PlaceholderText "VIEW_1_PLACEHOLDER"
+      PlaceholderFont placeholderFont
+      PlaceholderTextColor placeholderTextFieldColor
+      Layout
+        Height 50
+        Width 200
+        AlignLeft view1Label
+        Below view1Label 20
+    Button view1Button
+      Text "NEXT"
+      TextColor view1ButtonColor
+      Font buttonFont
+      Layout
+        Height 50
+        Width 100
+        AlignLeft view1Label
+        Below view1Field 30
+    Image view1Image
+      ImageSrc "firstImage"
+      Layout
+        Height 80
+        Width 80
+        AlignLeft view1Label
+        Below view1Button 20
