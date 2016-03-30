@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                OneWeekApps
-version:             0.1.5
+version:             0.2.0
 synopsis:            Haskell platform for rapidly developing mobile apps
 -- description:         
 license:             MIT
@@ -114,4 +114,16 @@ test-suite Version015Tests
                  parsec,
                  containers,
                  OneWeekApps
+  default-language: Haskell2010
+
+test-suite Version020Tests
+  ghc-options: -Wall
+  default-extensions: OverloadedStrings
+  type: exitcode-stdio-1.0
+  main-is: OWAVersion020Tests.hs
+  hs-source-dirs: tests,
+                  tests/Version020Tests
+  build-depends: base,
+                 hspec     >= 1.8,
+                 directory >= 1.2.5
   default-language: Haskell2010
