@@ -13,7 +13,7 @@ import TestUtil
 import Test.Hspec
 
 runViewFileSearchTests :: FilePath -> IO ()
-runViewFileSearchTests currentDirectory = hspec $ do
+runViewFileSearchTests currentDirectory = hspec $
   beforeAll_ (setupTestEnv currentDirectory)
   . afterAll_ (tearDownTestEnv currentDirectory) $ do
     findViewsBasicTest currentDirectory
