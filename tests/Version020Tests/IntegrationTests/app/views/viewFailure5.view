@@ -1,0 +1,6 @@
+View myView
+  Elements
+    Label aLabel
+      TextColor aColor
+      Font aFont
+

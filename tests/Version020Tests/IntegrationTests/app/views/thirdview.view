@@ -1,21 +1,21 @@
 View thirdView
   Type VIAThirdView
   Elements
-    TextField firstField
-      TextColor view3TextColor
+    TextField    firstField
+      TextColor    view3TextColor
       Font standardFont
-      PlaceholderText "VIEW_3_PLACEHOLDER1"
+      PlaceholderText  "VIEW_3_PLACEHOLDER1"
       PlaceholderTextColor placeholderTextFieldColor
-      PlaceholderFont placeholderFont
+      PlaceholderFont  placeholderFont
       Layout
-        Height 30
-        Width 200
-        AlignCenterX
-        AlignTop 40
+        Height  30
+        Width    200
+        AlignCenterX   
+        AlignTop    40
     TextField secondField
       TextColor view3TextColor
       Font standardFont
-      PlaceholderText "VIEW_3_PLACEHOLDER2"
+      PlaceholderText 		"VIEW_3_PLACEHOLDER2"
       PlaceholderTextColor placeholderTextFieldColor
       PlaceholderFont placeholderFont
       BackgroundColor elementBackgroundColor
@@ -23,7 +23,7 @@ View thirdView
         Height 30
         Width 200
         AlignCenterX
-        Below firstField 20
+        Below    firstField		20
     Image firstImage
       ImageSrc "Image31"
       Layout

@@ -1,0 +1,41 @@
+//
+// UIColor+VIAColors.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIColor+VIAColors.h"
+
+@implementation UIColor (VIAColors)
+
++ (UIColor*)view1LabelColor {
+  return [UIColor colorWithRed:0.251 green:0.251 blue:0.251 alpha:1.0];
+}
+
++ (UIColor*)view1TextFieldColor {
+  return [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+}
+
++ (UIColor*)placeholderTextFieldColor {
+  return [UIColor colorWithRed:0.561 green:0.561 blue:0.561 alpha:1.0];
+}
+
++ (UIColor*)view1ButtonColor {
+  return [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+}
+
++ (UIColor*)view2TextColor {
+  return [UIColor colorWithRed:0.0 green:0.502 blue:1.0 alpha:1.0];
+}
+
++ (UIColor*)view3TextColor {
+  return [UIColor colorWithRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+}
+
++ (UIColor*)elementBackgroundColor {
+  return [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.5];
+}
+
+@end
