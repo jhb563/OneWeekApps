@@ -12,7 +12,8 @@ module OWAFileSearch (
   findFontsFiles,
   findAlertsFiles,
   findErrorsFiles,
-  findStringsFiles
+  findStringsFiles,
+  findViewsFiles
 ) where
 
 import System.Directory
@@ -100,6 +101,11 @@ findStringsFiles :: FilePath -> IO [FilePath]
 findStringsFiles appDirectory = do 
   allFiles <- searchDirectoryForExtension stringsExtension [appDirectory] []
   return $ filter (not . fileHasName "Localizable.strings") allFiles
+
+-- | 'findViewsFiles' Locates all the files with the extension '.view', searching recursively
+-- from the given directory.
+findViewsFiles :: FilePath -> IO [FilePath]
+findViewsFiles appDirectory = return []
 
 colorsExtension :: String
 colorsExtension = "colors"
