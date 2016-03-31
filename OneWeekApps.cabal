@@ -126,5 +126,9 @@ test-suite Version020Tests
                   tests/Version020Tests/FileSearchTests
   build-depends: base,
                  hspec     >= 1.8,
-                 directory >= 1.2.5
+                 directory >= 1.2.5,
+                 process,
+                 parsec,
+                 containers,
+                 OneWeekApps
   default-language: Haskell2010

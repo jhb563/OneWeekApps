@@ -13,9 +13,9 @@ import TestUtil
 import Test.Hspec
 
 runViewFileSearchTests :: FilePath -> IO ()
-runViewFileSearchTests currentDirectory = do
+runViewFileSearchTests currentDirectory = hspec $ do
   beforeAll_ (setupTestEnv currentDirectory)
-  . afterAll_ (teardownTestEnv currentDirectory) $ do
+  . afterAll_ (tearDownTestEnv currentDirectory) $ do
     findViewsBasicTest currentDirectory
     findViewsMultiLevelTest currentDirectory
     findViewsMultiFileTest currentDirectory
@@ -82,9 +82,9 @@ multiLevelResults = map (multiLevelExtension ++)
 
 multiFileResults :: [FilePath]
 multiFileResults = map (multiFileExtension ++)
-  ["/viewFolder/view1.view",
-  "/viewFolder/view2.view",
-  "/viewFolder/view3.view"]
+  ["/viewsFolder/view1.view",
+  "/viewsFolder/view2.view",
+  "/viewsFolder/view3.view"]
 
 testEnvExtension :: FilePath
 testEnvExtension = "/testenv"
