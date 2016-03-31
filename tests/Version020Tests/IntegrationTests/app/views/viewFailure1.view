@@ -1,0 +1,10 @@
+View thisView
+  WhatAttribute isThis
+  Type VIAFourthView
+  Elements
+    Label aLabel
+      Text "Hi"
+      Layout
+        AlignTop 20
+        AlignLeft 20
+

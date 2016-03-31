@@ -1,0 +1,21 @@
+//
+// UIColor+VIAColors.h
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIColor (VIAColors)
+
++ (UIColor*)view1LabelColor;
++ (UIColor*)view1TextFieldColor;
++ (UIColor*)placeholderTextFieldColor;
++ (UIColor*)view1ButtonColor;
++ (UIColor*)view2TextColor;
++ (UIColor*)view3TextColor;
++ (UIColor*)elementBackgroundColor;
+
+@end

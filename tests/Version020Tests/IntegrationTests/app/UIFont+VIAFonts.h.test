@@ -1,0 +1,17 @@
+//
+// UIFont+VIAFonts.h
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface UIFont (VIAFonts)
+
++ (UIFont*)standardFont;
++ (UIFont*)buttonFont;
++ (UIFont*)placeholderFont;
+
+@end
