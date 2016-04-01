@@ -6,6 +6,7 @@ module ViewNameTests (
   runViewNameTests
 ) where
 
+import OWAViewParser
 import TestUtil
 import TestViews
 import Test.Hspec
@@ -21,35 +22,35 @@ runViewNameTests currentDirectory = hspec $ do
 
 simpleNameTest :: FilePath -> Spec
 simpleNameTest parseDirectory = do
-  let testFile = parseDirectory + simpleNameExtension
+  let testFile = parseDirectory ++ simpleNameExtension
   describe "Parse view with only a name" $ do
     it "Should return a matching view, inferring the type from the filename" $
       parseViewFromFile testFile `shouldReturnRights` nameTest1
 
 nameAndTypeTest1 :: FilePath -> Spec
 nameAndTypeTest1 parseDirectory = do
-  let testFile = parseDirectory + nameAndTypeExtension1
+  let testFile = parseDirectory ++ nameAndTypeExtension1
   describe "Parse view with a name and a type" $ do
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest2
 
 nameAndTypeTest2 :: FilePath -> Spec
 nameAndTypeTest2 parseDirectory = do
-  let testFile = parseDirectory + nameAndTypeExtension2
+  let testFile = parseDirectory ++ nameAndTypeExtension2
   describe "Parse view with a name and a type" $ do
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest3
 
 spacedTest :: FilePath -> Spec
 spacedTest parseDirectory = do
-  let testFile = parseDirectory + spacedExtension
+  let testFile = parseDirectory ++ spacedExtension
   describe "Parse view where attributes are spaced out more" $ do
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest4
 
 commentedTest :: FilePath -> Spec
 commentedTest parseDirectory = do
-  let testFile = parseDirectory + commentedExtension
+  let testFile = parseDirectory ++ commentedExtension
   describe "Parse view with comments in the file" $ do
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest5

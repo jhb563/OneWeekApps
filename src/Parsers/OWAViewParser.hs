@@ -19,7 +19,7 @@ import OWAView
 
 -- | 'parseViewFromFile' takes a file, reads its contents,
 -- and returns a view parsed from the file, or a list of errors encountered.
-parseViewFromFile :: FilePath -> IO (Either [OWAParseError] [OWAView])
+parseViewFromFile :: FilePath -> IO (Either [OWAParseError] OWAView)
 parseViewFromFile fPath = return $ Right OWAView {
   viewName = "",
   viewType = "",

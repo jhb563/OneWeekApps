@@ -1,4 +1,4 @@
-module OWAElement where
+module OWAElements where
 
 data OWALabel = OWALabel {
   labelName :: String,

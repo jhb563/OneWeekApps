@@ -49,7 +49,8 @@ library
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,
-                       ObjcUtil
+                       ObjcUtil,
+                       OWAElements
   hs-source-dirs:      src,
                        src/Parsers,
                        src/ObjcConverters,
@@ -125,7 +126,8 @@ test-suite Version020Tests
   main-is: OWAVersion020Tests.hs
   hs-source-dirs: tests,
                   tests/Version020Tests,
-                  tests/Version020Tests/FileSearchTests
+                  tests/Version020Tests/FileSearchTests,
+                  tests/Version020Tests/ViewTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
