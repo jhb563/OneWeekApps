@@ -23,35 +23,35 @@ runViewNameTests currentDirectory = hspec $ do
 simpleNameTest :: FilePath -> Spec
 simpleNameTest parseDirectory = do
   let testFile = parseDirectory ++ simpleNameExtension
-  describe "Parse view with only a name" $ do
+  describe "Parse view with only a name" $
     it "Should return a matching view, inferring the type from the filename" $
       parseViewFromFile testFile `shouldReturnRights` nameTest1
 
 nameAndTypeTest1 :: FilePath -> Spec
 nameAndTypeTest1 parseDirectory = do
   let testFile = parseDirectory ++ nameAndTypeExtension1
-  describe "Parse view with a name and a type" $ do
+  describe "Parse view with a name and a type" $
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest2
 
 nameAndTypeTest2 :: FilePath -> Spec
 nameAndTypeTest2 parseDirectory = do
   let testFile = parseDirectory ++ nameAndTypeExtension2
-  describe "Parse view with a name and a type" $ do
+  describe "Parse view with a name and a type" $
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest3
 
 spacedTest :: FilePath -> Spec
 spacedTest parseDirectory = do
   let testFile = parseDirectory ++ spacedExtension
-  describe "Parse view where attributes are spaced out more" $ do
+  describe "Parse view where attributes are spaced out more" $
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest4
 
 commentedTest :: FilePath -> Spec
 commentedTest parseDirectory = do
   let testFile = parseDirectory ++ commentedExtension
-  describe "Parse view with comments in the file" $ do
+  describe "Parse view with comments in the file" $
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` nameTest5
 

@@ -46,11 +46,11 @@ library
                        OWAParseError,
                        OWAView,
                        OWAViewParser,
+                       OWAElements,
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,
-                       ObjcUtil,
-                       OWAElements
+                       ObjcUtil
   hs-source-dirs:      src,
                        src/Parsers,
                        src/ObjcConverters,
