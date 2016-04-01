@@ -44,6 +44,9 @@ library
                        OWAStringsParser,
                        OWAStringsObjc,
                        OWAParseError,
+                       OWAView,
+                       OWAViewParser,
+                       OWAElements,
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,
@@ -123,7 +126,8 @@ test-suite Version020Tests
   main-is: OWAVersion020Tests.hs
   hs-source-dirs: tests,
                   tests/Version020Tests,
-                  tests/Version020Tests/FileSearchTests
+                  tests/Version020Tests/FileSearchTests,
+                  tests/Version020Tests/ViewTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
