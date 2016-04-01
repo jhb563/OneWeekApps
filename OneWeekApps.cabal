@@ -44,6 +44,8 @@ library
                        OWAStringsParser,
                        OWAStringsObjc,
                        OWAParseError,
+                       OWAView,
+                       OWAViewParser,
                        OWAObjcAbSyn,
                        OWAObjcPrint
   other-modules:       ParseUtil,
