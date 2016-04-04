@@ -1,0 +1,11 @@
+View finalView
+  Elements
+    Label lab
+      Text "HERE_IS_YOUR_NAME"
+      TextColor labelTextColor
+      Font standardFont
+      BackgroundColor elementBackgroundColor
+    TextField txt
+      Font standardFont
+      TextColor blueColor
+      BackgroundColor redColor

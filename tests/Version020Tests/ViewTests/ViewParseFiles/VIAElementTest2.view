@@ -1,0 +1,32 @@
+View containerView
+  Elements
+    Label firstLabel
+      Text "FIRST"
+      TextColor view1LabelColor
+    TextField firstTextfield
+      PlaceholderTextColor view1TextFieldColor
+      PlaceholderFont placeholderFont
+      PlaceholderText "ENTER_NAME"
+    Label secondLabel
+      Text "SECOND"
+      Font placeholderFont
+      BackgroundColor elementBackgroundColor
+    Button nextButton
+      Text "NEXT"
+      Font standardFont
+      TextColor view2Color
+    Button prevButton
+      Text "PREV"
+      Font placeholderFont
+      TextColor view2Color
+      BackgroundColor elementBackgroundColor
+    Image firstImage
+      ImageSrc "file1.png"
+    TextField secondTextfield
+      Font standardFont
+      TextColor view2Color
+      PlaceholderTextColor placeholderColor 
+      PlaceholderFont placeholderFont
+      PlaceholderText "ENTER_LOCATION"
+    Image secondImage
+      ImageSrc "file2.png" 
