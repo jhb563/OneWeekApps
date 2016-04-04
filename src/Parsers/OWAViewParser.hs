@@ -10,6 +10,7 @@ module OWAViewParser (
   parseViewFromFile
 ) where
 
+import Data.Either
 import OWAElements
 import OWAParseError
 import OWAView
@@ -22,7 +23,8 @@ import Text.ParserCombinators.Parsec
 
 type ViewAttr = String
 data ViewVal = TypeVal String |
-  ElementsVal [Either OWAParseError OWAViewElement]
+  ElementsVal [OWAViewElement] |
+  ElementsErrs [OWAParseError]
 type ViewAttrMap = Map.Map ViewAttr ViewVal
 
 -------------------------------------------------------------------------------
@@ -38,10 +40,9 @@ parseViewFromFile fPath = do
   let errorOrView = parseViewContents sourceName contents
   case errorOrView of
     Left parseError -> return (Left [ParsecError parseError])
-    Right (Left objectError) -> return (Left [objectError])
-    Right (Right view) -> return (Right view)
+    Right errsOrView -> return errsOrView
 
-parseViewContents :: String -> String -> Either ParseError (Either OWAParseError OWAView)
+parseViewContents :: String -> String -> Either ParseError (Either [OWAParseError] OWAView)
 parseViewContents sourceName = Text.Parsec.runParser
   (do
     commentOrSpacesParser
@@ -59,7 +60,7 @@ parseViewContents sourceName = Text.Parsec.runParser
 -----------------------------------PARSERS-------------------------------------
 -------------------------------------------------------------------------------
 
-viewParser :: String -> GenParser Char GenericParserState (Either OWAParseError OWAView)
+viewParser :: String -> GenParser Char GenericParserState (Either [OWAParseError] OWAView)
 viewParser fileName = do
   name <- nameParserWithKeyword viewKeyword
   modifyState setShouldUpdateIndentLevel
@@ -67,7 +68,9 @@ viewParser fileName = do
   attrs <- attributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   modifyState reduceIndentationLevel
-  return $ Right (viewFromNameFileAndAttrMap name fileName attrMap)
+  case Map.lookup elementErrorsKeyword attrMap of
+    Nothing -> return $ Right (viewFromNameFileAndAttrMap name fileName attrMap)
+    Just (ElementsErrs es) -> return $ Left es
 
 attributeParser :: GenParser Char GenericParserState (ViewAttr, ViewVal)
 attributeParser = indentParser $ choice allAttrParsers
@@ -87,7 +90,10 @@ elementsParser = do
   many $ Text.Parsec.try indentedComment
   elements <- elementParser `sepEndBy` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
-  return (elementsKeyword, ElementsVal elements)
+  let (errors, elems) = partitionEithers elements
+  if null errors
+    then return (elementsKeyword, ElementsVal elems)
+    else return (elementErrorsKeyword, ElementsErrs errors)
 
 elementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
 elementParser = indentParser $ choice allElementParsers
@@ -254,12 +260,15 @@ viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
 viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
   viewName = name,
   viewType = vType,
-  subviews = [],
+  subviews = elems,
   constraints = []
 }
   where vType = case Map.lookup typeKeyword attrMap of
           Nothing -> fileName
           Just (TypeVal t) -> t
+        elems = case Map.lookup elementsKeyword attrMap of
+          Nothing -> []
+          Just (ElementsVal viewElems) -> viewElems
 
 -------------------------------------------------------------------------------
 -----------------------------------VIEW KEYWORDS-------------------------------
@@ -273,6 +282,9 @@ typeKeyword = "Type"
 
 elementsKeyword :: String
 elementsKeyword = "Elements"
+
+elementErrorsKeyword :: String
+elementErrorsKeyword = "ElementErrors"
 
 labelKeyword :: String
 labelKeyword = "Label"
