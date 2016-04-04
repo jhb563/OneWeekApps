@@ -1,6 +1,7 @@
 module TestViews where
 
 import OWAView
+import OWAElements
 
 nameTest1 :: OWAView
 nameTest1 = OWAView {
@@ -78,11 +79,11 @@ viewImage = OWAImageView {
   sourceName = "profileImage.png"
 }
 
-elementTest1 :: OWAView {
+elementTest1 :: OWAView
 elementTest1 = OWAView {
   viewName = "myView",
   viewType = "VIAElementTest1",
-  subviews = [TextFieldElement viewField,
+  subviews = [TextFieldElement viewTextField,
     ButtonElement viewButton,
     ImageElement viewImage,
     LabelElement viewLabel],
@@ -161,7 +162,7 @@ secondImage = OWAImageView {
   sourceName = "file2.png"
 }
 
-elementTest2 :: OWAView {
+elementTest2 :: OWAView
 elementTest2 = OWAView {
   viewName = "containerView",
   viewType = "VIAElementTest2",
@@ -197,7 +198,7 @@ txt = OWATextField {
   textFieldBackgroundColorName = Just "redColor"
 }
 
-elementTest3 :: OWAView {
+elementTest3 :: OWAView
 elementTest3 = OWAView {
   viewName = "finalView",
   viewType = "VIAElementTest3",

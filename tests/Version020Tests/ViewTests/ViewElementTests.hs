@@ -15,26 +15,26 @@ import Test.Hspec
 runViewElementTests :: FilePath -> IO ()
 runViewElementTests currentDirectory = hspec $ do
   let parseDirectory = currentDirectory ++ parseDirectoryExtension
-  elementTest1 parseDirectory
-  elementTest2 parseDirectory
-  elementTest3 parseDirectory
+  viewElementTest1 parseDirectory
+  viewElementTest2 parseDirectory
+  viewElementTest3 parseDirectory
 
-elementTest1 :: Spec
-elementTest1 parseDirectory = do
+viewElementTest1 :: String -> Spec
+viewElementTest1 parseDirectory = do
   let testFile = parseDirectory ++ testExtension1
   describe "Parse elements of a view when there is one of each type of element" $
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` elementTest1
 
-elementTest2 :: Spec
-elementTest2 parseDirectory = do
+viewElementTest2 :: String -> Spec
+viewElementTest2 parseDirectory = do
   let testFile = parseDirectory ++ testExtension2
   describe "Parse elements of a view when there are two of each type of element" $
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` elementTest2
 
-elementTest3 :: Spec
-elementTest3 parseDirectory = do
+viewElementTest3 :: String -> Spec
+viewElementTest3 parseDirectory = do
   let testFile = parseDirectory ++ testExtension3
   describe "Parse elements of a view with some more attribute combinations" $
     it "Should return a matching view" $
