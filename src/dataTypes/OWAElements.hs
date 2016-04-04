@@ -14,8 +14,8 @@ module OWAElements where
 data OWALabel = OWALabel {
   labelName :: String,
   labelText :: String,
-  textColorName :: Maybe String,
-  fontName :: Maybe String,
+  labelTextColorName :: Maybe String,
+  labelFontName :: Maybe String,
   labelBackgroundColorName :: Maybe String
 } deriving (Show, Eq)
 
@@ -40,7 +40,7 @@ data OWATextField = OWATextField {
 data OWAButton = OWAButton {
   buttonName :: String,
   buttonText :: String,
-  buttonTextColor :: Maybe String,
+  buttonTextColorName :: Maybe String,
   buttonFontName :: Maybe String,
   buttonBackgroundColorName :: Maybe String
 } deriving (Show, Eq) 
@@ -49,5 +49,5 @@ data OWAButton = OWAButton {
 -- and a sourcefile name.
 data OWAImageView = OWAImageView {
   imageViewName :: String,
-  sourceName :: String
+  imageSourceName :: String
 } deriving (Show, Eq)
