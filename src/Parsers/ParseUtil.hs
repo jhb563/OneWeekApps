@@ -9,6 +9,7 @@ Maintainer  : jhbowen047@gmail.com
 module ParseUtil (
   ParserState(..),
   GenericParserState(..),
+  loneStringKeywordParser,
   nameParserWithKeyword,
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
@@ -66,6 +67,13 @@ instance ParserState GenericParserState where
 -------------------------------------------------------------------------------
 -------------------PARSING STRING ATTRIBUTES-----------------------------------
 -------------------------------------------------------------------------------
+
+-- | Takes a string for a keyword, and returns a parser which parses that string
+-- followed by a possible comment and newline.
+loneStringKeywordParser :: String -> GenParser Char st ()
+loneStringKeywordParser keyword = do
+  string keyword
+  singleTrailingComment
 
 -- | Takes a string for a keyword, and returns a parser which parses that
 -- keyword, a space, and then an alphanumeric name beginning with a

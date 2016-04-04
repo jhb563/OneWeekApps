@@ -10,6 +10,7 @@ module OWAViewParser (
   parseViewFromFile
 ) where
 
+import OWAElements
 import OWAParseError
 import OWAView
 import ParseUtil
@@ -20,7 +21,8 @@ import Text.Parsec.Error
 import Text.ParserCombinators.Parsec
 
 type ViewAttr = String
-data ViewVal = TypeVal String
+data ViewVal = TypeVal String |
+  ElementsVal [Either OWAParseError OWAViewElement]
 type ViewAttrMap = Map.Map ViewAttr ViewVal
 
 -------------------------------------------------------------------------------
@@ -71,16 +73,182 @@ attributeParser :: GenParser Char GenericParserState (ViewAttr, ViewVal)
 attributeParser = indentParser $ choice allAttrParsers
 
 allAttrParsers :: [GenParser Char GenericParserState (ViewAttr, ViewVal)]
-allAttrParsers = [typeParser]
+allAttrParsers = [typeParser, elementsParser]
 
 typeParser :: GenParser Char GenericParserState (ViewAttr, ViewVal)
 typeParser = do
   (_, typeName) <- variableNameParserWithKeyword typeKeyword 
   return (typeKeyword, TypeVal typeName)
 
+elementsParser :: GenParser Char GenericParserState (ViewAttr, ViewVal)
+elementsParser = do
+  loneStringKeywordParser elementsKeyword 
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  elements <- elementParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
+  return (elementsKeyword, ElementsVal elements)
+
+elementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+elementParser = indentParser $ choice allElementParsers
+
+allElementParsers :: [GenParser Char GenericParserState (Either OWAParseError OWAViewElement)]
+allElementParsers = [labelElementParser, buttonElementParser, 
+  textFieldElementParser, imageViewParser]
+
+labelElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+labelElementParser = do
+  name <- nameParserWithKeyword labelKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  labelAttrs <- Text.Parsec.try labelAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let attrMap = Map.fromList labelAttrs
+  let maybeLabel = labelFromNameAndAttrs name attrMap
+  modifyState reduceIndentationLevel
+  case maybeLabel of
+    Just label -> return $ Right (LabelElement label)
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      -- Text is the only required keyword for Labels
+      missingRequiredAttributes = [textKeyword]
+    }
+
+labelAttributeParser :: GenParser Char GenericParserState (String, String)
+labelAttributeParser = indentParser $ choice allLabelAttributeParsers
+
+allLabelAttributeParsers :: [GenParser Char GenericParserState (String, String)]
+allLabelAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser, backgroundColorParser]
+
+buttonElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+buttonElementParser = do
+  name <- nameParserWithKeyword buttonKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  buttonAttrs <- Text.Parsec.try buttonAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let attrMap = Map.fromList buttonAttrs
+  let maybeButton = buttonFromNameAndAttrs name attrMap
+  modifyState reduceIndentationLevel
+  case maybeButton of
+    Just button -> return $ Right (ButtonElement button)
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      -- Text is the only required keyword for buttons 
+      missingRequiredAttributes = [textKeyword]
+    }
+
+buttonAttributeParser :: GenParser Char GenericParserState (String, String)
+buttonAttributeParser = indentParser $ choice allButtonAttributeParsers
+
+allButtonAttributeParsers :: [GenParser Char GenericParserState (String, String)]
+allButtonAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser, backgroundColorParser]
+
+textFieldElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+textFieldElementParser = do
+  name <- nameParserWithKeyword textFieldKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  textfieldAttrs <- Text.Parsec.try textfieldAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let attrMap = Map.fromList textfieldAttrs
+  let textfield = textFieldFromNameAndAttrs name attrMap
+  modifyState reduceIndentationLevel
+  return $ Right (TextFieldElement textfield)
+
+textfieldAttributeParser :: GenParser Char GenericParserState (String, String)
+textfieldAttributeParser = indentParser $ choice allTextfieldAttributeParsers
+
+allTextfieldAttributeParsers :: [GenParser Char GenericParserState (String, String)]
+allTextfieldAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser,
+  placeholderTextParser, placeholderTextColorParser, placeholderFontParser,
+  backgroundColorParser]
+
+imageViewParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+imageViewParser = do
+  name <- nameParserWithKeyword imageViewKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  (_, src) <- indentParser $ localizedKeyParserWithKeyword imageSourceKeyword 
+  many $ Text.Parsec.try indentedComment
+  modifyState reduceIndentationLevel
+  return $ Right $ ImageElement OWAImageView {
+    imageViewName = name,
+    imageSourceName = src
+  }
+
+textParser :: GenParser Char GenericParserState (String, String)
+textParser = localizedKeyParserWithKeyword textKeyword
+
+textColorParser :: GenParser Char GenericParserState (String, String)
+textColorParser = do 
+  name <- nameParserWithKeyword textColorKeyword
+  return (textColorKeyword, name)
+
+fontParser :: GenParser Char GenericParserState (String, String)
+fontParser = do 
+  name <- nameParserWithKeyword fontKeyword
+  return (fontKeyword, name)
+
+placeholderTextParser :: GenParser Char GenericParserState (String, String)
+placeholderTextParser = localizedKeyParserWithKeyword placeholderTextKeyword
+
+placeholderTextColorParser :: GenParser Char GenericParserState (String, String)
+placeholderTextColorParser = do 
+  name <- nameParserWithKeyword placeholderTextColorKeyword
+  return (placeholderTextColorKeyword, name)
+
+placeholderFontParser :: GenParser Char GenericParserState (String, String)
+placeholderFontParser = do 
+  name <- nameParserWithKeyword placeholderFontKeyword
+  return (placeholderFontKeyword, name)
+
+backgroundColorParser :: GenParser Char GenericParserState (String, String)
+backgroundColorParser = do 
+  name <- nameParserWithKeyword backgroundColorKeyword
+  return (backgroundColorKeyword, name)
+
+imageSourceParser :: GenParser Char GenericParserState (String, String)
+imageSourceParser = do 
+  name <- nameParserWithKeyword imageSourceKeyword
+  return (imageSourceKeyword, name)
+
 -------------------------------------------------------------------------------
 -----------------------------------CONSTRUCTING VIEWS--------------------------
 -------------------------------------------------------------------------------
+
+labelFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWALabel
+labelFromNameAndAttrs name attrMap = do
+  text <- Map.lookup textKeyword attrMap
+  return OWALabel {
+    labelName = name,
+    labelText = text,
+    labelTextColorName = Map.lookup textColorKeyword attrMap,
+    labelFontName = Map.lookup fontKeyword attrMap,
+    labelBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
+  }
+
+textFieldFromNameAndAttrs :: String -> Map.Map String String -> OWATextField
+textFieldFromNameAndAttrs name attrMap = OWATextField {
+  textFieldName = name,
+  textFieldText = Map.lookup textKeyword attrMap,
+  textFieldColorName = Map.lookup textColorKeyword attrMap,
+  textFieldFontName = Map.lookup fontKeyword attrMap,
+  textFieldPlaceholderText = Map.lookup placeholderTextKeyword attrMap,
+  textFieldPlaceholderTextColorName = Map.lookup placeholderTextColorKeyword attrMap,
+  textFieldPlaceholderFontName = Map.lookup placeholderFontKeyword attrMap,
+  textFieldBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
+}
+
+buttonFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAButton
+buttonFromNameAndAttrs name attrMap = do
+  text <- Map.lookup textKeyword attrMap
+  return OWAButton {
+    buttonName = name,
+    buttonText = text,
+    buttonTextColorName = Map.lookup textColorKeyword attrMap,
+    buttonFontName = Map.lookup fontKeyword attrMap,
+    buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
+  }
 
 viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
 viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
@@ -102,3 +270,42 @@ viewKeyword = "View"
 
 typeKeyword :: String
 typeKeyword = "Type"
+
+elementsKeyword :: String
+elementsKeyword = "Elements"
+
+labelKeyword :: String
+labelKeyword = "Label"
+
+buttonKeyword :: String
+buttonKeyword = "Button"
+
+textFieldKeyword :: String
+textFieldKeyword = "TextField"
+
+imageViewKeyword :: String
+imageViewKeyword = "Image"
+
+textKeyword :: String
+textKeyword = "Text"
+
+textColorKeyword :: String
+textColorKeyword = "TextColor"
+
+fontKeyword :: String
+fontKeyword = "Font"
+
+placeholderTextKeyword :: String
+placeholderTextKeyword = "PlaceholderText"
+
+placeholderTextColorKeyword :: String
+placeholderTextColorKeyword = "PlaceholderTextColor"
+
+placeholderFontKeyword :: String
+placeholderFontKeyword = "PlaceholderFont"
+
+backgroundColorKeyword :: String
+backgroundColorKeyword = "BackgroundColor"
+
+imageSourceKeyword :: String
+imageSourceKeyword = "ImageSrc"

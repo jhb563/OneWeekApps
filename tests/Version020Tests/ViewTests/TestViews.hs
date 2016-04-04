@@ -47,8 +47,8 @@ viewLabel :: OWALabel
 viewLabel = OWALabel {
   labelName = "viewLabel",
   labelText = "TITLE",
-  textColorName = Nothing,
-  fontName = Nothing,
+  labelTextColorName = Nothing,
+  labelFontName = Nothing,
   labelBackgroundColorName = Nothing
 }
 
@@ -68,7 +68,7 @@ viewButton :: OWAButton
 viewButton = OWAButton {
   buttonName = "viewButton",
   buttonText = "CLICK_ME",
-  buttonTextColor = Nothing,
+  buttonTextColorName = Nothing,
   buttonFontName = Nothing,
   buttonBackgroundColorName = Nothing
 }
@@ -76,7 +76,7 @@ viewButton = OWAButton {
 viewImage :: OWAImageView
 viewImage = OWAImageView {
   imageViewName = "viewImage",
-  sourceName = "profileImage.png"
+  imageSourceName = "profileImage.png"
 }
 
 elementTest1 :: OWAView
@@ -94,8 +94,8 @@ firstLabel :: OWALabel
 firstLabel = OWALabel {
   labelName = "firstLabel",
   labelText = "FIRST",
-  textColorName = Just "view1LabelColor",
-  fontName = Nothing,
+  labelTextColorName = Just "view1LabelColor",
+  labelFontName = Nothing,
   labelBackgroundColorName = Nothing
 }
 
@@ -103,8 +103,8 @@ secondLabel :: OWALabel
 secondLabel = OWALabel {
   labelName = "secondLabel",
   labelText = "SECOND",
-  textColorName = Nothing,
-  fontName = Just "placeholderFont",
+  labelTextColorName = Nothing,
+  labelFontName = Just "placeholderFont",
   labelBackgroundColorName = Just "elementBackgroundColor"
 }
 
@@ -136,7 +136,7 @@ nextButton :: OWAButton
 nextButton = OWAButton {
   buttonName = "nextButton",
   buttonText = "NEXT",
-  buttonTextColor = Just "view2Color",
+  buttonTextColorName = Just "view2Color",
   buttonFontName = Just "standardFont",
   buttonBackgroundColorName = Nothing
 }
@@ -145,7 +145,7 @@ prevButton :: OWAButton
 prevButton = OWAButton {
   buttonName = "prevButton",
   buttonText = "PREV",
-  buttonTextColor = Just "view2Color",
+  buttonTextColorName = Just "view2Color",
   buttonFontName = Just "placeholderFont",
   buttonBackgroundColorName = Just "elementBackgroundColor"
 }
@@ -153,13 +153,13 @@ prevButton = OWAButton {
 firstImage :: OWAImageView
 firstImage = OWAImageView {
   imageViewName = "firstImage",
-  sourceName = "file1.png"
+  imageSourceName = "file1.png"
 }
 
 secondImage :: OWAImageView
 secondImage = OWAImageView {
   imageViewName = "secondImage",
-  sourceName = "file2.png"
+  imageSourceName = "file2.png"
 }
 
 elementTest2 :: OWAView
@@ -181,8 +181,8 @@ lab :: OWALabel
 lab = OWALabel {
   labelName = "lab",
   labelText = "HERE_IS_YOUR_NAME",
-  textColorName = Just "labelTextColor",
-  fontName = Just "standardFont",
+  labelTextColorName = Just "labelTextColor",
+  labelFontName = Just "standardFont",
   labelBackgroundColorName = Just "elementBackgroundColor"
 }
 
