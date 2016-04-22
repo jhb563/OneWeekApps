@@ -206,3 +206,6 @@ elementTest3 = OWAView {
     TextFieldElement txt],
   constraints = []
 }
+
+emptyLayoutTestView :: OWAView
+emptyLayoutTestView = elementTest1

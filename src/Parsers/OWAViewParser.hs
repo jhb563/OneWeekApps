@@ -124,7 +124,12 @@ labelAttributeParser :: GenParser Char GenericParserState (String, String)
 labelAttributeParser = indentParser $ choice allLabelAttributeParsers
 
 allLabelAttributeParsers :: [GenParser Char GenericParserState (String, String)]
-allLabelAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser, backgroundColorParser]
+allLabelAttributeParsers = map Text.Parsec.try 
+  [textParser, 
+  textColorParser, 
+  fontParser, 
+  backgroundColorParser,
+  constraintsParser]
 
 buttonElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
 buttonElementParser = do
@@ -148,7 +153,12 @@ buttonAttributeParser :: GenParser Char GenericParserState (String, String)
 buttonAttributeParser = indentParser $ choice allButtonAttributeParsers
 
 allButtonAttributeParsers :: [GenParser Char GenericParserState (String, String)]
-allButtonAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser, backgroundColorParser]
+allButtonAttributeParsers = map Text.Parsec.try 
+  [textParser, 
+  textColorParser, 
+  fontParser, 
+  backgroundColorParser,
+  constraintsParser]
 
 textFieldElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
 textFieldElementParser = do
@@ -165,22 +175,42 @@ textfieldAttributeParser :: GenParser Char GenericParserState (String, String)
 textfieldAttributeParser = indentParser $ choice allTextfieldAttributeParsers
 
 allTextfieldAttributeParsers :: [GenParser Char GenericParserState (String, String)]
-allTextfieldAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser,
-  placeholderTextParser, placeholderTextColorParser, placeholderFontParser,
-  backgroundColorParser]
+allTextfieldAttributeParsers = map Text.Parsec.try 
+  [textParser, 
+  textColorParser, 
+  fontParser,
+  placeholderTextParser, 
+  placeholderTextColorParser, 
+  placeholderFontParser,
+  backgroundColorParser,
+  constraintsParser]
 
 imageViewParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
 imageViewParser = do
   name <- nameParserWithKeyword imageViewKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  (_, src) <- indentParser $ localizedKeyParserWithKeyword imageSourceKeyword 
+  imageViewAttrs <- Text.Parsec.try imageViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let attrMap = Map.fromList imageViewAttrs
+  let maybeImageView = imageViewFromNameAndAttrs name attrMap
   many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
-  return $ Right $ ImageElement OWAImageView {
-    imageViewName = name,
-    imageSourceName = src
-  }
+  case maybeImageView of
+    Just imageView -> return $ Right (ImageElement imageView)
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      -- Source is the only required image keyword
+      missingRequiredAttributes = [imageSourceKeyword]
+    }
+
+imageViewAttributeParser :: GenParser Char GenericParserState (String, String)
+imageViewAttributeParser = indentParser $ choice allImageViewAttributeParsers
+
+allImageViewAttributeParsers :: [GenParser Char GenericParserState (String, String)]
+allImageViewAttributeParsers = map Text.Parsec.try
+  [localizedKeyParserWithKeyword imageSourceKeyword,
+  constraintsParser]
 
 textParser :: GenParser Char GenericParserState (String, String)
 textParser = localizedKeyParserWithKeyword textKeyword
@@ -217,6 +247,11 @@ imageSourceParser :: GenParser Char GenericParserState (String, String)
 imageSourceParser = do 
   name <- nameParserWithKeyword imageSourceKeyword
   return (imageSourceKeyword, name)
+
+constraintsParser :: GenParser Char GenericParserState (String, String)
+constraintsParser = do
+  loneStringKeywordParser layoutKeyword
+  return (constraintsKeyword, constraintsKeyword)
 
 -------------------------------------------------------------------------------
 -----------------------------------CONSTRUCTING VIEWS--------------------------
@@ -255,6 +290,14 @@ buttonFromNameAndAttrs name attrMap = do
     buttonFontName = Map.lookup fontKeyword attrMap,
     buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
   }
+
+imageViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAImageView
+imageViewFromNameAndAttrs name attrMap = do
+  sourceName <- Map.lookup imageSourceKeyword attrMap
+  return OWAImageView {
+    imageViewName = name,
+    imageSourceName = sourceName
+  } 
 
 viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
 viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
@@ -321,3 +364,9 @@ backgroundColorKeyword = "BackgroundColor"
 
 imageSourceKeyword :: String
 imageSourceKeyword = "ImageSrc"
+
+constraintsKeyword :: String
+constraintsKeyword = "Constraints"
+
+layoutKeyword :: String
+layoutKeyword = "Layout"
