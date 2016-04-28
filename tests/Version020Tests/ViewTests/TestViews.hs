@@ -207,5 +207,103 @@ elementTest3 = OWAView {
   constraints = []
 }
 
-emptyLayoutTestView :: OWAView
-emptyLayoutTestView = elementTest1
+noLayoutTestView :: OWAView
+noLayoutTestView = elementTest1
+
+heightWidthTestView :: OWAView
+heightWidthTestView = OWAView {
+  viewName = "myView",
+  viewType = "VIAConstraintTest2",
+  subviews = [TextFieldElement viewTextField,
+    ButtonElement viewButton,
+    ImageElement viewImage,
+    LabelElement viewLabel],
+  constraints = [textFieldHeight,
+    textFieldWidth,
+    buttonHeight,
+    buttonWidth,
+    imageHeight,
+    imageWidth,
+    labelHeight,
+    labelWidth]
+}
+
+textFieldHeight :: OWAConstraint
+textFieldHeight = OWAConstraint {
+  firstElementName = "viewField",
+  firstAttribute = Height,
+  secondElementName = Nothing,
+  secondAttribute = Nothing,
+  multiplier = 1.0,
+  constant = 30.0
+}
+
+textFieldWidth :: OWAConstraint
+textFieldWidth = OWAConstraint {
+  firstElementName = "viewField",
+  firstAttribute = Width,
+  secondElementName = Nothing,
+  secondAttribute = Nothing,
+  multiplier = 1.0,
+  constant = 100.0
+}
+
+buttonHeight :: OWAConstraint
+buttonHeight = OWAConstraint {
+  firstElementName = "viewButton",
+  firstAttribute = Height,
+  secondElementName = Nothing,
+  secondAttribute = Nothing,
+  multiplier = 1.0,
+  constant = 50.0
+}
+
+buttonWidth :: OWAConstraint
+buttonWidth = OWAConstraint {
+  firstElementName = "viewButton",
+  firstAttribute = Width,
+  secondElementName = Nothing,
+  secondAttribute = Nothing,
+  multiplier = 1.0,
+  constant = 200
+}
+
+imageHeight :: OWAConstraint
+imageHeight = OWAConstraint {
+  firstElementName = "viewImage",
+  firstAttribute = Height,
+  secondElementName = Just "viewButton",
+  secondAttribute = Just Height,
+  multiplier = 1.0,
+  constant = 0.0
+}
+
+imageWidth :: OWAConstraint
+imageWidth = OWAConstraint {
+  firstElementName = "viewImage",
+  firstAttribute = Width,
+  secondElementName = Just "viewButton",
+  secondAttribute = Just Width,
+  multiplier = 1.0,
+  constant = 0.0
+}
+
+labelHeight :: OWAConstraint
+labelHeight = OWAConstraint {
+  firstElementName = "viewLabel",
+  firstAttribute = Height,
+  secondElementName = Just "viewField",
+  secondAttribute = Just Height,
+  multiplier = 1.0,
+  constant = 5.0
+}
+
+labelWidth :: OWAConstraint
+labelWidth = OWAConstraint {
+  firstElementName = "viewLabel",
+  firstAttribute = Width,
+  secondElementName = Just "viewField",
+  secondAttribute = Just Width,
+  multiplier = 1.0,
+  constant = -5.0
+}
