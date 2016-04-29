@@ -280,7 +280,11 @@ allConstraintParsers = map Text.Parsec.try
   alignTopConstraintParser,
   alignBottomConstraintParser,
   alignRightConstraintParser,
-  alignLeftConstraintParser]
+  alignLeftConstraintParser,
+  belowConstraintParser,
+  aboveConstraintParser,
+  toRightConstraintParser,
+  toLeftConstraintParser]
 
 heightConstraintParser :: GenParser Char GenericParserState OWAConstraint
 heightConstraintParser = do
@@ -339,6 +343,42 @@ alignConstraintParser keyword attribute = do
     multiplier = 1.0,
     constant = fromMaybe 0.0 possibleDimen
   }
+
+belowConstraintParser :: GenParser Char GenericParserState OWAConstraint
+belowConstraintParser = placementConstraintParser belowKeyword Top
+
+aboveConstraintParser :: GenParser Char GenericParserState OWAConstraint
+aboveConstraintParser = placementConstraintParser aboveKeyword Bottom
+
+toRightConstraintParser :: GenParser Char GenericParserState OWAConstraint
+toRightConstraintParser = placementConstraintParser toRightKeyword LeftSide
+
+toLeftConstraintParser :: GenParser Char GenericParserState OWAConstraint
+toLeftConstraintParser = placementConstraintParser toLeftKeyword RightSide
+
+placementConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
+placementConstraintParser keyword attribute = do
+  string keyword
+  spaceTabs
+  viewName <- nameParser
+  possibleDimen <- optionMaybe (do
+    spaceTabs
+    parseFloat)
+  singleTrailingComment
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = attribute,
+    secondElementName = Just viewName,
+    secondAttribute = reverseAttribute,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  }
+    where reverseAttribute = case attribute of
+                              Top -> Just Bottom
+                              Bottom -> Just Top
+                              RightSide -> Just LeftSide
+                              LeftSide -> Just RightSide
+                              _ -> Nothing
 
 viewNameAndDimenOptionParser :: GenParser Char GenericParserState (Maybe String, Maybe Float)
 viewNameAndDimenOptionParser = do
@@ -507,3 +547,15 @@ alignRightKeyword = "AlignRight"
 
 alignLeftKeyword :: String
 alignLeftKeyword = "AlignLeft"
+
+belowKeyword :: String
+belowKeyword = "Below"
+
+aboveKeyword :: String
+aboveKeyword = "Above"
+
+toRightKeyword :: String
+toRightKeyword = "ToRightOf"
+
+toLeftKeyword :: String
+toLeftKeyword = "ToLeftOf"

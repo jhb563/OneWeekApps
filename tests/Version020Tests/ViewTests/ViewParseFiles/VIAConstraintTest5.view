@@ -1,0 +1,35 @@
+View constraintTest5
+  Elements
+    Label l1
+      Text "Hi"
+    Button b1
+      Text "Hi"
+      Layout
+        Below l1
+    TextField t1
+      Text "Hi"
+      Layout
+        ToRightOf l1
+    Image i1
+      ImageSrc "file1.png"
+      Layout
+        ToRightOf b1 10
+        Below t1 10.0
+    Label l2
+      Text "Bye"
+      Layout
+        Above b2
+        ToLeftOf t2
+    Button b2
+      Text "Bye"
+      Layout
+        ToLeftOf i2 -5
+    TextField t2
+      Text "Bye"
+      Layout
+        Above i2 -6.6
+    Image i2
+      ImageSrc "file2.png"
+
+
+

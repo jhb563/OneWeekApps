@@ -449,3 +449,35 @@ alignConstraintFromTuple (v1, v2, attr, val) = OWAConstraint {
   multiplier = 1.0,
   constant = val
 }
+
+placementTestView :: OWAView
+placementTestView = OWAView {
+  viewName = "constraintTest5",
+  viewType = "VIAConstraintTest5",
+  subviews = [l1, b1, t1, i1, l2, b2, t2, i2],
+  constraints = map placementConstraintFromTuple
+    [("b1", "l1", Top, 0.0),
+    ("t1", "l1", LeftSide, 0.0),
+    ("i1", "b1", LeftSide, 10.0),
+    ("i1", "t1", Top, 10.0),
+    ("l2", "b2", Bottom, 0.0),
+    ("l2", "t2", RightSide, 0.0),
+    ("b2", "i2", RightSide, -5.0),
+    ("t2", "i2", Bottom, -6.6)]
+}
+
+placementConstraintFromTuple :: (String, String, OWALayoutAttribute, Float) -> OWAConstraint
+placementConstraintFromTuple (v1, v2, attr, val) = OWAConstraint {
+  firstElementName = v1,
+  firstAttribute = attr,
+  secondElementName = Just v2,
+  secondAttribute = reverseAttr,
+  multiplier = 1.0,
+  constant = val
+}
+  where reverseAttr = case attr of
+                        Top -> Just Bottom
+                        Bottom -> Just Top
+                        RightSide -> Just LeftSide
+                        LeftSide -> Just RightSide
+                        _ -> Nothing

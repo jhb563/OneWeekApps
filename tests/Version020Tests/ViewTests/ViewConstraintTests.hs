@@ -18,6 +18,7 @@ runViewConstraintTests currentDirectory = hspec $ do
   noLayoutTest parseDirectory
   heightWidthTest parseDirectory
   alignTest parseDirectory
+  placementTest parseDirectory
 
 noLayoutTest :: String -> Spec
 noLayoutTest parseDirectory = do
@@ -46,6 +47,14 @@ alignTest parseDirectory = do
     context "where views are aligning to other views, with and without padding" $
       it "Should return a view with proper alignment constraints" $
         parseViewFromFile testFile2 `shouldReturnRights` alignTestView2
+
+placementTest :: String -> Spec
+placementTest parseDirectory = do
+  let testFile = parseDirectory ++ placementExtension
+  describe "Parse Layout with placement constraints" $
+    context "where views are placed next to each other with and without padding" $
+      it "Should return a view with proper placement constraints" $
+        parseViewFromFile testFile `shouldReturnRights` placementTestView
       
 parseDirectoryExtension :: String
 parseDirectoryExtension = "/tests/Version020Tests/ViewTests/ViewParseFiles"
@@ -61,3 +70,6 @@ alignExtension1 = "/VIAConstraintTest3.view"
 
 alignExtension2 :: String
 alignExtension2 = "/VIAConstraintTest4.view"
+
+placementExtension :: String
+placementExtension = "/VIAConstraintTest5.view"
