@@ -11,6 +11,7 @@ module OWAViewParser (
 ) where
 
 import Data.Either
+import Data.Maybe
 import OWAElements
 import OWAParseError
 import OWAView
@@ -23,8 +24,11 @@ import Text.ParserCombinators.Parsec
 
 type ViewAttr = String
 data ViewVal = TypeVal String |
-  ElementsVal [OWAViewElement] |
+  ElementsVal ([OWAViewElement], [OWAConstraint]) |
   ElementsErrs [OWAParseError]
+type ElementAttr = String
+data ElementVal = StringVal String |
+  ConstraintsVal [OWAConstraint]
 type ViewAttrMap = Map.Map ViewAttr ViewVal
 
 -------------------------------------------------------------------------------
@@ -88,31 +92,33 @@ elementsParser = do
   loneStringKeywordParser elementsKeyword 
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  elements <- elementParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  results <- elementParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (errors, elemTuples) = partitionEithers results
+  let (elements, constraintLists) = unzip elemTuples
   modifyState reduceIndentationLevel
-  let (errors, elems) = partitionEithers elements
   if null errors
-    then return (elementsKeyword, ElementsVal elems)
+    then return (elementsKeyword, ElementsVal (elements, concat constraintLists))
     else return (elementErrorsKeyword, ElementsErrs errors)
 
-elementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+elementParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 elementParser = indentParser $ choice allElementParsers
 
-allElementParsers :: [GenParser Char GenericParserState (Either OWAParseError OWAViewElement)]
+allElementParsers :: [GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))]
 allElementParsers = [labelElementParser, buttonElementParser, 
   textFieldElementParser, imageViewParser]
 
-labelElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+labelElementParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 labelElementParser = do
   name <- nameParserWithKeyword labelKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  labelAttrs <- Text.Parsec.try labelAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let attrMap = Map.fromList labelAttrs
+  labelAttrsAndConstraints <- Text.Parsec.try labelAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (attrMap, constraints) = splitAttrsAndConstraints labelAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let maybeLabel = labelFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
   case maybeLabel of
-    Just label -> return $ Right (LabelElement label)
+    Just label -> return $ Right (LabelElement label, modifiedConstraints)
     Nothing -> return $ Left ObjectError {
       fileName = "",
       itemName = name,
@@ -120,23 +126,29 @@ labelElementParser = do
       missingRequiredAttributes = [textKeyword]
     }
 
-labelAttributeParser :: GenParser Char GenericParserState (String, String)
+labelAttributeParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 labelAttributeParser = indentParser $ choice allLabelAttributeParsers
 
-allLabelAttributeParsers :: [GenParser Char GenericParserState (String, String)]
-allLabelAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser, backgroundColorParser]
+allLabelAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
+allLabelAttributeParsers = map Text.Parsec.try 
+  [textParser, 
+  textColorParser, 
+  fontParser, 
+  backgroundColorParser,
+  constraintsParser]
 
-buttonElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+buttonElementParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 buttonElementParser = do
   name <- nameParserWithKeyword buttonKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  buttonAttrs <- Text.Parsec.try buttonAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let attrMap = Map.fromList buttonAttrs
+  buttonAttrsAndConstraints <- Text.Parsec.try buttonAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (attrMap, constraints) = splitAttrsAndConstraints buttonAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let maybeButton = buttonFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
   case maybeButton of
-    Just button -> return $ Right (ButtonElement button)
+    Just button -> return $ Right (ButtonElement button, modifiedConstraints)
     Nothing -> return $ Left ObjectError {
       fileName = "",
       itemName = name,
@@ -144,83 +156,276 @@ buttonElementParser = do
       missingRequiredAttributes = [textKeyword]
     }
 
-buttonAttributeParser :: GenParser Char GenericParserState (String, String)
+buttonAttributeParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 buttonAttributeParser = indentParser $ choice allButtonAttributeParsers
 
-allButtonAttributeParsers :: [GenParser Char GenericParserState (String, String)]
-allButtonAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser, backgroundColorParser]
+allButtonAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
+allButtonAttributeParsers = map Text.Parsec.try 
+  [textParser, 
+  textColorParser, 
+  fontParser, 
+  backgroundColorParser,
+  constraintsParser]
 
-textFieldElementParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+textFieldElementParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 textFieldElementParser = do
   name <- nameParserWithKeyword textFieldKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  textfieldAttrs <- Text.Parsec.try textfieldAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let attrMap = Map.fromList textfieldAttrs
+  textfieldAttrsAndConstraints <- Text.Parsec.try textfieldAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (attrMap, constraints) = splitAttrsAndConstraints textfieldAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let textfield = textFieldFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
-  return $ Right (TextFieldElement textfield)
+  return $ Right (TextFieldElement textfield, modifiedConstraints)
 
-textfieldAttributeParser :: GenParser Char GenericParserState (String, String)
+textfieldAttributeParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 textfieldAttributeParser = indentParser $ choice allTextfieldAttributeParsers
 
-allTextfieldAttributeParsers :: [GenParser Char GenericParserState (String, String)]
-allTextfieldAttributeParsers = map Text.Parsec.try [textParser, textColorParser, fontParser,
-  placeholderTextParser, placeholderTextColorParser, placeholderFontParser,
-  backgroundColorParser]
+allTextfieldAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
+allTextfieldAttributeParsers = map Text.Parsec.try 
+  [textParser, 
+  textColorParser, 
+  fontParser,
+  placeholderTextParser, 
+  placeholderTextColorParser, 
+  placeholderFontParser,
+  backgroundColorParser,
+  constraintsParser]
 
-imageViewParser :: GenParser Char GenericParserState (Either OWAParseError OWAViewElement)
+imageViewParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 imageViewParser = do
   name <- nameParserWithKeyword imageViewKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  (_, src) <- indentParser $ localizedKeyParserWithKeyword imageSourceKeyword 
+  imageViewAttrsAndConstraints <- Text.Parsec.try imageViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (attrMap, constraints) = splitAttrsAndConstraints imageViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let maybeImageView = imageViewFromNameAndAttrs name attrMap
   many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
-  return $ Right $ ImageElement OWAImageView {
-    imageViewName = name,
-    imageSourceName = src
-  }
+  case maybeImageView of
+    Just imageView -> return $ Right (ImageElement imageView, modifiedConstraints)
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      -- Source is the only required image keyword
+      missingRequiredAttributes = [imageSourceKeyword]
+    }
 
-textParser :: GenParser Char GenericParserState (String, String)
-textParser = localizedKeyParserWithKeyword textKeyword
+imageViewAttributeParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
+imageViewAttributeParser = indentParser $ choice allImageViewAttributeParsers
 
-textColorParser :: GenParser Char GenericParserState (String, String)
+allImageViewAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
+allImageViewAttributeParsers = map Text.Parsec.try
+  [imageSourceParser,
+  constraintsParser]
+
+textParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
+textParser = do
+  (attr, val) <- localizedKeyParserWithKeyword textKeyword
+  return (attr, StringVal val)
+  
+textColorParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 textColorParser = do 
   name <- nameParserWithKeyword textColorKeyword
-  return (textColorKeyword, name)
+  return (textColorKeyword, StringVal name)
 
-fontParser :: GenParser Char GenericParserState (String, String)
+fontParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 fontParser = do 
   name <- nameParserWithKeyword fontKeyword
-  return (fontKeyword, name)
+  return (fontKeyword, StringVal name)
 
-placeholderTextParser :: GenParser Char GenericParserState (String, String)
-placeholderTextParser = localizedKeyParserWithKeyword placeholderTextKeyword
+placeholderTextParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
+placeholderTextParser = do
+  (attr, val) <- localizedKeyParserWithKeyword placeholderTextKeyword
+  return (attr, StringVal val)
 
-placeholderTextColorParser :: GenParser Char GenericParserState (String, String)
+placeholderTextColorParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 placeholderTextColorParser = do 
   name <- nameParserWithKeyword placeholderTextColorKeyword
-  return (placeholderTextColorKeyword, name)
+  return (placeholderTextColorKeyword, StringVal name)
 
-placeholderFontParser :: GenParser Char GenericParserState (String, String)
+placeholderFontParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 placeholderFontParser = do 
   name <- nameParserWithKeyword placeholderFontKeyword
-  return (placeholderFontKeyword, name)
+  return (placeholderFontKeyword, StringVal name)
 
-backgroundColorParser :: GenParser Char GenericParserState (String, String)
+backgroundColorParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 backgroundColorParser = do 
   name <- nameParserWithKeyword backgroundColorKeyword
-  return (backgroundColorKeyword, name)
+  return (backgroundColorKeyword, StringVal name)
 
-imageSourceParser :: GenParser Char GenericParserState (String, String)
+imageSourceParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 imageSourceParser = do 
-  name <- nameParserWithKeyword imageSourceKeyword
-  return (imageSourceKeyword, name)
+  (_, filename) <- localizedKeyParserWithKeyword imageSourceKeyword
+  return (imageSourceKeyword, StringVal filename)
+
+constraintsParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
+constraintsParser = do
+  loneStringKeywordParser layoutKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  constraints <- Text.Parsec.try singleConstraintParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  modifyState reduceIndentationLevel
+  return (constraintsKeyword, ConstraintsVal constraints)
+
+singleConstraintParser :: GenParser Char GenericParserState OWAConstraint
+singleConstraintParser = indentParser $ choice allConstraintParsers
+
+allConstraintParsers :: [GenParser Char GenericParserState OWAConstraint]
+allConstraintParsers = map Text.Parsec.try
+  [heightConstraintParser,
+  widthConstraintParser,
+  alignTopConstraintParser,
+  alignBottomConstraintParser,
+  alignRightConstraintParser,
+  alignLeftConstraintParser,
+  belowConstraintParser,
+  aboveConstraintParser,
+  toRightConstraintParser,
+  toLeftConstraintParser,
+  centerXConstraintParser,
+  centerYConstraintParser]
+
+heightConstraintParser :: GenParser Char GenericParserState OWAConstraint
+heightConstraintParser = do
+  string heightKeyword
+  spaceTabs
+  (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser 
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = Height,
+    secondElementName = possibleViewName,
+    secondAttribute = case possibleViewName of
+      Just _ -> Just Height
+      Nothing -> Nothing,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  }
+
+widthConstraintParser :: GenParser Char GenericParserState OWAConstraint
+widthConstraintParser = do
+  string widthKeyword
+  spaceTabs
+  (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser 
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = Width,
+    secondElementName = possibleViewName,
+    secondAttribute = case possibleViewName of
+      Just _ -> Just Width
+      Nothing -> Nothing,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  } 
+
+alignTopConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignTopConstraintParser = matchingConstraintParser alignTopKeyword Top
+
+alignBottomConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignBottomConstraintParser = matchingConstraintParser alignBottomKeyword Bottom
+
+alignRightConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignRightConstraintParser = matchingConstraintParser alignRightKeyword RightSide
+
+alignLeftConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignLeftConstraintParser = matchingConstraintParser alignLeftKeyword LeftSide
+
+belowConstraintParser :: GenParser Char GenericParserState OWAConstraint
+belowConstraintParser = placementConstraintParser belowKeyword Top
+
+aboveConstraintParser :: GenParser Char GenericParserState OWAConstraint
+aboveConstraintParser = placementConstraintParser aboveKeyword Bottom
+
+toRightConstraintParser :: GenParser Char GenericParserState OWAConstraint
+toRightConstraintParser = placementConstraintParser toRightKeyword LeftSide
+
+toLeftConstraintParser :: GenParser Char GenericParserState OWAConstraint
+toLeftConstraintParser = placementConstraintParser toLeftKeyword RightSide
+
+placementConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
+placementConstraintParser keyword attribute = do
+  string keyword
+  spaceTabs
+  viewName <- nameParser
+  possibleDimen <- optionMaybe (do
+    spaceTabs
+    parseFloat)
+  singleTrailingComment
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = attribute,
+    secondElementName = Just viewName,
+    secondAttribute = reverseAttribute,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  }
+    where reverseAttribute = case attribute of
+                              Top -> Just Bottom
+                              Bottom -> Just Top
+                              RightSide -> Just LeftSide
+                              LeftSide -> Just RightSide
+                              _ -> Nothing
+
+centerXConstraintParser :: GenParser Char GenericParserState OWAConstraint
+centerXConstraintParser = matchingConstraintParser centerXKeyword CenterX
+
+centerYConstraintParser :: GenParser Char GenericParserState OWAConstraint
+centerYConstraintParser = matchingConstraintParser centerYKeyword CenterY
+
+-- Used by alignment constraints and centering constraints. Applies when we parse a
+-- keyword, both view name and dimen are optional, and both elements of the constraint
+-- have the same attribute.
+matchingConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
+matchingConstraintParser keyword attribute = do
+  string keyword
+  many (oneOf " \t")
+  (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = attribute,
+    secondElementName = Just $ fromMaybe "Super" possibleViewName,
+    secondAttribute = Just attribute,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  }
+
+viewNameAndDimenOptionParser :: GenParser Char GenericParserState (Maybe String, Maybe Float)
+viewNameAndDimenOptionParser = do
+  possibleViewName <- optionMaybe nameParser
+  case possibleViewName of
+    Just vName -> do
+      possibleSpace <- optionMaybe spaceTabs
+      case possibleSpace of
+        Just _ -> do
+          possibleDimen <- optionMaybe parseFloat 
+          singleTrailingComment
+          return (Just vName, possibleDimen)
+        Nothing -> do
+          singleTrailingComment
+          return (Just vName, Nothing)
+    Nothing -> do
+      possibleDimen <- optionMaybe parseFloat 
+      singleTrailingComment
+      return (Nothing, possibleDimen)
 
 -------------------------------------------------------------------------------
 -----------------------------------CONSTRUCTING VIEWS--------------------------
 -------------------------------------------------------------------------------
+
+splitAttrsAndConstraints :: [(ElementAttr, ElementVal)] -> (Map.Map String String, [OWAConstraint])
+splitAttrsAndConstraints = splitAttrsAndConstraintsTail Map.empty []
+
+splitAttrsAndConstraintsTail :: Map.Map String String -> [OWAConstraint] -> [(ElementAttr, ElementVal)] -> (Map.Map String String, [OWAConstraint])
+splitAttrsAndConstraintsTail attrMap constraints [] = (attrMap, constraints)
+splitAttrsAndConstraintsTail attrMap constraints ((elemAttr, elemVal):rest) = case elemVal of
+  StringVal val -> splitAttrsAndConstraintsTail (Map.insert elemAttr val attrMap) constraints rest
+  ConstraintsVal newConstraints -> splitAttrsAndConstraintsTail attrMap (constraints ++ newConstraints) rest
+
+modifyConstraintsWithViewName :: String -> [OWAConstraint] -> [OWAConstraint]
+modifyConstraintsWithViewName viewName = map
+  (\c -> c {firstElementName = viewName})
 
 labelFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWALabel
 labelFromNameAndAttrs name attrMap = do
@@ -256,19 +461,27 @@ buttonFromNameAndAttrs name attrMap = do
     buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
   }
 
+imageViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAImageView
+imageViewFromNameAndAttrs name attrMap = do
+  sourceName <- Map.lookup imageSourceKeyword attrMap
+  return OWAImageView {
+    imageViewName = name,
+    imageSourceName = sourceName
+  } 
+
 viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
 viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
   viewName = name,
   viewType = vType,
   subviews = elems,
-  constraints = []
+  constraints = constraints
 }
   where vType = case Map.lookup typeKeyword attrMap of
           Nothing -> fileName
           Just (TypeVal t) -> t
-        elems = case Map.lookup elementsKeyword attrMap of
-          Nothing -> []
-          Just (ElementsVal viewElems) -> viewElems
+        (elems, constraints) = case Map.lookup elementsKeyword attrMap of
+          Nothing -> ([], [])
+          Just (ElementsVal (viewElems, constraints)) -> (viewElems, constraints)
 
 -------------------------------------------------------------------------------
 -----------------------------------VIEW KEYWORDS-------------------------------
@@ -321,3 +534,45 @@ backgroundColorKeyword = "BackgroundColor"
 
 imageSourceKeyword :: String
 imageSourceKeyword = "ImageSrc"
+
+constraintsKeyword :: String
+constraintsKeyword = "Constraints"
+
+layoutKeyword :: String
+layoutKeyword = "Layout"
+
+heightKeyword :: String
+heightKeyword = "Height"
+
+widthKeyword :: String
+widthKeyword = "Width" 
+
+alignTopKeyword :: String
+alignTopKeyword = "AlignTop"
+
+alignBottomKeyword :: String
+alignBottomKeyword = "AlignBottom"
+
+alignRightKeyword :: String
+alignRightKeyword = "AlignRight"
+
+alignLeftKeyword :: String
+alignLeftKeyword = "AlignLeft"
+
+belowKeyword :: String
+belowKeyword = "Below"
+
+aboveKeyword :: String
+aboveKeyword = "Above"
+
+toRightKeyword :: String
+toRightKeyword = "ToRightOf"
+
+toLeftKeyword :: String
+toLeftKeyword = "ToLeftOf"
+
+centerXKeyword :: String
+centerXKeyword = "CenterX"
+
+centerYKeyword :: String
+centerYKeyword = "CenterY"

@@ -11,10 +11,12 @@ module ParseUtil (
   GenericParserState(..),
   loneStringKeywordParser,
   nameParserWithKeyword,
+  nameParser,
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
   parseLocalizedKey,
   floatAttributeParser,
+  parseFloat,
   indentParser,
   spaceTabs,
   commentOrSpacesParser,
@@ -82,9 +84,16 @@ nameParserWithKeyword :: String -> GenParser Char st String
 nameParserWithKeyword keyword = do
   string keyword 
   spaceTabs
-  firstLetter <- lower
-  restOfName <- many alphaNum 
+  name <- nameParser
   singleTrailingComment
+  return name
+
+-- | Parses a possible element name, consisting of a lowercase letter followed
+-- by alphanumeric characters
+nameParser :: GenParser Char st String
+nameParser = do
+  firstLetter <- lower
+  restOfName <- many alphaNum
   return (firstLetter:restOfName)
 
 -- | Takes a string for a keyword, and returns a parser which parses that keyword,
@@ -138,12 +147,21 @@ floatAttributeParser :: String -> GenParser Char st (String, Float)
 floatAttributeParser keyword = do
   string keyword
   spaceTabs
-  value <- parseFloat
+  value <- parsePositiveFloat
   singleTrailingComment
   return (keyword, value)
 
-parseFloat :: GenParser Char st Float 
+-- | Parses a float, whether positive or negative.
+parseFloat :: GenParser Char st Float
 parseFloat = do
+  maybeNegative <- optionMaybe $ char '-'
+  positiveValue <- parsePositiveFloat
+  case maybeNegative of
+    Just '-' -> return $ -1.0 * positiveValue
+    _ -> return positiveValue
+
+parsePositiveFloat :: GenParser Char st Float 
+parsePositiveFloat = do
   wholeNumberString <- many digit
   let wholeNumberPortion = if not (null wholeNumberString)
                             then read wholeNumberString :: Float

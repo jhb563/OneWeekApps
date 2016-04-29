@@ -26,10 +26,10 @@ data OWALayoutAttribute = Width |
 -- | OWAConstraint models the different constraints we can put between
 -- different views and elements. 
 data OWAConstraint = OWAConstraint {
-  firstElement :: OWAViewElement,
-  firstAttributeName :: String,
-  secondElement :: Maybe OWAViewElement,
-  secondAttributeName :: Maybe String,
+  firstElementName :: String,
+  firstAttribute :: OWALayoutAttribute,
+  secondElementName :: Maybe String,
+  secondAttribute :: Maybe OWALayoutAttribute,
   multiplier :: Float,
   constant :: Float
 } deriving (Show, Eq)

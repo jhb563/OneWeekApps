@@ -1,0 +1,46 @@
+View constraintTest4
+  Elements
+    Image iBase1
+      ImageSrc "file1.png"
+    Image iBase2
+      ImageSrc "file2.png"
+    Label l1
+      Text "Hi"
+      Layout
+        AlignTop iBase1
+        AlignRight iBase1
+    Button b1
+      Text "Hi"
+      Layout
+        AlignTop iBase1 14.3
+        AlignRight iBase1
+    TextField t1
+      Text "Hi"
+      Layout
+        AlignTop iBase1 12.5
+        AlignLeft iBase1 -3.4
+    Image i1
+      Layout
+        AlignLeft iBase1
+        AlignTop iBase1
+      ImageSrc "file1.png"
+    Label l2
+      Text "Bye"
+      Layout
+        AlignBottom iBase2 -1.0
+        AlignLeft iBase2 -1.0
+    Button b2
+      Text "Bye"
+      Layout
+        AlignBottom iBase2
+        AlignLeft iBase2
+    TextField t2
+      Text "Bye"
+      Layout
+        AlignBottom iBase2
+        AlignRight iBase2
+    Image i2
+      ImageSrc "file2.png"
+      Layout
+        AlignBottom iBase2 1.0
+        AlignRight iBase2 1.0

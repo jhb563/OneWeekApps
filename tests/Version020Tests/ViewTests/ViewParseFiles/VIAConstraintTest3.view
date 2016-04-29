@@ -1,0 +1,42 @@
+View constraintTest3
+  Elements
+    Label l1
+      Text "Hi"
+      Layout
+        AlignTop
+        AlignRight
+    Button b1
+      Text "Hi"
+      Layout
+        AlignTop 10
+        AlignRight 10
+    TextField t1
+      Text "Hi"
+      Layout
+        AlignTop 5.6
+        AlignLeft 5.6
+    Image i1
+      ImageSrc "file1.png"
+      Layout
+        AlignLeft
+        AlignTop
+    Label l2
+      Text "Bye"
+      Layout
+        AlignLeft -5
+        AlignBottom -5.0
+    Button b2
+      Text "Bye"
+      Layout
+        AlignBottom
+        AlignLeft
+    TextField t2
+      Text "Bye"
+      Layout
+        AlignRight
+        AlignBottom
+    Image i2
+      ImageSrc "file2.png"
+      Layout
+        AlignBottom 14.43112
+        AlignRight 3.743

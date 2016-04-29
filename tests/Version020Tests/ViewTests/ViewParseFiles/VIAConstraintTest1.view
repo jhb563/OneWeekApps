@@ -1,0 +1,13 @@
+View myView
+  Type VIAElementTest1
+  Elements
+    TextField viewField
+      Text "HELLO_WORLD"
+      TextColor view1TextFieldColor
+      Font standardFont
+    Button viewButton
+      Text "CLICK_ME"
+    Image viewImage
+      ImageSrc "profileImage.png"
+    Label viewLabel
+      Text "TITLE"

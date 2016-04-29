@@ -1,8 +1,9 @@
 module Main where
 
 import System.Directory
-import ViewFileSearchTests
+import ViewConstraintTests
 import ViewElementTests
+import ViewFileSearchTests
 import ViewNameTests
 
 main :: IO ()
@@ -11,3 +12,4 @@ main = do
   runViewFileSearchTests currentDirectory
   runViewNameTests currentDirectory
   runViewElementTests currentDirectory
+  runViewConstraintTests currentDirectory
