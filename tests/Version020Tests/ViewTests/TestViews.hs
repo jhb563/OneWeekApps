@@ -481,3 +481,29 @@ placementConstraintFromTuple (v1, v2, attr, val) = OWAConstraint {
                         RightSide -> Just LeftSide
                         LeftSide -> Just RightSide
                         _ -> Nothing
+
+centerTestView :: OWAView
+centerTestView = OWAView {
+  viewName = "constraintTest6",
+  viewType = "VIAConstraintTest6",
+  subviews = [l1, b1, t1, i1],
+  constraints = map centerConstraintFromTuple
+    [("l1", "Super", CenterX, 0.0),
+    ("l1", "Super", CenterY, 0.0),
+    ("b1", "Super", CenterX, 10.0),
+    ("b1", "Super", CenterY, -10.0),
+    ("t1", "l1", CenterX, 0.0),
+    ("t1", "b1", CenterY, 0.0),
+    ("i1", "b1", CenterX, 5.5),
+    ("i1", "l1", CenterY, 3.2)]
+}
+
+centerConstraintFromTuple :: (String, String, OWALayoutAttribute, Float) -> OWAConstraint
+centerConstraintFromTuple (v1, v2, attr, val) = OWAConstraint {
+  firstElementName = v1,
+  firstAttribute = attr,
+  secondElementName = Just v2,
+  secondAttribute = Just attr,
+  multiplier = 1.0,
+  constant = val
+}

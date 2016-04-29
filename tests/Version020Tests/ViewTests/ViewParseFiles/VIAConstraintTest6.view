@@ -1,0 +1,24 @@
+View constraintTest6
+  Elements
+    Label l1
+      Text "Hi"
+      Layout
+        CenterX
+        CenterY
+    Button b1
+      Text "Hi"
+      Layout
+        CenterX 10
+        CenterY -10.0
+    TextField t1
+      Text "Hi"
+      Layout
+        CenterX l1
+        CenterY b1   
+    Image i1
+      ImageSrc "file1.png"
+      Layout
+        CenterX b1 5.5
+        CenterY l1 3.2
+
+

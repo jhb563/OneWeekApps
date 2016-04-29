@@ -284,7 +284,9 @@ allConstraintParsers = map Text.Parsec.try
   belowConstraintParser,
   aboveConstraintParser,
   toRightConstraintParser,
-  toLeftConstraintParser]
+  toLeftConstraintParser,
+  centerXConstraintParser,
+  centerYConstraintParser]
 
 heightConstraintParser :: GenParser Char GenericParserState OWAConstraint
 heightConstraintParser = do
@@ -319,30 +321,16 @@ widthConstraintParser = do
   } 
 
 alignTopConstraintParser :: GenParser Char GenericParserState OWAConstraint
-alignTopConstraintParser = alignConstraintParser alignTopKeyword Top
+alignTopConstraintParser = matchingConstraintParser alignTopKeyword Top
 
 alignBottomConstraintParser :: GenParser Char GenericParserState OWAConstraint
-alignBottomConstraintParser = alignConstraintParser alignBottomKeyword Bottom
+alignBottomConstraintParser = matchingConstraintParser alignBottomKeyword Bottom
 
 alignRightConstraintParser :: GenParser Char GenericParserState OWAConstraint
-alignRightConstraintParser = alignConstraintParser alignRightKeyword RightSide
+alignRightConstraintParser = matchingConstraintParser alignRightKeyword RightSide
 
 alignLeftConstraintParser :: GenParser Char GenericParserState OWAConstraint
-alignLeftConstraintParser = alignConstraintParser alignLeftKeyword LeftSide
-
-alignConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
-alignConstraintParser keyword attribute = do
-  string keyword
-  many (oneOf " \t")
-  (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser
-  return OWAConstraint {
-    firstElementName = "",
-    firstAttribute = attribute,
-    secondElementName = Just $ fromMaybe "Super" possibleViewName,
-    secondAttribute = Just attribute,
-    multiplier = 1.0,
-    constant = fromMaybe 0.0 possibleDimen
-  }
+alignLeftConstraintParser = matchingConstraintParser alignLeftKeyword LeftSide
 
 belowConstraintParser :: GenParser Char GenericParserState OWAConstraint
 belowConstraintParser = placementConstraintParser belowKeyword Top
@@ -379,6 +367,29 @@ placementConstraintParser keyword attribute = do
                               RightSide -> Just LeftSide
                               LeftSide -> Just RightSide
                               _ -> Nothing
+
+centerXConstraintParser :: GenParser Char GenericParserState OWAConstraint
+centerXConstraintParser = matchingConstraintParser centerXKeyword CenterX
+
+centerYConstraintParser :: GenParser Char GenericParserState OWAConstraint
+centerYConstraintParser = matchingConstraintParser centerYKeyword CenterY
+
+-- Used by alignment constraints and centering constraints. Applies when we parse a
+-- keyword, both view name and dimen are optional, and both elements of the constraint
+-- have the same attribute.
+matchingConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
+matchingConstraintParser keyword attribute = do
+  string keyword
+  many (oneOf " \t")
+  (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = attribute,
+    secondElementName = Just $ fromMaybe "Super" possibleViewName,
+    secondAttribute = Just attribute,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  }
 
 viewNameAndDimenOptionParser :: GenParser Char GenericParserState (Maybe String, Maybe Float)
 viewNameAndDimenOptionParser = do
@@ -559,3 +570,9 @@ toRightKeyword = "ToRightOf"
 
 toLeftKeyword :: String
 toLeftKeyword = "ToLeftOf"
+
+centerXKeyword :: String
+centerXKeyword = "CenterX"
+
+centerYKeyword :: String
+centerYKeyword = "CenterY"
