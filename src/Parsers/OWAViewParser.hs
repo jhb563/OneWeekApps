@@ -276,7 +276,11 @@ singleConstraintParser = indentParser $ choice allConstraintParsers
 allConstraintParsers :: [GenParser Char GenericParserState OWAConstraint]
 allConstraintParsers = map Text.Parsec.try
   [heightConstraintParser,
-  widthConstraintParser]
+  widthConstraintParser,
+  alignTopConstraintParser,
+  alignBottomConstraintParser,
+  alignRightConstraintParser,
+  alignLeftConstraintParser]
 
 heightConstraintParser :: GenParser Char GenericParserState OWAConstraint
 heightConstraintParser = do
@@ -310,6 +314,32 @@ widthConstraintParser = do
     constant = fromMaybe 0.0 possibleDimen
   } 
 
+alignTopConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignTopConstraintParser = alignConstraintParser alignTopKeyword Top
+
+alignBottomConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignBottomConstraintParser = alignConstraintParser alignBottomKeyword Bottom
+
+alignRightConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignRightConstraintParser = alignConstraintParser alignRightKeyword RightSide
+
+alignLeftConstraintParser :: GenParser Char GenericParserState OWAConstraint
+alignLeftConstraintParser = alignConstraintParser alignLeftKeyword LeftSide
+
+alignConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
+alignConstraintParser keyword attribute = do
+  string keyword
+  many (oneOf " \t")
+  (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser
+  return OWAConstraint {
+    firstElementName = "",
+    firstAttribute = attribute,
+    secondElementName = Just $ fromMaybe "Super" possibleViewName,
+    secondAttribute = Just attribute,
+    multiplier = 1.0,
+    constant = fromMaybe 0.0 possibleDimen
+  }
+
 viewNameAndDimenOptionParser :: GenParser Char GenericParserState (Maybe String, Maybe Float)
 viewNameAndDimenOptionParser = do
   possibleViewName <- optionMaybe nameParser
@@ -325,9 +355,9 @@ viewNameAndDimenOptionParser = do
           singleTrailingComment
           return (Just vName, Nothing)
     Nothing -> do
-      dimen <- parseFloat 
+      possibleDimen <- optionMaybe parseFloat 
       singleTrailingComment
-      return (Nothing, Just dimen)
+      return (Nothing, possibleDimen)
 
 -------------------------------------------------------------------------------
 -----------------------------------CONSTRUCTING VIEWS--------------------------
@@ -465,3 +495,15 @@ heightKeyword = "Height"
 
 widthKeyword :: String
 widthKeyword = "Width" 
+
+alignTopKeyword :: String
+alignTopKeyword = "AlignTop"
+
+alignBottomKeyword :: String
+alignBottomKeyword = "AlignBottom"
+
+alignRightKeyword :: String
+alignRightKeyword = "AlignRight"
+
+alignLeftKeyword :: String
+alignLeftKeyword = "AlignLeft"

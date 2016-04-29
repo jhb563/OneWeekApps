@@ -307,3 +307,145 @@ labelWidth = OWAConstraint {
   multiplier = 1.0,
   constant = -5.0
 }
+
+alignTestView1 :: OWAView
+alignTestView1 = OWAView {
+  viewName = "constraintTest3",
+  viewType = "VIAConstraintTest3",
+  subviews = [l1, b1, t1, i1, l2, b2, t2, i2],
+  constraints = map alignConstraintFromTuple
+    [("l1", "Super", Top, 0),
+    ("l1", "Super", RightSide, 0),
+    ("b1", "Super", Top, 10.0),
+    ("b1", "Super", RightSide, 10.0),
+    ("t1", "Super", Top, 5.6),
+    ("t1", "Super", LeftSide, 5.6),
+    ("i1", "Super", LeftSide, 0),
+    ("i1", "Super", Top, 0),
+    ("l2", "Super", LeftSide, -5.0),
+    ("l2", "Super", Bottom, -5.0),
+    ("b2", "Super", Bottom, 0.0),
+    ("b2", "Super", LeftSide, 0.0),
+    ("t2", "Super", RightSide, 0.0),
+    ("t2", "Super", Bottom, 0.0),
+    ("i2", "Super", Bottom, 14.43112),
+    ("i2", "Super", RightSide, 3.743)] 
+}
+
+alignTestView2 :: OWAView
+alignTestView2 = OWAView {
+  viewName = "constraintTest4",
+  viewType = "VIAConstraintTest4",
+  subviews = [iBase1, iBase2, l1, b1, t1, i1, l2, b2, t2, i2],
+  constraints = map alignConstraintFromTuple
+    [("l1", "iBase1", Top, 0),
+    ("l1", "iBase1", RightSide, 0),
+    ("b1", "iBase1", Top, 14.3),
+    ("b1", "iBase1", RightSide, 0.0),
+    ("t1", "iBase1", Top, 12.5),
+    ("t1", "iBase1", LeftSide, -3.4),
+    ("i1", "iBase1", LeftSide, 0),
+    ("i1", "iBase1", Top, 0.0),
+    ("l2", "iBase2", Bottom, -1.0),
+    ("l2", "iBase2", LeftSide, -1.0),
+    ("b2", "iBase2", Bottom, 0.0),
+    ("b2", "iBase2", LeftSide, 0.0),
+    ("t2", "iBase2", Bottom, 0.0),
+    ("t2", "iBase2", RightSide, 0.0),
+    ("i2", "iBase2", Bottom, 1.0),
+    ("i2", "iBase2", RightSide, 1.0)] 
+}
+
+l1 :: OWAViewElement
+l1 = LabelElement OWALabel {
+  labelName = "l1",
+  labelText = "Hi",
+  labelTextColorName = Nothing,
+  labelFontName = Nothing,
+  labelBackgroundColorName = Nothing
+}
+
+l2 :: OWAViewElement
+l2 = LabelElement OWALabel {
+  labelName = "l2",
+  labelText = "Bye",
+  labelTextColorName = Nothing,
+  labelFontName = Nothing,
+  labelBackgroundColorName = Nothing
+}
+
+b1 :: OWAViewElement
+b1 = ButtonElement OWAButton {
+  buttonName = "b1",
+  buttonText = "Hi",
+  buttonTextColorName = Nothing,
+  buttonFontName = Nothing,
+  buttonBackgroundColorName = Nothing
+}
+
+b2 :: OWAViewElement
+b2 = ButtonElement OWAButton {
+  buttonName = "b2",
+  buttonText = "Bye",
+  buttonTextColorName = Nothing,
+  buttonFontName = Nothing,
+  buttonBackgroundColorName = Nothing
+}
+
+t1 :: OWAViewElement
+t1 = TextFieldElement OWATextField {
+  textFieldName = "t1",
+  textFieldText = Just "Hi",
+  textFieldColorName = Nothing,
+  textFieldFontName = Nothing,
+  textFieldPlaceholderText = Nothing,
+  textFieldPlaceholderTextColorName = Nothing,
+  textFieldPlaceholderFontName = Nothing,
+  textFieldBackgroundColorName = Nothing
+}
+
+t2 :: OWAViewElement
+t2 = TextFieldElement OWATextField {
+  textFieldName = "t2",
+  textFieldText = Just "Bye",
+  textFieldColorName = Nothing,
+  textFieldFontName = Nothing,
+  textFieldPlaceholderText = Nothing,
+  textFieldPlaceholderTextColorName = Nothing,
+  textFieldPlaceholderFontName = Nothing,
+  textFieldBackgroundColorName = Nothing
+}
+
+i1 :: OWAViewElement
+i1 = ImageElement OWAImageView {
+  imageViewName = "i1",
+  imageSourceName = "file1.png"
+}
+
+i2 :: OWAViewElement
+i2 = ImageElement OWAImageView {
+  imageViewName = "i2",
+  imageSourceName = "file2.png"
+}
+
+iBase1 :: OWAViewElement
+iBase1 = ImageElement OWAImageView {
+  imageViewName = "iBase1",
+  imageSourceName = "file1.png"
+}
+
+iBase2 :: OWAViewElement
+iBase2 = ImageElement OWAImageView {
+  imageViewName = "iBase2",
+  imageSourceName = "file2.png"
+}
+
+alignConstraintFromTuple :: (String, String, OWALayoutAttribute, Float) -> OWAConstraint
+alignConstraintFromTuple (v1, v2, attr, val) = OWAConstraint {
+  firstElementName = v1,
+  firstAttribute = attr,
+  secondElementName = Just v2,
+  secondAttribute = Just attr,
+  multiplier = 1.0,
+  constant = val
+}
