@@ -46,6 +46,7 @@ library
                        OWAParseError,
                        OWAView,
                        OWAViewParser,
+                       OWAViewObjc,
                        OWAElements,
                        OWAObjcAbSyn,
                        OWAObjcPrint
