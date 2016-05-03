@@ -39,6 +39,8 @@ sectionDoc (ImportsSection includes) = vcat (map includeDoc includes) PPrint.<$>
 sectionDoc (ForwardDeclarationSection forwardDecls) = vcat (map forwardDeclDoc forwardDecls) PPrint.<$> empty
 sectionDoc (CategoryInterfaceSection category sections) = categoryInterfaceDoc category sections
 sectionDoc (CategoryImplementationSection category sections) = categoryImplementationDoc category sections
+sectionDoc (InterfaceSection typeName superclass properties methods) = interfaceDoc typeName superclass properties methods
+sectionDoc (ImplementationSection typeName sections) = implementationDoc typeName sections
 sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSectionDoc maybeComment methods
 sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
 sectionDoc (LocalizedStringListSection name statements) = text "//" <+> text name PPrint.<$>
@@ -73,6 +75,21 @@ categoryImplementationDoc :: Category -> [FileSection] -> Doc
 categoryImplementationDoc category sections = text "@implementation" <+>
   text (originalTypeName category) <+>
   parens (text $ categoryName category) PPrint.<$>
+  vcatWithSpace (map sectionDoc sections) PPrint.<$>
+  endDoc
+
+interfaceDoc :: String -> Maybe String -> [ObjcProperty] -> [ObjcMethod] -> Doc
+interfaceDoc typeName superclass properties methods = text "@interface" <+>
+  text typeName <+> superDocOrParens PPrint.<$>
+  empty PPrint.<$>
+  endDoc
+    where superDocOrParens = case superclass of
+                              Just super -> colon <+> text super
+                              _ -> text "()"
+
+implementationDoc :: String -> [FileSection] -> Doc
+implementationDoc typeName sections = text "@implementation" <+>
+  text typeName PPrint.<$>
   vcatWithSpace (map sectionDoc sections) PPrint.<$>
   endDoc
 
@@ -118,6 +135,9 @@ statementDoc (ExpressionStatement objcExpression) = expressionDoc objcExpression
 statementDoc (IfBlock condition statements) = indentBlock
   (text "if" <+> parens (expressionDoc condition))
   (vcat $ map statementDoc statements)
+statementDoc (ForEachBlock decl varName statements) = indentBlock
+  (text "for" <+> parens (expressionDoc decl <+> text "in" <+> expressionDoc varName))
+  (vcat $ map statementDoc statements)
   
 expressionDoc :: ObjcExpression -> Doc
 expressionDoc (MethodCall callingExp (UserMethod method) args) = methodCallDoc
@@ -129,6 +149,8 @@ expressionDoc (CFunctionCall funcName exprs) = text funcName <>
 expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
   opDoc op <+>
   expressionDoc expr2
+expressionDoc (PropertyCall callingExp propName) = expressionDoc callingExp <>
+  text "." <> text propName
 expressionDoc (VoidBlock params statements) = indentBlock 
   (text "^" <>
     parens (hcat $ punctuate (text ", ") (map blockParamDoc params)))
@@ -139,6 +161,9 @@ expressionDoc (DictionaryLit exprMappings) = text "@{" <> hcat (punctuate (text 
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (CStringLit stringVal) = text "\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
+expressionDoc (ArrayLit expressions) = text "@[" <>
+  hcat (punctuate (text ", ") (map expressionDoc expressions)) <>
+  text "]"
 
 keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc
 keyValueDoc (key, value) = expressionDoc key <+> colon <+> expressionDoc value

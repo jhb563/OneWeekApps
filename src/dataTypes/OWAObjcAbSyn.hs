@@ -28,6 +28,8 @@ data FileSection =
   ForwardDeclarationSection [ForwardDeclaration] |
   CategoryInterfaceSection Category [FileSection] |
   CategoryImplementationSection Category [FileSection] |
+  InterfaceSection String (Maybe String) [ObjcProperty] [ObjcMethod] |
+  ImplementationSection String [FileSection] |
   MethodHeaderListSection (Maybe String) [ObjcMethod] |
   MethodImplementationListSection (Maybe String) [ObjcMethod] |
   LocalizedStringListSection String [ObjcStatement]
@@ -55,6 +57,13 @@ data Category = Category {
   originalTypeName :: String,
   categoryName :: String,
   categoryMethods :: [ObjcMethod]
+} deriving (Show, Eq)
+
+-- | 'ObjcProperty' stores the structure for a property declaration
+data ObjcProperty = ObjcProperty {
+  propertyType :: ObjcType,
+  propertyAttributes :: [String],
+  propertyName :: String
 } deriving (Show, Eq)
 
 -- | 'ObjcMethod' stores the structure of a particular method. 
@@ -100,7 +109,8 @@ data BlockParam = BlockParam {
 data ObjcStatement =
   ReturnStatement ObjcExpression |
   ExpressionStatement ObjcExpression |
-  IfBlock ObjcExpression [ObjcStatement]
+  IfBlock ObjcExpression [ObjcStatement] |
+  ForEachBlock ObjcExpression ObjcExpression [ObjcStatement]
   deriving (Show, Eq)
 
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This
@@ -109,13 +119,15 @@ data ObjcExpression =
   MethodCall ObjcExpression CalledMethod [ObjcExpression] |
   CFunctionCall String [ObjcExpression] |
   BinOp ObjcExpression Operator ObjcExpression |
+  PropertyCall ObjcExpression Identifier |
   VoidBlock [BlockParam] [ObjcStatement] |
   Var Identifier |
   VarDecl ObjcType Identifier |
   DictionaryLit [(ObjcExpression, ObjcExpression)] |
   StringLit String |
   CStringLit String |
-  FloatLit Float
+  FloatLit Float |
+  ArrayLit [ObjcExpression]
   deriving (Show, Eq)
 
 -- | 'Operator' represents operators such as +,-,*,= etc.
