@@ -28,7 +28,7 @@ objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcHeaderFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".h") appInfo,
   uiKitImportsSection,
-  InterfaceSection vTy (Just vanillaViewTypeKeyword) properties []]
+  InterfaceSection vTy (Just "UIView") properties []]
     where vTy = viewType view
           subs = subviews view
           properties = map (propertyForSubview True) subs
@@ -98,8 +98,11 @@ nameForElement (TextFieldElement textField) = textFieldName textField
 nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
 
+selfExprForName :: String -> ObjcExpression
+selfExprForName name = PropertyCall (Var "self") name
+
 selfExprForElement :: OWAViewElement -> ObjcExpression
-selfExprForElement element = PropertyCall (Var "self") (nameForElement element)
+selfExprForElement element = selfExprForName (nameForElement element)
 
 propExprForName :: String -> ObjcExpression
 propExprForName name = Var $ '_':name
@@ -373,10 +376,3 @@ valueAssignment exp1 valueName newValue = ExpressionStatement $ BinOp
   (PropertyCall exp1 valueName) 
   Assign
   newValue
-
---------------------------------------------------------------------------------
---------------------------STRING CONSTANTS--------------------------------------
---------------------------------------------------------------------------------
-
-vanillaViewTypeKeyword :: String
-vanillaViewTypeKeyword = "UIView"
