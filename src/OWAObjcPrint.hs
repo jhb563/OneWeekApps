@@ -39,6 +39,8 @@ sectionDoc (ImportsSection includes) = vcat (map includeDoc includes) PPrint.<$>
 sectionDoc (ForwardDeclarationSection forwardDecls) = vcat (map forwardDeclDoc forwardDecls) PPrint.<$> empty
 sectionDoc (CategoryInterfaceSection category sections) = categoryInterfaceDoc category sections
 sectionDoc (CategoryImplementationSection category sections) = categoryImplementationDoc category sections
+sectionDoc (InterfaceSection typeName superclass properties methods) = interfaceDoc typeName superclass properties methods
+sectionDoc (ImplementationSection typeName sections) = implementationDoc typeName sections
 sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSectionDoc maybeComment methods
 sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
 sectionDoc (LocalizedStringListSection name statements) = text "//" <+> text name PPrint.<$>
@@ -76,6 +78,24 @@ categoryImplementationDoc category sections = text "@implementation" <+>
   vcatWithSpace (map sectionDoc sections) PPrint.<$>
   endDoc
 
+interfaceDoc :: String -> Maybe String -> [ObjcProperty] -> [ObjcMethod] -> Doc
+interfaceDoc typeName superclass properties methods = text "@interface" <+>
+  text typeName <+> superDocOrParens PPrint.<$>
+  propertySection PPrint.<$>
+  endDoc
+    where propertySection = case properties of
+                              [] -> empty 
+                              _ -> vcatWithSpace (map propertyDoc properties) PPrint.<$> empty
+          superDocOrParens = case superclass of
+                              Just super -> colon <+> text super
+                              _ -> text "()"
+
+implementationDoc :: String -> [FileSection] -> Doc
+implementationDoc typeName sections = text "@implementation" <+>
+  text typeName PPrint.<$>
+  vcatWithSpace (map sectionDoc sections) PPrint.<$>
+  endDoc
+
 methodHeaderListSectionDoc :: Maybe String -> [ObjcMethod] -> Doc
 methodHeaderListSectionDoc Nothing methods = vcat (map headerFileMethodHeaderDoc methods) PPrint.<$> empty
 methodHeaderListSectionDoc (Just comment) methods = text "//" <+> text comment PPrint.<$>
@@ -87,6 +107,12 @@ methodImplementationListSectionDoc Nothing methods = spaceOut (map fullMethodDoc
 methodImplementationListSectionDoc (Just pragma) methods = pragmaDoc pragma PPrint.<$>
   empty PPrint.<$>
   spaceOut (map fullMethodDoc methods)
+
+propertyDoc :: ObjcProperty -> Doc
+propertyDoc property = text "@property" <+>
+  parens (hcat $ punctuate (text ", ") (map text $ propertyAttributes property)) <+>
+  typeDoc (propertyType property) <+>
+  text (propertyName property) <> semi
 
 headerFileMethodHeaderDoc :: ObjcMethod -> Doc
 headerFileMethodHeaderDoc method = methodHeaderDoc method <> semi
@@ -118,6 +144,9 @@ statementDoc (ExpressionStatement objcExpression) = expressionDoc objcExpression
 statementDoc (IfBlock condition statements) = indentBlock
   (text "if" <+> parens (expressionDoc condition))
   (vcat $ map statementDoc statements)
+statementDoc (ForEachBlock decl varName statements) = indentBlock
+  (text "for" <+> parens (expressionDoc decl <+> text "in" <+> expressionDoc varName))
+  (vcat $ map statementDoc statements)
   
 expressionDoc :: ObjcExpression -> Doc
 expressionDoc (MethodCall callingExp (UserMethod method) args) = methodCallDoc
@@ -129,6 +158,8 @@ expressionDoc (CFunctionCall funcName exprs) = text funcName <>
 expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
   opDoc op <+>
   expressionDoc expr2
+expressionDoc (PropertyCall callingExp propName) = expressionDoc callingExp <>
+  text "." <> text propName
 expressionDoc (VoidBlock params statements) = indentBlock 
   (text "^" <>
     parens (hcat $ punctuate (text ", ") (map blockParamDoc params)))
@@ -139,6 +170,9 @@ expressionDoc (DictionaryLit exprMappings) = text "@{" <> hcat (punctuate (text 
 expressionDoc (StringLit stringVal) = text "@\"" <> text stringVal <> text "\""
 expressionDoc (CStringLit stringVal) = text "\"" <> text stringVal <> text "\""
 expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
+expressionDoc (ArrayLit expressions) = text "@[" <>
+  hcat (punctuate (text ", ") (map expressionDoc expressions)) <>
+  text "]"
 
 keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc
 keyValueDoc (key, value) = expressionDoc key <+> colon <+> expressionDoc value

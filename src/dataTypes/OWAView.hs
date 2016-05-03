@@ -21,7 +21,20 @@ data OWALayoutAttribute = Width |
   Bottom |
   CenterX |
   CenterY
-  deriving (Show, Eq)
+  deriving (Eq)
+
+-- | Show instance for attributes which gives us the more natural "Left"
+-- and "Right" as opposed to LeftSide/RightSide, which are used to
+-- avoid naming conflicts with the Haskell built in functions.
+instance Show OWALayoutAttribute where
+  show Width = "Width"
+  show Height = "Height"
+  show LeftSide = "Left"
+  show RightSide = "Right"
+  show Top = "Top"
+  show Bottom = "Bottom"
+  show CenterX = "CenterX"
+  show CenterY = "CenterY"  
 
 -- | OWAConstraint models the different constraints we can put between
 -- different views and elements. 

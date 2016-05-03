@@ -5,6 +5,7 @@ import ViewConstraintTests
 import ViewElementTests
 import ViewFileSearchTests
 import ViewNameTests
+import ViewPrintTests
 
 main :: IO ()
 main = do
@@ -13,3 +14,4 @@ main = do
   runViewNameTests currentDirectory
   runViewElementTests currentDirectory
   runViewConstraintTests currentDirectory
+  runViewPrintTests currentDirectory
