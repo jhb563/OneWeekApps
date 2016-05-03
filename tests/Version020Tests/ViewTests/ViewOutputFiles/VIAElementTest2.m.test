@@ -1,0 +1,141 @@
+//
+// VIAElementTest2.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "VIAElementTest2.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface VIAElementTest2 ()
+
+@property (nonatomic, strong) UILabel* firstLabel;
+@property (nonatomic, strong) UITextField* firstTextfield;
+@property (nonatomic, strong) UILabel* secondLabel;
+@property (nonatomic, strong) UIButton* nextButton;
+@property (nonatomic, strong) UIButton* prevButton;
+@property (nonatomic, strong) UIImageView* firstImage;
+@property (nonatomic, strong) UITextField* secondTextfield;
+@property (nonatomic, strong) UIImageView* secondImage;
+
+@end
+
+@implementation VIAElementTest2
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.firstLabel, self.firstTextfield, self.secondLabel, self.nextButton, self.prevButton, self.firstImage, self.secondTextfield, self.secondImage];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  
+}
+
+#pragma mark - Lazy Getters
+
+- (UILabel*)firstLabel {
+  if (_firstLabel) {
+    return _firstLabel;
+  }
+  _firstLabel = [[UILabel alloc] init];
+  _firstLabel.text = NSLocalizedString(@"FIRST", nil);
+  _firstLabel.textColor = [UIColor view1LabelColor];
+  return _firstLabel;
+}
+
+- (UITextField*)firstTextfield {
+  if (_firstTextfield) {
+    return _firstTextfield;
+  }
+  _firstTextfield = [[UITextField alloc] init];
+  NSDictionary* placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor view1TextFieldColor], NSFontAttributeName : [UIFont placeholderFont]};
+  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"ENTER_NAME", nil) attributes:placeholderAttributes];
+  _firstTextfield.attributedPlaceholder = placeholder;
+  return _firstTextfield;
+}
+
+- (UILabel*)secondLabel {
+  if (_secondLabel) {
+    return _secondLabel;
+  }
+  _secondLabel = [[UILabel alloc] init];
+  _secondLabel.text = NSLocalizedString(@"SECOND", nil);
+  _secondLabel.font = [UIFont placeholderFont];
+  _secondLabel.backgroundColor = [UIColor elementBackgroundColor];
+  return _secondLabel;
+}
+
+- (UIButton*)nextButton {
+  if (_nextButton) {
+    return _nextButton;
+  }
+  _nextButton = [[UIButton alloc] init];
+  [_nextButton setTitle:NSLocalizedString(@"NEXT", nil) forState:UIControlStateNormal];
+  [_nextButton setTitleColor:[UIColor view2Color] forState:UIControlStateNormal];
+  _nextButton.titleLabel.font = [UIFont standardFont];
+  return _nextButton;
+}
+
+- (UIButton*)prevButton {
+  if (_prevButton) {
+    return _prevButton;
+  }
+  _prevButton = [[UIButton alloc] init];
+  [_prevButton setTitle:NSLocalizedString(@"PREV", nil) forState:UIControlStateNormal];
+  [_prevButton setTitleColor:[UIColor view2Color] forState:UIControlStateNormal];
+  _prevButton.titleLabel.font = [UIFont placeholderFont];
+  _prevButton.backgroundColor = [UIColor elementBackgroundColor];
+  return _prevButton;
+}
+
+- (UIImageView*)firstImage {
+  if (_firstImage) {
+    return _firstImage;
+  }
+  _firstImage = [[UIImageView alloc] init];
+  _firstImage.image = [UIImage imageNamed:@"file1.png"];
+  return _firstImage;
+}
+
+- (UITextField*)secondTextfield {
+  if (_secondTextfield) {
+    return _secondTextfield;
+  }
+  _secondTextfield = [[UITextField alloc] init];
+  _secondTextfield.textColor = [UIColor view2Color];
+  _secondTextfield.font = [UIFont standardFont];
+  NSDictionary* placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor placeholderColor], NSFontAttributeName : [UIFont placeholderFont]};
+  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"ENTER_LOCATION", nil) attributes:placeholderAttributes];
+  _secondTextfield.attributedPlaceholder = placeholder;
+  return _secondTextfield;
+}
+
+- (UIImageView*)secondImage {
+  if (_secondImage) {
+    return _secondImage;
+  }
+  _secondImage = [[UIImageView alloc] init];
+  _secondImage.image = [UIImage imageNamed:@"file2.png"];
+  return _secondImage;
+}
+
+@end

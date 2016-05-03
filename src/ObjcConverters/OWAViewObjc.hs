@@ -11,9 +11,11 @@ module OWAViewObjc (
   objcImplementationFromView
 ) where
 
+import Data.Maybe
 import ObjcUtil
 import OWAAppInfo
 import OWAObjcAbSyn
+import OWAElements
 import OWAView
 
 --------------------------------------------------------------------------------
@@ -26,8 +28,10 @@ objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcHeaderFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".h") appInfo,
   uiKitImportsSection,
-  InterfaceSection vTy (Just vanillaViewTypeKeyword) [] []]
+  InterfaceSection vTy (Just vanillaViewTypeKeyword) properties []]
     where vTy = viewType view
+          subs = subviews view
+          properties = map (propertyForSubview True) subs
 
 -- | 'objcImplementationFromView' takes the app info and a view and returns
 -- the structure for the view's implementation file.
@@ -35,9 +39,14 @@ objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcImplementationFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".m") appInfo,
   importsSection vTy (appPrefix appInfo),
-  InterfaceSection vTy Nothing [] [],
-  ImplementationSection vTy [lifecycleSection, setupSection view]]
+  InterfaceSection vTy Nothing properties [],
+  ImplementationSection vTy impSections]
     where vTy = viewType view
+          subs = subviews view
+          properties = map (propertyForSubview False) subs
+          impSections = if not (null subs)
+                          then [lifecycleSection, setupSection view, lazyGetterSection view]
+                          else [lifecycleSection, setupSection view]
 
 --------------------------------------------------------------------------------
 --------------------------SECTION HELPERS---------------------------------------
@@ -56,7 +65,47 @@ lifecycleSection = MethodImplementationListSection (Just "Lifecycle") [initMetho
 
 setupSection :: OWAView -> FileSection
 setupSection view = MethodImplementationListSection (Just "Setup") 
-  [setupViewsMethod, setupConstraintsMethod]
+  [setupViewsMethod (subviews view), setupConstraintsMethod]
+
+lazyGetterSection :: OWAView -> FileSection
+lazyGetterSection view = MethodImplementationListSection (Just "Lazy Getters")
+  (map lazyGetterForView (subviews view))
+
+--------------------------------------------------------------------------------
+--------------------------PROPERTIES--------------------------------------------
+--------------------------------------------------------------------------------
+
+propertyForSubview :: Bool -> OWAViewElement -> ObjcProperty
+propertyForSubview isReadonly subview = ObjcProperty {
+  propertyType = typeForElement subview,
+  propertyAttributes = if isReadonly then ["nonatomic", "strong", "readonly"]
+                        else ["nonatomic", "strong"],
+  propertyName = nameForElement subview
+}
+
+typeNameForElement :: OWAViewElement -> String
+typeNameForElement (LabelElement _) = "UILabel"
+typeNameForElement (TextFieldElement _) = "UITextField"
+typeNameForElement (ButtonElement _) = "UIButton"
+typeNameForElement (ImageElement _) = "UIImageView"
+
+typeForElement :: OWAViewElement -> ObjcType
+typeForElement element = PointerType $ typeNameForElement element
+
+nameForElement :: OWAViewElement -> String
+nameForElement (LabelElement label) = labelName label
+nameForElement (TextFieldElement textField) = textFieldName textField
+nameForElement (ButtonElement button) = buttonName button
+nameForElement (ImageElement image) = imageViewName image
+
+selfExprForElement :: OWAViewElement -> ObjcExpression
+selfExprForElement element = PropertyCall (Var "self") (nameForElement element)
+
+propExprForName :: String -> ObjcExpression
+propExprForName name = Var $ '_':name
+
+propExprForElement :: OWAViewElement -> ObjcExpression
+propExprForElement element = propExprForName (nameForElement element)
 
 --------------------------------------------------------------------------------
 --------------------------METHOD HELPERS----------------------------------------
@@ -70,29 +119,29 @@ initMethod = ObjcMethod {
   params = [],
   methodBody = initBody
 }
-  where superCall = MethodCall 
-                      (Var "super") 
-                      LibMethod {libNameIntro = "init", libParams = []} 
-                      []
+  where superCall = MethodCall (Var "super") libInit []
         superStatement = ExpressionStatement $ BinOp (Var "self") Assign superCall
-        ifBody = [ExpressionStatement $ MethodCall (Var "self") (UserMethod setupViewsMethod) [],
+        ifBody = [ExpressionStatement $ MethodCall (Var "self") (UserMethod setupViewsMethodBase) [],
                   ExpressionStatement $ MethodCall (Var "self") (UserMethod setupConstraintsMethod) []]
         ifBlock = IfBlock (Var "self") ifBody
         returnStatement = ReturnStatement $ Var "self"
         initBody = [superStatement, ifBlock, returnStatement]
 
-setupViewsMethod :: ObjcMethod
-setupViewsMethod = ObjcMethod {
+setupViewsMethodBase :: ObjcMethod
+setupViewsMethodBase = ObjcMethod {
   isStatic = False,
   nameIntro = "setupViews",
   returnType = SimpleType "void",
   params = [],
-  methodBody = setupViewsBody 
+  methodBody = []
 }
+
+setupViewsMethod :: [OWAViewElement] -> ObjcMethod
+setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
   where arrayDecl = ExpressionStatement $ BinOp
                       (VarDecl (PointerType "NSArray") "subviews")
                       Assign
-                      (ArrayLit [])
+                      (ArrayLit $ map selfExprForElement subviews)
         setMaskStatement = ExpressionStatement $ BinOp
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
                             Assign
@@ -117,7 +166,172 @@ setupConstraintsMethod = ObjcMethod {
   params = [],
   methodBody = []
 }
-  
+
+lazyGetterForView :: OWAViewElement -> ObjcMethod
+lazyGetterForView element = ObjcMethod {
+  isStatic = False,
+  nameIntro = nameForElement element,
+  returnType = typeForElement element,
+  params = [],
+  methodBody = lazyGetterBody element
+}
+
+lazyGetterBody :: OWAViewElement -> [ObjcStatement]
+lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtrnStatement]
+  where prop = propExprForElement element
+        rtrnStatement = ReturnStatement prop
+        lazyIfReturn = IfBlock prop [rtrnStatement]
+        initialization = ExpressionStatement $ BinOp prop
+          Assign
+          (MethodCall (MethodCall (Var $ typeNameForElement element) libAlloc []) libInit [])
+        customization = case element of
+          (LabelElement label) -> labelCustomization label
+          (TextFieldElement textField) -> textFieldCustomization textField
+          (ButtonElement button) -> buttonCustomization button
+          (ImageElement image) -> imageCustomization image
+
+libAlloc :: CalledMethod
+libAlloc = LibMethod {
+  libNameIntro = "alloc",
+  libParams = []
+}
+
+libInit :: CalledMethod
+libInit = LibMethod {
+  libNameIntro = "init",
+  libParams = []
+}
+
+--------------------------------------------------------------------------------
+--------------------------VIEW CUSTOMIZATION------------------------------------
+--------------------------------------------------------------------------------
+
+labelCustomization :: OWALabel -> [ObjcStatement]
+labelCustomization label = textAssign:catMaybes [textColorAssign, fontAssign, backgroundAssign]
+  where propExpr = propExprForName $ labelName label
+        textAssign = valueAssignment propExpr "text" (localizedStringExpr $ labelText label)
+        textColorAssign = case labelTextColorName label of
+          Nothing -> Nothing
+          Just color -> Just $ valueAssignment propExpr "textColor" (libMethodForColor color)
+        fontAssign = case labelFontName label of
+          Nothing -> Nothing
+          Just font -> Just $ valueAssignment propExpr "font" (libMethodForFont font)
+        backgroundAssign = case labelBackgroundColorName label of
+          Nothing -> Nothing
+          Just bColor -> Just $ valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)
+
+textFieldCustomization :: OWATextField -> [ObjcStatement]
+textFieldCustomization textField = firstStatements ++ placeholders ++ maybeToList backgroundAssign 
+  where propExpr = propExprForName $ textFieldName textField
+        textAssign = case textFieldText textField of
+          Nothing -> Nothing
+          Just text -> Just $ valueAssignment propExpr "text" (localizedStringExpr text)
+        textColorAssign = case textFieldColorName textField of
+          Nothing -> Nothing
+          Just textColor -> Just $ valueAssignment propExpr "textColor" (libMethodForColor textColor)
+        fontAssign = case textFieldFontName textField of
+          Nothing -> Nothing
+          Just font -> Just $ valueAssignment propExpr "font" (libMethodForFont font)
+        firstStatements = catMaybes [textAssign, textColorAssign, fontAssign]
+        placeholders = placeholderStatements textField
+        backgroundAssign = case textFieldBackgroundColorName textField of
+          Nothing -> Nothing
+          Just bColor -> Just $ valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)
+
+placeholderStatements :: OWATextField -> [ObjcStatement]
+placeholderStatements textField = if noPlaceholders then [] else statements
+  where pText =  textFieldPlaceholderText textField
+        pColor = textFieldPlaceholderTextColorName textField
+        pFont = textFieldPlaceholderFontName textField
+        noPlaceholders = isNothing pText && isNothing pColor && isNothing pFont
+        colorAttrPair = case pColor of
+          Nothing -> Nothing
+          Just color -> Just (Var "NSForegroundColorAttributeName", libMethodForColor color)
+        fontAttrPair = case pFont of
+          Nothing -> Nothing
+          Just font -> Just (Var "NSFontAttributeName", libMethodForFont font)
+        dictionary = DictionaryLit $ catMaybes [colorAttrPair, fontAttrPair]
+        dictAssign = ExpressionStatement $ BinOp 
+          (VarDecl (PointerType "NSDictionary") "placeholderAttributes")
+          Assign
+          dictionary
+        initExpr = MethodCall (MethodCall (Var "NSAttributedString") libAlloc [])
+          LibMethod {
+            libNameIntro = "initWith",
+            libParams = ["String", "attributes"]
+          }
+          [localizedStringExpr (fromMaybe "" pText), Var "placeholderAttributes"]
+        placeholderInit = ExpressionStatement $ BinOp
+          (VarDecl (PointerType "NSAttributedString") "placeholder")
+          Assign
+          initExpr
+        propExpr = propExprForName $ textFieldName textField
+        placeholderAssign = valueAssignment propExpr "attributedPlaceholder" (Var "placeholder")
+        statements = [dictAssign, placeholderInit, placeholderAssign]
+
+buttonCustomization :: OWAButton -> [ObjcStatement]
+buttonCustomization button = textStatement:otherStatements
+  where propExpr = propExprForName $ buttonName button
+        textStatement = ExpressionStatement $ MethodCall propExpr
+          LibMethod {
+            libNameIntro = "set",
+            libParams = ["Title", "forState"]
+          }
+          [localizedStringExpr $ buttonText button, Var "UIControlStateNormal"]
+        textColorAssign = case buttonTextColorName button of
+          Nothing -> Nothing
+          Just color -> Just $ ExpressionStatement $ MethodCall propExpr
+            LibMethod {
+              libNameIntro = "set",
+              libParams = ["TitleColor", "forState"]
+            }
+            [libMethodForColor color, Var "UIControlStateNormal"];
+        fontAssign = case buttonFontName button of
+          Nothing -> Nothing
+          Just font -> Just $ valueAssignment (PropertyCall propExpr "titleLabel") "font" (libMethodForFont font)
+        backgroundAssign = case buttonBackgroundColorName button of
+          Nothing -> Nothing
+          Just bColor -> Just $ valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)
+        otherStatements = catMaybes [textColorAssign, fontAssign, backgroundAssign]
+
+imageCustomization :: OWAImageView -> [ObjcStatement]
+imageCustomization image = [imageSourceAssign]
+  where propExpr = propExprForName $ imageViewName image
+        imageSourceAssign = valueAssignment propExpr "image" (libMethodForImage $ imageSourceName image)
+
+libMethodForColor :: String -> ObjcExpression
+libMethodForColor colorName = MethodCall
+  (Var "UIColor")
+  LibMethod {
+    libNameIntro = colorName,
+    libParams = []
+  }
+  []
+
+libMethodForFont :: String -> ObjcExpression
+libMethodForFont fontName = MethodCall
+  (Var "UIFont")
+  LibMethod {
+    libNameIntro = fontName,
+    libParams = []
+  }
+  []
+
+libMethodForImage :: String -> ObjcExpression
+libMethodForImage imageSrc = MethodCall
+  (Var "UIImage")
+  LibMethod {
+    libNameIntro = "image",
+    libParams = ["Named"]
+  }
+  [StringLit imageSrc]
+
+valueAssignment :: ObjcExpression -> String -> ObjcExpression -> ObjcStatement
+valueAssignment exp1 valueName newValue = ExpressionStatement $ BinOp
+  (PropertyCall exp1 valueName) 
+  Assign
+  newValue
+
 --------------------------------------------------------------------------------
 --------------------------STRING CONSTANTS--------------------------------------
 --------------------------------------------------------------------------------

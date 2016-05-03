@@ -81,9 +81,12 @@ categoryImplementationDoc category sections = text "@implementation" <+>
 interfaceDoc :: String -> Maybe String -> [ObjcProperty] -> [ObjcMethod] -> Doc
 interfaceDoc typeName superclass properties methods = text "@interface" <+>
   text typeName <+> superDocOrParens PPrint.<$>
-  empty PPrint.<$>
+  propertySection PPrint.<$>
   endDoc
-    where superDocOrParens = case superclass of
+    where propertySection = case properties of
+                              [] -> empty 
+                              _ -> vcatWithSpace (map propertyDoc properties) PPrint.<$> empty
+          superDocOrParens = case superclass of
                               Just super -> colon <+> text super
                               _ -> text "()"
 
@@ -104,6 +107,12 @@ methodImplementationListSectionDoc Nothing methods = spaceOut (map fullMethodDoc
 methodImplementationListSectionDoc (Just pragma) methods = pragmaDoc pragma PPrint.<$>
   empty PPrint.<$>
   spaceOut (map fullMethodDoc methods)
+
+propertyDoc :: ObjcProperty -> Doc
+propertyDoc property = text "@property" <+>
+  parens (hcat $ punctuate (text ", ") (map text $ propertyAttributes property)) <+>
+  typeDoc (propertyType property) <+>
+  text (propertyName property) <> semi
 
 headerFileMethodHeaderDoc :: ObjcMethod -> Doc
 headerFileMethodHeaderDoc method = methodHeaderDoc method <> semi

@@ -29,9 +29,9 @@ runViewPrintTests currentDirectory = do
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
-    . afterAll_ (removeResultsFiles testDirectory resultsFiles) $
+    . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       nameTests testDirectory
-      --elementTests testDirectory
+      elementTests testDirectory
       --constraintTests testDirectory
 
 nameTests :: FilePath -> Spec
@@ -48,26 +48,25 @@ nameTests testDirectory = describe "Print File Structure for views with no eleme
     it "The printed implementation should match for view 3" $
       (testDirectory ++ name3MResultFile) `filesShouldMatch` (testDirectory ++ name3MTestFile)
 
---elementTests :: FilePath -> Spec
---elementTests testDirectory = do
---  describe "Print File Structure for views with elements but not constraints" $ do
---    it "The printed header should match for view 1" $
---      (testDirectory ++ element1HeaderResultFile) `filesShouldMatch` (testDirectory ++ element1HeaderTestFile)
+elementTests :: FilePath -> Spec
+elementTests testDirectory = describe "Print File Structure for views with elements but not constraints" $ do
+    it "The printed header should match for view 1" $
+      (testDirectory ++ element1HeaderResultFile) `filesShouldMatch` (testDirectory ++ element1HeaderTestFile)
 
---    it "The printed implementation should match for view 1" $
---      (testDirectory ++ element1MResultFile) `filesShouldMatch` (testDirectory ++ element1MTestFile)      
+    it "The printed implementation should match for view 1" $
+      (testDirectory ++ element1MResultFile) `filesShouldMatch` (testDirectory ++ element1MTestFile)      
 
---    it "The printed header should match for view 2" $
---      (testDirectory ++ element2HeaderResultFile) `filesShouldMatch` (testDirectory ++ element2HeaderTestFile)
+    it "The printed header should match for view 2" $
+      (testDirectory ++ element2HeaderResultFile) `filesShouldMatch` (testDirectory ++ element2HeaderTestFile)
 
---    it "The printed implementation should match for view 2" $
---      (testDirectory ++ element2MResultFile) `filesShouldMatch` (testDirectory ++ element2MTestFile)
+    it "The printed implementation should match for view 2" $
+      (testDirectory ++ element2MResultFile) `filesShouldMatch` (testDirectory ++ element2MTestFile)
 
---    it "The printed header should match for view 3" $
---      (testDirectory ++ element3HeaderResultFile) `filesShouldMatch` (testDirectory ++ element3HeaderTestFile)
+    it "The printed header should match for view 3" $
+      (testDirectory ++ element3HeaderResultFile) `filesShouldMatch` (testDirectory ++ element3HeaderTestFile)
 
---    it "The printed implementation should match for view 3" $
---      (testDirectory ++ element3MResultFile) `filesShouldMatch` (testDirectory ++ element3MTestFile)
+    it "The printed implementation should match for view 3" $
+      (testDirectory ++ element3MResultFile) `filesShouldMatch` (testDirectory ++ element3MTestFile)
 
 --constraintTests :: FilePath -> Spec
 --constraintTests testDirectory = do
@@ -119,13 +118,13 @@ testFileStructures :: [ObjcFile]
 testFileStructures = [objcHeaderFromView sampleAppInfo nameTest1,
   objcImplementationFromView sampleAppInfo nameTest1,
   objcHeaderFromView sampleAppInfo nameTest3,
-  objcImplementationFromView sampleAppInfo nameTest3]
-  --objcHeaderFromView sampleAppInfo elementTest1,
-  --objcImplementationFromView sampleAppInfo elementTest1,
-  --objcHeaderFromView sampleAppInfo elementTest2,
-  --objcImplementationFromView sampleAppInfo elementTest2,
-  --objcHeaderFromView sampleAppInfo elementTest3,
-  --objcImplementationFromView sampleAppInfo elementTest3,
+  objcImplementationFromView sampleAppInfo nameTest3,
+  objcHeaderFromView sampleAppInfo elementTest1,
+  objcImplementationFromView sampleAppInfo elementTest1,
+  objcHeaderFromView sampleAppInfo elementTest2,
+  objcImplementationFromView sampleAppInfo elementTest2,
+  objcHeaderFromView sampleAppInfo elementTest3,
+  objcImplementationFromView sampleAppInfo elementTest3]
   --objcHeaderFromView sampleAppInfo heightWidthTestView,
   --objcImplementationFromView sampleAppInfo heightWidthTestView,
   --objcHeaderFromView sampleAppInfo alignTestView1,
@@ -141,13 +140,13 @@ resultsFiles :: [String]
 resultsFiles = [name1HeaderResultFile,
   name1MResultFile,
   name3HeaderResultFile,
-  name3MResultFile]
-  --element1HeaderResultFile,
-  --element1MResultFile,
-  --element2HeaderResultFile,
-  --element2MResultFile,
-  --element3HeaderResultFile,
-  --element3MResultFile,
+  name3MResultFile,
+  element1HeaderResultFile,
+  element1MResultFile,
+  element2HeaderResultFile,
+  element2MResultFile,
+  element3HeaderResultFile,
+  element3MResultFile]
   --heightWidthHeaderResultFile,
   --heightWidthMResultFile,
   --align1HeaderResultFile,
@@ -171,23 +170,23 @@ name3HeaderResultFile = "VIAPrimaryView.h"
 name3MResultFile :: String
 name3MResultFile = "VIAPrimaryView.m"
 
---element1HeaderResultFile :: String
---element1HeaderResultFile = "VIAElementTest1.h"
+element1HeaderResultFile :: String
+element1HeaderResultFile = "VIAElementTest1.h"
 
---element1MResultFile :: String
---element1MResultFile = "VIAElementTest1.m"
+element1MResultFile :: String
+element1MResultFile = "VIAElementTest1.m"
 
---element2HeaderResultFile :: String
---element2HeaderResultFile = "VIAElementTest2.h"
+element2HeaderResultFile :: String
+element2HeaderResultFile = "VIAElementTest2.h"
 
---element2MResultFile :: String
---element2MResultFile = "VIAElementTest2.m"
+element2MResultFile :: String
+element2MResultFile = "VIAElementTest2.m"
 
---element3HeaderResultFile :: String
---element3HeaderResultFile = "VIAElementTest3.h"
+element3HeaderResultFile :: String
+element3HeaderResultFile = "VIAElementTest3.h"
 
---element3MResultFile :: String
---element3MResultFile = "VIAElementTest3.m"
+element3MResultFile :: String
+element3MResultFile = "VIAElementTest3.m"
 
 --heightWidthHeaderResultFile :: String
 --heightWidthHeaderResultFile = "VIAConstraintTest2.h"
@@ -231,23 +230,23 @@ name3HeaderTestFile = "VIAPrimaryView.h.test"
 name3MTestFile :: String
 name3MTestFile = "VIAPrimaryView.m.test"
 
---element1HeaderTestFile :: String
---element1HeaderTestFile = "VIAElementTest1.h.test"
+element1HeaderTestFile :: String
+element1HeaderTestFile = "VIAElementTest1.h.test"
 
---element1MTestFile :: String
---element1MTestFile = "VIAElementTest1.m.test"
+element1MTestFile :: String
+element1MTestFile = "VIAElementTest1.m.test"
 
---element2HeaderTestFile :: String
---element2HeaderTestFile = "VIAElementTest2.h.test"
+element2HeaderTestFile :: String
+element2HeaderTestFile = "VIAElementTest2.h.test"
 
---element2MTestFile :: String
---element2MTestFile = "VIAElementTest2.m.test"
+element2MTestFile :: String
+element2MTestFile = "VIAElementTest2.m.test"
 
---element3HeaderTestFile :: String
---element3HeaderTestFile = "VIAElementTest3.h.test"
+element3HeaderTestFile :: String
+element3HeaderTestFile = "VIAElementTest3.h.test"
 
---element3MTestFile :: String
---element3MTestFile = "VIAElementTest3.m.test"
+element3MTestFile :: String
+element3MTestFile = "VIAElementTest3.m.test"
 
 --heightWidthHeaderTestFile :: String
 --heightWidthHeaderTestFile = "VIAConstraintTest2.h.test"
