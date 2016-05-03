@@ -32,7 +32,7 @@ runViewPrintTests currentDirectory = do
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       nameTests testDirectory
       elementTests testDirectory
-      --constraintTests testDirectory
+      constraintTests testDirectory
 
 nameTests :: FilePath -> Spec
 nameTests testDirectory = describe "Print File Structure for views with no elements or constraints" $ do
@@ -68,42 +68,41 @@ elementTests testDirectory = describe "Print File Structure for views with eleme
     it "The printed implementation should match for view 3" $
       (testDirectory ++ element3MResultFile) `filesShouldMatch` (testDirectory ++ element3MTestFile)
 
---constraintTests :: FilePath -> Spec
---constraintTests testDirectory = do
---  describe "Print File Structure for views with elements and constraints" $ do
---    context "when the constraints are height and width constraints" $ do
---      it "The printed header should match" $
---        (testDirectory ++ heightWidthHeaderResultFile) `filesShouldMatch` (testDirectory ++ heightWidthHeaderTestFile)
+constraintTests :: FilePath -> Spec
+constraintTests testDirectory = describe "Print File Structure for views with elements and constraints" $ do
+    context "when the constraints are height and width constraints" $ do
+      it "The printed header should match" $
+        (testDirectory ++ heightWidthHeaderResultFile) `filesShouldMatch` (testDirectory ++ heightWidthHeaderTestFile)
 
---      it "The printed implementation should match" $
---        (testDirectory ++ heightWidthMResultFile) `filesShouldMatch` (testDirectory ++ heightWidthMTestFile)
+      it "The printed implementation should match" $
+        (testDirectory ++ heightWidthMResultFile) `filesShouldMatch` (testDirectory ++ heightWidthMTestFile)
 
---    context "when the constraints are alignment constraints" $ do
---      it "The printed header should match for view 1" $
---        (testDirectory ++ align1HeaderResultFile) `filesShouldMatch` (testDirectory ++ align1HeaderTestFile)
+    context "when the constraints are alignment constraints" $ do
+      it "The printed header should match for view 1" $
+        (testDirectory ++ align1HeaderResultFile) `filesShouldMatch` (testDirectory ++ align1HeaderTestFile)
 
---      it "The printed implementation should match for view 1" $
---        (testDirectory ++ align1MResultFile) `filesShouldMatch` (testDirectory ++ align1MTestFile)
+      it "The printed implementation should match for view 1" $
+        (testDirectory ++ align1MResultFile) `filesShouldMatch` (testDirectory ++ align1MTestFile)
 
---      it "The printed header should match for view 2" $
---        (testDirectory ++ align2HeaderResultFile) `filesShouldMatch` (testDirectory ++ align2HeaderTestFile)
+      it "The printed header should match for view 2" $
+        (testDirectory ++ align2HeaderResultFile) `filesShouldMatch` (testDirectory ++ align2HeaderTestFile)
 
---      it "The printed implementation should match for view 2" $
---        (testDirectory ++ align2MResultFile) `filesShouldMatch` (testDirectory ++ align2MTestFile)
+      it "The printed implementation should match for view 2" $
+        (testDirectory ++ align2MResultFile) `filesShouldMatch` (testDirectory ++ align2MTestFile)
 
---    context "when the constraints are alignment constraints" $ do
---      it "The printed header should match" $
---        (testDirectory ++ placementHeaderResultFile) `filesShouldMatch` (testDirectory ++ placementHeaderTestFile)
+    context "when the constraints are alignment constraints" $ do
+      it "The printed header should match" $
+        (testDirectory ++ placementHeaderResultFile) `filesShouldMatch` (testDirectory ++ placementHeaderTestFile)
 
---      it "The printed implementation should match" $
---        (testDirectory ++ placementMResultFile) `filesShouldMatch` (testDirectory ++ placementMTestFile)
+      it "The printed implementation should match" $
+        (testDirectory ++ placementMResultFile) `filesShouldMatch` (testDirectory ++ placementMTestFile)
 
---    context "when the constraints are centering constraints" $ do
---      it "The printed header should match" $
---        (testDirectory ++ centerHeaderResultFile) `filesShouldMatch` (testDirectory ++ centerHeaderTestFile)
+    context "when the constraints are centering constraints" $ do
+      it "The printed header should match" $
+        (testDirectory ++ centerHeaderResultFile) `filesShouldMatch` (testDirectory ++ centerHeaderTestFile)
 
---      it "The printed implementation should match" $
---        (testDirectory ++ centerMResultFile) `filesShouldMatch` (testDirectory ++ centerMTestFile)
+      it "The printed implementation should match" $
+        (testDirectory ++ centerMResultFile) `filesShouldMatch` (testDirectory ++ centerMTestFile)
 
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {
@@ -124,17 +123,17 @@ testFileStructures = [objcHeaderFromView sampleAppInfo nameTest1,
   objcHeaderFromView sampleAppInfo elementTest2,
   objcImplementationFromView sampleAppInfo elementTest2,
   objcHeaderFromView sampleAppInfo elementTest3,
-  objcImplementationFromView sampleAppInfo elementTest3]
-  --objcHeaderFromView sampleAppInfo heightWidthTestView,
-  --objcImplementationFromView sampleAppInfo heightWidthTestView,
-  --objcHeaderFromView sampleAppInfo alignTestView1,
-  --objcImplementationFromView sampleAppInfo alignTestView1,
-  --objcHeaderFromView sampleAppInfo alignTestView2,
-  --objcImplementationFromView sampleAppInfo alignTestView2,
-  --objcHeaderFromView sampleAppInfo placementTestView,
-  --objcImplementationFromView sampleAppInfo placementTestView,
-  --objcHeaderFromView sampleAppInfo centerTestView,
-  --objcImplementationFromView sampleAppInfo centerTestView]
+  objcImplementationFromView sampleAppInfo elementTest3,
+  objcHeaderFromView sampleAppInfo heightWidthTestView,
+  objcImplementationFromView sampleAppInfo heightWidthTestView,
+  objcHeaderFromView sampleAppInfo alignTestView1,
+  objcImplementationFromView sampleAppInfo alignTestView1,
+  objcHeaderFromView sampleAppInfo alignTestView2,
+  objcImplementationFromView sampleAppInfo alignTestView2,
+  objcHeaderFromView sampleAppInfo placementTestView,
+  objcImplementationFromView sampleAppInfo placementTestView,
+  objcHeaderFromView sampleAppInfo centerTestView,
+  objcImplementationFromView sampleAppInfo centerTestView]
 
 resultsFiles :: [String]
 resultsFiles = [name1HeaderResultFile,
@@ -146,17 +145,17 @@ resultsFiles = [name1HeaderResultFile,
   element2HeaderResultFile,
   element2MResultFile,
   element3HeaderResultFile,
-  element3MResultFile]
-  --heightWidthHeaderResultFile,
-  --heightWidthMResultFile,
-  --align1HeaderResultFile,
-  --align1MResultFile,
-  --align2HeaderResultFile,
-  --align2MResultFile,
-  --placementHeaderResultFile,
-  --placementMResultFile,
-  --centerHeaderResultFile,
-  --centerMResultFile]
+  element3MResultFile,
+  heightWidthHeaderResultFile,
+  heightWidthMResultFile,
+  align1HeaderResultFile,
+  align1MResultFile,
+  align2HeaderResultFile,
+  align2MResultFile,
+  placementHeaderResultFile,
+  placementMResultFile,
+  centerHeaderResultFile,
+  centerMResultFile]
 
 name1HeaderResultFile :: String
 name1HeaderResultFile = "VIANameTestView.h"
@@ -188,35 +187,35 @@ element3HeaderResultFile = "VIAElementTest3.h"
 element3MResultFile :: String
 element3MResultFile = "VIAElementTest3.m"
 
---heightWidthHeaderResultFile :: String
---heightWidthHeaderResultFile = "VIAConstraintTest2.h"
+heightWidthHeaderResultFile :: String
+heightWidthHeaderResultFile = "VIAConstraintTest2.h"
 
---heightWidthMResultFile :: String
---heightWidthMResultFile = "VIAConstraintTest2.m"
+heightWidthMResultFile :: String
+heightWidthMResultFile = "VIAConstraintTest2.m"
 
---align1HeaderResultFile :: String
---align1HeaderResultFile = "VIAConstraintTest3.h"
+align1HeaderResultFile :: String
+align1HeaderResultFile = "VIAConstraintTest3.h"
 
---align1MResultFile :: String
---align1MResultFile = "VIAConstraintTest3.m"
+align1MResultFile :: String
+align1MResultFile = "VIAConstraintTest3.m"
 
---align2HeaderResultFile :: String
---align2HeaderResultFile = "VIAConstraintTest4.h"
+align2HeaderResultFile :: String
+align2HeaderResultFile = "VIAConstraintTest4.h"
 
---align2MResultFile :: String
---align2MResultFile = "VIAConstraintTest4.m"
+align2MResultFile :: String
+align2MResultFile = "VIAConstraintTest4.m"
 
---placementHeaderResultFile :: String
---placementHeaderResultFile = "VIAConstraintTest5.h"
+placementHeaderResultFile :: String
+placementHeaderResultFile = "VIAConstraintTest5.h"
 
---placementMResultFile :: String
---placementMResultFile = "VIAConstraintTest5.m"
+placementMResultFile :: String
+placementMResultFile = "VIAConstraintTest5.m"
 
---centerHeaderResultFile :: String
---centerHeaderResultFile = "VIAConstraintTest6.h"
+centerHeaderResultFile :: String
+centerHeaderResultFile = "VIAConstraintTest6.h"
 
---centerMResultFile :: String
---centerMResultFile = "VIAConstraintTest6.m"
+centerMResultFile :: String
+centerMResultFile = "VIAConstraintTest6.m"
 
 name1HeaderTestFile :: String
 name1HeaderTestFile = "VIANameTestView.h.test"
@@ -248,32 +247,32 @@ element3HeaderTestFile = "VIAElementTest3.h.test"
 element3MTestFile :: String
 element3MTestFile = "VIAElementTest3.m.test"
 
---heightWidthHeaderTestFile :: String
---heightWidthHeaderTestFile = "VIAConstraintTest2.h.test"
+heightWidthHeaderTestFile :: String
+heightWidthHeaderTestFile = "VIAConstraintTest2.h.test"
 
---heightWidthMTestFile :: String
---heightWidthMTestFile = "VIAConstraintTest2.m.test"
+heightWidthMTestFile :: String
+heightWidthMTestFile = "VIAConstraintTest2.m.test"
 
---align1HeaderTestFile :: String
---align1HeaderTestFile = "VIAConstraintTest3.h.test"
+align1HeaderTestFile :: String
+align1HeaderTestFile = "VIAConstraintTest3.h.test"
 
---align1MTestFile :: String
---align1MTestFile = "VIAConstraintTest3.m.test"
+align1MTestFile :: String
+align1MTestFile = "VIAConstraintTest3.m.test"
 
---align2HeaderTestFile :: String
---align2HeaderTestFile = "VIAConstraintTest4.h.test"
+align2HeaderTestFile :: String
+align2HeaderTestFile = "VIAConstraintTest4.h.test"
 
---align2MTestFile :: String
---align2MTestFile = "VIAConstraintTest4.m.test"
+align2MTestFile :: String
+align2MTestFile = "VIAConstraintTest4.m.test"
 
---placementHeaderTestFile :: String
---placementHeaderTestFile = "VIAConstraintTest5.h.test"
+placementHeaderTestFile :: String
+placementHeaderTestFile = "VIAConstraintTest5.h.test"
 
---placementMTestFile :: String
---placementMTestFile = "VIAConstraintTest5.m.test"
+placementMTestFile :: String
+placementMTestFile = "VIAConstraintTest5.m.test"
 
---centerHeaderTestFile :: String
---centerHeaderTestFile = "VIAConstraintTest6.h.test"
+centerHeaderTestFile :: String
+centerHeaderTestFile = "VIAConstraintTest6.h.test"
 
---centerMTestFile :: String
---centerMTestFile = "VIAConstraintTest6.m.test"
+centerMTestFile :: String
+centerMTestFile = "VIAConstraintTest6.m.test"

@@ -65,7 +65,7 @@ lifecycleSection = MethodImplementationListSection (Just "Lifecycle") [initMetho
 
 setupSection :: OWAView -> FileSection
 setupSection view = MethodImplementationListSection (Just "Setup") 
-  [setupViewsMethod (subviews view), setupConstraintsMethod]
+  [setupViewsMethod (subviews view), setupConstraintsMethod (constraints view)]
 
 lazyGetterSection :: OWAView -> FileSection
 lazyGetterSection view = MethodImplementationListSection (Just "Lazy Getters")
@@ -122,7 +122,7 @@ initMethod = ObjcMethod {
   where superCall = MethodCall (Var "super") libInit []
         superStatement = ExpressionStatement $ BinOp (Var "self") Assign superCall
         ifBody = [ExpressionStatement $ MethodCall (Var "self") (UserMethod setupViewsMethodBase) [],
-                  ExpressionStatement $ MethodCall (Var "self") (UserMethod setupConstraintsMethod) []]
+                  ExpressionStatement $ MethodCall (Var "self") (UserMethod setupConstraintsMethodBase) []]
         ifBlock = IfBlock (Var "self") ifBody
         returnStatement = ReturnStatement $ Var "self"
         initBody = [superStatement, ifBlock, returnStatement]
@@ -157,15 +157,57 @@ setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
                     (Var "subviews")
                     [setMaskStatement, addSubviewStatement]
         setupViewsBody = [arrayDecl, forBlock]
-  
-setupConstraintsMethod :: ObjcMethod
-setupConstraintsMethod = ObjcMethod {
+
+setupConstraintsMethodBase :: ObjcMethod
+setupConstraintsMethodBase = ObjcMethod {
   isStatic = False,
   nameIntro = "setupConstraints",
   returnType = SimpleType "void",
   params = [],
   methodBody = []
 }
+  
+setupConstraintsMethod :: [OWAConstraint] -> ObjcMethod
+setupConstraintsMethod constraints = setupConstraintsMethodBase {methodBody = setupConstraintsBody}
+  where setupConstraintsBody = concatMap constraintStatements constraints
+
+constraintStatements :: OWAConstraint -> [ObjcStatement]
+constraintStatements constraint = [createConstraint, addConstraint]
+  where firstName = firstElementName constraint
+        firstAttr = firstAttribute constraint
+        constraintName = firstName ++ show firstAttr
+        secondItemExpr = case secondElementName constraint of
+          Nothing -> Var "nil"
+          Just "Super" -> Var "self"
+          Just secondName -> PropertyCall (Var "self") secondName
+        constraintInitialization = MethodCall 
+          (Var "NSLayoutConstraint")
+          LibMethod {
+            libNameIntro = "constraintWith",
+            libParams = ["Item", "attribute", "relatedBy", "toItem", "attribute", "multiplier", "constant"]
+          }
+          [PropertyCall (Var "self") firstName,
+          Var $ objcStringForAttribute (Just firstAttr),
+          Var "NSLayoutRelationEquality",
+          secondItemExpr,
+          Var $ objcStringForAttribute (secondAttribute constraint),
+          FloatLit $ multiplier constraint,
+          FloatLit $ constant constraint]
+        createConstraint = ExpressionStatement $ BinOp
+          (VarDecl (PointerType "NSLayoutConstraint") constraintName)
+          Assign
+          constraintInitialization
+        addConstraint = ExpressionStatement $ MethodCall 
+          (Var "self")
+          LibMethod {
+            libNameIntro = "add",
+            libParams = ["Constraint"]
+          }
+          [Var constraintName]
+
+objcStringForAttribute :: Maybe OWALayoutAttribute -> String
+objcStringForAttribute Nothing = "NSLayoutAttributeNotAnAttribute"
+objcStringForAttribute (Just attr) = "NSLayoutAttribute" ++ show attr
 
 lazyGetterForView :: OWAViewElement -> ObjcMethod
 lazyGetterForView element = ObjcMethod {
