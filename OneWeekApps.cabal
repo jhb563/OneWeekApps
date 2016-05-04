@@ -129,7 +129,8 @@ test-suite Version020Tests
                   tests/Version020Tests,
                   tests/Version020Tests/FileSearchTests,
                   tests/Version020Tests/ViewTests,
-                  tests/Version020Tests/ErrorTests
+                  tests/Version020Tests/ErrorTests,
+                  tests/Version020Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

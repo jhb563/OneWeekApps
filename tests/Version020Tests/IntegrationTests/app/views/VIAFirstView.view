@@ -20,8 +20,8 @@ View firstView
       Layout
         Height 50
         Width 200
-        AlignLeft view1Label
-        Below view1Label 20 // Some constraints are more complicated
+        AlignLeft view1label
+        Below view1label 20 // Some constraints are more complicated
     Button view1Button
       Text "NEXT"
       TextColor view1ButtonColor
@@ -29,14 +29,14 @@ View firstView
       Layout
         Height 50
         Width 100
-        AlignLeft view1Label
+        AlignLeft view1label
         Below view1Field 30
     Image view1Image
       ImageSrc "firstImage" // Images only have one attribute
       Layout
         Height 80
         Width 80
-        AlignLeft view1Label
+        AlignLeft view1label
         Below view1Button 20
 
 // We can also add some trailing comments

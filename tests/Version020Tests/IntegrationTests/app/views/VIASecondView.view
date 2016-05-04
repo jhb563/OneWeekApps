@@ -25,24 +25,24 @@ View secondView
         AlignLeft firstLabel
         Below firstLabel 20
     Button firstButton
-	    Text "SELECT_OPTION_1"
-	    TextColor view2TextColor
-	    Font buttonFont
-	    BackgroundColor elementBackgroundColor
-	  	Layout
-			    Height 50
-			    Width 100
-			    ToRightOf firstLabel 50
-			    AlignCenterY firstLabel
+      Text "SELECT_OPTION_1"
+      TextColor view2TextColor
+      Font buttonFont
+      BackgroundColor elementBackgroundColor
+      Layout
+          Height 50
+          Width 100
+          ToRightOf firstLabel 50
+          CenterY firstLabel
     Button secondButton
       Text "SELECT_OPTION_2"
       TextColor view2TextColor
       Font buttonFont
       Layout
-	        	Height 50
-	        	Width 100
-	        	ToRightOf secondLabel 50
-	        	AlignCenterY secondLabel
+            Height 50
+            Width 100
+            ToRightOf secondLabel 50
+            CenterY secondLabel
 
 
 

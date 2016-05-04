@@ -7,8 +7,8 @@
 //
 
 #import "VIASecondView.h"
-#import "UIColor+VIAColors.h"
-#import "UIFont+VIAFonts.h"
+#import "UIColor+IGAColors.h"
+#import "UIFont+IGAFonts.h"
 
 @interface VIASecondView ()
 
@@ -43,37 +43,37 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutAttribute* firstLabelHeight = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  NSLayoutConstraint* firstLabelHeight = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:firstLabelHeight];
-  NSLayoutAttribute* firstLabelWidth = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  NSLayoutConstraint* firstLabelWidth = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:firstLabelWidth];
-  NSLayoutAttribute* firstLabelLeft = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:40];
+  NSLayoutConstraint* firstLabelLeft = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:40.0];
   [self addConstraint:firstLabelLeft];
-  NSLayoutAttribute* firstLabelTop = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40];
+  NSLayoutConstraint* firstLabelTop = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
   [self addConstraint:firstLabelTop];
-  NSLayoutAttribute* secondLabelHeight = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  NSLayoutConstraint* secondLabelHeight = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:secondLabelHeight];
-  NSLayoutAttribute* secondLabelWidth = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  NSLayoutConstraint* secondLabelWidth = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:secondLabelWidth];
-  NSLayoutAttribute* secondLabelLeft = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
+  NSLayoutConstraint* secondLabelLeft = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:secondLabelLeft];
-  NSLayoutAttribute* secondLabelTop = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20];
+  NSLayoutConstraint* secondLabelTop = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
   [self addConstraint:secondLabelTop];
-  NSLayoutAttribute* firstButtonHeight = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50];
+  NSLayoutConstraint* firstButtonHeight = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
   [self addConstraint:firstButtonHeight];
-  NSLayoutAttribute* firstButtonWidth = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  NSLayoutConstraint* firstButtonWidth = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:firstButtonWidth];
-  NSLayoutAttribute* firstButtonLeft = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:50];
+  NSLayoutConstraint* firstButtonLeft = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:50.0];
   [self addConstraint:firstButtonLeft];
-  NSLayoutAttribute* firstButtonCenterY = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+  NSLayoutConstraint* firstButtonCenterY = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.firstLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:firstButtonCenterY];
-  NSLayoutAttribute* secondButtonHeight = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50];
+  NSLayoutConstraint* secondButtonHeight = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
   [self addConstraint:secondButtonHeight];
-  NSLayoutAttribute* secondButtonWidth = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100];
+  NSLayoutConstraint* secondButtonWidth = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:secondButtonWidth];
-  NSLayoutAttribute* secondButtonLeft = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.secondLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:50];
+  NSLayoutConstraint* secondButtonLeft = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.secondLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:50.0];
   [self addConstraint:secondButtonLeft];
-  NSLayoutAttribute* secondButtonCenterY = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.secondLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+  NSLayoutConstraint* secondButtonCenterY = [NSLayoutConstraint constraintWithItem:self.secondButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.secondLabel attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:secondButtonCenterY];
 }
 
@@ -87,7 +87,6 @@
   _firstLabel.text = NSLocalizedString(@"OPTION_1", nil);
   _firstLabel.textColor = [UIColor view2TextColor];
   _firstLabel.font = [UIFont standardFont];
-  _firstLabel.backgroundColor = [UIColor elementBackgroundColor];
   return _firstLabel;
 }
 
