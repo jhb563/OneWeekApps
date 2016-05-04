@@ -7,8 +7,8 @@
 //
 
 #import "VIAThirdView.h"
-#import "UIColor+VIAColors.h"
-#import "UIFont+VIAFonts.h"
+#import "UIColor+IGAColors.h"
+#import "UIFont+IGAFonts.h"
 
 @interface VIAThirdView ()
 
@@ -43,37 +43,37 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutAttribute* firstFieldHeight = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  NSLayoutConstraint* firstFieldHeight = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:firstFieldHeight];
-  NSLayoutAttribute* firstFieldWidth = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200];
+  NSLayoutConstraint* firstFieldWidth = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
   [self addConstraint:firstFieldWidth];
-  NSLayoutAttribute* firstFieldCenterX = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+  NSLayoutConstraint* firstFieldCenterX = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:firstFieldCenterX];
-  NSLayoutAttribute* firstFieldTop = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40];
+  NSLayoutConstraint* firstFieldTop = [NSLayoutConstraint constraintWithItem:self.firstField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
   [self addConstraint:firstFieldTop];
-  NSLayoutAttribute* secondFieldHeight = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
+  NSLayoutConstraint* secondFieldHeight = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:secondFieldHeight];
-  NSLayoutAttribute* secondFieldWidth = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200];
+  NSLayoutConstraint* secondFieldWidth = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
   [self addConstraint:secondFieldWidth];
-  NSLayoutAttribute* secondFieldCenterX = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+  NSLayoutConstraint* secondFieldCenterX = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:secondFieldCenterX];
-  NSLayoutAttribute* secondFieldTop = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.firstField attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20];
+  NSLayoutConstraint* secondFieldTop = [NSLayoutConstraint constraintWithItem:self.secondField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.firstField attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
   [self addConstraint:secondFieldTop];
-  NSLayoutAttribute* firstImageHeight = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  NSLayoutConstraint* firstImageHeight = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
   [self addConstraint:firstImageHeight];
-  NSLayoutAttribute* firstImageWidth = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  NSLayoutConstraint* firstImageWidth = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
   [self addConstraint:firstImageWidth];
-  NSLayoutAttribute* firstImageLeft = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20];
+  NSLayoutConstraint* firstImageLeft = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0];
   [self addConstraint:firstImageLeft];
-  NSLayoutAttribute* firstImageTop = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.secondField attribute:NSLayoutAttributeBottom multiplier:1.0 constant:40];
+  NSLayoutConstraint* firstImageTop = [NSLayoutConstraint constraintWithItem:self.firstImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.secondField attribute:NSLayoutAttributeBottom multiplier:1.0 constant:40.0];
   [self addConstraint:firstImageTop];
-  NSLayoutAttribute* secondImageHeight = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  NSLayoutConstraint* secondImageHeight = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
   [self addConstraint:secondImageHeight];
-  NSLayoutAttribute* secondImageWidth = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80];
+  NSLayoutConstraint* secondImageWidth = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
   [self addConstraint:secondImageWidth];
-  NSLayoutAttribute* secondImageLeft = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstImage attribute:NSLayoutAttributeRight multiplier:1.0 constant:40];
+  NSLayoutConstraint* secondImageLeft = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.firstImage attribute:NSLayoutAttributeRight multiplier:1.0 constant:40.0];
   [self addConstraint:secondImageLeft];
-  NSLayoutAttribute* secondImageCenterY = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.firstImage attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
+  NSLayoutConstraint* secondImageCenterY = [NSLayoutConstraint constraintWithItem:self.secondImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.firstImage attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:secondImageCenterY];
 }
 

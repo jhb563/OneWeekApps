@@ -1,5 +1,5 @@
 //
-// UIFont+VIAFonts.h
+// UIFont+IGAFonts.h
 // ViewIntegrationApp
 //
 // Created By James Bowen 3/30/2016
@@ -8,10 +8,10 @@
 
 @import UIKit;
 
-@interface UIFont (VIAFonts)
+@interface UIFont (IGAFonts)
 
-+ (UIFont*)standardFont;
 + (UIFont*)buttonFont;
 + (UIFont*)placeholderFont;
++ (UIFont*)standardFont;
 
 @end

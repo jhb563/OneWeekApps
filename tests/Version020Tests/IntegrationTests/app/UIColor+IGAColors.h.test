@@ -1,5 +1,5 @@
 //
-// UIColor+VIAColors.h
+// UIColor+IGAColors.h
 // ViewIntegrationApp
 //
 // Created By James Bowen 3/30/2016
@@ -8,14 +8,14 @@
 
 @import UIKit;
 
-@interface UIColor (VIAColors)
+@interface UIColor (IGAColors)
 
-+ (UIColor*)view1LabelColor;
-+ (UIColor*)view1TextFieldColor;
++ (UIColor*)elementBackgroundColor;
 + (UIColor*)placeholderTextFieldColor;
 + (UIColor*)view1ButtonColor;
++ (UIColor*)view1LabelColor;
++ (UIColor*)view1TextFieldColor;
 + (UIColor*)view2TextColor;
 + (UIColor*)view3TextColor;
-+ (UIColor*)elementBackgroundColor;
 
 @end

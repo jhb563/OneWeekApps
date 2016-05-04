@@ -32,6 +32,9 @@ import OWAObjcPrint
 import OWAParseError
 import OWAStringsParser
 import OWAStringsObjc
+import OWAView
+import OWAViewObjc
+import OWAViewParser
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -53,6 +56,7 @@ runOWA filePath args = do
           produceAlertsFiles outputMode appDirectory appInfo
           produceErrorsFiles outputMode appDirectory appInfo
           produceStringsFile outputMode appDirectory appInfo
+          produceViewsFiles outputMode appDirectory appInfo
 
 ---------------------------------------------------------------------------
 ------------------------PROGRAM STATUS PRINTING----------------------------
@@ -285,3 +289,41 @@ errorHeaderFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.h"
 
 errorImplementationFileExtension :: String -> FilePath
 errorImplementationFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.m"
+
+---------------------------------------------------------------------------
+------------------------PRODUCING VIEWS FILES------------------------------
+---------------------------------------------------------------------------
+
+produceViewsFiles :: OutputMode -> FilePath -> OWAAppInfo -> IO ()
+produceViewsFiles outputMode appDirectory appInfo = do
+  printIfNotSilent outputMode "Generating views..."
+  printIfVerbose outputMode "Searching for views files..."
+  viewFiles <- findViewsFiles appDirectory
+  printIfVerbose outputMode "Found view files at: "
+  mapM_ (printIfVerbose outputMode) viewFiles
+  listOfParseResults <- mapM parseViewFromFile viewFiles
+  let errors = concat $ lefts listOfParseResults
+  if not (null errors)
+    then do
+      printIfNotSilent outputMode "Encountered errors parsing views..."
+      printErrors outputMode errors
+    else printIfVerbose outputMode "No errors parsing views!"
+  let views = rights listOfParseResults
+  printIfVerbose outputMode ("Found" ++ show (length views) ++ " views")
+  if not (null views)
+    then printIfVerbose outputMode "Printing views..."
+    else printIfVerbose outputMode "No views to print!"
+  mapM_ (printViewFiles appDirectory outputMode appInfo) views
+  printIfNotSilent outputMode "Finished generating views!"
+   
+printViewFiles :: FilePath -> OutputMode -> OWAAppInfo -> OWAView -> IO ()
+printViewFiles appDirectory outputMode appInfo view = do
+  printStructureToFile headerStructure headerPath
+  printStructureToFile mStructure mPath
+  printIfVerbose outputMode headerPath
+  printIfVerbose outputMode mPath
+    where headerStructure = objcHeaderFromView appInfo view
+          mStructure = objcImplementationFromView appInfo view
+          vTy = viewType view
+          headerPath = appDirectory ++ '/':vTy ++ ".h"
+          mPath = appDirectory ++ '/':vTy ++ ".m"

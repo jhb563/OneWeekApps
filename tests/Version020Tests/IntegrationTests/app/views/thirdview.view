@@ -10,7 +10,7 @@ View thirdView
       Layout
         Height  30
         Width    200
-        AlignCenterX   
+        CenterX   
         AlignTop    40
     TextField secondField
       TextColor view3TextColor
@@ -22,7 +22,7 @@ View thirdView
       Layout
         Height 30
         Width 200
-        AlignCenterX
+        CenterX
         Below    firstField		20
     Image firstImage
       ImageSrc "Image31"
@@ -37,4 +37,4 @@ View thirdView
         Height 80
         Width 80
         ToRightOf firstImage 40
-        AlignCenterY firstImage
+        CenterY firstImage
