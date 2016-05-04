@@ -24,7 +24,7 @@ changingIndentFonts :: SourcePos
 changingIndentFonts = newPos "changingIndentFonts.fonts" 3 3 
 
 changingIndentAlerts :: SourcePos
-changingIndentAlerts = newPos "changingIndentAlerts.alerts" 3 1 
+changingIndentAlerts = newPos "changingIndentAlerts.alerts" 3 3
 
 changingIndentErrors :: SourcePos
 changingIndentErrors = newPos "changingIndentErrors.errors" 3 3 

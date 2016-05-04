@@ -1,0 +1,7 @@
+View myView
+  Elements
+    Label l5
+      Text "Hi"
+    Button b2
+      ImageSrc "file1.png"
+

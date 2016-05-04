@@ -1,0 +1,10 @@
+View myView
+  Elements
+    Button b1
+      Text "Hi"
+      Layout
+        Height 50
+    Imgur website
+      ImageSrc "Hi.png"
+    TextField t1
+      Text "Yo"

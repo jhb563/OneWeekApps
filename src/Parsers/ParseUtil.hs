@@ -45,6 +45,7 @@ class ParserState a where
   addIndentationLevel :: String -> a -> a
   reduceIndentationLevel :: a -> a
   setShouldUpdateIndentLevel :: a -> a
+  setShouldNotUpdateLevel :: a -> a
 
 -- | GenericParserState is a basic object used by most of our parsers which
 -- encompasses only those functions which related to indentation.
@@ -65,6 +66,7 @@ instance ParserState GenericParserState where
     shouldUpdate = False
   }
   setShouldUpdateIndentLevel currentState = currentState { shouldUpdate = True}
+  setShouldNotUpdateLevel currentState = currentState {shouldUpdate = False}
 
 -------------------------------------------------------------------------------
 -------------------PARSING STRING ATTRIBUTES-----------------------------------
@@ -193,7 +195,7 @@ indentParser parser = do
   parserState <- getState
   let indentLevel = currentIndentLevel parserState
   let shouldUpdate = shouldUpdateIndentLevel parserState
-  string $ concat indentLevel 
+  Text.Parsec.try $ string (concat indentLevel)
   if shouldUpdate
     then do
       newLevel <- spaceTabs

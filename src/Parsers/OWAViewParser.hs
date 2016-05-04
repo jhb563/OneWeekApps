@@ -114,7 +114,7 @@ labelElementParser = do
   name <- nameParserWithKeyword labelKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  labelAttrsAndConstraints <- Text.Parsec.try labelAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  labelAttrsAndConstraints <- labelAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let (attrMap, constraints) = splitAttrsAndConstraints labelAttrsAndConstraints
   let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let maybeLabel = labelFromNameAndAttrs name attrMap
@@ -132,8 +132,7 @@ labelAttributeParser :: GenParser Char GenericParserState (ElementAttr, ElementV
 labelAttributeParser = indentParser $ choice allLabelAttributeParsers
 
 allLabelAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
-allLabelAttributeParsers = map Text.Parsec.try 
-  [textParser, 
+allLabelAttributeParsers = [textParser, 
   textColorParser, 
   fontParser, 
   backgroundColorParser,
@@ -144,7 +143,7 @@ buttonElementParser = do
   name <- nameParserWithKeyword buttonKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  buttonAttrsAndConstraints <- Text.Parsec.try buttonAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  buttonAttrsAndConstraints <- buttonAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let (attrMap, constraints) = splitAttrsAndConstraints buttonAttrsAndConstraints
   let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let maybeButton = buttonFromNameAndAttrs name attrMap
@@ -162,8 +161,7 @@ buttonAttributeParser :: GenParser Char GenericParserState (ElementAttr, Element
 buttonAttributeParser = indentParser $ choice allButtonAttributeParsers
 
 allButtonAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
-allButtonAttributeParsers = map Text.Parsec.try 
-  [textParser, 
+allButtonAttributeParsers = [textParser, 
   textColorParser, 
   fontParser, 
   backgroundColorParser,
@@ -174,7 +172,7 @@ textFieldElementParser = do
   name <- nameParserWithKeyword textFieldKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  textfieldAttrsAndConstraints <- Text.Parsec.try textfieldAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  textfieldAttrsAndConstraints <- textfieldAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let (attrMap, constraints) = splitAttrsAndConstraints textfieldAttrsAndConstraints
   let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let textfield = textFieldFromNameAndAttrs name attrMap
@@ -185,8 +183,7 @@ textfieldAttributeParser :: GenParser Char GenericParserState (ElementAttr, Elem
 textfieldAttributeParser = indentParser $ choice allTextfieldAttributeParsers
 
 allTextfieldAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
-allTextfieldAttributeParsers = map Text.Parsec.try 
-  [textParser, 
+allTextfieldAttributeParsers = [textParser, 
   textColorParser, 
   fontParser,
   placeholderTextParser, 
@@ -200,7 +197,7 @@ imageViewParser = do
   name <- nameParserWithKeyword imageViewKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  imageViewAttrsAndConstraints <- Text.Parsec.try imageViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  imageViewAttrsAndConstraints <- imageViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let (attrMap, constraints) = splitAttrsAndConstraints imageViewAttrsAndConstraints
   let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let maybeImageView = imageViewFromNameAndAttrs name attrMap
@@ -219,48 +216,47 @@ imageViewAttributeParser :: GenParser Char GenericParserState (ElementAttr, Elem
 imageViewAttributeParser = indentParser $ choice allImageViewAttributeParsers
 
 allImageViewAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
-allImageViewAttributeParsers = map Text.Parsec.try
-  [imageSourceParser,
+allImageViewAttributeParsers = [imageSourceParser,
   constraintsParser]
 
 textParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 textParser = do
-  (attr, val) <- localizedKeyParserWithKeyword textKeyword
+  (attr, val) <- Text.Parsec.try $ localizedKeyParserWithKeyword textKeyword
   return (attr, StringVal val)
   
 textColorParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 textColorParser = do 
-  name <- nameParserWithKeyword textColorKeyword
+  name <- Text.Parsec.try $ nameParserWithKeyword textColorKeyword
   return (textColorKeyword, StringVal name)
 
 fontParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 fontParser = do 
-  name <- nameParserWithKeyword fontKeyword
+  name <- Text.Parsec.try $ nameParserWithKeyword fontKeyword
   return (fontKeyword, StringVal name)
 
 placeholderTextParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 placeholderTextParser = do
-  (attr, val) <- localizedKeyParserWithKeyword placeholderTextKeyword
+  (attr, val) <- Text.Parsec.try $ localizedKeyParserWithKeyword placeholderTextKeyword
   return (attr, StringVal val)
 
 placeholderTextColorParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 placeholderTextColorParser = do 
-  name <- nameParserWithKeyword placeholderTextColorKeyword
+  name <- Text.Parsec.try $ nameParserWithKeyword placeholderTextColorKeyword
   return (placeholderTextColorKeyword, StringVal name)
 
 placeholderFontParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 placeholderFontParser = do 
-  name <- nameParserWithKeyword placeholderFontKeyword
+  name <- Text.Parsec.try $ nameParserWithKeyword placeholderFontKeyword
   return (placeholderFontKeyword, StringVal name)
 
 backgroundColorParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 backgroundColorParser = do 
-  name <- nameParserWithKeyword backgroundColorKeyword
+  name <- Text.Parsec.try $ nameParserWithKeyword backgroundColorKeyword
   return (backgroundColorKeyword, StringVal name)
 
 imageSourceParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 imageSourceParser = do 
-  (_, filename) <- localizedKeyParserWithKeyword imageSourceKeyword
+  (_, filename) <- Text.Parsec.try $ localizedKeyParserWithKeyword imageSourceKeyword
   return (imageSourceKeyword, StringVal filename)
 
 constraintsParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
@@ -268,16 +264,18 @@ constraintsParser = do
   loneStringKeywordParser layoutKeyword
   modifyState setShouldUpdateIndentLevel
   many $ Text.Parsec.try indentedComment
-  constraints <- Text.Parsec.try singleConstraintParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  modifyState reduceIndentationLevel
+  constraints <- singleConstraintParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  currentState <- getState
+  if shouldUpdate currentState
+    then modifyState setShouldNotUpdateLevel
+    else modifyState reduceIndentationLevel
   return (constraintsKeyword, ConstraintsVal constraints)
 
 singleConstraintParser :: GenParser Char GenericParserState OWAConstraint
 singleConstraintParser = indentParser $ choice allConstraintParsers
 
 allConstraintParsers :: [GenParser Char GenericParserState OWAConstraint]
-allConstraintParsers = map Text.Parsec.try
-  [heightConstraintParser,
+allConstraintParsers = [heightConstraintParser,
   widthConstraintParser,
   alignTopConstraintParser,
   alignBottomConstraintParser,
@@ -348,7 +346,7 @@ toLeftConstraintParser = placementConstraintParser toLeftKeyword RightSide
 
 placementConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
 placementConstraintParser keyword attribute = do
-  string keyword
+  Text.Parsec.try $ string keyword
   spaceTabs
   viewName <- nameParser
   possibleDimen <- optionMaybe (do
@@ -381,7 +379,7 @@ centerYConstraintParser = matchingConstraintParser centerYKeyword CenterY
 -- have the same attribute.
 matchingConstraintParser :: String -> OWALayoutAttribute -> GenParser Char GenericParserState OWAConstraint
 matchingConstraintParser keyword attribute = do
-  string keyword
+  Text.Parsec.try $ string keyword
   many (oneOf " \t")
   (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser
   return OWAConstraint {
