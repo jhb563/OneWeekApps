@@ -44,7 +44,9 @@ parseViewFromFile fPath = do
   let errorOrView = parseViewContents sourceName contents
   case errorOrView of
     Left parseError -> return (Left [ParsecError parseError])
-    Right errsOrView -> return errsOrView
+    Right itemErrsOrView -> case itemErrsOrView of
+      Left itemErrs -> return $ Left (map (attachFileName sourceName) itemErrs)
+      Right view -> return $ Right view 
 
 parseViewContents :: String -> String -> Either ParseError (Either [OWAParseError] OWAView)
 parseViewContents sourceName = Text.Parsec.runParser

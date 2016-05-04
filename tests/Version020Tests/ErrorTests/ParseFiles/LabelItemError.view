@@ -1,0 +1,9 @@
+View myView
+  Elements
+    Label myLabel
+      Font newFont
+      TextColor myColor
+      Layout
+        Height 40
+    Button myButton
+      Text "Hi"

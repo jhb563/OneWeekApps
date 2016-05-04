@@ -1,0 +1,6 @@
+View combinedErrorView
+  Elements
+    Button b1
+      TextColor redColor
+    Label l1
+      Font boldFont
