@@ -4,6 +4,7 @@ import System.Directory
 import ViewConstraintTests
 import ViewElementTests
 import ViewFileSearchTests
+import ViewItemErrorTests
 import ViewNameTests
 import ViewPrintTests
 
@@ -15,3 +16,4 @@ main = do
   runViewElementTests currentDirectory
   runViewConstraintTests currentDirectory
   runViewPrintTests currentDirectory
+  runViewItemErrorTests currentDirectory

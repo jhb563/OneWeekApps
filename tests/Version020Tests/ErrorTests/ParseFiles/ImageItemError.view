@@ -1,0 +1,6 @@
+View myView
+  Elements
+    Image newImage
+      Layout
+        Height 50
+        Width 40
