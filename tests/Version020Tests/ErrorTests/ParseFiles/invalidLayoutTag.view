@@ -1,0 +1,7 @@
+View myView
+  Elements
+    Button b1
+      Text "Hi"
+      Layout
+        NextTo l1 20
+        Beside l1 20

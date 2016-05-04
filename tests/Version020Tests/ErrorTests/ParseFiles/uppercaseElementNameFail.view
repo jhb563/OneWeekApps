@@ -1,0 +1,5 @@
+View myView
+  Elements
+    Label MyFirstLabel
+      Text "Hi"
+

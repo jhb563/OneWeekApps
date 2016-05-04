@@ -99,7 +99,7 @@ nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
 
 selfExprForName :: String -> ObjcExpression
-selfExprForName name = PropertyCall (Var "self") name
+selfExprForName = PropertyCall (Var "self")
 
 selfExprForElement :: OWAViewElement -> ObjcExpression
 selfExprForElement element = selfExprForName (nameForElement element)
