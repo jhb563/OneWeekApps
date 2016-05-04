@@ -9,11 +9,14 @@ Maintainer  : jhbowen047@gmail.com
 module ParseUtil (
   ParserState(..),
   GenericParserState(..),
+  loneStringKeywordParser,
   nameParserWithKeyword,
+  nameParser,
   variableNameParserWithKeyword,
   localizedKeyParserWithKeyword,
   parseLocalizedKey,
   floatAttributeParser,
+  parseFloat,
   indentParser,
   spaceTabs,
   commentOrSpacesParser,
@@ -42,6 +45,7 @@ class ParserState a where
   addIndentationLevel :: String -> a -> a
   reduceIndentationLevel :: a -> a
   setShouldUpdateIndentLevel :: a -> a
+  setShouldNotUpdateLevel :: a -> a
 
 -- | GenericParserState is a basic object used by most of our parsers which
 -- encompasses only those functions which related to indentation.
@@ -62,10 +66,18 @@ instance ParserState GenericParserState where
     shouldUpdate = False
   }
   setShouldUpdateIndentLevel currentState = currentState { shouldUpdate = True}
+  setShouldNotUpdateLevel currentState = currentState {shouldUpdate = False}
 
 -------------------------------------------------------------------------------
 -------------------PARSING STRING ATTRIBUTES-----------------------------------
 -------------------------------------------------------------------------------
+
+-- | Takes a string for a keyword, and returns a parser which parses that string
+-- followed by a possible comment and newline.
+loneStringKeywordParser :: String -> GenParser Char st ()
+loneStringKeywordParser keyword = do
+  string keyword
+  singleTrailingComment
 
 -- | Takes a string for a keyword, and returns a parser which parses that
 -- keyword, a space, and then an alphanumeric name beginning with a
@@ -74,9 +86,16 @@ nameParserWithKeyword :: String -> GenParser Char st String
 nameParserWithKeyword keyword = do
   string keyword 
   spaceTabs
-  firstLetter <- lower
-  restOfName <- many alphaNum 
+  name <- nameParser
   singleTrailingComment
+  return name
+
+-- | Parses a possible element name, consisting of a lowercase letter followed
+-- by alphanumeric characters
+nameParser :: GenParser Char st String
+nameParser = do
+  firstLetter <- lower
+  restOfName <- many alphaNum
   return (firstLetter:restOfName)
 
 -- | Takes a string for a keyword, and returns a parser which parses that keyword,
@@ -130,12 +149,21 @@ floatAttributeParser :: String -> GenParser Char st (String, Float)
 floatAttributeParser keyword = do
   string keyword
   spaceTabs
-  value <- parseFloat
+  value <- parsePositiveFloat
   singleTrailingComment
   return (keyword, value)
 
-parseFloat :: GenParser Char st Float 
+-- | Parses a float, whether positive or negative.
+parseFloat :: GenParser Char st Float
 parseFloat = do
+  maybeNegative <- optionMaybe $ char '-'
+  positiveValue <- parsePositiveFloat
+  case maybeNegative of
+    Just '-' -> return $ -1.0 * positiveValue
+    _ -> return positiveValue
+
+parsePositiveFloat :: GenParser Char st Float 
+parsePositiveFloat = do
   wholeNumberString <- many digit
   let wholeNumberPortion = if not (null wholeNumberString)
                             then read wholeNumberString :: Float
@@ -167,7 +195,7 @@ indentParser parser = do
   parserState <- getState
   let indentLevel = currentIndentLevel parserState
   let shouldUpdate = shouldUpdateIndentLevel parserState
-  string $ concat indentLevel 
+  Text.Parsec.try $ string (concat indentLevel)
   if shouldUpdate
     then do
       newLevel <- spaceTabs

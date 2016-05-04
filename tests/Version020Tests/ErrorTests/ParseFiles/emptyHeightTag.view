@@ -1,0 +1,8 @@
+View heightFail
+  Elements
+    Label l1
+      Text "Hi"
+      Layout
+        Height
+        Width
+

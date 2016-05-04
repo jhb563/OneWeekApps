@@ -1,0 +1,72 @@
+//
+// VIAElementTest3.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "VIAElementTest3.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface VIAElementTest3 ()
+
+@property (nonatomic, strong) UILabel* lab;
+@property (nonatomic, strong) UITextField* txt;
+
+@end
+
+@implementation VIAElementTest3
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.lab, self.txt];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  
+}
+
+#pragma mark - Lazy Getters
+
+- (UILabel*)lab {
+  if (_lab) {
+    return _lab;
+  }
+  _lab = [[UILabel alloc] init];
+  _lab.text = NSLocalizedString(@"HERE_IS_YOUR_NAME", nil);
+  _lab.textColor = [UIColor labelTextColor];
+  _lab.font = [UIFont standardFont];
+  _lab.backgroundColor = [UIColor elementBackgroundColor];
+  return _lab;
+}
+
+- (UITextField*)txt {
+  if (_txt) {
+    return _txt;
+  }
+  _txt = [[UITextField alloc] init];
+  _txt.textColor = [UIColor blueColor];
+  _txt.font = [UIFont standardFont];
+  _txt.backgroundColor = [UIColor redColor];
+  return _txt;
+}
+
+@end

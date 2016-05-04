@@ -1,0 +1,104 @@
+//
+// VIAConstraintTest2.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "VIAConstraintTest2.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface VIAConstraintTest2 ()
+
+@property (nonatomic, strong) UITextField* viewField;
+@property (nonatomic, strong) UIButton* viewButton;
+@property (nonatomic, strong) UIImageView* viewImage;
+@property (nonatomic, strong) UILabel* viewLabel;
+
+@end
+
+@implementation VIAConstraintTest2
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.viewField, self.viewButton, self.viewImage, self.viewLabel];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* viewFieldHeight = [NSLayoutConstraint constraintWithItem:self.viewField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:viewFieldHeight];
+  NSLayoutConstraint* viewFieldWidth = [NSLayoutConstraint constraintWithItem:self.viewField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:viewFieldWidth];
+  NSLayoutConstraint* viewButtonHeight = [NSLayoutConstraint constraintWithItem:self.viewButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  [self addConstraint:viewButtonHeight];
+  NSLayoutConstraint* viewButtonWidth = [NSLayoutConstraint constraintWithItem:self.viewButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:viewButtonWidth];
+  NSLayoutConstraint* viewImageHeight = [NSLayoutConstraint constraintWithItem:self.viewImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:self.viewButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  [self addConstraint:viewImageHeight];
+  NSLayoutConstraint* viewImageWidth = [NSLayoutConstraint constraintWithItem:self.viewImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:self.viewButton attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
+  [self addConstraint:viewImageWidth];
+  NSLayoutConstraint* viewLabelHeight = [NSLayoutConstraint constraintWithItem:self.viewLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:self.viewField attribute:NSLayoutAttributeHeight multiplier:1.0 constant:5.0];
+  [self addConstraint:viewLabelHeight];
+  NSLayoutConstraint* viewLabelWidth = [NSLayoutConstraint constraintWithItem:self.viewLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:self.viewField attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-5.0];
+  [self addConstraint:viewLabelWidth];
+}
+
+#pragma mark - Lazy Getters
+
+- (UITextField*)viewField {
+  if (_viewField) {
+    return _viewField;
+  }
+  _viewField = [[UITextField alloc] init];
+  _viewField.text = NSLocalizedString(@"HELLO_WORLD", nil);
+  _viewField.textColor = [UIColor view1TextFieldColor];
+  _viewField.font = [UIFont standardFont];
+  return _viewField;
+}
+
+- (UIButton*)viewButton {
+  if (_viewButton) {
+    return _viewButton;
+  }
+  _viewButton = [[UIButton alloc] init];
+  [_viewButton setTitle:NSLocalizedString(@"CLICK_ME", nil) forState:UIControlStateNormal];
+  return _viewButton;
+}
+
+- (UIImageView*)viewImage {
+  if (_viewImage) {
+    return _viewImage;
+  }
+  _viewImage = [[UIImageView alloc] init];
+  _viewImage.image = [UIImage imageNamed:@"profileImage.png"];
+  return _viewImage;
+}
+
+- (UILabel*)viewLabel {
+  if (_viewLabel) {
+    return _viewLabel;
+  }
+  _viewLabel = [[UILabel alloc] init];
+  _viewLabel.text = NSLocalizedString(@"TITLE", nil);
+  return _viewLabel;
+}
+
+@end

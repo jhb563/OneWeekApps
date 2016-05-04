@@ -1,0 +1,18 @@
+//
+// VIAElementTest1.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface VIAElementTest1 : UIView
+
+@property (nonatomic, strong, readonly) UITextField* viewField;
+@property (nonatomic, strong, readonly) UIButton* viewButton;
+@property (nonatomic, strong, readonly) UIImageView* viewImage;
+@property (nonatomic, strong, readonly) UILabel* viewLabel;
+
+@end

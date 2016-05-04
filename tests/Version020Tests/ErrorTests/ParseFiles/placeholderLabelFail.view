@@ -1,0 +1,9 @@
+View myView
+  Elements
+    Label l1
+      Text "HI"
+      PlaceholderText "WHAT_IS_UP"
+      PlaceholderFont placeholderFont
+      Layout
+        Height 30
+        Width 100

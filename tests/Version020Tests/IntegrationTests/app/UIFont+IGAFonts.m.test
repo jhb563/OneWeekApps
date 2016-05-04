@@ -1,0 +1,25 @@
+//
+// UIFont+IGAFonts.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "UIFont+IGAFonts.h"
+
+@implementation UIFont (IGAFonts)
+
++ (UIFont*)buttonFont {
+  return [UIFont fontWithName:@"Verdana" size:18.0];
+}
+
++ (UIFont*)placeholderFont {
+  return [UIFont fontWithName:@"Arial" size:14.0];
+}
+
++ (UIFont*)standardFont {
+  return [UIFont fontWithName:@"HelveticaNeue" size:14.0];
+}
+
+@end

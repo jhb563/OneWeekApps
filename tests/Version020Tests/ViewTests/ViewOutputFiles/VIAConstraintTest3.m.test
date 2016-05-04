@@ -1,0 +1,158 @@
+//
+// VIAConstraintTest3.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "VIAConstraintTest3.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface VIAConstraintTest3 ()
+
+@property (nonatomic, strong) UILabel* l1;
+@property (nonatomic, strong) UIButton* b1;
+@property (nonatomic, strong) UITextField* t1;
+@property (nonatomic, strong) UIImageView* i1;
+@property (nonatomic, strong) UILabel* l2;
+@property (nonatomic, strong) UIButton* b2;
+@property (nonatomic, strong) UITextField* t2;
+@property (nonatomic, strong) UIImageView* i2;
+
+@end
+
+@implementation VIAConstraintTest3
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.l1, self.b1, self.t1, self.i1, self.l2, self.b2, self.t2, self.i2];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* l1Top = [NSLayoutConstraint constraintWithItem:self.l1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:l1Top];
+  NSLayoutConstraint* l1Right = [NSLayoutConstraint constraintWithItem:self.l1 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  [self addConstraint:l1Right];
+  NSLayoutConstraint* b1Top = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:10.0];
+  [self addConstraint:b1Top];
+  NSLayoutConstraint* b1Right = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:10.0];
+  [self addConstraint:b1Right];
+  NSLayoutConstraint* t1Top = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:5.6];
+  [self addConstraint:t1Top];
+  NSLayoutConstraint* t1Left = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.6];
+  [self addConstraint:t1Left];
+  NSLayoutConstraint* i1Left = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:i1Left];
+  NSLayoutConstraint* i1Top = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:i1Top];
+  NSLayoutConstraint* l2Left = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-5.0];
+  [self addConstraint:l2Left];
+  NSLayoutConstraint* l2Bottom = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-5.0];
+  [self addConstraint:l2Bottom];
+  NSLayoutConstraint* b2Bottom = [NSLayoutConstraint constraintWithItem:self.b2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:b2Bottom];
+  NSLayoutConstraint* b2Left = [NSLayoutConstraint constraintWithItem:self.b2 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:b2Left];
+  NSLayoutConstraint* t2Right = [NSLayoutConstraint constraintWithItem:self.t2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  [self addConstraint:t2Right];
+  NSLayoutConstraint* t2Bottom = [NSLayoutConstraint constraintWithItem:self.t2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:t2Bottom];
+  NSLayoutConstraint* i2Bottom = [NSLayoutConstraint constraintWithItem:self.i2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:14.431];
+  [self addConstraint:i2Bottom];
+  NSLayoutConstraint* i2Right = [NSLayoutConstraint constraintWithItem:self.i2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:3.743];
+  [self addConstraint:i2Right];
+}
+
+#pragma mark - Lazy Getters
+
+- (UILabel*)l1 {
+  if (_l1) {
+    return _l1;
+  }
+  _l1 = [[UILabel alloc] init];
+  _l1.text = NSLocalizedString(@"Hi", nil);
+  return _l1;
+}
+
+- (UIButton*)b1 {
+  if (_b1) {
+    return _b1;
+  }
+  _b1 = [[UIButton alloc] init];
+  [_b1 setTitle:NSLocalizedString(@"Hi", nil) forState:UIControlStateNormal];
+  return _b1;
+}
+
+- (UITextField*)t1 {
+  if (_t1) {
+    return _t1;
+  }
+  _t1 = [[UITextField alloc] init];
+  _t1.text = NSLocalizedString(@"Hi", nil);
+  return _t1;
+}
+
+- (UIImageView*)i1 {
+  if (_i1) {
+    return _i1;
+  }
+  _i1 = [[UIImageView alloc] init];
+  _i1.image = [UIImage imageNamed:@"file1.png"];
+  return _i1;
+}
+
+- (UILabel*)l2 {
+  if (_l2) {
+    return _l2;
+  }
+  _l2 = [[UILabel alloc] init];
+  _l2.text = NSLocalizedString(@"Bye", nil);
+  return _l2;
+}
+
+- (UIButton*)b2 {
+  if (_b2) {
+    return _b2;
+  }
+  _b2 = [[UIButton alloc] init];
+  [_b2 setTitle:NSLocalizedString(@"Bye", nil) forState:UIControlStateNormal];
+  return _b2;
+}
+
+- (UITextField*)t2 {
+  if (_t2) {
+    return _t2;
+  }
+  _t2 = [[UITextField alloc] init];
+  _t2.text = NSLocalizedString(@"Bye", nil);
+  return _t2;
+}
+
+- (UIImageView*)i2 {
+  if (_i2) {
+    return _i2;
+  }
+  _i2 = [[UIImageView alloc] init];
+  _i2.image = [UIImage imageNamed:@"file2.png"];
+  return _i2;
+}
+
+@end

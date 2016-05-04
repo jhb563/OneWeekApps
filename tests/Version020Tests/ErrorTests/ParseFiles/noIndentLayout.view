@@ -1,0 +1,8 @@
+View myView
+  Elements
+    Label l1
+      Text "Hi"
+      Layout
+      Height 50
+      Width 100
+

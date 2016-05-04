@@ -1,0 +1,9 @@
+
+View myView
+  Elements
+    Label l1
+      Text "Hi"
+  WhatIsThisTag "Yo"
+  Type ParseFail3
+
+

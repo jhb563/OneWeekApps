@@ -1,0 +1,4 @@
+View myView
+  Elements
+  Label aLabel
+    Text "what"

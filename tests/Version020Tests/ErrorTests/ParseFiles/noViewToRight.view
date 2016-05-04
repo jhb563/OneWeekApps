@@ -1,0 +1,9 @@
+View myView
+  Elements
+    Button b1
+      Text "Hi"
+      Layout
+        ToRightOf 14
+    Image i1
+      ImageSrc "file1.png"
+

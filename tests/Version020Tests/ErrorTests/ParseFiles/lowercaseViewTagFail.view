@@ -1,0 +1,4 @@
+view myView
+  Elements
+    Label l1
+      Text "Hi"

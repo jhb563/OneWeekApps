@@ -1,0 +1,22 @@
+//
+// VIAConstraintTest5.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface VIAConstraintTest5 : UIView
+
+@property (nonatomic, strong, readonly) UILabel* l1;
+@property (nonatomic, strong, readonly) UIButton* b1;
+@property (nonatomic, strong, readonly) UITextField* t1;
+@property (nonatomic, strong, readonly) UIImageView* i1;
+@property (nonatomic, strong, readonly) UILabel* l2;
+@property (nonatomic, strong, readonly) UIButton* b2;
+@property (nonatomic, strong, readonly) UITextField* t2;
+@property (nonatomic, strong, readonly) UIImageView* i2;
+
+@end

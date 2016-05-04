@@ -84,6 +84,9 @@ instance ParserState ErrorParserState where
     errorIndentationLevel = errorIndentationLevel currentState,
     errorShouldUpdateIndent = True
   }
+  setShouldNotUpdateLevel currentState = currentState {
+    errorShouldUpdateIndent = False
+  }
 
 updateDefaultDomain :: String -> Maybe String -> ErrorParserState -> ErrorParserState
 updateDefaultDomain defaultDomain Nothing currentState = ErrorParserState {

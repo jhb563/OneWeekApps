@@ -1,0 +1,4 @@
+View MyFantasticView
+  Elements
+    Label l1
+      Text "Hi"

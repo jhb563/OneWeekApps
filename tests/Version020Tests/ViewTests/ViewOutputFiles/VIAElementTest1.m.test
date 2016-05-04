@@ -1,0 +1,89 @@
+//
+// VIAElementTest1.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "VIAElementTest1.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface VIAElementTest1 ()
+
+@property (nonatomic, strong) UITextField* viewField;
+@property (nonatomic, strong) UIButton* viewButton;
+@property (nonatomic, strong) UIImageView* viewImage;
+@property (nonatomic, strong) UILabel* viewLabel;
+
+@end
+
+@implementation VIAElementTest1
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.viewField, self.viewButton, self.viewImage, self.viewLabel];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  
+}
+
+#pragma mark - Lazy Getters
+
+- (UITextField*)viewField {
+  if (_viewField) {
+    return _viewField;
+  }
+  _viewField = [[UITextField alloc] init];
+  _viewField.text = NSLocalizedString(@"HELLO_WORLD", nil);
+  _viewField.textColor = [UIColor view1TextFieldColor];
+  _viewField.font = [UIFont standardFont];
+  return _viewField;
+}
+
+- (UIButton*)viewButton {
+  if (_viewButton) {
+    return _viewButton;
+  }
+  _viewButton = [[UIButton alloc] init];
+  [_viewButton setTitle:NSLocalizedString(@"CLICK_ME", nil) forState:UIControlStateNormal];
+  return _viewButton;
+}
+
+- (UIImageView*)viewImage {
+  if (_viewImage) {
+    return _viewImage;
+  }
+  _viewImage = [[UIImageView alloc] init];
+  _viewImage.image = [UIImage imageNamed:@"profileImage.png"];
+  return _viewImage;
+}
+
+- (UILabel*)viewLabel {
+  if (_viewLabel) {
+    return _viewLabel;
+  }
+  _viewLabel = [[UILabel alloc] init];
+  _viewLabel.text = NSLocalizedString(@"TITLE", nil);
+  return _viewLabel;
+}
+
+@end

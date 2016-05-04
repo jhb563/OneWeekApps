@@ -12,7 +12,8 @@ module OWAFileSearch (
   findFontsFiles,
   findAlertsFiles,
   findErrorsFiles,
-  findStringsFiles
+  findStringsFiles,
+  findViewsFiles
 ) where
 
 import System.Directory
@@ -101,6 +102,11 @@ findStringsFiles appDirectory = do
   allFiles <- searchDirectoryForExtension stringsExtension [appDirectory] []
   return $ filter (not . fileHasName "Localizable.strings") allFiles
 
+-- | 'findViewsFiles' Locates all the files with the extension '.view', searching recursively
+-- from the given directory.
+findViewsFiles :: FilePath -> IO [FilePath]
+findViewsFiles appDirectory = searchDirectoryForExtension viewsExtension [appDirectory] []
+
 colorsExtension :: String
 colorsExtension = "colors"
 
@@ -115,6 +121,9 @@ errorsExtension = "errors"
 
 stringsExtension :: String
 stringsExtension = "strings"
+
+viewsExtension :: String
+viewsExtension = "view"
 
 -- 'searchDirectoryForExtension' is a common helper method doing most of the work
 -- for searching for the files. It uses BFS on the directory. It includes a queue of unexplored

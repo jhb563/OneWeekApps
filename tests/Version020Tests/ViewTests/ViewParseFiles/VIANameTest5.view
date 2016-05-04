@@ -1,0 +1,5 @@
+// This view has comments
+View commentContainer // Many comments
+  // Here's a comment
+  Type myComment // Many comments
+// Trailing comments
