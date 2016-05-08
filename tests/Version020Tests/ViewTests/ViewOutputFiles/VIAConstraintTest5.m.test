@@ -47,21 +47,21 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutConstraint* b1Top = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.l1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* b1Top = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.l1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
   [self addConstraint:b1Top];
-  NSLayoutConstraint* t1Left = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.l1 attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* t1Left = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.l1 attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
   [self addConstraint:t1Left];
-  NSLayoutConstraint* i1Left = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.b1 attribute:NSLayoutAttributeRight multiplier:1.0 constant:10.0];
+  NSLayoutConstraint* i1Left = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.b1 attribute:NSLayoutAttributeRight multiplier:1.0 constant:10.0];
   [self addConstraint:i1Left];
-  NSLayoutConstraint* i1Top = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.t1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10.0];
+  NSLayoutConstraint* i1Top = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.t1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10.0];
   [self addConstraint:i1Top];
-  NSLayoutConstraint* l2Bottom = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEquality toItem:self.b2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* l2Bottom = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.b2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
   [self addConstraint:l2Bottom];
-  NSLayoutConstraint* l2Right = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEquality toItem:self.t2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* l2Right = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.t2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:l2Right];
-  NSLayoutConstraint* b2Right = [NSLayoutConstraint constraintWithItem:self.b2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEquality toItem:self.i2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-5.0];
+  NSLayoutConstraint* b2Right = [NSLayoutConstraint constraintWithItem:self.b2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.i2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-5.0];
   [self addConstraint:b2Right];
-  NSLayoutConstraint* t2Bottom = [NSLayoutConstraint constraintWithItem:self.t2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEquality toItem:self.i2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:-6.6];
+  NSLayoutConstraint* t2Bottom = [NSLayoutConstraint constraintWithItem:self.t2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.i2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:-6.6];
   [self addConstraint:t2Bottom];
 }
 
