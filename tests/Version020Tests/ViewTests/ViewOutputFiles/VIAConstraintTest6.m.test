@@ -43,21 +43,21 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutConstraint* l1CenterX = [NSLayoutConstraint constraintWithItem:self.l1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* l1CenterX = [NSLayoutConstraint constraintWithItem:self.l1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:l1CenterX];
-  NSLayoutConstraint* l1CenterY = [NSLayoutConstraint constraintWithItem:self.l1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* l1CenterY = [NSLayoutConstraint constraintWithItem:self.l1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:l1CenterY];
-  NSLayoutConstraint* b1CenterX = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:10.0];
+  NSLayoutConstraint* b1CenterX = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:10.0];
   [self addConstraint:b1CenterX];
-  NSLayoutConstraint* b1CenterY = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:-10.0];
+  NSLayoutConstraint* b1CenterY = [NSLayoutConstraint constraintWithItem:self.b1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:-10.0];
   [self addConstraint:b1CenterY];
-  NSLayoutConstraint* t1CenterX = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self.l1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* t1CenterX = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.l1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:t1CenterX];
-  NSLayoutConstraint* t1CenterY = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.b1 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* t1CenterY = [NSLayoutConstraint constraintWithItem:self.t1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.b1 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:t1CenterY];
-  NSLayoutConstraint* i1CenterX = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEquality toItem:self.b1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:5.5];
+  NSLayoutConstraint* i1CenterX = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.b1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:5.5];
   [self addConstraint:i1CenterX];
-  NSLayoutConstraint* i1CenterY = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEquality toItem:self.l1 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:3.2];
+  NSLayoutConstraint* i1CenterY = [NSLayoutConstraint constraintWithItem:self.i1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.l1 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:3.2];
   [self addConstraint:i1CenterY];
 }
 
