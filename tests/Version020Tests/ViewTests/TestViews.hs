@@ -462,8 +462,8 @@ placementTestView = OWAView {
     ("i1", "t1", Top, 10.0),
     ("l2", "b2", Bottom, 0.0),
     ("l2", "t2", RightSide, 0.0),
-    ("b2", "i2", RightSide, -5.0),
-    ("t2", "i2", Bottom, -6.6)]
+    ("b2", "i2", RightSide, 5.0),
+    ("t2", "i2", Bottom, 6.6)]
 }
 
 placementConstraintFromTuple :: (String, String, OWALayoutAttribute, Float) -> OWAConstraint

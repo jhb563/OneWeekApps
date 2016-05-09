@@ -353,13 +353,15 @@ placementConstraintParser keyword attribute = do
     spaceTabs
     parseFloat)
   singleTrailingComment
+  let constant = fromMaybe 0.0 possibleDimen
+  let actualConstant = possibleReverse * constant
   return OWAConstraint {
     firstElementName = "",
     firstAttribute = attribute,
     secondElementName = Just viewName,
     secondAttribute = reverseAttribute,
     multiplier = 1.0,
-    constant = fromMaybe 0.0 possibleDimen
+    constant = actualConstant
   }
     where reverseAttribute = case attribute of
                               Top -> Just Bottom
@@ -367,6 +369,10 @@ placementConstraintParser keyword attribute = do
                               RightSide -> Just LeftSide
                               LeftSide -> Just RightSide
                               _ -> Nothing
+          possibleReverse = case attribute of
+                              Bottom -> -1.0
+                              RightSide -> -1.0 
+                              _ -> 1.0
 
 centerXConstraintParser :: GenParser Char GenericParserState OWAConstraint
 centerXConstraintParser = matchingConstraintParser centerXKeyword CenterX

@@ -59,9 +59,9 @@
   [self addConstraint:l2Bottom];
   NSLayoutConstraint* l2Right = [NSLayoutConstraint constraintWithItem:self.l2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.t2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:l2Right];
-  NSLayoutConstraint* b2Right = [NSLayoutConstraint constraintWithItem:self.b2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.i2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-5.0];
+  NSLayoutConstraint* b2Right = [NSLayoutConstraint constraintWithItem:self.b2 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.i2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:5.0];
   [self addConstraint:b2Right];
-  NSLayoutConstraint* t2Bottom = [NSLayoutConstraint constraintWithItem:self.t2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.i2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:-6.6];
+  NSLayoutConstraint* t2Bottom = [NSLayoutConstraint constraintWithItem:self.t2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.i2 attribute:NSLayoutAttributeTop multiplier:1.0 constant:6.6];
   [self addConstraint:t2Bottom];
 }
 
