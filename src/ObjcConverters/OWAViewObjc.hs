@@ -191,7 +191,7 @@ constraintStatements constraint = [createConstraint, addConstraint]
           }
           [PropertyCall (Var "self") firstName,
           Var $ objcStringForAttribute (Just firstAttr),
-          Var "NSLayoutRelationEquality",
+          Var "NSLayoutRelationEqual",
           secondItemExpr,
           Var $ objcStringForAttribute (secondAttribute constraint),
           FloatLit $ multiplier constraint,

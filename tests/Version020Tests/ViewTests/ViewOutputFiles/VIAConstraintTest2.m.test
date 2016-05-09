@@ -43,21 +43,21 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutConstraint* viewFieldHeight = [NSLayoutConstraint constraintWithItem:self.viewField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  NSLayoutConstraint* viewFieldHeight = [NSLayoutConstraint constraintWithItem:self.viewField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:viewFieldHeight];
-  NSLayoutConstraint* viewFieldWidth = [NSLayoutConstraint constraintWithItem:self.viewField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  NSLayoutConstraint* viewFieldWidth = [NSLayoutConstraint constraintWithItem:self.viewField attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:viewFieldWidth];
-  NSLayoutConstraint* viewButtonHeight = [NSLayoutConstraint constraintWithItem:self.viewButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  NSLayoutConstraint* viewButtonHeight = [NSLayoutConstraint constraintWithItem:self.viewButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
   [self addConstraint:viewButtonHeight];
-  NSLayoutConstraint* viewButtonWidth = [NSLayoutConstraint constraintWithItem:self.viewButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  NSLayoutConstraint* viewButtonWidth = [NSLayoutConstraint constraintWithItem:self.viewButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
   [self addConstraint:viewButtonWidth];
-  NSLayoutConstraint* viewImageHeight = [NSLayoutConstraint constraintWithItem:self.viewImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:self.viewButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* viewImageHeight = [NSLayoutConstraint constraintWithItem:self.viewImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.viewButton attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
   [self addConstraint:viewImageHeight];
-  NSLayoutConstraint* viewImageWidth = [NSLayoutConstraint constraintWithItem:self.viewImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:self.viewButton attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* viewImageWidth = [NSLayoutConstraint constraintWithItem:self.viewImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.viewButton attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
   [self addConstraint:viewImageWidth];
-  NSLayoutConstraint* viewLabelHeight = [NSLayoutConstraint constraintWithItem:self.viewLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:self.viewField attribute:NSLayoutAttributeHeight multiplier:1.0 constant:5.0];
+  NSLayoutConstraint* viewLabelHeight = [NSLayoutConstraint constraintWithItem:self.viewLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.viewField attribute:NSLayoutAttributeHeight multiplier:1.0 constant:5.0];
   [self addConstraint:viewLabelHeight];
-  NSLayoutConstraint* viewLabelWidth = [NSLayoutConstraint constraintWithItem:self.viewLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:self.viewField attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-5.0];
+  NSLayoutConstraint* viewLabelWidth = [NSLayoutConstraint constraintWithItem:self.viewLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.viewField attribute:NSLayoutAttributeWidth multiplier:1.0 constant:-5.0];
   [self addConstraint:viewLabelWidth];
 }
 

@@ -43,37 +43,37 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutConstraint* view1labelHeight = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  NSLayoutConstraint* view1labelHeight = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
   [self addConstraint:view1labelHeight];
-  NSLayoutConstraint* view1labelWidth = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  NSLayoutConstraint* view1labelWidth = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:view1labelWidth];
-  NSLayoutConstraint* view1labelLeft = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:40.0];
+  NSLayoutConstraint* view1labelLeft = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:40.0];
   [self addConstraint:view1labelLeft];
-  NSLayoutConstraint* view1labelTop = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
+  NSLayoutConstraint* view1labelTop = [NSLayoutConstraint constraintWithItem:self.view1label attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
   [self addConstraint:view1labelTop];
-  NSLayoutConstraint* view1FieldHeight = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  NSLayoutConstraint* view1FieldHeight = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
   [self addConstraint:view1FieldHeight];
-  NSLayoutConstraint* view1FieldWidth = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  NSLayoutConstraint* view1FieldWidth = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
   [self addConstraint:view1FieldWidth];
-  NSLayoutConstraint* view1FieldLeft = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.view1label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* view1FieldLeft = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view1label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:view1FieldLeft];
-  NSLayoutConstraint* view1FieldTop = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.view1label attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
+  NSLayoutConstraint* view1FieldTop = [NSLayoutConstraint constraintWithItem:self.view1Field attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view1label attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
   [self addConstraint:view1FieldTop];
-  NSLayoutConstraint* view1ButtonHeight = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  NSLayoutConstraint* view1ButtonHeight = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
   [self addConstraint:view1ButtonHeight];
-  NSLayoutConstraint* view1ButtonWidth = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  NSLayoutConstraint* view1ButtonWidth = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:view1ButtonWidth];
-  NSLayoutConstraint* view1ButtonLeft = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.view1label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* view1ButtonLeft = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view1label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:view1ButtonLeft];
-  NSLayoutConstraint* view1ButtonTop = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.view1Field attribute:NSLayoutAttributeBottom multiplier:1.0 constant:30.0];
+  NSLayoutConstraint* view1ButtonTop = [NSLayoutConstraint constraintWithItem:self.view1Button attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view1Field attribute:NSLayoutAttributeBottom multiplier:1.0 constant:30.0];
   [self addConstraint:view1ButtonTop];
-  NSLayoutConstraint* view1ImageHeight = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
+  NSLayoutConstraint* view1ImageHeight = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
   [self addConstraint:view1ImageHeight];
-  NSLayoutConstraint* view1ImageWidth = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEquality toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
+  NSLayoutConstraint* view1ImageWidth = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
   [self addConstraint:view1ImageWidth];
-  NSLayoutConstraint* view1ImageLeft = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEquality toItem:self.view1label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* view1ImageLeft = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view1label attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:view1ImageLeft];
-  NSLayoutConstraint* view1ImageTop = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEquality toItem:self.view1Button attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
+  NSLayoutConstraint* view1ImageTop = [NSLayoutConstraint constraintWithItem:self.view1Image attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view1Button attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
   [self addConstraint:view1ImageTop];
 }
 
