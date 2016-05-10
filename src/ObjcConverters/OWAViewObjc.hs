@@ -367,6 +367,5 @@ libMethodForImage imageSrc = MethodCall
   [StringLit imageSrc]
 
 valueAssignment :: ObjcExpression -> String -> ObjcExpression -> ObjcStatement
-valueAssignment exp1 valueName newValue = AssignStatement
+valueAssignment exp1 valueName = AssignStatement
   (PropertyCall exp1 valueName) 
-  newValue
