@@ -26,10 +26,8 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ForwardDeclarationSection [ForwardDeclaration] |
-  CategoryInterfaceSection Category [FileSection] |
-  CategoryImplementationSection Category [FileSection] |
-  InterfaceSection String (Maybe String) [ObjcProperty] [ObjcMethod] |
-  ImplementationSection String [FileSection] |
+  InterfaceSection String (Maybe String) (Maybe String) [ObjcProperty] [FileSection] |
+  ImplementationSection String (Maybe String) [FileSection] |
   MethodHeaderListSection (Maybe String) [ObjcMethod] |
   MethodImplementationListSection (Maybe String) [ObjcMethod] |
   LocalizedStringListSection String [ObjcStatement]
@@ -110,12 +108,14 @@ data ObjcStatement =
   ReturnStatement ObjcExpression |
   ExpressionStatement ObjcExpression |
   IfBlock ObjcExpression [ObjcStatement] |
-  ForEachBlock ObjcExpression ObjcExpression [ObjcStatement]
+  ForEachBlock ObjcExpression ObjcExpression [ObjcStatement] |
+  AssignStatement ObjcExpression ObjcExpression
   deriving (Show, Eq)
 
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This
 -- will ultimately include more complicated types of expressions. 
 data ObjcExpression = 
+  SelfExpr |
   MethodCall ObjcExpression CalledMethod [ObjcExpression] |
   CFunctionCall String [ObjcExpression] |
   BinOp ObjcExpression Operator ObjcExpression |
@@ -127,7 +127,8 @@ data ObjcExpression =
   StringLit String |
   CStringLit String |
   FloatLit Float |
-  ArrayLit [ObjcExpression]
+  ArrayLit [ObjcExpression] |
+  BoolLit Bool
   deriving (Show, Eq)
 
 -- | 'Operator' represents operators such as +,-,*,= etc.

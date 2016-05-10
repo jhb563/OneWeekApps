@@ -28,7 +28,7 @@ objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcHeaderFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".h") appInfo,
   uiKitImportsSection,
-  InterfaceSection vTy (Just "UIView") properties []]
+  InterfaceSection vTy (Just "UIView") Nothing properties []]
     where vTy = viewType view
           subs = subviews view
           properties = map (propertyForSubview True) subs
@@ -39,8 +39,8 @@ objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcImplementationFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".m") appInfo,
   importsSection vTy (appPrefix appInfo),
-  InterfaceSection vTy Nothing properties [],
-  ImplementationSection vTy impSections]
+  InterfaceSection vTy Nothing Nothing properties [],
+  ImplementationSection vTy Nothing impSections]
     where vTy = viewType view
           subs = subviews view
           properties = map (propertyForSubview False) subs
@@ -99,7 +99,7 @@ nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
 
 selfExprForName :: String -> ObjcExpression
-selfExprForName = PropertyCall (Var "self")
+selfExprForName = PropertyCall SelfExpr
 
 selfExprForElement :: OWAViewElement -> ObjcExpression
 selfExprForElement element = selfExprForName (nameForElement element)
@@ -123,10 +123,10 @@ initMethod = ObjcMethod {
   methodBody = initBody
 }
   where superCall = MethodCall (Var "super") libInit []
-        superStatement = ExpressionStatement $ BinOp (Var "self") Assign superCall
-        ifBody = [ExpressionStatement $ MethodCall (Var "self") (UserMethod setupViewsMethodBase) [],
-                  ExpressionStatement $ MethodCall (Var "self") (UserMethod setupConstraintsMethodBase) []]
-        ifBlock = IfBlock (Var "self") ifBody
+        superStatement = AssignStatement SelfExpr superCall
+        ifBody = [ExpressionStatement $ MethodCall SelfExpr (UserMethod setupViewsMethodBase) [],
+                  ExpressionStatement $ MethodCall SelfExpr (UserMethod setupConstraintsMethodBase) []]
+        ifBlock = IfBlock SelfExpr ifBody
         returnStatement = ReturnStatement $ Var "self"
         initBody = [superStatement, ifBlock, returnStatement]
 
@@ -141,15 +141,13 @@ setupViewsMethodBase = ObjcMethod {
 
 setupViewsMethod :: [OWAViewElement] -> ObjcMethod
 setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
-  where arrayDecl = ExpressionStatement $ BinOp
+  where arrayDecl = AssignStatement
                       (VarDecl (PointerType "NSArray") "subviews")
-                      Assign
                       (ArrayLit $ map selfExprForElement subviews)
-        setMaskStatement = ExpressionStatement $ BinOp
+        setMaskStatement = AssignStatement
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
-                            Assign
-                            (Var "NO")
-        addSubviewStatement = ExpressionStatement $ MethodCall (Var "self")
+                            (BoolLit False) 
+        addSubviewStatement = ExpressionStatement $ MethodCall SelfExpr
                                 LibMethod {
                                   libNameIntro = "add",
                                   libParams = ["Subview"]
@@ -182,26 +180,25 @@ constraintStatements constraint = [createConstraint, addConstraint]
         secondItemExpr = case secondElementName constraint of
           Nothing -> Var "nil"
           Just "Super" -> Var "self"
-          Just secondName -> PropertyCall (Var "self") secondName
+          Just secondName -> PropertyCall SelfExpr secondName
         constraintInitialization = MethodCall 
           (Var "NSLayoutConstraint")
           LibMethod {
             libNameIntro = "constraintWith",
             libParams = ["Item", "attribute", "relatedBy", "toItem", "attribute", "multiplier", "constant"]
           }
-          [PropertyCall (Var "self") firstName,
+          [PropertyCall SelfExpr firstName,
           Var $ objcStringForAttribute (Just firstAttr),
           Var "NSLayoutRelationEqual",
           secondItemExpr,
           Var $ objcStringForAttribute (secondAttribute constraint),
           FloatLit $ multiplier constraint,
           FloatLit $ constant constraint]
-        createConstraint = ExpressionStatement $ BinOp
+        createConstraint = AssignStatement
           (VarDecl (PointerType "NSLayoutConstraint") constraintName)
-          Assign
           constraintInitialization
         addConstraint = ExpressionStatement $ MethodCall 
-          (Var "self")
+          SelfExpr
           LibMethod {
             libNameIntro = "add",
             libParams = ["Constraint"]
@@ -226,8 +223,8 @@ lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtr
   where prop = propExprForElement element
         rtrnStatement = ReturnStatement prop
         lazyIfReturn = IfBlock prop [rtrnStatement]
-        initialization = ExpressionStatement $ BinOp prop
-          Assign
+        initialization = AssignStatement 
+          prop
           (MethodCall (MethodCall (Var $ typeNameForElement element) libAlloc []) libInit [])
         customization = case element of
           (LabelElement label) -> labelCustomization label
@@ -296,9 +293,8 @@ placeholderStatements textField = if noPlaceholders then [] else statements
           Nothing -> Nothing
           Just font -> Just (Var "NSFontAttributeName", libMethodForFont font)
         dictionary = DictionaryLit $ catMaybes [colorAttrPair, fontAttrPair]
-        dictAssign = ExpressionStatement $ BinOp 
+        dictAssign = AssignStatement
           (VarDecl (PointerType "NSDictionary") "placeholderAttributes")
-          Assign
           dictionary
         initExpr = MethodCall (MethodCall (Var "NSAttributedString") libAlloc [])
           LibMethod {
@@ -306,9 +302,8 @@ placeholderStatements textField = if noPlaceholders then [] else statements
             libParams = ["String", "attributes"]
           }
           [localizedStringExpr (fromMaybe "" pText), Var "placeholderAttributes"]
-        placeholderInit = ExpressionStatement $ BinOp
+        placeholderInit = AssignStatement
           (VarDecl (PointerType "NSAttributedString") "placeholder")
-          Assign
           initExpr
         propExpr = propExprForName $ textFieldName textField
         placeholderAssign = valueAssignment propExpr "attributedPlaceholder" (Var "placeholder")
@@ -372,7 +367,5 @@ libMethodForImage imageSrc = MethodCall
   [StringLit imageSrc]
 
 valueAssignment :: ObjcExpression -> String -> ObjcExpression -> ObjcStatement
-valueAssignment exp1 valueName newValue = ExpressionStatement $ BinOp
+valueAssignment exp1 valueName = AssignStatement
   (PropertyCall exp1 valueName) 
-  Assign
-  newValue

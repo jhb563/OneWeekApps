@@ -39,11 +39,9 @@ setSection stringSet = LocalizedStringListSection (setName stringSet)
 
 -- Put in a list to give it monoid property with fold
 statementWithKeyAndValue :: String -> String -> [ObjcStatement]
-statementWithKeyAndValue key value = [ExpressionStatement $
-  BinOp
-    (CStringLit key)
-    Assign
-    (CStringLit value)]
+statementWithKeyAndValue key value = [AssignStatement
+  (CStringLit key)
+  (CStringLit value)]
 
 --------------------------------------------------------------------------------
 --------------------------SORT HELPER-------------------------------------------

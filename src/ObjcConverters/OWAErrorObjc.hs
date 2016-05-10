@@ -32,7 +32,7 @@ objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
 objcHeaderFromErrors appInfo  errors = ObjcFile
   [categoryCommentSection appInfo originalErrorTypeName categoryName True,
   foundationImportsSection,
-  CategoryInterfaceSection category sections]
+  InterfaceSection originalErrorTypeName Nothing (Just categoryName) [] sections]
     where category = categoryForErrors categoryName errors
           categoryName = appPrefix appInfo ++ "Errors"
           sections = methodHeaderSectionsForErrors errors
@@ -51,7 +51,10 @@ objcImplementationFromErrors appInfo errors = if not (null errors)
         enumSect = enumSection categoryName errors
         category = categoryForErrors categoryName errors
         sections = methodImplementationSectionsForErrors errors
-        implSection = CategoryImplementationSection category sections
+        implSection = ImplementationSection
+                        (originalTypeName category)
+                        (Just categoryName)
+                        sections
 
 --------------------------------------------------------------------------------
 --------------------------CONSTRUCTING CATEGORY---------------------------------
