@@ -62,20 +62,6 @@ forwardDeclDoc (EnumDecl enumName types) = indentBlock headerLine enumBody <> se
   where headerLine = text "typedef NS_ENUM(NSInteger," <+> text enumName <> text ")"
         enumBody = vcat $ punctuate (text ",") (map text types)
 
-categoryInterfaceDoc :: Category -> [FileSection] -> Doc
-categoryInterfaceDoc category sections = text "@interface" <+> 
-  text (originalTypeName category) <+> 
-  parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map sectionDoc sections) PPrint.<$>
-  endDoc
-
-categoryImplementationDoc :: Category -> [FileSection] -> Doc
-categoryImplementationDoc category sections = text "@implementation" <+>
-  text (originalTypeName category) <+>
-  parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map sectionDoc sections) PPrint.<$>
-  endDoc
-
 interfaceDoc :: String -> Maybe String -> Maybe String -> [ObjcProperty] -> [FileSection] -> Doc
 interfaceDoc typeName superclass possibleCategoryName properties sections = text "@interface" <+>
   text typeName <+> superDocOrParens PPrint.<$>
