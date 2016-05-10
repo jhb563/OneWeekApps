@@ -26,10 +26,8 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ForwardDeclarationSection [ForwardDeclaration] |
-  CategoryInterfaceSection Category [FileSection] |
-  CategoryImplementationSection Category [FileSection] |
-  InterfaceSection String (Maybe String) [ObjcProperty] [ObjcMethod] |
-  ImplementationSection String [FileSection] |
+  InterfaceSection String (Maybe String) (Maybe String) [ObjcProperty] [FileSection] |
+  ImplementationSection String (Maybe String) [FileSection] |
   MethodHeaderListSection (Maybe String) [ObjcMethod] |
   MethodImplementationListSection (Maybe String) [ObjcMethod] |
   LocalizedStringListSection String [ObjcStatement]

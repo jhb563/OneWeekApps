@@ -28,7 +28,7 @@ objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcHeaderFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".h") appInfo,
   uiKitImportsSection,
-  InterfaceSection vTy (Just "UIView") properties []]
+  InterfaceSection vTy (Just "UIView") Nothing properties []]
     where vTy = viewType view
           subs = subviews view
           properties = map (propertyForSubview True) subs
@@ -39,8 +39,8 @@ objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcImplementationFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".m") appInfo,
   importsSection vTy (appPrefix appInfo),
-  InterfaceSection vTy Nothing properties [],
-  ImplementationSection vTy impSections]
+  InterfaceSection vTy Nothing Nothing properties [],
+  ImplementationSection vTy Nothing impSections]
     where vTy = viewType view
           subs = subviews view
           properties = map (propertyForSubview False) subs
