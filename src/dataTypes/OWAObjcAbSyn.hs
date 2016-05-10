@@ -129,7 +129,8 @@ data ObjcExpression =
   StringLit String |
   CStringLit String |
   FloatLit Float |
-  ArrayLit [ObjcExpression]
+  ArrayLit [ObjcExpression] |
+  BoolLit Bool
   deriving (Show, Eq)
 
 -- | 'Operator' represents operators such as +,-,*,= etc.

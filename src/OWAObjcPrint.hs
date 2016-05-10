@@ -177,6 +177,7 @@ expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 expressionDoc (ArrayLit expressions) = text "@[" <>
   hcat (punctuate (text ", ") (map expressionDoc expressions)) <>
   text "]"
+expressionDoc (BoolLit bool) = text (if bool then "YES" else "NO")
 
 keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc
 keyValueDoc (key, value) = expressionDoc key <+> colon <+> expressionDoc value

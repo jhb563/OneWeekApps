@@ -146,7 +146,7 @@ setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
                       (ArrayLit $ map selfExprForElement subviews)
         setMaskStatement = AssignStatement
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
-                            (Var "NO")
+                            (BoolLit False) 
         addSubviewStatement = ExpressionStatement $ MethodCall SelfExpr
                                 LibMethod {
                                   libNameIntro = "add",
