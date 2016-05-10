@@ -98,9 +98,8 @@ methodBodyForAlert alert = consStatement:(actionStatements ++ [returnStatement])
         returnStatement = ReturnStatement (Var "alert")
 
 constructorAssignment :: OWAAlert -> ObjcStatement
-constructorAssignment alert = ExpressionStatement $ BinOp
+constructorAssignment alert = AssignStatement
   (VarDecl (PointerType originalAlertTypeName) "alert")
-  Assign
   (MethodCall (Var originalAlertTypeName) alertControllerConstructor
     [localizedStringExpr $ alertTitle alert,
     localizedStringExpr $ alertMessage alert,
@@ -118,8 +117,8 @@ actionStatementsForFormat (YesNoButtons yesName noName) =
 
 actionStatements :: String -> String -> String -> [ObjcStatement]
 actionStatements buttonName actionName handlerName = 
-  [ExpressionStatement $ BinOp (VarDecl (PointerType alertTypeName) actionName)
-    Assign
+  [AssignStatement
+    (VarDecl (PointerType alertTypeName) actionName)
     (constructActionExpr buttonName handlerName),
   addActionStatement actionName]
 

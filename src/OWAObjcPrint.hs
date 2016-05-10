@@ -147,6 +147,9 @@ statementDoc (IfBlock condition statements) = indentBlock
 statementDoc (ForEachBlock decl varName statements) = indentBlock
   (text "for" <+> parens (expressionDoc decl <+> text "in" <+> expressionDoc varName))
   (vcat $ map statementDoc statements)
+statementDoc (AssignStatement expr1 expr2) = expressionDoc expr1 <+>
+  text "=" <+>
+  expressionDoc expr2 <> semi
   
 expressionDoc :: ObjcExpression -> Doc
 expressionDoc SelfExpr = text "self"

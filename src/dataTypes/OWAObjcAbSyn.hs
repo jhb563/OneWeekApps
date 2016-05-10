@@ -110,7 +110,8 @@ data ObjcStatement =
   ReturnStatement ObjcExpression |
   ExpressionStatement ObjcExpression |
   IfBlock ObjcExpression [ObjcStatement] |
-  ForEachBlock ObjcExpression ObjcExpression [ObjcStatement]
+  ForEachBlock ObjcExpression ObjcExpression [ObjcStatement] |
+  AssignStatement ObjcExpression ObjcExpression
   deriving (Show, Eq)
 
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This

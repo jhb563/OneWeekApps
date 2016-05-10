@@ -123,7 +123,7 @@ initMethod = ObjcMethod {
   methodBody = initBody
 }
   where superCall = MethodCall (Var "super") libInit []
-        superStatement = ExpressionStatement $ BinOp SelfExpr Assign superCall
+        superStatement = AssignStatement SelfExpr superCall
         ifBody = [ExpressionStatement $ MethodCall SelfExpr (UserMethod setupViewsMethodBase) [],
                   ExpressionStatement $ MethodCall SelfExpr (UserMethod setupConstraintsMethodBase) []]
         ifBlock = IfBlock SelfExpr ifBody
@@ -141,13 +141,11 @@ setupViewsMethodBase = ObjcMethod {
 
 setupViewsMethod :: [OWAViewElement] -> ObjcMethod
 setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
-  where arrayDecl = ExpressionStatement $ BinOp
+  where arrayDecl = AssignStatement
                       (VarDecl (PointerType "NSArray") "subviews")
-                      Assign
                       (ArrayLit $ map selfExprForElement subviews)
-        setMaskStatement = ExpressionStatement $ BinOp
+        setMaskStatement = AssignStatement
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
-                            Assign
                             (Var "NO")
         addSubviewStatement = ExpressionStatement $ MethodCall SelfExpr
                                 LibMethod {
@@ -196,9 +194,8 @@ constraintStatements constraint = [createConstraint, addConstraint]
           Var $ objcStringForAttribute (secondAttribute constraint),
           FloatLit $ multiplier constraint,
           FloatLit $ constant constraint]
-        createConstraint = ExpressionStatement $ BinOp
+        createConstraint = AssignStatement
           (VarDecl (PointerType "NSLayoutConstraint") constraintName)
-          Assign
           constraintInitialization
         addConstraint = ExpressionStatement $ MethodCall 
           SelfExpr
@@ -226,8 +223,8 @@ lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtr
   where prop = propExprForElement element
         rtrnStatement = ReturnStatement prop
         lazyIfReturn = IfBlock prop [rtrnStatement]
-        initialization = ExpressionStatement $ BinOp prop
-          Assign
+        initialization = AssignStatement 
+          prop
           (MethodCall (MethodCall (Var $ typeNameForElement element) libAlloc []) libInit [])
         customization = case element of
           (LabelElement label) -> labelCustomization label
@@ -296,9 +293,8 @@ placeholderStatements textField = if noPlaceholders then [] else statements
           Nothing -> Nothing
           Just font -> Just (Var "NSFontAttributeName", libMethodForFont font)
         dictionary = DictionaryLit $ catMaybes [colorAttrPair, fontAttrPair]
-        dictAssign = ExpressionStatement $ BinOp 
+        dictAssign = AssignStatement
           (VarDecl (PointerType "NSDictionary") "placeholderAttributes")
-          Assign
           dictionary
         initExpr = MethodCall (MethodCall (Var "NSAttributedString") libAlloc [])
           LibMethod {
@@ -306,9 +302,8 @@ placeholderStatements textField = if noPlaceholders then [] else statements
             libParams = ["String", "attributes"]
           }
           [localizedStringExpr (fromMaybe "" pText), Var "placeholderAttributes"]
-        placeholderInit = ExpressionStatement $ BinOp
+        placeholderInit = AssignStatement
           (VarDecl (PointerType "NSAttributedString") "placeholder")
-          Assign
           initExpr
         propExpr = propExprForName $ textFieldName textField
         placeholderAssign = valueAssignment propExpr "attributedPlaceholder" (Var "placeholder")
@@ -372,7 +367,6 @@ libMethodForImage imageSrc = MethodCall
   [StringLit imageSrc]
 
 valueAssignment :: ObjcExpression -> String -> ObjcExpression -> ObjcStatement
-valueAssignment exp1 valueName newValue = ExpressionStatement $ BinOp
+valueAssignment exp1 valueName newValue = AssignStatement
   (PropertyCall exp1 valueName) 
-  Assign
   newValue
