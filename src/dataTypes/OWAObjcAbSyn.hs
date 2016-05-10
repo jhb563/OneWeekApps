@@ -116,6 +116,7 @@ data ObjcStatement =
 -- | 'ObjcExpression' represents an expression within Objective C syntax. This
 -- will ultimately include more complicated types of expressions. 
 data ObjcExpression = 
+  SelfExpr |
   MethodCall ObjcExpression CalledMethod [ObjcExpression] |
   CFunctionCall String [ObjcExpression] |
   BinOp ObjcExpression Operator ObjcExpression |

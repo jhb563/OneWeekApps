@@ -99,7 +99,7 @@ nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
 
 selfExprForName :: String -> ObjcExpression
-selfExprForName = PropertyCall (Var "self")
+selfExprForName = PropertyCall SelfExpr
 
 selfExprForElement :: OWAViewElement -> ObjcExpression
 selfExprForElement element = selfExprForName (nameForElement element)
@@ -123,10 +123,10 @@ initMethod = ObjcMethod {
   methodBody = initBody
 }
   where superCall = MethodCall (Var "super") libInit []
-        superStatement = ExpressionStatement $ BinOp (Var "self") Assign superCall
-        ifBody = [ExpressionStatement $ MethodCall (Var "self") (UserMethod setupViewsMethodBase) [],
-                  ExpressionStatement $ MethodCall (Var "self") (UserMethod setupConstraintsMethodBase) []]
-        ifBlock = IfBlock (Var "self") ifBody
+        superStatement = ExpressionStatement $ BinOp SelfExpr Assign superCall
+        ifBody = [ExpressionStatement $ MethodCall SelfExpr (UserMethod setupViewsMethodBase) [],
+                  ExpressionStatement $ MethodCall SelfExpr (UserMethod setupConstraintsMethodBase) []]
+        ifBlock = IfBlock SelfExpr ifBody
         returnStatement = ReturnStatement $ Var "self"
         initBody = [superStatement, ifBlock, returnStatement]
 
@@ -149,7 +149,7 @@ setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
                             Assign
                             (Var "NO")
-        addSubviewStatement = ExpressionStatement $ MethodCall (Var "self")
+        addSubviewStatement = ExpressionStatement $ MethodCall SelfExpr
                                 LibMethod {
                                   libNameIntro = "add",
                                   libParams = ["Subview"]
@@ -182,14 +182,14 @@ constraintStatements constraint = [createConstraint, addConstraint]
         secondItemExpr = case secondElementName constraint of
           Nothing -> Var "nil"
           Just "Super" -> Var "self"
-          Just secondName -> PropertyCall (Var "self") secondName
+          Just secondName -> PropertyCall SelfExpr secondName
         constraintInitialization = MethodCall 
           (Var "NSLayoutConstraint")
           LibMethod {
             libNameIntro = "constraintWith",
             libParams = ["Item", "attribute", "relatedBy", "toItem", "attribute", "multiplier", "constant"]
           }
-          [PropertyCall (Var "self") firstName,
+          [PropertyCall SelfExpr firstName,
           Var $ objcStringForAttribute (Just firstAttr),
           Var "NSLayoutRelationEqual",
           secondItemExpr,
@@ -201,7 +201,7 @@ constraintStatements constraint = [createConstraint, addConstraint]
           Assign
           constraintInitialization
         addConstraint = ExpressionStatement $ MethodCall 
-          (Var "self")
+          SelfExpr
           LibMethod {
             libNameIntro = "add",
             libParams = ["Constraint"]

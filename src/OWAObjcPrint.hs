@@ -149,6 +149,7 @@ statementDoc (ForEachBlock decl varName statements) = indentBlock
   (vcat $ map statementDoc statements)
   
 expressionDoc :: ObjcExpression -> Doc
+expressionDoc SelfExpr = text "self"
 expressionDoc (MethodCall callingExp (UserMethod method) args) = methodCallDoc
   callingExp (nameIntro method) (map paramTitle $ params method) args
 expressionDoc (MethodCall callingExp libMethod args) = methodCallDoc
