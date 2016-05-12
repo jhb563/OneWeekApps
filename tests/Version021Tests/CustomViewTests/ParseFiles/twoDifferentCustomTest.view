@@ -1,0 +1,25 @@
+View myView
+  Type IGACustomTest3
+  Elements
+    CustomView firstView
+      Type OWAFirstView
+      Layout
+        CenterX
+        CenterY
+        Height 100
+        Width 100
+    Button aButton
+      Text "Hi"
+      Layout
+        ToLeftOf firstView
+        CenterY firstView
+        Height 30
+        Width 50
+    CustomView secondView
+      Type OWASecondView
+      Layout
+        Below firstView
+        CenterX firstView
+        Height 50
+        Width 100
+

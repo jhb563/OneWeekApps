@@ -57,11 +57,20 @@ data OWAView = OWAView {
   constraints :: [OWAConstraint]
 } deriving (Show, Eq) 
 
+-- | OWAViewRecord simplifies the View model for cases where we
+-- are unconcerned about the subviews and constraints. This occurs
+-- for embedding custom views within our view.
+data OWAViewRecord = OWAViewRecord {
+  viewRecordName :: String,
+  viewRecordType :: String
+} deriving (Show, Eq)
+
 -- | OWAViewElement provides a wrapper around the different types of subviews
 -- that a view can have. This will soon be expanded to include other OWAViews,
 -- as well as simple container views.
 data OWAViewElement = LabelElement OWALabel |
   TextFieldElement OWATextField |
   ButtonElement OWAButton |
-  ImageElement OWAImageView
+  ImageElement OWAImageView |
+  CustomViewElement OWAViewRecord
   deriving (Show, Eq)
