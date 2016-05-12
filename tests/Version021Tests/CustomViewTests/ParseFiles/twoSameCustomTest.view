@@ -1,0 +1,18 @@
+View myView
+  Type IGACustomTest2
+  Elements
+    CustomView custom1
+      Type OWACustomView
+      Layout
+        AlignTop 40
+        CenterX
+        Width 200
+        Height 200
+    CustomView custom2
+      Type OWACustomView
+      Layout
+        Below custom1
+        CenterX custom1
+        Width custom1
+        Height custom1
+

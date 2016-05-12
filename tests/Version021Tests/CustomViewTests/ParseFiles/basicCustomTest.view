@@ -1,0 +1,25 @@
+View myView
+  Type IGACustomTest1
+  Elements
+    Label myLabel
+      Text "Hi"
+      Layout
+        AlignTop 60
+        AlignLeft 30
+        Height 30
+        Width 100
+    CustomView firstView
+      Type OWAFirstView
+      Layout
+        Below myLabel
+        AlignLeft myLabel
+        Height 100
+        Width 200
+    Button myButton
+      Text "Hi"
+      Layout
+        Below firstView
+        AlignLeft firstView 10
+        Height 50
+        Width 100
+

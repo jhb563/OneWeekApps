@@ -107,7 +107,7 @@ elementParser = indentParser $ choice allElementParsers
 
 allElementParsers :: [GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))]
 allElementParsers = [labelElementParser, buttonElementParser, 
-  textFieldElementParser, imageViewParser]
+  textFieldElementParser, imageViewParser, customViewParser]
 
 labelElementParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 labelElementParser = do
@@ -219,6 +219,32 @@ allImageViewAttributeParsers :: [GenParser Char GenericParserState (ElementAttr,
 allImageViewAttributeParsers = [imageSourceParser,
   constraintsParser]
 
+customViewParser :: GenParser Char GenericParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
+customViewParser = do
+  name <- nameParserWithKeyword customViewKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  customViewAttrsAndConstraints <- customViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (attrMap, constraints) = splitAttrsAndConstraints customViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let maybeCustomViewRecord = customViewFromNameAndAttrs name attrMap
+  many $ Text.Parsec.try indentedComment
+  modifyState reduceIndentationLevel
+  case maybeCustomViewRecord of
+    Just customViewRecord -> return $ Right (CustomViewElement customViewRecord, modifiedConstraints)
+    Nothing -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      -- Type is the only required custom view keyword
+      missingRequiredAttributes = [typeKeyword]
+    }
+
+customViewAttributeParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
+customViewAttributeParser = indentParser $ choice allCustomViewAttributeParsers
+
+allCustomViewAttributeParsers :: [GenParser Char GenericParserState (ElementAttr, ElementVal)]
+allCustomViewAttributeParsers = [viewTypeParser, constraintsParser]
+
 textParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 textParser = do
   (attr, val) <- Text.Parsec.try $ localizedKeyParserWithKeyword textKeyword
@@ -258,6 +284,11 @@ imageSourceParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 imageSourceParser = do 
   (_, filename) <- Text.Parsec.try $ localizedKeyParserWithKeyword imageSourceKeyword
   return (imageSourceKeyword, StringVal filename)
+
+viewTypeParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
+viewTypeParser = do
+  (_, typeName) <- Text.Parsec.try $ variableNameParserWithKeyword typeKeyword
+  return (typeKeyword, StringVal typeName)
 
 constraintsParser :: GenParser Char GenericParserState (ElementAttr, ElementVal)
 constraintsParser = do
@@ -475,6 +506,14 @@ imageViewFromNameAndAttrs name attrMap = do
     imageSourceName = sourceName
   } 
 
+customViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAViewRecord
+customViewFromNameAndAttrs name attrMap = do
+  typeName <- Map.lookup typeKeyword attrMap
+  return OWAViewRecord {
+    viewRecordName = name,
+    viewRecordType = typeName
+  }
+
 viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
 viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
   viewName = name,
@@ -516,6 +555,9 @@ textFieldKeyword = "TextField"
 
 imageViewKeyword :: String
 imageViewKeyword = "Image"
+
+customViewKeyword :: String
+customViewKeyword = "CustomView"
 
 textKeyword :: String
 textKeyword = "Text"
