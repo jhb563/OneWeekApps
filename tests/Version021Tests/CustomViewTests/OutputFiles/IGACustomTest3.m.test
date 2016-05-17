@@ -36,7 +36,7 @@
 #pragma mark - Setup
 
 - (void)setupViews {
-  NSArray* subviews = @[self.custom1, self.custom2];
+  NSArray* subviews = @[self.firstView, self.aButton, self.secondView];
   for (UIView* view in subviews) {
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:view];
@@ -46,14 +46,14 @@
 - (void)setupConstraints {
   NSLayoutConstraint* firstViewCenterX = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:firstViewCenterX];
-  NSLayoutConstraint* firstViewCenterY = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:00.0];
+  NSLayoutConstraint* firstViewCenterY = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:firstViewCenterY];
   NSLayoutConstraint* firstViewHeight = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:firstViewHeight];
   NSLayoutConstraint* firstViewWidth = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:firstViewWidth];
-  NSLayoutConstraint* aButtonLeft = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
-  [self addConstraint:aButtonLeft];
+  NSLayoutConstraint* aButtonRight = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:aButtonRight];
   NSLayoutConstraint* aButtonCenterY = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:aButtonCenterY];
   NSLayoutConstraint* aButtonHeight = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];

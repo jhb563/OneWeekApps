@@ -64,8 +64,8 @@
   NSLayoutConstraint* myButtonLeft = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:10.0];
   [self addConstraint:myButtonLeft];
   NSLayoutConstraint* myButtonHeight = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
-  NSLayoutConstraint* myButtonWidth = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:myButtonHeight];
+  NSLayoutConstraint* myButtonWidth = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
   [self addConstraint:myButtonWidth];
 }
 

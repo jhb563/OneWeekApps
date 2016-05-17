@@ -46,18 +46,18 @@
   [self addConstraint:custom1Top];
   NSLayoutConstraint* custom1CenterX = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:custom1CenterX];
-  NSLayoutConstraint* custom1Height = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
-  [self addConstraint:custom1Height];
   NSLayoutConstraint* custom1Width = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
   [self addConstraint:custom1Width];
+  NSLayoutConstraint* custom1Height = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:custom1Height];
   NSLayoutConstraint* custom2Top = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
   [self addConstraint:custom2Top];
   NSLayoutConstraint* custom2CenterX = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:custom2CenterX];
-  NSLayoutConstraint* custom2Height = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
-  [self addConstraint:custom2Height];
   NSLayoutConstraint* custom2Width = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
   [self addConstraint:custom2Width];
+  NSLayoutConstraint* custom2Height = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  [self addConstraint:custom2Height];
 }
 
 #pragma mark - Lazy Getters

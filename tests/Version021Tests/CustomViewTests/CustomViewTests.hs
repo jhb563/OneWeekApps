@@ -16,7 +16,7 @@ module CustomViewTests (
 
 import OWAAppInfo
 import OWAObjcAbSyn
-import OWAObjcPrint
+import OWAViewObjc
 import OWAViewParser
 import TestUtil
 import TestViews

@@ -61,6 +61,7 @@ forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
 forwardDeclDoc (EnumDecl enumName types) = indentBlock headerLine enumBody <> semi
   where headerLine = text "typedef NS_ENUM(NSInteger," <+> text enumName <> text ")"
         enumBody = vcat $ punctuate (text ",") (map text types)
+forwardDeclDoc (ClassDecl className) = text "@class" <+> text className <> semi
 
 interfaceDoc :: String -> Maybe String -> Maybe String -> [ObjcProperty] -> [FileSection] -> Doc
 interfaceDoc typeName superclass possibleCategoryName properties sections = text "@interface" <+>

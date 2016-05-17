@@ -17,6 +17,7 @@ import OWAAppInfo
 import OWAObjcAbSyn
 import OWAElements
 import OWAView
+import qualified Data.Set as Set
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
@@ -25,20 +26,24 @@ import OWAView
 -- | 'objcHeaderFromView' takes the app info and a view and returns
 -- the structure for the view's header file.
 objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
-objcHeaderFromView appInfo view = ObjcFile 
+objcHeaderFromView appInfo view = ObjcFile $
   [topCommentSection (vTy ++ ".h") appInfo,
-  uiKitImportsSection,
-  InterfaceSection vTy (Just "UIView") Nothing properties []]
+  uiKitImportsSection] ++
+  rest
     where vTy = viewType view
           subs = subviews view
           properties = map (propertyForSubview True) subs
+          interfaceSection = InterfaceSection vTy (Just "UIView") Nothing properties []
+          rest = case forwardClassSection view of
+                  Nothing -> [interfaceSection]
+                  Just declSection -> [declSection, interfaceSection]
 
 -- | 'objcImplementationFromView' takes the app info and a view and returns
 -- the structure for the view's implementation file.
 objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcImplementationFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".m") appInfo,
-  importsSection vTy (appPrefix appInfo),
+  importsSection view (appPrefix appInfo),
   InterfaceSection vTy Nothing Nothing properties [],
   ImplementationSection vTy Nothing impSections]
     where vTy = viewType view
@@ -52,13 +57,26 @@ objcImplementationFromView appInfo view = ObjcFile
 --------------------------SECTION HELPERS---------------------------------------
 --------------------------------------------------------------------------------
 
-importsSection :: String -> String -> FileSection
-importsSection viewType appPrefix = ImportsSection
-  [FileImport (viewType ++ ".h"),
+forwardClassSection :: OWAView -> Maybe FileSection
+forwardClassSection view = case classesToImportForView view of
+  [] -> Nothing
+  classes -> Just $ ForwardDeclarationSection $ map ClassDecl classes
+
+importsSection :: OWAView -> String -> FileSection
+importsSection view appPrefix = ImportsSection $
+  [FileImport $ viewType view ++ ".h",
   FileImport colorFileName,
-  FileImport fontFileName]
+  FileImport fontFileName] ++
+  map (FileImport . (++ ".h")) classes
     where colorFileName = "UIColor+" ++ appPrefix ++ "Colors.h"
           fontFileName = "UIFont+" ++ appPrefix ++ "Fonts.h" 
+          classes = classesToImportForView view
+
+classesToImportForView :: OWAView -> [String]
+classesToImportForView view = Set.toList $ foldl tailFunc Set.empty (subviews view)
+  where tailFunc set v = case v of
+                      (CustomViewElement viewRecord) -> Set.insert (viewRecordType viewRecord) set
+                      _ -> set
 
 lifecycleSection :: FileSection
 lifecycleSection = MethodImplementationListSection (Just "Lifecycle") [initMethod]
@@ -88,6 +106,7 @@ typeNameForElement (LabelElement _) = "UILabel"
 typeNameForElement (TextFieldElement _) = "UITextField"
 typeNameForElement (ButtonElement _) = "UIButton"
 typeNameForElement (ImageElement _) = "UIImageView"
+typeNameForElement (CustomViewElement record) = viewRecordType record
 
 typeForElement :: OWAViewElement -> ObjcType
 typeForElement element = PointerType $ typeNameForElement element
@@ -97,6 +116,7 @@ nameForElement (LabelElement label) = labelName label
 nameForElement (TextFieldElement textField) = textFieldName textField
 nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
+nameForElement (CustomViewElement record) = viewRecordName record
 
 selfExprForName :: String -> ObjcExpression
 selfExprForName = PropertyCall SelfExpr
@@ -231,6 +251,7 @@ lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtr
           (TextFieldElement textField) -> textFieldCustomization textField
           (ButtonElement button) -> buttonCustomization button
           (ImageElement image) -> imageCustomization image
+          (CustomViewElement _) -> []
 
 libAlloc :: CalledMethod
 libAlloc = LibMethod {
