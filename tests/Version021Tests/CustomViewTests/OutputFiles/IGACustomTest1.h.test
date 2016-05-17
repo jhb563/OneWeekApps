@@ -1,0 +1,19 @@
+//
+// IGACustomTest1.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@class OWAFirstView;
+
+@interface IGACustomTest1 : UIView
+
+@property (nonatomic, strong, readonly) UILabel* myLabel;
+@property (nonatomic, strong, readonly) OWAFirstView* firstView;
+@property (nonatomic, strong, readonly) UIButton* myButton;
+
+@end

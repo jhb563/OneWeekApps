@@ -45,7 +45,8 @@ data Import =
 -- the main body of a file, such as a block typedef, class, or protocol
 data ForwardDeclaration =
   TypedefDecl ObjcType Identifier [ObjcType] |
-  EnumDecl Identifier [Identifier]
+  EnumDecl Identifier [Identifier] |
+  ClassDecl Identifier
   deriving (Show, Eq)
 
 -- | 'Category' stores the structure of an Objective C class extension.

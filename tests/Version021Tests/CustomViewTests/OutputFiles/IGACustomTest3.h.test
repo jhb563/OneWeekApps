@@ -1,0 +1,20 @@
+//
+// IGACustomTest3.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@class OWAFirstView;
+@class OWASecondView;
+
+@interface IGACustomTest3 : UIView
+
+@property (nonatomic, strong, readonly) OWAFirstView* firstView;
+@property (nonatomic, strong, readonly) UIButton* aButton;
+@property (nonatomic, strong, readonly) OWASecondView* secondView;
+
+@end
