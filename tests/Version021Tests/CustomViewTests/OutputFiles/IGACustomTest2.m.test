@@ -1,0 +1,81 @@
+//
+// IGACustomTest2.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "IGACustomTest2.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+#import "OWACustomView.h"
+
+@interface IGACustomTest2 ()
+
+@property (nonatomic, strong) OWACustomView* custom1;
+@property (nonatomic, strong) OWACustomView* custom2;
+
+@end
+
+@implementation IGACustomTest2
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.custom1, self.custom2];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* custom1Top = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
+  [self addConstraint:custom1Top];
+  NSLayoutConstraint* custom1CenterX = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:custom1CenterX];
+  NSLayoutConstraint* custom1Height = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:custom1Height];
+  NSLayoutConstraint* custom1Width = [NSLayoutConstraint constraintWithItem:self.custom1 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:custom1Width];
+  NSLayoutConstraint* custom2Top = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:custom2Top];
+  NSLayoutConstraint* custom2CenterX = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:custom2CenterX];
+  NSLayoutConstraint* custom2Height = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  [self addConstraint:custom2Height];
+  NSLayoutConstraint* custom2Width = [NSLayoutConstraint constraintWithItem:self.custom2 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.custom1 attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
+  [self addConstraint:custom2Width];
+}
+
+#pragma mark - Lazy Getters
+
+- (OWACustomView*)custom1 {
+  if (_custom1) {
+    return _custom1;
+  }
+  _custom1 = [[OWACustomView alloc] init];
+  return _custom1;
+}
+
+- (OWACustomView*)custom2 {
+  if (_custom2) {
+    return _custom2;
+  }
+  _custom2 = [[OWACustomView alloc] init];
+  return _custom2;
+}
+
+@end

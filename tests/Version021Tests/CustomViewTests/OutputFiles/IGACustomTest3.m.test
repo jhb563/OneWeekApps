@@ -1,0 +1,100 @@
+//
+// IGACustomTest3.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "IGACustomTest3.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+#import "OWAFirstView.h"
+#import "OWASecondView.h"
+
+@interface IGACustomTest3 ()
+
+@property (nonatomic, strong) OWAFirstView* firstView;
+@property (nonatomic, strong) UIButton* aButton;
+@property (nonatomic, strong) OWASecondView* secondView;
+
+@end
+
+@implementation IGACustomTest3
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.custom1, self.custom2];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* firstViewCenterX = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:firstViewCenterX];
+  NSLayoutConstraint* firstViewCenterY = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:00.0];
+  [self addConstraint:firstViewCenterY];
+  NSLayoutConstraint* firstViewHeight = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:firstViewHeight];
+  NSLayoutConstraint* firstViewWidth = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:firstViewWidth];
+  NSLayoutConstraint* aButtonLeft = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:aButtonLeft];
+  NSLayoutConstraint* aButtonCenterY = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  [self addConstraint:aButtonCenterY];
+  NSLayoutConstraint* aButtonHeight = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:aButtonHeight];
+  NSLayoutConstraint* aButtonWidth = [NSLayoutConstraint constraintWithItem:self.aButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  [self addConstraint:aButtonWidth];
+  NSLayoutConstraint* secondViewTop = [NSLayoutConstraint constraintWithItem:self.secondView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:secondViewTop];
+  NSLayoutConstraint* secondViewCenterX = [NSLayoutConstraint constraintWithItem:self.secondView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:secondViewCenterX];
+  NSLayoutConstraint* secondViewHeight = [NSLayoutConstraint constraintWithItem:self.secondView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  [self addConstraint:secondViewHeight];
+  NSLayoutConstraint* secondViewWidth = [NSLayoutConstraint constraintWithItem:self.secondView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:secondViewWidth];
+}
+
+#pragma mark - Lazy Getters
+
+- (OWAFirstView*)firstView {
+  if (_firstView) {
+    return _firstView;
+  }
+  _firstView = [[OWAFirstView alloc] init];
+  return _firstView;
+}
+
+- (UIButton*)aButton {
+  if (_aButton) {
+    return _aButton;
+  }
+  _aButton = [[UIButton alloc] init];
+  [_aButton setTitle:NSLocalizedString(@"Hi", nil) forState:UIControlStateNormal];
+  return _aButton;
+}
+
+- (OWASecondView*)secondView {
+  if (_secondView) {
+    return _secondView;
+  }
+  _secondView = [[OWASecondView alloc] init];
+  return _secondView;
+}
+
+@end
