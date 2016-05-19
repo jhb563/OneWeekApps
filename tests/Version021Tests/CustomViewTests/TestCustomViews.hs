@@ -1,4 +1,4 @@
-module TestViews where
+module TestCustomViews where
 
 import OWAView
 import OWAElements

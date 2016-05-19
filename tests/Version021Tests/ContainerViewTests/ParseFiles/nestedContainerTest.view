@@ -1,0 +1,31 @@
+View myView
+  Type IGAContainerTest2
+  Elements
+    ContainerView topContainer
+      BackgroundColor redColor
+      Elements
+        ContainerView insideContainer
+          BackgroundColor blueColor
+          Elements
+            Label insideLabel
+              Text "Hello from the inside"
+              Layout
+                CenterX
+                CenterY
+          Layout
+            AlignLeft
+            AlignTop 20
+            Height 200
+            Width 200
+        Button topButton
+          Text "Hello from not so inside"
+          Layout
+            CenterY
+            ToRightOf insideContainer 20
+            Height 30
+            Width 100
+      Layout
+        AlignTop
+        AlignBottom
+        AlignLeft
+        AlignRight

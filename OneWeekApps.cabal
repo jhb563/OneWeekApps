@@ -147,7 +147,8 @@ test-suite Version021Tests
   main-is: OWAVersion021Tests.hs
   hs-source-dirs: tests,
                   tests/Version021Tests,
-                  tests/Version021Tests/CustomViewTests
+                  tests/Version021Tests/CustomViewTests,
+                  tests/Version021Tests/ContainerViewTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
