@@ -65,6 +65,14 @@ data OWAViewRecord = OWAViewRecord {
   viewRecordType :: String
 } deriving (Show, Eq)
 
+-- | OWAContainer is another simplified View which just holds a group of
+-- elements. It has a generic type, and does not store its own constraints.
+data OWAContainer = OWAContainer {
+  containerName :: String,
+  containerBackgroundColorName :: Maybe String,
+  containerSubviews :: [OWAViewElement]
+} deriving (Show, Eq)
+
 -- | OWAViewElement provides a wrapper around the different types of subviews
 -- that a view can have. This will soon be expanded to include other OWAViews,
 -- as well as simple container views.
@@ -72,5 +80,6 @@ data OWAViewElement = LabelElement OWALabel |
   TextFieldElement OWATextField |
   ButtonElement OWAButton |
   ImageElement OWAImageView |
-  CustomViewElement OWAViewRecord
+  CustomViewElement OWAViewRecord |
+  ContainerViewElement OWAContainer
   deriving (Show, Eq)

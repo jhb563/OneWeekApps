@@ -19,7 +19,7 @@ import OWAObjcAbSyn
 import OWAViewObjc
 import OWAViewParser
 import TestUtil
-import TestViews
+import TestCustomViews
 import Test.Hspec
 
 runCustomViewTests :: FilePath -> IO ()
