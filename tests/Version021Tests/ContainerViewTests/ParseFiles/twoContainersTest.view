@@ -1,5 +1,5 @@
 View myView
-  Type IGAContainerTest3
+  Type IGAContainerView3
   Elements
     Label firstLabel
       Text "Name"

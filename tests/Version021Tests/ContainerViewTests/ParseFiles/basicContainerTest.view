@@ -19,7 +19,7 @@ View myView
         AlignLeft 20
         AlignRight 20
         Height 200
-    ImageView myImage
+    Image myImage
       ImageSrc "file1.png"
       Layout
         CenterX

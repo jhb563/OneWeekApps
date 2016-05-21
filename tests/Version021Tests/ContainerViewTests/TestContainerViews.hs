@@ -8,18 +8,18 @@ import OWAView
 basicContainerTest :: OWAView
 basicContainerTest = OWAView {
   viewName = "myView",
-  viewType = "IGAContainerTest1",
+  viewType = "IGAContainerView1",
   subviews = [ContainerViewElement myContainer,
               ImageElement myImage],
-  constraints = [centerConstraintFromTuple ("nextLabel", "myContainer", True),
+  constraints = [alignConstraintFromTuple ("myContainer", "Super", Top, 40),
+                alignConstraintFromTuple ("myContainer", "Super", LeftSide, 20),
+                alignConstraintFromTuple ("myContainer", "Super", RightSide, 20),
+                heightWidthConstraintFromTuple ("myContainer", Nothing, 200, Height),
+                centerConstraintFromTuple ("nextLabel", "myContainer", True),
                 centerConstraintFromTuple ("nextLabel", "myContainer", False),
                 centerConstraintFromTuple ("nextButton", "myContainer", True),
                 belowConstraintFromTuple ("nextButton", "nextLabel", 30),
                 heightWidthConstraintFromTuple ("nextButton", Nothing, 30, Height),
-                alignConstraintFromTuple ("myContainer", "Super", Top, 40),
-                alignConstraintFromTuple ("myContainer", "Super", LeftSide, 20),
-                alignConstraintFromTuple ("myContainer", "Super", RightSide, 20),
-                heightWidthConstraintFromTuple ("myContainer", Nothing, 200, Height),
                 centerConstraintFromTuple ("myImage", "Super", True),
                 belowConstraintFromTuple ("myImage", "myContainer", 30),
                 heightWidthConstraintFromTuple ("myImage", Nothing, 80, Width), 
@@ -29,22 +29,22 @@ basicContainerTest = OWAView {
 nestedContainerTest :: OWAView
 nestedContainerTest = OWAView {
   viewName = "myView",
-  viewType = "IGAContainerTest2",
+  viewType = "IGAContainerView2",
   subviews = [ContainerViewElement topContainer],
-  constraints = [centerConstraintFromTuple ("insideLabel", "insideContainer", True),
-                centerConstraintFromTuple ("insideLabel", "insideContainer", False),
+  constraints = [alignConstraintFromTuple ("topContainer", "Super", Top, 0),
+                alignConstraintFromTuple ("topContainer", "Super", Bottom, 0),
+                alignConstraintFromTuple ("topContainer", "Super", LeftSide, 0),
+                alignConstraintFromTuple ("topContainer", "Super", RightSide, 0),
                 alignConstraintFromTuple ("insideContainer", "topContainer", LeftSide, 0),
                 alignConstraintFromTuple ("insideContainer", "topContainer", Top, 20),
                 heightWidthConstraintFromTuple ("insideContainer", Nothing, 200, Height),
                 heightWidthConstraintFromTuple ("insideContainer", Nothing, 200, Width),
+                centerConstraintFromTuple ("insideLabel", "insideContainer", True),
+                centerConstraintFromTuple ("insideLabel", "insideContainer", False),
                 centerConstraintFromTuple ("topButton", "topContainer", False),
                 toRightConstraint,
                 heightWidthConstraintFromTuple ("topButton", Nothing, 30, Height),
-                heightWidthConstraintFromTuple ("topButton", Nothing, 100, Width),
-                alignConstraintFromTuple ("topContainer", "Super", Top, 0),
-                alignConstraintFromTuple ("topContainer", "Super", Bottom, 0),
-                alignConstraintFromTuple ("topContainer", "Super", LeftSide, 0),
-                alignConstraintFromTuple ("topContainer", "Super", RightSide, 0)]
+                heightWidthConstraintFromTuple ("topButton", Nothing, 100, Width)]
 }
   where toRightConstraint = OWAConstraint {
                               firstElementName = "topButton",
@@ -52,13 +52,13 @@ nestedContainerTest = OWAView {
                               secondElementName = Just "insideContainer",
                               secondAttribute = Just RightSide,
                               multiplier = 1.0,
-                              constant = 100
+                              constant = 20
                             }
 
 twoContainersTest :: OWAView
 twoContainersTest = OWAView {
   viewName = "myView",
-  viewType = "IGAContainerTest3",
+  viewType = "IGAContainerView3",
   subviews = [LabelElement firstLabel,
               ContainerViewElement container1,
               LabelElement secondLabel,
@@ -67,26 +67,26 @@ twoContainersTest = OWAView {
                 alignConstraintFromTuple ("firstLabel", "Super", LeftSide, 20),
                 heightWidthConstraintFromTuple ("firstLabel", Nothing, 30, Height),
                 heightWidthConstraintFromTuple ("firstLabel", Nothing, 100, Width),
-                heightWidthConstraintFromTuple ("myImage", Just "container1", 0, Height),
-                heightWidthConstraintFromTuple ("myImage", Just "container1", 0, Width),
-                centerConstraintFromTuple ("myImage", "container1", True),
-                centerConstraintFromTuple ("myImage", "container1", False),
                 belowConstraintFromTuple ("container1", "firstLabel", 10),
                 alignConstraintFromTuple ("container1", "firstLabel", LeftSide,  0),
                 heightWidthConstraintFromTuple ("container1", Nothing, 100, Height),
                 heightWidthConstraintFromTuple ("container1", Nothing, 100, Width),
+                heightWidthConstraintFromTuple ("myImage", Just "container1", 0, Height),
+                heightWidthConstraintFromTuple ("myImage", Just "container1", 0, Width),
+                centerConstraintFromTuple ("myImage", "container1", True),
+                centerConstraintFromTuple ("myImage", "container1", False),
                 belowConstraintFromTuple ("secondLabel", "container1", 20),
                 alignConstraintFromTuple ("secondLabel", "firstLabel", LeftSide, 0),
                 heightWidthConstraintFromTuple ("secondLabel", Just "firstLabel", 0, Height),
                 heightWidthConstraintFromTuple ("secondLabel", Just "firstLabel", 0, Width),
-                centerConstraintFromTuple ("myField", "container2", False),
-                alignConstraintFromTuple ("myField", "container2", LeftSide, 0),
-                alignConstraintFromTuple ("myField", "container2", RightSide, 0),
-                heightWidthConstraintFromTuple ("myField", Nothing, 30, Height),
                 belowConstraintFromTuple ("container2", "secondLabel", 0),
                 alignConstraintFromTuple ("container2", "container1", LeftSide, 0),
                 heightWidthConstraintFromTuple ("container2", Just "container1", 0, Height),
-                heightWidthConstraintFromTuple ("container2", Just "container1", 0, Width)]
+                heightWidthConstraintFromTuple ("container2", Just "container1", 0, Width),
+                centerConstraintFromTuple ("myField", "container2", False),
+                alignConstraintFromTuple ("myField", "container2", LeftSide, 0),
+                alignConstraintFromTuple ("myField", "container2", RightSide, 0),
+                heightWidthConstraintFromTuple ("myField", Nothing, 30, Height)]
 }
 
 -- Elements

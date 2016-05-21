@@ -1,5 +1,5 @@
 View myView
-  Type IGAContainerTest2
+  Type IGAContainerView2
   Elements
     ContainerView topContainer
       BackgroundColor redColor
