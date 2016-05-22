@@ -1,0 +1,157 @@
+//
+// IGACustomTest3.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "IGACustomTest3.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+#import "OWAFirstView.h"
+#import "OWASecondView.h"
+
+@interface IGACustomTest3 ()
+
+@property (nonatomic, strong) UILabel* firstLabel;
+@property (nonatomic, strong) UIView* container1;
+@property (nonatomic, strong) UIImageView* myImage;
+@property (nonatomic, strong) UILabel* secondLabel;
+@property (nonatomic, strong) UIView* container2;
+@property (nonatomic, strong) UITextField* myField;
+
+@end
+
+@implementation IGACustomTest3
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.firstLabel, self.container1, self.secondLabel, self.container2];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+  NSArray* container1Subviews = @[self.myImage];
+  for (UIView* view in container1Subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.container1 addSubview:view];
+  }
+  NSArray* container2Subviews = @[self.myField];
+  for (UIView* view in container2Subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.container2 addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* firstLabelTop = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:20.0];
+  [self addConstraint:firstLabelTop];
+  NSLayoutConstraint* firstLabelLeft = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0];
+  [self addConstraint:firstLabelLeft];
+  NSLayoutConstraint* firstLabelHeight = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:firstLabelHeight];
+  NSLayoutConstraint* firstLabelWidth = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:firstLabelWidth];
+  NSLayoutConstraint* container1Top = [NSLayoutConstraint constraintWithItem:self.container1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10.0];
+  [self addConstraint:container1Top];
+  NSLayoutConstraint* container1Left = [NSLayoutConstraint constraintWithItem:self.container1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:container1Left];
+  NSLayoutConstraint* container1Height = [NSLayoutConstraint constraintWithItem:self.container1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:container1Height];
+  NSLayoutConstraint* container1Width = [NSLayoutConstraint constraintWithItem:self.container1 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:container1Width];
+  NSLayoutConstraint* myImageHeight = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageHeight];
+  NSLayoutConstraint* myImageWidth = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageWidth];
+  NSLayoutConstraint* myImageCenterX = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageCenterX];
+  NSLayoutConstraint* myImageCenterY = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageCenterY];
+  NSLayoutConstraint* secondLabelTop = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
+  [self addConstraint:secondLabelTop];
+  NSLayoutConstraint* secondLabelLeft = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:secondLabelLeft];
+  NSLayoutConstraint* secondLabelHeight = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  [self addConstraint:secondLabelHeight];
+  NSLayoutConstraint* secondLabelWidth = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
+  [self addConstraint:secondLabelWidth];
+  NSLayoutConstraint* container2Top = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.secondLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:container2Top];
+  NSLayoutConstraint* container2Left = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:container2Left];
+  NSLayoutConstraint* container2Height = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0.0];
+  [self addConstraint:container2Height];
+  NSLayoutConstraint* container2Width = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
+  [self addConstraint:container2Width];
+  NSLayoutConstraint* myFieldCenterY = [NSLayoutConstraint constraintWithItem:self.myField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.container2 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  [self addConstraint:myFieldCenterY];
+  NSLayoutConstraint* myFieldLeft = [NSLayoutConstraint constraintWithItem:self.myField attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.container2 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:myFieldLeft];
+  NSLayoutConstraint* myFieldRight = [NSLayoutConstraint constraintWithItem:self.myField attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.container2 attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  [self addConstraint:myFieldRight];
+  NSLayoutConstraint* myFieldHeight = [NSLayoutConstraint constraintWithItem:self.myField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:myFieldHeight];
+}
+
+#pragma mark - Lazy Getters
+
+- (UILabel*)firstLabel {
+  if (_firstLabel) {
+    return _firstLabel;
+  }
+  _firstLabel = [[UILabel alloc] init];
+  _firstLabel.text = NSLocalizedString(@"Name", nil)
+  return _firstLabel;
+}
+
+- (UIView*)container1 {
+  if (_container1) {
+    return _container1;
+  }
+  _container1 = [[UIView alloc] init];
+  return _container1;
+}
+
+- (UILabel*)secondLabel {
+  if (_secondLabel) {
+    return _secondLabel;
+  }
+  _secondLabel = [[UILabel alloc] init];
+  _secondLabel.text = NSLocalizedString(@"Location", nil)
+  return _secondLabel;
+}
+
+- (UIView*)container2 {
+  if (_container2) {
+    return _container2;
+  }
+  _container2 = [[UIView alloc] init];
+  return _container2;
+}
+
+- (UITextField*)myField {
+  if (_myField) {
+    return _myField;
+  }
+  _myField = [[UITextField alloc] init];
+  NSDictionary* placeholderAttributes = @{};
+  NSAttributedString* placeholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Enter Location", nil) attributes:placeholderAttributes];
+  _myField.attributedPlaceholder = placeholder;
+  return _myField;
+}
+
+@end

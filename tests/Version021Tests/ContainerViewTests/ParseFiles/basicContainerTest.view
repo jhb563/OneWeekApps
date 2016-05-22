@@ -17,7 +17,7 @@ View myView
       Layout
         AlignTop 40
         AlignLeft 20
-        AlignRight 20
+        AlignRight -20
         Height 200
     Image myImage
       ImageSrc "file1.png"

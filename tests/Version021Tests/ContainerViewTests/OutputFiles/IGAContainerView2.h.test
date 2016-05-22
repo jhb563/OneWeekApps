@@ -1,0 +1,18 @@
+//
+// IGAContainerView2.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface IGAContainerView2 : UIView
+
+@property (nonatomic, strong, readonly) UIView* topContainer;
+@property (nonatomic, strong, readonly) UIView* insideContainer;
+@property (nonatomic, strong, readonly) UILabel* insideLabel;
+@property (nonatomic, strong, readonly) UIButton* topButton;
+
+@end
