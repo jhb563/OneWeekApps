@@ -13,7 +13,7 @@ basicContainerTest = OWAView {
               ImageElement myImage],
   constraints = [alignConstraintFromTuple ("myContainer", "Super", Top, 40),
                 alignConstraintFromTuple ("myContainer", "Super", LeftSide, 20),
-                alignConstraintFromTuple ("myContainer", "Super", RightSide, 20),
+                alignConstraintFromTuple ("myContainer", "Super", RightSide, -20),
                 heightWidthConstraintFromTuple ("myContainer", Nothing, 200, Height),
                 centerConstraintFromTuple ("nextLabel", "myContainer", True),
                 centerConstraintFromTuple ("nextLabel", "myContainer", False),
