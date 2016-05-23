@@ -12,10 +12,10 @@
 
 @interface IGAContainerView2 ()
 
-@property (nonatomic, strong, readonly) UIView* topContainer;
-@property (nonatomic, strong, readonly) UIView* insideContainer;
-@property (nonatomic, strong, readonly) UILabel* insideLabel;
-@property (nonatomic, strong, readonly) UIButton* topButton;
+@property (nonatomic, strong) UIView* topContainer;
+@property (nonatomic, strong) UIView* insideContainer;
+@property (nonatomic, strong) UILabel* insideLabel;
+@property (nonatomic, strong) UIButton* topButton;
 
 @end
 
@@ -79,8 +79,8 @@
   [self addConstraint:topButtonLeft];
   NSLayoutConstraint* topButtonHeight = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:topButtonHeight];
-  NSLayoutConstraint* topButtonHeight = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
-  [self addConstraint:topButtonHeight];
+  NSLayoutConstraint* topButtonWidth = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:topButtonWidth];
 }
 
 #pragma mark - Lazy Getters
@@ -99,7 +99,7 @@
     return _insideContainer;
   }
   _insideContainer = [[UIView alloc] init];
-  _insideContainer.backgroundColr = [UIColor blueColor]; 
+  _insideContainer.backgroundColor = [UIColor blueColor];
   return _insideContainer;
 }
 

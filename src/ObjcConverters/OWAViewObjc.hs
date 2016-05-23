@@ -31,7 +31,7 @@ objcHeaderFromView appInfo view = ObjcFile $
   uiKitImportsSection] ++
   rest
     where vTy = viewType view
-          subs = subviews view
+          subs = allChildViews view
           properties = map (propertyForSubview True) subs
           interfaceSection = InterfaceSection vTy (Just "UIView") Nothing properties []
           rest = case forwardClassSection view of
@@ -47,7 +47,7 @@ objcImplementationFromView appInfo view = ObjcFile
   InterfaceSection vTy Nothing Nothing properties [],
   ImplementationSection vTy Nothing impSections]
     where vTy = viewType view
-          subs = subviews view
+          subs = allChildViews view
           properties = map (propertyForSubview False) subs
           impSections = if not (null subs)
                           then [lifecycleSection, setupSection view, lazyGetterSection view]
@@ -87,7 +87,15 @@ setupSection view = MethodImplementationListSection (Just "Setup")
 
 lazyGetterSection :: OWAView -> FileSection
 lazyGetterSection view = MethodImplementationListSection (Just "Lazy Getters")
-  (map lazyGetterForView (subviews view))
+  (map lazyGetterForView (allChildViews view))
+
+allChildViews :: OWAView -> [OWAViewElement]
+allChildViews view = concatMap allNestedSubviews (subviews view)
+
+allNestedSubviews :: OWAViewElement -> [OWAViewElement]
+allNestedSubviews containerElem@(ContainerViewElement container) = containerElem :
+  concatMap allNestedSubviews (containerSubviews container)
+allNestedSubviews otherElem = [otherElem]
 
 --------------------------------------------------------------------------------
 --------------------------PROPERTIES--------------------------------------------
@@ -107,6 +115,7 @@ typeNameForElement (TextFieldElement _) = "UITextField"
 typeNameForElement (ButtonElement _) = "UIButton"
 typeNameForElement (ImageElement _) = "UIImageView"
 typeNameForElement (CustomViewElement record) = viewRecordType record
+typeNameForElement (ContainerViewElement _) = "UIView"
 
 typeForElement :: OWAViewElement -> ObjcType
 typeForElement element = PointerType $ typeNameForElement element
@@ -117,6 +126,7 @@ nameForElement (TextFieldElement textField) = textFieldName textField
 nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
 nameForElement (CustomViewElement record) = viewRecordName record
+nameForElement (ContainerViewElement container) = containerName container
 
 selfExprForName :: String -> ObjcExpression
 selfExprForName = PropertyCall SelfExpr
@@ -161,13 +171,30 @@ setupViewsMethodBase = ObjcMethod {
 
 setupViewsMethod :: [OWAViewElement] -> ObjcMethod
 setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
-  where arrayDecl = AssignStatement
-                      (VarDecl (PointerType "NSArray") "subviews")
-                      (ArrayLit $ map selfExprForElement subviews)
+  where superViewSection = setupViewsSectionForNameAndElements "" subviews
+        containers = concatMap searchSubviewsForContainers subviews
+        otherContainerSections = concatMap (\(ContainerViewElement container) ->
+          setupViewsSectionForNameAndElements 
+            (containerName container)
+            (containerSubviews container)) containers
+        setupViewsBody = superViewSection ++ otherContainerSections
+
+searchSubviewsForContainers :: OWAViewElement -> [OWAViewElement]
+searchSubviewsForContainers containerElem@(ContainerViewElement container) = 
+  containerElem : concatMap searchSubviewsForContainers (containerSubviews container)
+searchSubviewsForContainers _ = []
+
+setupViewsSectionForNameAndElements :: String -> [OWAViewElement] -> [ObjcStatement]
+setupViewsSectionForNameAndElements name elems = [arrayDecl, forBlock]
+  where subviewsVarName = if null name then "subviews" else name ++ "Subviews"
+        superExpr = if null name then SelfExpr else selfExprForName name
+        arrayDecl = AssignStatement
+                      (VarDecl (PointerType "NSArray") subviewsVarName)
+                      (ArrayLit $ map selfExprForElement elems)
         setMaskStatement = AssignStatement
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
                             (BoolLit False) 
-        addSubviewStatement = ExpressionStatement $ MethodCall SelfExpr
+        addSubviewStatement = ExpressionStatement $ MethodCall superExpr
                                 LibMethod {
                                   libNameIntro = "add",
                                   libParams = ["Subview"]
@@ -175,10 +202,9 @@ setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
                                 [Var "view"]
         forBlock = ForEachBlock
                     (VarDecl (PointerType "UIView") "view")
-                    (Var "subviews")
+                    (Var subviewsVarName)
                     [setMaskStatement, addSubviewStatement]
-        setupViewsBody = [arrayDecl, forBlock]
-
+        
 setupConstraintsMethodBase :: ObjcMethod
 setupConstraintsMethodBase = ObjcMethod {
   isStatic = False,
@@ -252,6 +278,7 @@ lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtr
           (ButtonElement button) -> buttonCustomization button
           (ImageElement image) -> imageCustomization image
           (CustomViewElement _) -> []
+          (ContainerViewElement container) -> containerCustomization container
 
 libAlloc :: CalledMethod
 libAlloc = LibMethod {
@@ -359,6 +386,12 @@ imageCustomization :: OWAImageView -> [ObjcStatement]
 imageCustomization image = [imageSourceAssign]
   where propExpr = propExprForName $ imageViewName image
         imageSourceAssign = valueAssignment propExpr "image" (libMethodForImage $ imageSourceName image)
+
+containerCustomization :: OWAContainer -> [ObjcStatement]
+containerCustomization container = case containerBackgroundColorName container of
+  Nothing -> []
+  Just bColor -> [valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)]
+    where propExpr = propExprForName $ containerName container
 
 libMethodForColor :: String -> ObjcExpression
 libMethodForColor colorName = MethodCall

@@ -104,7 +104,7 @@
   return _nextButton;
 }
 
-- (UIImage*)myImage {
+- (UIImageView*)myImage {
   if (_myImage) {
     return _myImage;
   }

@@ -1,18 +1,16 @@
 //
-// IGACustomTest3.m
+// IGAContainerView3.m
 // MySampleApp
 //
 // Created By James Bowen 4/30/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "IGACustomTest3.h"
+#import "IGAContainerView3.h"
 #import "UIColor+MSAColors.h"
 #import "UIFont+MSAFonts.h"
-#import "OWAFirstView.h"
-#import "OWASecondView.h"
 
-@interface IGACustomTest3 ()
+@interface IGAContainerView3 ()
 
 @property (nonatomic, strong) UILabel* firstLabel;
 @property (nonatomic, strong) UIView* container1;
@@ -23,7 +21,7 @@
 
 @end
 
-@implementation IGACustomTest3
+@implementation IGAContainerView3
 
 #pragma mark - Lifecycle
 
@@ -81,7 +79,7 @@
   [self addConstraint:myImageCenterX];
   NSLayoutConstraint* myImageCenterY = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
   [self addConstraint:myImageCenterY];
-  NSLayoutConstraint* secondLabelTop = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
+  NSLayoutConstraint* secondLabelTop = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
   [self addConstraint:secondLabelTop];
   NSLayoutConstraint* secondLabelLeft = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:secondLabelLeft];
@@ -89,7 +87,7 @@
   [self addConstraint:secondLabelHeight];
   NSLayoutConstraint* secondLabelWidth = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0.0];
   [self addConstraint:secondLabelWidth];
-  NSLayoutConstraint* container2Top = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.secondLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* container2Top = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.secondLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
   [self addConstraint:container2Top];
   NSLayoutConstraint* container2Left = [NSLayoutConstraint constraintWithItem:self.container2 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.container1 attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
   [self addConstraint:container2Left];
@@ -114,7 +112,7 @@
     return _firstLabel;
   }
   _firstLabel = [[UILabel alloc] init];
-  _firstLabel.text = NSLocalizedString(@"Name", nil)
+  _firstLabel.text = NSLocalizedString(@"Name", nil);
   return _firstLabel;
 }
 
@@ -126,12 +124,21 @@
   return _container1;
 }
 
+- (UIImageView*)myImage {
+  if (_myImage) {
+    return _myImage;
+  }
+  _myImage = [[UIImageView alloc] init];
+  _myImage.image = [UIImage imageNamed:@"file1.png"];
+  return _myImage;
+}
+
 - (UILabel*)secondLabel {
   if (_secondLabel) {
     return _secondLabel;
   }
   _secondLabel = [[UILabel alloc] init];
-  _secondLabel.text = NSLocalizedString(@"Location", nil)
+  _secondLabel.text = NSLocalizedString(@"Location", nil);
   return _secondLabel;
 }
 
