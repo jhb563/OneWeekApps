@@ -30,11 +30,12 @@ runContainerViewTests currentDirectory = do
     beforeAll_ (removeDiffFiles outputDirectory) $
     beforeAll_ (createResultsFiles outputDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles outputDirectory resultsFiles) $ do
-      viewParseTests parseDirectory
-      viewPrintTests outputDirectory
+      containerViewParseTests parseDirectory
+      containerViewPrintTests outputDirectory
+      scrollViewParseTests parseDirectory
 
-viewParseTests :: FilePath -> Spec
-viewParseTests parseDirectory = do
+containerViewParseTests :: FilePath -> Spec
+containerViewParseTests parseDirectory = do
   let testFile1 = parseDirectory ++ basicParseExtension
   let testFile2 = parseDirectory ++ nestedParseExtension
   let testFile3 = parseDirectory ++ twoContainersParseExtension
@@ -43,16 +44,39 @@ viewParseTests parseDirectory = do
       it "Should match the test view" $
         parseViewFromFile testFile1 `shouldReturnRights` basicContainerTest
     
-    context "When there are two of the same type of CustomView" $
+    context "When there are two of the same type of ContainerView" $
       it "Should match the test view" $
         parseViewFromFile testFile2 `shouldReturnRights` nestedContainerTest
 
-    context "When there are two different types of CustomViews" $
+    context "When there are two different types of ContainerViews" $
       it "Should match the test view" $
         parseViewFromFile testFile3 `shouldReturnRights` twoContainersTest
 
-viewPrintTests :: FilePath -> Spec
-viewPrintTests outputDirectory = describe "Print File Structure for views with container views" $ do
+scrollViewParseTests :: FilePath -> Spec
+scrollViewParseTests parseDirectory = do
+  let testFile1 = parseDirectory ++ scrollViewDefaultTestExtension
+  let testFile2 = parseDirectory ++ scrollViewVerticalTestExtension
+  let testFile3 = parseDirectory ++ scrollViewHorizontalTestExtension
+  let testFile4 = parseDirectory ++ scrollViewBothTestExtension
+  describe "Parse Views with ScrollView elements" $ do
+    context "When the scroll view has no direction specified" $
+      it "Should match the vertical test view" $
+        parseViewFromFile testFile1 `shouldReturnRights` scrollViewDefaultTestView
+    
+    context "When the scoll view has a vertical direction" $
+      it "Should match the vertical test view" $
+        parseViewFromFile testFile2 `shouldReturnRights` scrollViewVerticalTestView
+
+    context "When the scroll view has a horizontal direction" $
+      it "Should match the horizontal test view" $
+        parseViewFromFile testFile3 `shouldReturnRights` scrollViewHorizontalTestView
+
+    context "When the scroll view has both directions" $
+      it "Should match the both-direction test view" $
+        parseViewFromFile testFile4 `shouldReturnRights` scrollViewBothTestView
+
+containerViewPrintTests :: FilePath -> Spec
+containerViewPrintTests outputDirectory = describe "Print File Structure for views with container views" $ do
   context "When there is a single container view" $ do
     it "The printed header should match" $
       (outputDirectory ++ basicHeaderResultFile) `filesShouldMatch` (outputDirectory ++ basicHeaderTestFile)
@@ -110,6 +134,18 @@ nestedParseExtension = "/nestedContainerTest.view"
 
 twoContainersParseExtension :: String
 twoContainersParseExtension = "/twoContainersTest.view"
+
+scrollViewDefaultTestExtension :: String
+scrollViewDefaultTestExtension = "/scrollViewDefaultTest.view"
+
+scrollViewVerticalTestExtension :: String
+scrollViewVerticalTestExtension = "/scrollViewVerticalTest.view"
+
+scrollViewHorizontalTestExtension :: String
+scrollViewHorizontalTestExtension = "/scrollViewHorizontalTest.view"
+
+scrollViewBothTestExtension :: String
+scrollViewBothTestExtension = "/scrollViewBothTest.view"
 
 outputDirectoryExtension :: String
 outputDirectoryExtension = "/tests/Version021Tests/ContainerViewTests/OutputFiles"
