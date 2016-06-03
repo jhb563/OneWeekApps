@@ -1,5 +1,5 @@
 View myView
-  Type IGAContainerView1
+  Type IGAScrollView1
   Elements
     ScrollView scrollView
       ScrollDirection Vertical

@@ -152,7 +152,7 @@ elementParser = indentParser $ choice allElementParsers
 allElementParsers :: [GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))]
 allElementParsers = [labelElementParser, buttonElementParser, 
   textFieldElementParser, imageViewParser, customViewParser,
-  containerViewParser]
+  containerViewParser, scrollViewParser]
 
 labelElementParser :: GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 labelElementParser = do
@@ -321,6 +321,36 @@ containerViewElementsParser containerName = do
   case viewVal of
     ElementsVal (elements, constraints) -> return (elementsKeyword, SubviewsVal (elements, constraints))
     ElementsErrs errs -> return (elementErrorsKeyword, ErrorsVal errs)
+
+scrollViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
+scrollViewParser = do
+  name <- nameParserWithKeyword scrollViewKeyword
+  modifyState setShouldUpdateIndentLevel
+  many $ Text.Parsec.try indentedComment
+  scrollViewAttrsAndConstraints <- scrollViewAttributeParser name `sepEndBy` many (Text.Parsec.try indentedComment)
+  let (attrMap, constraints) = splitAttrsAndConstraints scrollViewAttrsAndConstraints
+  let (subElements, subConstraints, errors) = extractSubviewsAndErrors scrollViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let scrollView = scrollViewFromNameSubviewsAndAttrs name subElements attrMap
+  let addedConstraints = addedScrollViewConstraints name (scrollDirection scrollView) modifiedConstraints
+  let allConstraints = modifiedConstraints ++ addedConstraints ++ subConstraints
+  many $ Text.Parsec.try indentedComment
+  modifyState reduceIndentationLevel
+  return $ Right (ScrollViewElement scrollView, allConstraints)
+
+scrollViewAttributeParser :: String -> GenParser Char ViewParserState (ElementAttr, ElementVal)
+scrollViewAttributeParser scrollViewName = indentParser $ choice (allScrollViewAttributeParsers scrollViewName)
+
+allScrollViewAttributeParsers :: String -> [GenParser Char ViewParserState (ElementAttr, ElementVal)]
+allScrollViewAttributeParsers scrollViewName = scrollDirectionParser : allContainerViewAttributeParsers (scrollViewName ++ "ContainerView")
+
+scrollDirectionParser :: GenParser Char ViewParserState (ElementAttr, ElementVal)
+scrollDirectionParser = do
+  string scrollDirectionKeyword
+  spaceTabs
+  dirString <- choice $ map string [verticalKeyword, horizontalKeyword, bothKeyword]
+  singleTrailingComment
+  return (scrollDirectionKeyword, StringVal dirString)
 
 textParser :: GenParser Char ViewParserState (ElementAttr, ElementVal)
 textParser = do
@@ -555,6 +585,37 @@ modifyConstraintsWithViewName :: String -> [OWAConstraint] -> [OWAConstraint]
 modifyConstraintsWithViewName viewName = map
   (\c -> c {firstElementName = viewName})
 
+addedScrollViewConstraints :: String -> OWAScrollDirection -> [OWAConstraint] -> [OWAConstraint]
+addedScrollViewConstraints name direction constraints = case direction of
+  Vertical -> topBottomEqualConstraints ++ leftRightOutsideConstraints
+  Horizontal -> topBottomOutsideConstraints ++ leftRightEqualConstraints
+  Both -> topBottomEqualConstraints ++ leftRightEqualConstraints
+  where containerName = name ++ scrollViewContainerExtension
+        topBottomEqualConstraints = [containerEqualityConstraint name Top, containerEqualityConstraint name Bottom]
+        leftRightEqualConstraints = [containerEqualityConstraint name LeftSide, containerEqualityConstraint name RightSide]
+        scrollViewTopConstraint = findMatchingScrollViewConstraint name Top constraints
+        scrollViewBottomConstraint = findMatchingScrollViewConstraint name Bottom constraints
+        scrollViewLeftSideConstraint = findMatchingScrollViewConstraint name LeftSide constraints
+        scrollViewRightSideConstraint = findMatchingScrollViewConstraint name RightSide constraints
+        switchElemName c = c {firstElementName = containerName}
+        topBottomOutsideConstraints = [switchElemName scrollViewTopConstraint, switchElemName scrollViewBottomConstraint]
+        leftRightOutsideConstraints = [switchElemName scrollViewLeftSideConstraint, switchElemName scrollViewRightSideConstraint]
+
+containerEqualityConstraint :: String -> OWALayoutAttribute -> OWAConstraint
+containerEqualityConstraint name attribute = OWAConstraint {
+  firstElementName = name ++ scrollViewContainerExtension,
+  firstAttribute = attribute,
+  secondElementName = Just name,
+  secondAttribute = Just attribute,
+  multiplier = 1.0,
+  constant = 0
+}
+
+findMatchingScrollViewConstraint :: String -> OWALayoutAttribute -> [OWAConstraint] -> OWAConstraint
+findMatchingScrollViewConstraint name attr constraints = head $ filter
+  (\c -> firstElementName c == name && firstAttribute c == attr)
+  constraints
+
 labelFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWALabel
 labelFromNameAndAttrs name attrMap = do
   text <- Map.lookup textKeyword attrMap
@@ -610,7 +671,23 @@ containerViewFromNameSubviewsAndAttrs name subElements attrMap = OWAContainer {
   containerName = name,
   containerBackgroundColorName = Map.lookup backgroundColorKeyword attrMap,
   containerSubviews = subElements
-} 
+}
+
+scrollViewFromNameSubviewsAndAttrs :: String -> [OWAViewElement] -> Map.Map String String -> OWAScrollView
+scrollViewFromNameSubviewsAndAttrs name subElements attrMap = OWAScrollView {
+  scrollViewName = name,
+  scrollViewBackgroundColorName = Map.lookup backgroundColorKeyword attrMap,
+  scrollDirection = direction,
+  scrollViewContainer = OWAContainer {
+    containerName = name ++ scrollViewContainerExtension,
+    containerBackgroundColorName = Nothing,
+    containerSubviews = subElements
+  }
+}
+  where direction = case Map.lookup scrollDirectionKeyword attrMap of
+                      Just "Horizontal" -> Horizontal
+                      Just "Both" -> Both
+                      _ -> Vertical
 
 viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
 viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
@@ -662,6 +739,24 @@ customViewKeyword = "CustomView"
 
 containerViewKeyword :: String
 containerViewKeyword = "ContainerView"
+
+scrollViewKeyword :: String
+scrollViewKeyword = "ScrollView"
+
+scrollViewContainerExtension :: String
+scrollViewContainerExtension = "ContainerView"
+
+scrollDirectionKeyword :: String
+scrollDirectionKeyword = "ScrollDirection"
+
+verticalKeyword :: String
+verticalKeyword = "Vertical"
+
+horizontalKeyword :: String
+horizontalKeyword = "Horizontal"
+
+bothKeyword :: String
+bothKeyword = "Both"
 
 textKeyword :: String
 textKeyword = "Text"
