@@ -73,6 +73,18 @@ data OWAContainer = OWAContainer {
   containerSubviews :: [OWAViewElement]
 } deriving (Show, Eq)
 
+-- | OWAScrollDirection is an Enum for the possible directions a scroll view can go
+data OWAScrollDirection = Vertical | Horizontal | Both deriving (Show, Eq)
+
+-- | OWAScrollView holds a single container (which in turn has subviews)
+-- and is designed to scroll
+data OWAScrollView = OWAScrollView {
+  scrollViewName :: String,
+  scrollViewBackgroundColorName :: Maybe String,
+  scrollDirection :: OWAScrollDirection,
+  scrollViewContainer :: OWAContainer
+} deriving (Show, Eq)
+
 -- | OWAViewElement provides a wrapper around the different types of subviews
 -- that a view can have. This will soon be expanded to include other OWAViews,
 -- as well as simple container views.
@@ -81,5 +93,6 @@ data OWAViewElement = LabelElement OWALabel |
   ButtonElement OWAButton |
   ImageElement OWAImageView |
   CustomViewElement OWAViewRecord |
-  ContainerViewElement OWAContainer
+  ContainerViewElement OWAContainer |
+  ScrollViewElement OWAScrollView
   deriving (Show, Eq)

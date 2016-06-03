@@ -89,6 +89,97 @@ twoContainersTest = OWAView {
                 heightWidthConstraintFromTuple ("myField", Nothing, 30, Height)]
 }
 
+scrollViewDefaultTestView :: OWAView
+scrollViewDefaultTestView = scrollViewVerticalTestView
+
+scrollViewVerticalTestView :: OWAView
+scrollViewVerticalTestView = OWAView {
+  viewName = "myView",
+  viewType = "IGAScrollView1",
+  subviews = [ScrollViewElement scrollView,
+              ImageElement myImage],
+  constraints = [alignConstraintFromTuple ("scrollView", "Super", Top, 40),
+                alignConstraintFromTuple ("scrollView", "Super", LeftSide, 20),
+                alignConstraintFromTuple ("scrollView", "Super", RightSide, -20),
+                aboveImageConstraint,
+                heightWidthConstraintFromTuple ("scrollView", Nothing, 200, Height),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", Top, 0),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", Bottom, 0),
+                alignConstraintFromTuple ("scrollViewContainerView", "Super", LeftSide, 20),
+                alignConstraintFromTuple ("scrollViewContainerView", "Super", RightSide, -20),
+                centerConstraintFromTuple ("nextLabel", "scrollViewContainerView", True),
+                alignConstraintFromTuple ("nextLabel", "scrollViewContainerView", Top, 20),
+                heightWidthConstraintFromTuple ("nextLabel", Nothing, 30, Height),
+                heightWidthConstraintFromTuple ("nextLabel", Nothing, 100, Width),
+                centerConstraintFromTuple ("nextButton", "scrollViewContainerView", True),
+                belowConstraintFromTuple ("nextButton", "nextLabel", 300),
+                heightWidthConstraintFromTuple ("nextButton", Nothing, 30, Height),
+                heightWidthConstraintFromTuple ("nextButton", Nothing, 100, Width),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", Bottom, 10),
+                centerConstraintFromTuple ("myImage", "Super", True),
+                heightWidthConstraintFromTuple ("myImage", Nothing, 80, Width), 
+                heightWidthConstraintFromTuple ("myImage", Nothing, 80, Height)]
+}
+
+scrollViewHorizontalTestView :: OWAView
+scrollViewHorizontalTestView = OWAView {
+  viewName = "myView",
+  viewType = "IGAScrollView2",
+  subviews = [ScrollViewElement (scrollView {scrollDirection = Horizontal, scrollViewBackgroundColorName = Nothing}),
+              ImageElement myImage],
+  constraints = [alignConstraintFromTuple ("scrollView", "Super", Top, 40),
+                alignConstraintFromTuple ("scrollView", "Super", LeftSide, 20),
+                alignConstraintFromTuple ("scrollView", "Super", RightSide, -20),
+                aboveImageConstraint,
+                heightWidthConstraintFromTuple ("scrollView", Nothing, 200, Height),
+                alignConstraintFromTuple ("scrollViewContainerView", "Super", Top, 40),
+                aboveImageConstraint {firstElementName = "scrollViewContainerView"},
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", LeftSide, 0),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", RightSide, 0),
+                alignConstraintFromTuple ("nextLabel", "scrollViewContainerView", Top, 20),
+                alignConstraintFromTuple ("nextLabel", "scrollViewContainerView", LeftSide, 100),
+                heightWidthConstraintFromTuple ("nextLabel", Nothing, 30, Height),
+                heightWidthConstraintFromTuple ("nextLabel", Nothing, 100, Width),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", LeftSide, 150),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", RightSide, -150),
+                belowConstraintFromTuple ("nextButton", "nextLabel", 30),
+                heightWidthConstraintFromTuple ("nextButton", Nothing, 30, Height),
+                heightWidthConstraintFromTuple ("nextButton", Nothing, 300, Width),
+                centerConstraintFromTuple ("myImage", "Super", True),
+                heightWidthConstraintFromTuple ("myImage", Nothing, 80, Width), 
+                heightWidthConstraintFromTuple ("myImage", Nothing, 80, Height)]
+}
+
+scrollViewBothTestView :: OWAView
+scrollViewBothTestView = OWAView {
+  viewName = "myView",
+  viewType = "IGAScrollView3",
+  subviews = [ScrollViewElement (scrollView {scrollDirection = Both, scrollViewBackgroundColorName = Nothing}),
+              ImageElement myImage],
+  constraints = [alignConstraintFromTuple ("scrollView", "Super", Top, 40),
+                alignConstraintFromTuple ("scrollView", "Super", LeftSide, 20),
+                alignConstraintFromTuple ("scrollView", "Super", RightSide, -20),
+                aboveImageConstraint,
+                heightWidthConstraintFromTuple ("scrollView", Nothing, 200, Height),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", Top, 0),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", Bottom, 0),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", LeftSide, 0),
+                alignConstraintFromTuple ("scrollViewContainerView", "scrollView", RightSide, 0),
+                alignConstraintFromTuple ("nextLabel", "scrollViewContainerView", Top, 20),
+                alignConstraintFromTuple ("nextLabel", "scrollViewContainerView", LeftSide, 100),
+                heightWidthConstraintFromTuple ("nextLabel", Nothing, 30, Height),
+                heightWidthConstraintFromTuple ("nextLabel", Nothing, 100, Width),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", LeftSide, 150),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", RightSide, -150),
+                belowConstraintFromTuple ("nextButton", "nextLabel", 300),
+                heightWidthConstraintFromTuple ("nextButton", Nothing, 30, Height),
+                heightWidthConstraintFromTuple ("nextButton", Nothing, 300, Width),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", Bottom, 10),
+                centerConstraintFromTuple ("myImage", "Super", True),
+                heightWidthConstraintFromTuple ("myImage", Nothing, 80, Width), 
+                heightWidthConstraintFromTuple ("myImage", Nothing, 80, Height)]
+}
+
 -- Elements
 
 myContainer :: OWAContainer
@@ -200,6 +291,14 @@ myField = OWATextField {
   textFieldBackgroundColorName = Nothing
 }
 
+scrollView :: OWAScrollView
+scrollView = OWAScrollView {
+  scrollViewName = "scrollView",
+  scrollViewBackgroundColorName = Just "greenColor",
+  scrollDirection = Vertical,
+  scrollViewContainer = myContainer {containerName = "scrollViewContainerView"}
+} 
+
 heightWidthConstraintFromTuple :: (String, Maybe String, Float, OWALayoutAttribute) -> OWAConstraint
 heightWidthConstraintFromTuple (name, maybeSecondName, dimen, attr) = OWAConstraint {
   firstElementName = name,
@@ -241,4 +340,14 @@ belowConstraintFromTuple (name, secondName, dimen) = OWAConstraint {
   secondAttribute = Just Bottom,
   multiplier = 1.0,
   constant = dimen
+}
+
+aboveImageConstraint :: OWAConstraint
+aboveImageConstraint = OWAConstraint {
+  firstElementName = "scrollView",
+  firstAttribute = Bottom,
+  secondElementName = Just "myImage",
+  secondAttribute = Just Top,
+  multiplier = 1.0,
+  constant = -30
 }
