@@ -33,6 +33,7 @@ runContainerViewTests currentDirectory = do
       containerViewParseTests parseDirectory
       containerViewPrintTests outputDirectory
       scrollViewParseTests parseDirectory
+      scrollViewPrintTests outputDirectory
 
 containerViewParseTests :: FilePath -> Spec
 containerViewParseTests parseDirectory = do
@@ -98,6 +99,29 @@ containerViewPrintTests outputDirectory = describe "Print File Structure for vie
     it "The printed implementation should match" $
       (outputDirectory ++ twoContainersMResultFile) `filesShouldMatch` (outputDirectory ++ twoContainersMTestFile)
 
+scrollViewPrintTests :: FilePath -> Spec
+scrollViewPrintTests outputDirectory = describe "Print File Structure for views with scroll views" $ do
+  context "When the scroll view goes vertically" $ do
+    it "The printed header should match" $
+      (outputDirectory ++ verticalScrollHeaderResultFile) `filesShouldMatch` (outputDirectory ++ verticalScrollHeaderTestFile)
+
+    it "When the scroll view goes horizontally" $ 
+      (outputDirectory ++ verticalScrollMResultFile) `filesShouldMatch` (outputDirectory ++ verticalScrollMTestFile)
+
+  context "When there are two nested container views" $ do
+    it "The printed header should match" $
+      (outputDirectory ++ horizontalScrollHeaderResultFile) `filesShouldMatch` (outputDirectory ++ horizontalScrollHeaderTestFile)
+
+    it "The printed implementation should match" $
+      (outputDirectory ++ horizontalScrollMResultFile) `filesShouldMatch` (outputDirectory ++ horizontalScrollMTestFile)
+
+  context "When the scroll view scrolls in both directions" $ do
+    it "The printed header should match" $
+      (outputDirectory ++ bothScrollHeaderResultFile) `filesShouldMatch` (outputDirectory ++ bothScrollHeaderTestFile)
+      
+    it "The printed implementation should match" $
+      (outputDirectory ++ bothScrollMResultFile) `filesShouldMatch` (outputDirectory ++ bothScrollMTestFile)
+
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {
   appName = "MySampleApp",
@@ -113,7 +137,13 @@ testFileStructures = [objcHeaderFromView sampleAppInfo basicContainerTest,
   objcHeaderFromView sampleAppInfo nestedContainerTest,
   objcImplementationFromView sampleAppInfo nestedContainerTest,
   objcHeaderFromView sampleAppInfo twoContainersTest,
-  objcImplementationFromView sampleAppInfo twoContainersTest]
+  objcImplementationFromView sampleAppInfo twoContainersTest,
+  objcHeaderFromView sampleAppInfo scrollViewVerticalTestView,
+  objcImplementationFromView sampleAppInfo scrollViewVerticalTestView,
+  objcHeaderFromView sampleAppInfo scrollViewHorizontalTestView,
+  objcImplementationFromView sampleAppInfo scrollViewHorizontalTestView,
+  objcHeaderFromView sampleAppInfo scrollViewBothTestView,
+  objcImplementationFromView sampleAppInfo scrollViewBothTestView]
 
 resultsFiles :: [String]
 resultsFiles = [basicHeaderResultFile,
@@ -121,7 +151,13 @@ resultsFiles = [basicHeaderResultFile,
   nestedHeaderResultFile,
   nestedMResultFile,
   twoContainersHeaderResultFile,
-  twoContainersMResultFile]
+  twoContainersMResultFile,
+  verticalScrollHeaderResultFile,
+  verticalScrollMResultFile,
+  horizontalScrollHeaderResultFile,
+  horizontalScrollMResultFile,
+  bothScrollHeaderResultFile,
+  bothScrollMResultFile]
 
 parseDirectoryExtension :: String
 parseDirectoryExtension = "/tests/Version021Tests/ContainerViewTests/ParseFiles"
@@ -185,3 +221,39 @@ twoContainersHeaderTestFile = "/IGAContainerView3.h.test"
 
 twoContainersMTestFile :: String
 twoContainersMTestFile = "/IGAContainerView3.m.test"
+
+verticalScrollHeaderResultFile :: String
+verticalScrollHeaderResultFile = "/IGAScrollView1.h"
+
+verticalScrollMResultFile :: String
+verticalScrollMResultFile = "/IGAScrollView1.m"
+
+horizontalScrollHeaderResultFile :: String
+horizontalScrollHeaderResultFile = "/IGAScrollView2.h"
+
+horizontalScrollMResultFile :: String
+horizontalScrollMResultFile = "/IGAScrollView2.m"
+
+bothScrollHeaderResultFile :: String
+bothScrollHeaderResultFile = "/IGAScrollView3.h"
+
+bothScrollMResultFile :: String
+bothScrollMResultFile = "/IGAScrollView3.m"
+
+verticalScrollHeaderTestFile :: String
+verticalScrollHeaderTestFile = "/IGAScrollView1.h.test"
+
+verticalScrollMTestFile :: String
+verticalScrollMTestFile = "/IGAScrollView1.m.test"
+
+horizontalScrollHeaderTestFile :: String
+horizontalScrollHeaderTestFile = "/IGAScrollView2.h.test"
+
+horizontalScrollMTestFile :: String
+horizontalScrollMTestFile = "/IGAScrollView2.m.test"
+
+bothScrollHeaderTestFile :: String
+bothScrollHeaderTestFile = "/IGAScrollView3.h.test"
+
+bothScrollMTestFile :: String
+bothScrollMTestFile = "/IGAScrollView3.m.test"
