@@ -1,9 +1,9 @@
 //
-//  IGAScrollView3.m
-//  OWADemo1
+// IGAScrollView3.m
+// MySampleApp
 //
-//  Created by James Bowen on 4/30/2016.
-//  Copyright © 2016 One Week Apps. All rights reserved.
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
 #import "IGAScrollView3.h"
@@ -16,7 +16,7 @@
 @property (nonatomic, strong) UIView* scrollViewContainerView;
 @property (nonatomic, strong) UILabel* nextLabel;
 @property (nonatomic, strong) UIButton* nextButton;
-@property (nonatomic, strong) UILabel* label;
+@property (nonatomic, strong) UIImageView* myImage;
 
 @end
 
@@ -36,7 +36,7 @@
 #pragma mark - Setup
 
 - (void)setupViews {
-  NSArray* subviews = @[self.scrollView, self.label];
+  NSArray* subviews = @[self.scrollView, self.myImage];
   for (UIView* view in subviews) {
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:view];
@@ -54,15 +54,15 @@
 }
 
 - (void)setupConstraints {
-  NSLayoutConstraint* scrollViewTop = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40];
+  NSLayoutConstraint* scrollViewTop = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
   [self addConstraint:scrollViewTop];
-  NSLayoutConstraint* scrollViewLeft = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20];
+  NSLayoutConstraint* scrollViewLeft = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0];
   [self addConstraint:scrollViewLeft];
-  NSLayoutConstraint* scrollViewRight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-20];
+  NSLayoutConstraint* scrollViewRight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-20.0];
   [self addConstraint:scrollViewRight];
-  NSLayoutConstraint* scrollViewBottom = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.myImage attribute:NSLayoutAttributeTop multiplier:1.0 constant:30];
+  NSLayoutConstraint* scrollViewBottom = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.myImage attribute:NSLayoutAttributeTop multiplier:1.0 constant:-30.0];
   [self addConstraint:scrollViewBottom];
-  NSLayoutConstraint* scrollViewHeight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200];
+  NSLayoutConstraint* scrollViewHeight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
   [self addConstraint:scrollViewHeight];
   NSLayoutConstraint* scrollViewContainerViewTop = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
   [self addConstraint:scrollViewContainerViewTop];
@@ -141,7 +141,7 @@
     return _myImage;
   }
   _myImage = [[UIImageView alloc] init];
-  _myImage.image = [UIImage imageNamed:"@file1.png"];
+  _myImage.image = [UIImage imageNamed:@"file1.png"];
   return _myImage;
 }
 

@@ -95,6 +95,9 @@ allChildViews view = concatMap allNestedSubviews (subviews view)
 allNestedSubviews :: OWAViewElement -> [OWAViewElement]
 allNestedSubviews containerElem@(ContainerViewElement container) = containerElem :
   concatMap allNestedSubviews (containerSubviews container)
+allNestedSubviews scrollElem@(ScrollViewElement scrollView) = scrollElem : ContainerViewElement container :
+  concatMap allNestedSubviews (containerSubviews container)
+  where container = scrollViewContainer scrollView
 allNestedSubviews otherElem = [otherElem]
 
 --------------------------------------------------------------------------------
@@ -116,6 +119,7 @@ typeNameForElement (ButtonElement _) = "UIButton"
 typeNameForElement (ImageElement _) = "UIImageView"
 typeNameForElement (CustomViewElement record) = viewRecordType record
 typeNameForElement (ContainerViewElement _) = "UIView"
+typeNameForElement (ScrollViewElement _) = "UIScrollView"
 
 typeForElement :: OWAViewElement -> ObjcType
 typeForElement element = PointerType $ typeNameForElement element
@@ -127,6 +131,7 @@ nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
 nameForElement (CustomViewElement record) = viewRecordName record
 nameForElement (ContainerViewElement container) = containerName container
+nameForElement (ScrollViewElement scrollView) = scrollViewName scrollView
 
 selfExprForName :: String -> ObjcExpression
 selfExprForName = PropertyCall SelfExpr
@@ -173,16 +178,23 @@ setupViewsMethod :: [OWAViewElement] -> ObjcMethod
 setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
   where superViewSection = setupViewsSectionForNameAndElements "" subviews
         containers = concatMap searchSubviewsForContainers subviews
-        otherContainerSections = concatMap (\(ContainerViewElement container) ->
-          setupViewsSectionForNameAndElements 
-            (containerName container)
-            (containerSubviews container)) containers
+        otherContainerSections = concatMap setupViewsSectionForElement containers
         setupViewsBody = superViewSection ++ otherContainerSections
 
 searchSubviewsForContainers :: OWAViewElement -> [OWAViewElement]
 searchSubviewsForContainers containerElem@(ContainerViewElement container) = 
   containerElem : concatMap searchSubviewsForContainers (containerSubviews container)
+searchSubviewsForContainers scrollElem@(ScrollViewElement scrollView) = 
+  scrollElem : searchSubviewsForContainers (ContainerViewElement $ scrollViewContainer scrollView)
 searchSubviewsForContainers _ = []
+
+setupViewsSectionForElement :: OWAViewElement -> [ObjcStatement]
+setupViewsSectionForElement (ContainerViewElement container) = setupViewsSectionForNameAndElements 
+  (containerName container) 
+  (containerSubviews container)
+setupViewsSectionForElement (ScrollViewElement scrollView) = setupViewsSectionForNameAndElements
+  (scrollViewName scrollView)
+  [ContainerViewElement $ scrollViewContainer scrollView]
 
 setupViewsSectionForNameAndElements :: String -> [OWAViewElement] -> [ObjcStatement]
 setupViewsSectionForNameAndElements name elems = [arrayDecl, forBlock]
@@ -279,6 +291,7 @@ lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtr
           (ImageElement image) -> imageCustomization image
           (CustomViewElement _) -> []
           (ContainerViewElement container) -> containerCustomization container
+          (ScrollViewElement scrollView) -> scrollViewCustomization scrollView
 
 libAlloc :: CalledMethod
 libAlloc = LibMethod {
@@ -392,6 +405,14 @@ containerCustomization container = case containerBackgroundColorName container o
   Nothing -> []
   Just bColor -> [valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)]
     where propExpr = propExprForName $ containerName container
+
+scrollViewCustomization :: OWAScrollView -> [ObjcStatement]
+scrollViewCustomization scrollView = case scrollViewBackgroundColorName scrollView of
+  Just color -> [valueAssignment 
+    (propExprForName $ scrollViewName scrollView) 
+    "backgroundColor" 
+    (libMethodForColor color)]
+  _ -> []
 
 libMethodForColor :: String -> ObjcExpression
 libMethodForColor colorName = MethodCall

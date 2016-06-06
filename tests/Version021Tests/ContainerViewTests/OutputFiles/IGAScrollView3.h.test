@@ -1,9 +1,9 @@
 //
-//  IGAScrollView3.h
-//  MySampleApp
+// IGAScrollView3.h
+// MySampleApp
 //
-//  Created by James Bowen on 4/30/2016.
-//  Copyright © 2016 One Week Apps. All rights reserved.
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
 @import UIKit;
