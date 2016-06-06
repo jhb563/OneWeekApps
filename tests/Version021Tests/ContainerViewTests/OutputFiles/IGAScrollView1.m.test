@@ -1,0 +1,147 @@
+//
+// IGAScrollView1.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "IGAScrollView1.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface IGAScrollView1 ()
+
+@property (nonatomic, strong) UIScrollView* scrollView;
+@property (nonatomic, strong) UIView* scrollViewContainerView;
+@property (nonatomic, strong) UILabel* nextLabel;
+@property (nonatomic, strong) UIButton* nextButton;
+@property (nonatomic, strong) UIImageView* myImage;
+
+@end
+
+@implementation IGAScrollView1
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.scrollView, self.myImage];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+  NSArray* scrollViewSubviews = @[self.scrollViewContainerView];
+  for (UIView* view in scrollViewSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:view];
+  }
+  NSArray* scrollViewContainerViewSubviews = @[self.nextLabel, self.nextButton];
+  for (UIView* view in scrollViewContainerViewSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollViewContainerView addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* scrollViewTop = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
+  [self addConstraint:scrollViewTop];
+  NSLayoutConstraint* scrollViewLeft = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0];
+  [self addConstraint:scrollViewLeft];
+  NSLayoutConstraint* scrollViewRight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-20.0];
+  [self addConstraint:scrollViewRight];
+  NSLayoutConstraint* scrollViewBottom = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.myImage attribute:NSLayoutAttributeTop multiplier:1.0 constant:-30.0];
+  [self addConstraint:scrollViewBottom];
+  NSLayoutConstraint* scrollViewHeight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:scrollViewHeight];
+  NSLayoutConstraint* scrollViewContainerViewTop = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewContainerViewTop];
+  NSLayoutConstraint* scrollViewContainerViewBottom = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.scrollView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewContainerViewBottom];
+  NSLayoutConstraint* scrollViewContainerViewLeft = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0];
+  [self addConstraint:scrollViewContainerViewLeft];
+  NSLayoutConstraint* scrollViewContainerViewRight = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:-20.0];
+  [self addConstraint:scrollViewContainerViewRight];
+  NSLayoutConstraint* nextLabelCenterX = [NSLayoutConstraint constraintWithItem:self.nextLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:nextLabelCenterX];
+  NSLayoutConstraint* nextLabelTop = [NSLayoutConstraint constraintWithItem:self.nextLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeTop multiplier:1.0 constant:20.0];
+  [self addConstraint:nextLabelTop];
+  NSLayoutConstraint* nextLabelHeight = [NSLayoutConstraint constraintWithItem:self.nextLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:nextLabelHeight];
+  NSLayoutConstraint* nextLabelWidth = [NSLayoutConstraint constraintWithItem:self.nextLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:nextLabelWidth];
+  NSLayoutConstraint* nextButtonCenterX = [NSLayoutConstraint constraintWithItem:self.nextButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:nextButtonCenterX];
+  NSLayoutConstraint* nextButtonTop = [NSLayoutConstraint constraintWithItem:self.nextButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.nextLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:300.0];
+  [self addConstraint:nextButtonTop];
+  NSLayoutConstraint* nextButtonHeight = [NSLayoutConstraint constraintWithItem:self.nextButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:nextButtonHeight];
+  NSLayoutConstraint* nextButtonWidth = [NSLayoutConstraint constraintWithItem:self.nextButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:nextButtonWidth];
+  NSLayoutConstraint* nextButtonBottom = [NSLayoutConstraint constraintWithItem:self.nextButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10.0];
+  [self addConstraint:nextButtonBottom];
+  NSLayoutConstraint* myImageCenterX = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageCenterX];
+  NSLayoutConstraint* myImageWidth = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
+  [self addConstraint:myImageWidth];
+  NSLayoutConstraint* myImageHeight = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
+  [self addConstraint:myImageHeight];
+}
+
+#pragma mark - Lazy Getters
+
+- (UIScrollView*)scrollView {
+  if (_scrollView) {
+    return _scrollView;
+  }
+  _scrollView = [[UIScrollView alloc] init];
+  _scrollView.backgroundColor = [UIColor greenColor];
+  return _scrollView;
+}
+
+- (UIView*)scrollViewContainerView {
+  if (_scrollViewContainerView) {
+    return _scrollViewContainerView;
+  }
+  _scrollViewContainerView = [[UIView alloc] init];
+  return _scrollViewContainerView;
+}
+
+- (UILabel*)nextLabel {
+  if (_nextLabel) {
+    return _nextLabel;
+  }
+  _nextLabel = [[UILabel alloc] init];
+  _nextLabel.text = NSLocalizedString(@"Next", nil);
+  return _nextLabel;
+}
+
+- (UIButton*)nextButton {
+  if (_nextButton) {
+    return _nextButton;
+  }
+  _nextButton = [[UIButton alloc] init];
+  [_nextButton setTitle:NSLocalizedString(@"Next", nil) forState:UIControlStateNormal];
+  return _nextButton;
+}
+
+- (UIImageView*)myImage {
+  if (_myImage) {
+    return _myImage;
+  }
+  _myImage = [[UIImageView alloc] init];
+  _myImage.image = [UIImage imageNamed:@"file1.png"];
+  return _myImage;
+}
+
+@end

@@ -115,7 +115,7 @@ scrollViewVerticalTestView = OWAView {
                 belowConstraintFromTuple ("nextButton", "nextLabel", 300),
                 heightWidthConstraintFromTuple ("nextButton", Nothing, 30, Height),
                 heightWidthConstraintFromTuple ("nextButton", Nothing, 100, Width),
-                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", Bottom, 10),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", Bottom, -10),
                 centerConstraintFromTuple ("myImage", "Super", True),
                 heightWidthConstraintFromTuple ("myImage", Nothing, 80, Width), 
                 heightWidthConstraintFromTuple ("myImage", Nothing, 80, Height)]
@@ -174,7 +174,7 @@ scrollViewBothTestView = OWAView {
                 belowConstraintFromTuple ("nextButton", "nextLabel", 300),
                 heightWidthConstraintFromTuple ("nextButton", Nothing, 30, Height),
                 heightWidthConstraintFromTuple ("nextButton", Nothing, 300, Width),
-                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", Bottom, 10),
+                alignConstraintFromTuple ("nextButton", "scrollViewContainerView", Bottom, -10),
                 centerConstraintFromTuple ("myImage", "Super", True),
                 heightWidthConstraintFromTuple ("myImage", Nothing, 80, Width), 
                 heightWidthConstraintFromTuple ("myImage", Nothing, 80, Height)]

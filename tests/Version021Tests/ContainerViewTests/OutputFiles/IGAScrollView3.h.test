@@ -1,0 +1,19 @@
+//
+// IGAScrollView3.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface IGAScrollView3 : UIView
+
+@property (nonatomic, strong, readonly) UIScrollView* scrollView;
+@property (nonatomic, strong, readonly) UIView* scrollViewContainerView;
+@property (nonatomic, strong, readonly) UILabel* nextLabel;
+@property (nonatomic, strong, readonly) UIButton* nextButton;
+@property (nonatomic, strong, readonly) UIImageView* myImage;
+
+@end
