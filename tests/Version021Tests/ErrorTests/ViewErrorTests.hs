@@ -67,15 +67,15 @@ scrollViewErrorTests parseDirectory = do
   let testFile3 = parseDirectory ++ scrollViewErrorTestExtension3
   let testFile4 = parseDirectory ++ scrollViewErrorTestExtension4
   describe "Parse view when scroll views contain errors" $ do
-    context "when the user specifies a vertical scroll view but no top constraint" $
-      it "Should return an object error highlighting the lack of a top constraint" $
+    context "when the user specifies a vertical scroll view but no right constraint" $
+      it "Should return an object error highlighting the lack of a right constraint" $
         parseViewFromFile testFile1 `shouldReturnLefts` scrollError1
 
-    context "when the user specifies a vertical scroll view but no top or bottom constraints" $
+    context "when the user specifies a vertical scroll view but no left or right constraints" $
       it "Should return an object error highlighting the lack of these constraints" $
         parseViewFromFile testFile2 `shouldReturnLefts` scrollError2
 
-    context "when the user specifies a horizontal scroll view but no left or right constraints" $
+    context "when the user specifies a horizontal scroll view but no top or bottom constraints" $
       it "Should return an object error highlighting the lack of these constraints" $
         parseViewFromFile testFile3 `shouldReturnLefts` scrollError3
 

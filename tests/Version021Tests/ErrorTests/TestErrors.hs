@@ -4,7 +4,7 @@ import OWAParseError
 import Text.Parsec.Pos
 
 customError1 :: SourcePos
-customError1 = newPos "customViewError1.view" 3 5
+customError1 = newPos "customViewError1.view" 4 5
 
 customError2 :: [OWAParseError]
 customError2 = [ObjectError {
@@ -14,7 +14,7 @@ customError2 = [ObjectError {
 }]
 
 customError3 :: SourcePos
-customError3 = newPos "customViewError3.view" 4 15
+customError3 = newPos "customViewError3.view" 4 5
 
 customError4 :: SourcePos
 customError4 = newPos "customViewError4.view" 6 7
@@ -32,21 +32,21 @@ scrollError1 :: [OWAParseError]
 scrollError1 = [ObjectError {
   fileName = "scrollViewError1.view",
   itemName = "myScrollView",
-  missingRequiredAttributes = ["topConstraint"]
+  missingRequiredAttributes = ["RightConstraint"]
 }]
 
 scrollError2 :: [OWAParseError]
 scrollError2 = [ObjectError {
   fileName = "scrollViewError2.view",
   itemName = "myScrollView",
-  missingRequiredAttributes = ["topConstraint", "bottomConstraint"]
+  missingRequiredAttributes = ["LeftConstraint", "RightConstraint"]
 }]
 
 scrollError3 :: [OWAParseError]
 scrollError3 = [ObjectError {
   fileName = "scrollViewError3.view",
   itemName = "myScrollView",
-  missingRequiredAttributes = ["leftConstraint", "rightConstraint"]
+  missingRequiredAttributes = ["TopConstraint", "BottomConstraint"]
 }]
 
 scrollError4 :: SourcePos
