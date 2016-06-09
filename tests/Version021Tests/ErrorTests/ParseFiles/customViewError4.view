@@ -1,0 +1,14 @@
+View myView
+  Type OWAView1
+  Elements
+    CustomView myFirstView
+      Type OWAFirstView
+      Elements
+        Label myLabel
+          Text "Hi"
+          Layout
+            Width 30
+            Height 40
+      Layout
+        Height 400
+        Width 400
