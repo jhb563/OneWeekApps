@@ -332,11 +332,19 @@ scrollViewParser = do
   let (subElements, subConstraints, errors) = extractSubviewsAndErrors scrollViewAttrsAndConstraints
   let modifiedConstraints = modifyConstraintsWithViewName name constraints
   let scrollView = scrollViewFromNameSubviewsAndAttrs name subElements attrMap
-  let addedConstraints = addedScrollViewConstraints name (scrollDirection scrollView) modifiedConstraints
-  let allConstraints = modifiedConstraints ++ addedConstraints ++ subConstraints
+  let addedConstraintsOrFailure = addedScrollViewConstraints name (scrollDirection scrollView) modifiedConstraints
   many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
-  return $ Right (ScrollViewElement scrollView, allConstraints)
+  case addedConstraintsOrFailure of
+    Left missingStrs -> return $ Left ObjectError {
+      fileName = "",
+      itemName = name,
+      missingRequiredAttributes = missingStrs
+    }
+    Right addedConstraints -> do
+      let allConstraints = modifiedConstraints ++ addedConstraints ++ subConstraints
+      return $ Right (ScrollViewElement scrollView, allConstraints)
+
 
 scrollViewAttributeParser :: String -> GenParser Char ViewParserState (ElementAttr, ElementVal)
 scrollViewAttributeParser scrollViewName = indentParser $ choice (allScrollViewAttributeParsers scrollViewName)
@@ -585,11 +593,15 @@ modifyConstraintsWithViewName :: String -> [OWAConstraint] -> [OWAConstraint]
 modifyConstraintsWithViewName viewName = map
   (\c -> c {firstElementName = viewName})
 
-addedScrollViewConstraints :: String -> OWAScrollDirection -> [OWAConstraint] -> [OWAConstraint]
+addedScrollViewConstraints :: String -> OWAScrollDirection -> [OWAConstraint] -> Either [String] [OWAConstraint]
 addedScrollViewConstraints name direction constraints = case direction of
-  Vertical -> topBottomEqualConstraints ++ leftRightOutsideConstraints
-  Horizontal -> topBottomOutsideConstraints ++ leftRightEqualConstraints
-  Both -> topBottomEqualConstraints ++ leftRightEqualConstraints
+  Vertical -> case missingLeftRightStrings of
+    [] -> Right $ topBottomEqualConstraints ++ map switchElemName leftRightOutsideConstraints
+    missingStrs -> Left missingStrs
+  Horizontal -> case missingTopBottomStrings of
+    [] -> Right $ map switchElemName topBottomOutsideConstraints ++ leftRightEqualConstraints
+    missingStrs -> Left missingStrs 
+  Both -> Right $ topBottomEqualConstraints ++ leftRightEqualConstraints
   where containerName = name ++ scrollViewContainerExtension
         topBottomEqualConstraints = [containerEqualityConstraint name Top, containerEqualityConstraint name Bottom]
         leftRightEqualConstraints = [containerEqualityConstraint name LeftSide, containerEqualityConstraint name RightSide]
@@ -598,8 +610,8 @@ addedScrollViewConstraints name direction constraints = case direction of
         scrollViewLeftSideConstraint = findMatchingScrollViewConstraint name LeftSide constraints
         scrollViewRightSideConstraint = findMatchingScrollViewConstraint name RightSide constraints
         switchElemName c = c {firstElementName = containerName}
-        topBottomOutsideConstraints = [switchElemName scrollViewTopConstraint, switchElemName scrollViewBottomConstraint]
-        leftRightOutsideConstraints = [switchElemName scrollViewLeftSideConstraint, switchElemName scrollViewRightSideConstraint]
+        (missingTopBottomStrings, topBottomOutsideConstraints) = partitionEithers [scrollViewTopConstraint, scrollViewBottomConstraint]
+        (missingLeftRightStrings, leftRightOutsideConstraints) = partitionEithers [scrollViewLeftSideConstraint, scrollViewRightSideConstraint]
 
 containerEqualityConstraint :: String -> OWALayoutAttribute -> OWAConstraint
 containerEqualityConstraint name attribute = OWAConstraint {
@@ -611,10 +623,11 @@ containerEqualityConstraint name attribute = OWAConstraint {
   constant = 0
 }
 
-findMatchingScrollViewConstraint :: String -> OWALayoutAttribute -> [OWAConstraint] -> OWAConstraint
-findMatchingScrollViewConstraint name attr constraints = head $ filter
-  (\c -> firstElementName c == name && firstAttribute c == attr)
-  constraints
+findMatchingScrollViewConstraint :: String -> OWALayoutAttribute -> [OWAConstraint] -> Either String OWAConstraint
+findMatchingScrollViewConstraint name attr constraints = if not (null results) then Right (head results) else Left (show attr ++ "Constraint")
+  where results = filter
+                    (\c -> firstElementName c == name && firstAttribute c == attr)
+                    constraints
 
 labelFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWALabel
 labelFromNameAndAttrs name attrMap = do
