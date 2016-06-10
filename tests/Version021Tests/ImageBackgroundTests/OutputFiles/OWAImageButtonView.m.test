@@ -1,0 +1,64 @@
+//
+// OWAImageButtonView.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "OWAImageButtonView.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface OWAImageButtonView ()
+
+@property (nonatomic, strong) UIButton* button1;
+
+@end
+
+@implementation OWAImageButtonView
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.button1];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* button1Height = [NSLayoutConstraint constraintWithItem:self.button1 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  [self addConstraint:button1Height];
+  NSLayoutConstraint* button1Width = [NSLayoutConstraint constraintWithItem:self.button1 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:button1Width];
+  NSLayoutConstraint* button1Top = [NSLayoutConstraint constraintWithItem:self.button1 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:button1Top];
+  NSLayoutConstraint* button1Left = [NSLayoutConstraint constraintWithItem:self.button1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:button1Left];
+}
+
+#pragma mark - Lazy Getters
+
+- (UIButton*)button1 {
+  if (_button1) {
+    return _button1;
+  }
+  _button1 = [[UIButton alloc] init];
+  [_button1 setImage:[UIImage imageNamed:@"file1.png"] forState:UIControlStateNormal];
+  return _button1;
+}
+
+@end

@@ -14,9 +14,9 @@ module ImageButtonTests (
   runImageButtonTests
 ) where
 
---import OWAAppInfo
+import OWAAppInfo
 import OWAObjcAbSyn
---import OWAViewObjc
+import OWAViewObjc
 import OWAViewParser
 import TestButtonObjects
 import TestUtil
@@ -31,6 +31,7 @@ runImageButtonTests currentDirectory = do
     beforeAll_ (createResultsFiles outputDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles outputDirectory resultsFiles) $ do
       imageButtonParseTests parseDirectory
+      imageButtonPrintTests outputDirectory
 
 imageButtonParseTests :: FilePath -> Spec
 imageButtonParseTests parseDirectory = do
@@ -50,6 +51,14 @@ imageButtonParseTests parseDirectory = do
       it "Should return a parse error highlighting the improper tag" $
         parseViewFromFile testFile3 `shouldMatchError` wrongTagNameError
 
+imageButtonPrintTests :: FilePath -> Spec
+imageButtonPrintTests outputDirectory = describe "Print File Structure for view with an image button" $ do
+  it "The printed header should match" $
+    (outputDirectory ++ imageButtonHeaderResultFile) `filesShouldMatch` (outputDirectory ++ imageButtonHeaderTestFile)
+
+  it "The printed implementation should match" $
+    (outputDirectory ++ imageButtonMResultFile) `filesShouldMatch` (outputDirectory ++ imageButtonMTestFile)
+
 parseDirectoryExtension :: String
 parseDirectoryExtension = "/tests/Version021Tests/ImageBackgroundTests/ParseFiles"
 
@@ -65,8 +74,30 @@ imageButtonExtension3 = "/imageButtonError2.view"
 outputDirectoryExtension :: String
 outputDirectoryExtension = "/tests/Version021Tests/ImageBackgroundTests/OutputFiles"
 
-resultsFiles :: [String]
-resultsFiles = []
+sampleAppInfo :: OWAAppInfo
+sampleAppInfo = OWAAppInfo {
+  appName = "MySampleApp",
+  appPrefix = "MSA",
+  authorName = "James Bowen",
+  dateCreatedString = "4/30/2016",
+  companyName = Just "One Week Apps"
+}
 
 testFileStructures :: [ObjcFile]
-testFileStructures = []
+testFileStructures = [objcHeaderFromView sampleAppInfo testSuccessView,
+                     objcImplementationFromView sampleAppInfo testSuccessView]
+
+resultsFiles :: [String]
+resultsFiles = [imageButtonHeaderResultFile, imageButtonMResultFile]
+
+imageButtonHeaderTestFile :: String
+imageButtonHeaderTestFile = "/OWAImageButtonView.h.test"
+
+imageButtonMTestFile :: String
+imageButtonMTestFile = "/OWAImageButtonView.m.test"
+
+imageButtonHeaderResultFile :: String
+imageButtonHeaderResultFile = "/OWAImageButtonView.h"
+
+imageButtonMResultFile :: String
+imageButtonMResultFile = "/OWAImageButtonView.m"
