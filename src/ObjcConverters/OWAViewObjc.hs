@@ -380,7 +380,7 @@ buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssi
               libNameIntro = "set",
               libParams = ["Title", "forState"]
             }
-            [localizedStringExpr $ text, Var "UIControlStateNormal"]
+            [localizedStringExpr text, Var "UIControlStateNormal"]
         textColorAssign = case buttonTextColorName button of
           Nothing -> Nothing
           Just color -> Just $ ExpressionStatement $ MethodCall propExpr

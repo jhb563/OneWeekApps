@@ -6,7 +6,7 @@ import OWAView
 
 testImageButton :: OWAButton
 testImageButton = OWAButton {
-  buttonName = "myButton",
+  buttonName = "button1",
   buttonText = Nothing,
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
@@ -16,7 +16,7 @@ testImageButton = OWAButton {
 
 heightConstraint :: OWAConstraint
 heightConstraint = OWAConstraint {
-  firstElementName = "myButton",
+  firstElementName = "button1",
   firstAttribute = Height,
   secondElementName = Nothing,
   secondAttribute = Nothing,
@@ -26,7 +26,7 @@ heightConstraint = OWAConstraint {
 
 widthConstraint :: OWAConstraint
 widthConstraint = OWAConstraint {
-  firstElementName = "myButton",
+  firstElementName = "button1",
   firstAttribute = Width,
   secondElementName = Nothing,
   secondAttribute = Nothing,
@@ -36,7 +36,7 @@ widthConstraint = OWAConstraint {
 
 topConstraint :: OWAConstraint
 topConstraint = OWAConstraint {
-  firstElementName = "myButton",
+  firstElementName = "button1",
   firstAttribute = Top,
   secondElementName = Just "Super",
   secondAttribute = Just Top,
@@ -46,7 +46,7 @@ topConstraint = OWAConstraint {
 
 leftConstraint :: OWAConstraint
 leftConstraint = OWAConstraint {
-  firstElementName = "myButton",
+  firstElementName = "button1",
   firstAttribute = LeftSide,
   secondElementName = Just "Super",
   secondAttribute = Just LeftSide,
