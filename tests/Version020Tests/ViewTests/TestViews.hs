@@ -67,10 +67,11 @@ viewTextField = OWATextField {
 viewButton :: OWAButton
 viewButton = OWAButton {
   buttonName = "viewButton",
-  buttonText = "CLICK_ME",
+  buttonText = Just "CLICK_ME",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 }
 
 viewImage :: OWAImageView
@@ -135,19 +136,21 @@ secondTextfield = OWATextField {
 nextButton :: OWAButton
 nextButton = OWAButton {
   buttonName = "nextButton",
-  buttonText = "NEXT",
+  buttonText = Just "NEXT",
   buttonTextColorName = Just "view2Color",
   buttonFontName = Just "standardFont",
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 }
 
 prevButton :: OWAButton
 prevButton = OWAButton {
   buttonName = "prevButton",
-  buttonText = "PREV",
+  buttonText = Just "PREV",
   buttonTextColorName = Just "view2Color",
   buttonFontName = Just "placeholderFont",
-  buttonBackgroundColorName = Just "elementBackgroundColor"
+  buttonBackgroundColorName = Just "elementBackgroundColor",
+  buttonBackgroundImageSourceName = Nothing
 }
 
 firstImage :: OWAImageView
@@ -377,19 +380,21 @@ l2 = LabelElement OWALabel {
 b1 :: OWAViewElement
 b1 = ButtonElement OWAButton {
   buttonName = "b1",
-  buttonText = "Hi",
+  buttonText = Just "Hi",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 }
 
 b2 :: OWAViewElement
 b2 = ButtonElement OWAButton {
   buttonName = "b2",
-  buttonText = "Bye",
+  buttonText = Just "Bye",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 }
 
 t1 :: OWAViewElement

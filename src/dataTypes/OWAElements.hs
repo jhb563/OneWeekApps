@@ -39,10 +39,11 @@ data OWATextField = OWATextField {
 -- background color, and font. 
 data OWAButton = OWAButton {
   buttonName :: String,
-  buttonText :: String,
+  buttonText :: Maybe String,
   buttonTextColorName :: Maybe String,
   buttonFontName :: Maybe String,
-  buttonBackgroundColorName :: Maybe String
+  buttonBackgroundColorName :: Maybe String,
+  buttonBackgroundImageSourceName :: Maybe String
 } deriving (Show, Eq) 
 
 -- | OWAImageView represents an Image subview. These must have a name

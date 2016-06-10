@@ -371,14 +371,16 @@ placeholderStatements textField = if noPlaceholders then [] else statements
         statements = [dictAssign, placeholderInit, placeholderAssign]
 
 buttonCustomization :: OWAButton -> [ObjcStatement]
-buttonCustomization button = textStatement:otherStatements
+buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssign, backgroundAssign]
   where propExpr = propExprForName $ buttonName button
-        textStatement = ExpressionStatement $ MethodCall propExpr
-          LibMethod {
-            libNameIntro = "set",
-            libParams = ["Title", "forState"]
-          }
-          [localizedStringExpr $ buttonText button, Var "UIControlStateNormal"]
+        textStatement = case buttonText button of
+          Nothing -> Nothing
+          Just text -> Just $ ExpressionStatement $ MethodCall propExpr
+            LibMethod {
+              libNameIntro = "set",
+              libParams = ["Title", "forState"]
+            }
+            [localizedStringExpr $ text, Var "UIControlStateNormal"]
         textColorAssign = case buttonTextColorName button of
           Nothing -> Nothing
           Just color -> Just $ ExpressionStatement $ MethodCall propExpr
@@ -393,7 +395,6 @@ buttonCustomization button = textStatement:otherStatements
         backgroundAssign = case buttonBackgroundColorName button of
           Nothing -> Nothing
           Just bColor -> Just $ valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)
-        otherStatements = catMaybes [textColorAssign, fontAssign, backgroundAssign]
 
 imageCustomization :: OWAImageView -> [ObjcStatement]
 imageCustomization image = [imageSourceAssign]

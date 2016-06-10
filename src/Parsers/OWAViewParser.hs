@@ -654,13 +654,13 @@ textFieldFromNameAndAttrs name attrMap = OWATextField {
 
 buttonFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAButton
 buttonFromNameAndAttrs name attrMap = do
-  text <- Map.lookup textKeyword attrMap
   return OWAButton {
     buttonName = name,
-    buttonText = text,
+    buttonText = Map.lookup textKeyword attrMap,
     buttonTextColorName = Map.lookup textColorKeyword attrMap,
     buttonFontName = Map.lookup fontKeyword attrMap,
-    buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
+    buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap,
+    buttonBackgroundImageSourceName = Nothing
   }
 
 imageViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAImageView
