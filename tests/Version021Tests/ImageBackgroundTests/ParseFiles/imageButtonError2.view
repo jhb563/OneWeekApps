@@ -1,0 +1,9 @@
+View myView
+  Elements
+    Button myButton
+      BackgroundImage "file1.png"
+      Layout
+        Height 50
+        Width 100
+        AlignTop
+        AlignLeft

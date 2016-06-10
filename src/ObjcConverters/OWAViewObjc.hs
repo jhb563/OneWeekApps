@@ -371,14 +371,16 @@ placeholderStatements textField = if noPlaceholders then [] else statements
         statements = [dictAssign, placeholderInit, placeholderAssign]
 
 buttonCustomization :: OWAButton -> [ObjcStatement]
-buttonCustomization button = textStatement:otherStatements
+buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssign, backgroundAssign, imageAssign]
   where propExpr = propExprForName $ buttonName button
-        textStatement = ExpressionStatement $ MethodCall propExpr
-          LibMethod {
-            libNameIntro = "set",
-            libParams = ["Title", "forState"]
-          }
-          [localizedStringExpr $ buttonText button, Var "UIControlStateNormal"]
+        textStatement = case buttonText button of
+          Nothing -> Nothing
+          Just text -> Just $ ExpressionStatement $ MethodCall propExpr
+            LibMethod {
+              libNameIntro = "set",
+              libParams = ["Title", "forState"]
+            }
+            [localizedStringExpr text, Var "UIControlStateNormal"]
         textColorAssign = case buttonTextColorName button of
           Nothing -> Nothing
           Just color -> Just $ ExpressionStatement $ MethodCall propExpr
@@ -386,14 +388,21 @@ buttonCustomization button = textStatement:otherStatements
               libNameIntro = "set",
               libParams = ["TitleColor", "forState"]
             }
-            [libMethodForColor color, Var "UIControlStateNormal"];
+            [libMethodForColor color, Var "UIControlStateNormal"]
         fontAssign = case buttonFontName button of
           Nothing -> Nothing
           Just font -> Just $ valueAssignment (PropertyCall propExpr "titleLabel") "font" (libMethodForFont font)
         backgroundAssign = case buttonBackgroundColorName button of
           Nothing -> Nothing
           Just bColor -> Just $ valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)
-        otherStatements = catMaybes [textColorAssign, fontAssign, backgroundAssign]
+        imageAssign = case buttonBackgroundImageSourceName button of
+          Nothing -> Nothing
+          Just img -> Just $ ExpressionStatement $ MethodCall propExpr
+            LibMethod {
+              libNameIntro = "set",
+              libParams = ["Image", "forState"]
+            }
+            [libMethodForImage img, Var "UIControlStateNormal"]
 
 imageCustomization :: OWAImageView -> [ObjcStatement]
 imageCustomization image = [imageSourceAssign]

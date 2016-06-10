@@ -14,7 +14,7 @@ testButtonErrors :: [OWAParseError]
 testButtonErrors = [ObjectError {
   fileName = "ButtonItemError.view",
   itemName = "myButton",
-  missingRequiredAttributes = ["Text"]
+  missingRequiredAttributes = ["Text or ImageSrc"]
 }]
 
 testImageErrors :: [OWAParseError]
@@ -28,7 +28,7 @@ testCombinedErrors :: [OWAParseError]
 testCombinedErrors = [ObjectError {
   fileName = "CombinedError.view",
   itemName = "b1",
-  missingRequiredAttributes = ["Text"]
+  missingRequiredAttributes = ["Text or ImageSrc"]
 }, ObjectError {
   fileName = "CombinedError.view",
   itemName = "l1",
@@ -52,9 +52,6 @@ uppercaseElementNameFailError = newPos "uppercaseElementNameFail.view" 3 11
 
 placeholderLabelFailError :: SourcePos
 placeholderLabelFailError = newPos "placeholderLabelFail.view" 5 7
-
-imageSourceButtonFailError :: SourcePos
-imageSourceButtonFailError = newPos "imageSourceButtonFail.view" 6 7
 
 noIndentLayoutError :: SourcePos
 noIndentLayoutError = newPos "noIndentLayout.view" 6 7

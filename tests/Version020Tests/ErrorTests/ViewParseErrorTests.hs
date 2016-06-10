@@ -42,7 +42,6 @@ elementsTest parseDirectory = do
   let testFile1 = parseDirectory ++ invalidElementsTagExtension
   let testFile2 = parseDirectory ++ uppercaseElementNameFailExtension
   let testFile3 = parseDirectory ++ placeholderLabelFailExtension
-  let testFile4 = parseDirectory ++ imageSourceButtonFailExtension
   describe "Parse views with incorrectly formatted elements" $ do
     context "when an invalid tag is used as an element" $
       it "Should return a parse error highlighting the error location" $
@@ -55,10 +54,6 @@ elementsTest parseDirectory = do
     context "when a placeholder tag is used on a Label element" $
       it "Should return a parse error highlighting the error location" $
         parseViewFromFile testFile3 `shouldMatchError` placeholderLabelFailError
-
-    context "when an Image source tag is used on a Button element" $
-      it "Should return a parse error highlighting the error location" $
-        parseViewFromFile testFile4 `shouldMatchError` imageSourceButtonFailError
 
 layoutTest :: FilePath -> Spec
 layoutTest parseDirectory = do
@@ -118,9 +113,6 @@ uppercaseElementNameFailExtension = "/uppercaseElementNameFail.view"
 
 placeholderLabelFailExtension :: String
 placeholderLabelFailExtension = "/placeholderLabelFail.view"
-
-imageSourceButtonFailExtension :: String
-imageSourceButtonFailExtension = "/imageSourceButtonFail.view"
 
 noIndentLayoutExtension :: String
 noIndentLayoutExtension = "/noIndentLayout.view"

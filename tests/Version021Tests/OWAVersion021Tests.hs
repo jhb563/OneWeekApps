@@ -2,6 +2,7 @@ module Main where
 
 import ContainerViewTests
 import CustomViewTests
+import ImageButtonTests
 import ViewErrorTests
 import System.Directory
 
@@ -11,3 +12,4 @@ main = do
   runCustomViewTests currentDirectory
   runContainerViewTests currentDirectory
   runViewErrorTests currentDirectory
+  runImageButtonTests currentDirectory

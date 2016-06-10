@@ -198,8 +198,8 @@ buttonElementParser = do
     Nothing -> return $ Left ObjectError {
       fileName = "",
       itemName = name,
-      -- Text is the only required keyword for buttons 
-      missingRequiredAttributes = [textKeyword]
+      -- Text or ImageSrc is the only required keyword for buttons 
+      missingRequiredAttributes = [textKeyword ++ " or " ++ imageSourceKeyword]
     }
 
 buttonAttributeParser :: GenParser Char ViewParserState (ElementAttr, ElementVal)
@@ -210,7 +210,8 @@ allButtonAttributeParsers = [textParser,
   textColorParser, 
   fontParser, 
   backgroundColorParser,
-  constraintsParser]
+  constraintsParser,
+  imageSourceParser]
 
 textFieldElementParser :: GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 textFieldElementParser = do
@@ -653,15 +654,18 @@ textFieldFromNameAndAttrs name attrMap = OWATextField {
 }
 
 buttonFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAButton
-buttonFromNameAndAttrs name attrMap = do
-  text <- Map.lookup textKeyword attrMap
-  return OWAButton {
+buttonFromNameAndAttrs name attrMap = if isNothing text && isNothing imgSourceName
+  then Nothing
+  else Just OWAButton {
     buttonName = name,
     buttonText = text,
     buttonTextColorName = Map.lookup textColorKeyword attrMap,
     buttonFontName = Map.lookup fontKeyword attrMap,
-    buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap
+    buttonBackgroundColorName = Map.lookup backgroundColorKeyword attrMap,
+    buttonBackgroundImageSourceName = imgSourceName
   }
+    where text = Map.lookup textKeyword attrMap
+          imgSourceName = Map.lookup imageSourceKeyword attrMap
 
 imageViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAImageView
 imageViewFromNameAndAttrs name attrMap = do

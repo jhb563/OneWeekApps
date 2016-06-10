@@ -42,10 +42,11 @@ basicFirstView = OWAViewRecord {
 myButton :: OWAButton
 myButton = OWAButton {
   buttonName = "myButton",
-  buttonText = "Hi",
+  buttonText = Just "Hi",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 } 
 
 twoSameCustomTest :: OWAView
@@ -113,10 +114,11 @@ firstView = OWAViewRecord {
 aButton :: OWAButton
 aButton = OWAButton {
   buttonName = "aButton",
-  buttonText = "Hi",
+  buttonText = Just "Hi",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 } 
 
 secondView :: OWAViewRecord

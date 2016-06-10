@@ -202,10 +202,11 @@ nextLabel = OWALabel {
 nextButton :: OWAButton
 nextButton = OWAButton {
   buttonName = "nextButton",
-  buttonText = "Next",
+  buttonText = Just "Next",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 }
 
 myImage :: OWAImageView
@@ -241,10 +242,11 @@ insideLabel = OWALabel {
 topButton :: OWAButton
 topButton = OWAButton {
   buttonName = "topButton",
-  buttonText = "Hello from not so inside",
+  buttonText = Just "Hello from not so inside",
   buttonTextColorName = Nothing,
   buttonFontName = Nothing,
-  buttonBackgroundColorName = Nothing
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Nothing
 } 
 
 firstLabel :: OWALabel
