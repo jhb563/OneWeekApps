@@ -667,8 +667,6 @@ buttonFromNameAndAttrs name attrMap = if isNothing text && isNothing imgSourceNa
     where text = Map.lookup textKeyword attrMap
           imgSourceName = Map.lookup imageSourceKeyword attrMap
 
-  
-
 imageViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAImageView
 imageViewFromNameAndAttrs name attrMap = do
   sourceName <- Map.lookup imageSourceKeyword attrMap
