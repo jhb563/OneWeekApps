@@ -7,20 +7,21 @@ View firstView
         Width 300
         AlignTop
         AlignLeft
-      Label firstLabel
-        Text "Hi"
-        Layout 
-          AlignTop 40
-          AlignLeft 20
-          Height 30
-          Width 100
-      Button firstButton
-        ImageSrc "file1.png"
-        Layout
-          Below firstLabel 20
-          AlignLeft firstLabel
-          Height 40
-          Width 150
+      Elements
+        Label firstLabel
+          Text "Hi"
+          Layout 
+            AlignTop 40
+            AlignLeft 20
+            Height 30
+            Width 100
+        Button firstButton
+          ImageSrc "file1.png"
+          Layout
+            Below firstLabel 20
+            AlignLeft firstLabel
+            Height 40
+            Width 150
     Image myImage
       ImageSrc "file2.png"
       Layout

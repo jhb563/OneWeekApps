@@ -15,12 +15,12 @@ import IntegrationTestUtil
 import TestUtil
 import Test.Hspec
 
-runV021IntegrationTests :: FilePath :: IO ()
+runV021IntegrationTests :: FilePath -> IO ()
 runV021IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/Version021Tests/IntegrationTests"
   runIntegrationTests testDirectory
-  [checkViewsFiles]
-  additionalFiles
+    [checkViewsFiles]
+    additionalFiles
 
 checkViewsFiles :: FilePath -> Spec
 checkViewsFiles testDirectory = do

@@ -40,7 +40,7 @@
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:view];
   }
-  NSArray myContainerSubviews = @[self.firstLabel, self.firstButton];
+  NSArray* myContainerSubviews = @[self.firstLabel, self.firstButton];
   for (UIView* view in myContainerSubviews) {
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self.myContainer addSubview:view];
@@ -106,7 +106,7 @@
     return _firstButton;
   }
   _firstButton = [[UIButton alloc] init];
-  [_firstButton setImage:[UIImage imageNamed:@"file1.png" forState:UIControlStateNormal];
+  [_firstButton setImage:[UIImage imageNamed:@"file1.png"] forState:UIControlStateNormal];
   return _firstButton;
 }
 

@@ -41,7 +41,7 @@
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:view];
   }
-  NSArray scrollViewSubviews = @[self.scrollViewContainerView];
+  NSArray* scrollViewSubviews = @[self.scrollViewContainerView];
   for (UIView* view in scrollViewSubviews) {
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self.scrollView addSubview:view];
@@ -72,11 +72,11 @@
   [self addConstraint:scrollViewContainerViewRight];
   NSLayoutConstraint* firstViewTop = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
   [self addConstraint:firstViewTop];
-  NSLayoutConstraint* firstViewCenterX = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  NSLayoutConstraint* firstViewCenterX = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
   [self addConstraint:firstViewCenterX];
-  NSLayoutConstraint* firstViewHeight = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  NSLayoutConstraint* firstViewHeight = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:400.0];
   [self addConstraint:firstViewHeight];
-  NSLayoutConstraint* firstViewWidth = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:101.0];
+  NSLayoutConstraint* firstViewWidth = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:400.0];
   [self addConstraint:firstViewWidth];
   NSLayoutConstraint* myLabelHeight = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
   [self addConstraint:myLabelHeight];
@@ -95,7 +95,7 @@
     return _scrollView;
   }
   _scrollView = [[UIScrollView alloc] init];
-  return _scrollView
+  return _scrollView;
 }
 
 - (UIView*)scrollViewContainerView {
