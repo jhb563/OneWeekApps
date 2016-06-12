@@ -1,0 +1,7 @@
+View myView
+  Elements
+    ScrollView myScrollView
+      ScrollDirection vertical
+      Elements
+        Label l1
+          Text "Hi"

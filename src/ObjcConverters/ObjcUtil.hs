@@ -94,8 +94,11 @@ categoryFromNamesAndMethodBuilder typeName catName methodBuilder objects = Categ
 -- | Takes a category and returns the interface section where all method headers
 -- are in a single block with no comment.
 simpleCategoryInterface :: Category -> FileSection
-simpleCategoryInterface category = CategoryInterfaceSection
-  category
+simpleCategoryInterface category = InterfaceSection
+  (originalTypeName category)
+  Nothing
+  (Just $ categoryName category)
+  []
   (if null (categoryMethods category)
     then []
     else [MethodHeaderListSection Nothing (categoryMethods category)])
@@ -103,8 +106,9 @@ simpleCategoryInterface category = CategoryInterfaceSection
 -- | Takes a category and returns the implementation section with no pragma marks
 -- and all methods are in that section.
 simpleCategoryImplementation :: Category -> FileSection
-simpleCategoryImplementation category = CategoryImplementationSection
-  category
+simpleCategoryImplementation category = ImplementationSection
+  (originalTypeName category)
+  (Just $ categoryName category)
   (if null (categoryMethods category)
     then []
     else [MethodImplementationListSection Nothing (categoryMethods category)])

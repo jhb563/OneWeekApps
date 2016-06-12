@@ -1,0 +1,124 @@
+//
+// IGAContainerView2.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "IGAContainerView2.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+
+@interface IGAContainerView2 ()
+
+@property (nonatomic, strong) UIView* topContainer;
+@property (nonatomic, strong) UIView* insideContainer;
+@property (nonatomic, strong) UILabel* insideLabel;
+@property (nonatomic, strong) UIButton* topButton;
+
+@end
+
+@implementation IGAContainerView2
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.topContainer];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+  NSArray* topContainerSubviews = @[self.insideContainer, self.topButton];
+  for (UIView* view in topContainerSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.topContainer addSubview:view];
+  }
+  NSArray* insideContainerSubviews = @[self.insideLabel];
+  for (UIView* view in insideContainerSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.insideContainer addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* topContainerTop = [NSLayoutConstraint constraintWithItem:self.topContainer attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:topContainerTop];
+  NSLayoutConstraint* topContainerBottom = [NSLayoutConstraint constraintWithItem:self.topContainer attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:topContainerBottom];
+  NSLayoutConstraint* topContainerLeft = [NSLayoutConstraint constraintWithItem:self.topContainer attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:topContainerLeft];
+  NSLayoutConstraint* topContainerRight = [NSLayoutConstraint constraintWithItem:self.topContainer attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  [self addConstraint:topContainerRight];
+  NSLayoutConstraint* insideContainerLeft = [NSLayoutConstraint constraintWithItem:self.insideContainer attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.topContainer attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:insideContainerLeft];
+  NSLayoutConstraint* insideContainerTop = [NSLayoutConstraint constraintWithItem:self.insideContainer attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.topContainer attribute:NSLayoutAttributeTop multiplier:1.0 constant:20.0];
+  [self addConstraint:insideContainerTop];
+  NSLayoutConstraint* insideContainerHeight = [NSLayoutConstraint constraintWithItem:self.insideContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:insideContainerHeight];
+  NSLayoutConstraint* insideContainerWidth = [NSLayoutConstraint constraintWithItem:self.insideContainer attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:insideContainerWidth];
+  NSLayoutConstraint* insideLabelCenterX = [NSLayoutConstraint constraintWithItem:self.insideLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.insideContainer attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:insideLabelCenterX];
+  NSLayoutConstraint* insideLabelCenterY = [NSLayoutConstraint constraintWithItem:self.insideLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.insideContainer attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  [self addConstraint:insideLabelCenterY];
+  NSLayoutConstraint* topButtonCenterY = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.topContainer attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
+  [self addConstraint:topButtonCenterY];
+  NSLayoutConstraint* topButtonLeft = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.insideContainer attribute:NSLayoutAttributeRight multiplier:1.0 constant:20.0];
+  [self addConstraint:topButtonLeft];
+  NSLayoutConstraint* topButtonHeight = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:topButtonHeight];
+  NSLayoutConstraint* topButtonWidth = [NSLayoutConstraint constraintWithItem:self.topButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:topButtonWidth];
+}
+
+#pragma mark - Lazy Getters
+
+- (UIView*)topContainer {
+  if (_topContainer) {
+    return _topContainer;
+  }
+  _topContainer = [[UIView alloc] init];
+  _topContainer.backgroundColor = [UIColor redColor];
+  return _topContainer;
+}
+
+- (UIView*)insideContainer {
+  if (_insideContainer) {
+    return _insideContainer;
+  }
+  _insideContainer = [[UIView alloc] init];
+  _insideContainer.backgroundColor = [UIColor blueColor];
+  return _insideContainer;
+}
+
+- (UILabel*)insideLabel {
+  if (_insideLabel) {
+    return _insideLabel;
+  }
+  _insideLabel = [[UILabel alloc] init];
+  _insideLabel.text = NSLocalizedString(@"Hello from the inside", nil);
+  return _insideLabel;
+}
+
+- (UIButton*)topButton {
+  if (_topButton) {
+    return _topButton;
+  }
+  _topButton = [[UIButton alloc] init];
+  [_topButton setTitle:NSLocalizedString(@"Hello from not so inside", nil) forState:UIControlStateNormal];
+  return _topButton;
+}
+
+@end

@@ -37,10 +37,8 @@ sectionDoc :: FileSection -> Doc
 sectionDoc (BlockCommentSection commentLines) = vcat (map commentDoc commentLines) PPrint.<$> empty
 sectionDoc (ImportsSection includes) = vcat (map includeDoc includes) PPrint.<$> empty
 sectionDoc (ForwardDeclarationSection forwardDecls) = vcat (map forwardDeclDoc forwardDecls) PPrint.<$> empty
-sectionDoc (CategoryInterfaceSection category sections) = categoryInterfaceDoc category sections
-sectionDoc (CategoryImplementationSection category sections) = categoryImplementationDoc category sections
-sectionDoc (InterfaceSection typeName superclass properties methods) = interfaceDoc typeName superclass properties methods
-sectionDoc (ImplementationSection typeName sections) = implementationDoc typeName sections
+sectionDoc (InterfaceSection typeName superclass possibleCategoryName properties methods) = interfaceDoc typeName superclass possibleCategoryName properties methods
+sectionDoc (ImplementationSection typeName possibleCategoryName sections) = implementationDoc typeName possibleCategoryName sections
 sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSectionDoc maybeComment methods
 sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
 sectionDoc (LocalizedStringListSection name statements) = text "//" <+> text name PPrint.<$>
@@ -63,38 +61,33 @@ forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
 forwardDeclDoc (EnumDecl enumName types) = indentBlock headerLine enumBody <> semi
   where headerLine = text "typedef NS_ENUM(NSInteger," <+> text enumName <> text ")"
         enumBody = vcat $ punctuate (text ",") (map text types)
+forwardDeclDoc (ClassDecl className) = text "@class" <+> text className <> semi
 
-categoryInterfaceDoc :: Category -> [FileSection] -> Doc
-categoryInterfaceDoc category sections = text "@interface" <+> 
-  text (originalTypeName category) <+> 
-  parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map sectionDoc sections) PPrint.<$>
-  endDoc
-
-categoryImplementationDoc :: Category -> [FileSection] -> Doc
-categoryImplementationDoc category sections = text "@implementation" <+>
-  text (originalTypeName category) <+>
-  parens (text $ categoryName category) PPrint.<$>
-  vcatWithSpace (map sectionDoc sections) PPrint.<$>
-  endDoc
-
-interfaceDoc :: String -> Maybe String -> [ObjcProperty] -> [ObjcMethod] -> Doc
-interfaceDoc typeName superclass properties methods = text "@interface" <+>
+interfaceDoc :: String -> Maybe String -> Maybe String -> [ObjcProperty] -> [FileSection] -> Doc
+interfaceDoc typeName superclass possibleCategoryName properties sections = text "@interface" <+>
   text typeName <+> superDocOrParens PPrint.<$>
-  propertySection PPrint.<$>
+  middleSection PPrint.<$>
   endDoc
     where propertySection = case properties of
                               [] -> empty 
                               _ -> vcatWithSpace (map propertyDoc properties) PPrint.<$> empty
+          middleSection = case sections of
+            [] -> propertySection
+            _ -> propertySection PPrint.<$> vcat (map sectionDoc sections)
           superDocOrParens = case superclass of
                               Just super -> colon <+> text super
-                              _ -> text "()"
+                              Nothing -> case possibleCategoryName of
+                                Just name -> parens $ text name
+                                Nothing -> text "()"
 
-implementationDoc :: String -> [FileSection] -> Doc
-implementationDoc typeName sections = text "@implementation" <+>
-  text typeName PPrint.<$>
+implementationDoc :: String -> Maybe String -> [FileSection] -> Doc
+implementationDoc typeName possibleCategoryName sections = text "@implementation" <+>
+  nameDoc PPrint.<$>
   vcatWithSpace (map sectionDoc sections) PPrint.<$>
   endDoc
+    where nameDoc = case possibleCategoryName of
+                      Nothing -> text typeName
+                      Just catName -> text typeName <+> parens (text catName)
 
 methodHeaderListSectionDoc :: Maybe String -> [ObjcMethod] -> Doc
 methodHeaderListSectionDoc Nothing methods = vcat (map headerFileMethodHeaderDoc methods) PPrint.<$> empty
@@ -147,8 +140,12 @@ statementDoc (IfBlock condition statements) = indentBlock
 statementDoc (ForEachBlock decl varName statements) = indentBlock
   (text "for" <+> parens (expressionDoc decl <+> text "in" <+> expressionDoc varName))
   (vcat $ map statementDoc statements)
+statementDoc (AssignStatement expr1 expr2) = expressionDoc expr1 <+>
+  text "=" <+>
+  expressionDoc expr2 <> semi
   
 expressionDoc :: ObjcExpression -> Doc
+expressionDoc SelfExpr = text "self"
 expressionDoc (MethodCall callingExp (UserMethod method) args) = methodCallDoc
   callingExp (nameIntro method) (map paramTitle $ params method) args
 expressionDoc (MethodCall callingExp libMethod args) = methodCallDoc
@@ -173,6 +170,7 @@ expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 expressionDoc (ArrayLit expressions) = text "@[" <>
   hcat (punctuate (text ", ") (map expressionDoc expressions)) <>
   text "]"
+expressionDoc (BoolLit bool) = text (if bool then "YES" else "NO")
 
 keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc
 keyValueDoc (key, value) = expressionDoc key <+> colon <+> expressionDoc value

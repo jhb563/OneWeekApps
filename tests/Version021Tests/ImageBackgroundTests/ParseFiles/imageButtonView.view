@@ -1,0 +1,10 @@
+View myView
+  Type OWAImageButtonView
+  Elements
+    Button button1
+      ImageSrc "file1.png"
+      Layout
+        Height 50
+        Width 100
+        AlignTop
+        AlignLeft

@@ -1,0 +1,11 @@
+View myView
+  Type OWAView1
+  Elements
+    containerView myContainer
+      Elements
+        Label myLabel
+          Text "Hello"
+          Layout
+            Width 300
+            Height 300
+

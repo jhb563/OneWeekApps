@@ -1,0 +1,20 @@
+//
+// IGAContainerView3.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import UIKit;
+
+@interface IGAContainerView3 : UIView
+
+@property (nonatomic, strong, readonly) UILabel* firstLabel;
+@property (nonatomic, strong, readonly) UIView* container1;
+@property (nonatomic, strong, readonly) UIImageView* myImage;
+@property (nonatomic, strong, readonly) UILabel* secondLabel;
+@property (nonatomic, strong, readonly) UIView* container2;
+@property (nonatomic, strong, readonly) UITextField* myField;
+
+@end

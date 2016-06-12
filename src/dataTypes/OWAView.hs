@@ -57,11 +57,42 @@ data OWAView = OWAView {
   constraints :: [OWAConstraint]
 } deriving (Show, Eq) 
 
+-- | OWAViewRecord simplifies the View model for cases where we
+-- are unconcerned about the subviews and constraints. This occurs
+-- for embedding custom views within our view.
+data OWAViewRecord = OWAViewRecord {
+  viewRecordName :: String,
+  viewRecordType :: String
+} deriving (Show, Eq)
+
+-- | OWAContainer is another simplified View which just holds a group of
+-- elements. It has a generic type, and does not store its own constraints.
+data OWAContainer = OWAContainer {
+  containerName :: String,
+  containerBackgroundColorName :: Maybe String,
+  containerSubviews :: [OWAViewElement]
+} deriving (Show, Eq)
+
+-- | OWAScrollDirection is an Enum for the possible directions a scroll view can go
+data OWAScrollDirection = Vertical | Horizontal | Both deriving (Show, Eq)
+
+-- | OWAScrollView holds a single container (which in turn has subviews)
+-- and is designed to scroll
+data OWAScrollView = OWAScrollView {
+  scrollViewName :: String,
+  scrollViewBackgroundColorName :: Maybe String,
+  scrollDirection :: OWAScrollDirection,
+  scrollViewContainer :: OWAContainer
+} deriving (Show, Eq)
+
 -- | OWAViewElement provides a wrapper around the different types of subviews
 -- that a view can have. This will soon be expanded to include other OWAViews,
 -- as well as simple container views.
 data OWAViewElement = LabelElement OWALabel |
   TextFieldElement OWATextField |
   ButtonElement OWAButton |
-  ImageElement OWAImageView
+  ImageElement OWAImageView |
+  CustomViewElement OWAViewRecord |
+  ContainerViewElement OWAContainer |
+  ScrollViewElement OWAScrollView
   deriving (Show, Eq)

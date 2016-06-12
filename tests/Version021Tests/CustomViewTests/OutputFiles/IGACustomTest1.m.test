@@ -1,0 +1,100 @@
+//
+// IGACustomTest1.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "IGACustomTest1.h"
+#import "UIColor+MSAColors.h"
+#import "UIFont+MSAFonts.h"
+#import "OWAFirstView.h"
+
+@interface IGACustomTest1 ()
+
+@property (nonatomic, strong) UILabel* myLabel;
+@property (nonatomic, strong) OWAFirstView* firstView;
+@property (nonatomic, strong) UIButton* myButton;
+
+@end
+
+@implementation IGACustomTest1
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.myLabel, self.firstView, self.myButton];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* myLabelTop = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:60.0];
+  [self addConstraint:myLabelTop];
+  NSLayoutConstraint* myLabelLeft = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:30.0];
+  [self addConstraint:myLabelLeft];
+  NSLayoutConstraint* myLabelHeight = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:myLabelHeight];
+  NSLayoutConstraint* myLabelWidth = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:myLabelWidth];
+  NSLayoutConstraint* firstViewTop = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.myLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:firstViewTop];
+  NSLayoutConstraint* firstViewLeft = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.myLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:firstViewLeft];
+  NSLayoutConstraint* firstViewHeight = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:firstViewHeight];
+  NSLayoutConstraint* firstViewWidth = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:200.0];
+  [self addConstraint:firstViewWidth];
+  NSLayoutConstraint* myButtonTop = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:myButtonTop];
+  NSLayoutConstraint* myButtonLeft = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:10.0];
+  [self addConstraint:myButtonLeft];
+  NSLayoutConstraint* myButtonHeight = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50.0];
+  [self addConstraint:myButtonHeight];
+  NSLayoutConstraint* myButtonWidth = [NSLayoutConstraint constraintWithItem:self.myButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:myButtonWidth];
+}
+
+#pragma mark - Lazy Getters
+
+- (UILabel*)myLabel {
+  if (_myLabel) {
+    return _myLabel;
+  }
+  _myLabel = [[UILabel alloc] init];
+  _myLabel.text = NSLocalizedString(@"Hi", nil);
+  return _myLabel;
+}
+
+- (OWAFirstView*)firstView {
+  if (_firstView) {
+    return _firstView;
+  }
+  _firstView = [[OWAFirstView alloc] init];
+  return _firstView;
+}
+
+- (UIButton*)myButton {
+  if (_myButton) {
+    return _myButton;
+  }
+  _myButton = [[UIButton alloc] init];
+  [_myButton setTitle:NSLocalizedString(@"Hi", nil) forState:UIControlStateNormal];
+  return _myButton;
+}
+
+@end

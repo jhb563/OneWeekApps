@@ -1,0 +1,45 @@
+View myView
+  Type IGAContainerView3
+  Elements
+    Label firstLabel
+      Text "Name"
+      Layout
+        AlignTop 20
+        AlignLeft 20
+        Height 30
+        Width 100
+    ContainerView container1
+      Elements
+        Image myImage
+          ImageSrc "file1.png"
+          Layout
+            Height container1
+            Width container1
+            CenterX
+            CenterY
+      Layout
+        Below firstLabel 10
+        AlignLeft firstLabel
+        Height 100
+        Width 100
+    Label secondLabel
+      Text "Location"
+      Layout
+        Below container1 20
+        AlignLeft firstLabel
+        Height firstLabel
+        Width firstLabel
+    ContainerView container2
+      Elements
+        TextField myField
+          PlaceholderText "Enter Location"
+          Layout
+            CenterY
+            AlignLeft
+            AlignRight
+            Height 30
+      Layout
+        Below secondLabel
+        AlignLeft container1
+        Height container1
+        Width container1

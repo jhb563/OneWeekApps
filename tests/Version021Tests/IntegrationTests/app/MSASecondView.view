@@ -1,0 +1,26 @@
+View secondView
+  Type MSASecondView
+  Elements
+    ScrollView scrollView
+      ScrollDirection Vertical
+      Layout
+        AlignTop
+        AlignLeft
+        AlignRight
+        AlignBottom 
+      Elements
+        CustomView firstView
+          Type MSAFirstView
+          Layout
+            AlignTop
+            CenterX
+            Height 400
+            Width 400
+        Label myLabel
+          Text "Hi"
+          Layout
+            Height 30
+            Width 101
+            Below firstView 10
+            AlignLeft firstView
+         

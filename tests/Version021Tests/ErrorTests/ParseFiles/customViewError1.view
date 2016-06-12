@@ -1,0 +1,7 @@
+View myView
+  Type OWAView1
+  Elements
+    MyCustomClassView firstView
+      Layout
+        Height 300
+        Width 300

@@ -1,0 +1,17 @@
+View myView
+  Type OWAView1
+  Elements
+    CustomView
+      Type OWAFirstView
+      Layout
+        AlignLeft
+        AlignTop
+        Height 40
+        Width 40
+    Button myButton
+      Text "Hi"
+      Layout
+        CenterX
+        CenterY
+        Height 30
+        Width 30

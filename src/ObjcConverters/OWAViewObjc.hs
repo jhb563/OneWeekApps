@@ -17,6 +17,7 @@ import OWAAppInfo
 import OWAObjcAbSyn
 import OWAElements
 import OWAView
+import qualified Data.Set as Set
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
@@ -25,24 +26,28 @@ import OWAView
 -- | 'objcHeaderFromView' takes the app info and a view and returns
 -- the structure for the view's header file.
 objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
-objcHeaderFromView appInfo view = ObjcFile 
+objcHeaderFromView appInfo view = ObjcFile $
   [topCommentSection (vTy ++ ".h") appInfo,
-  uiKitImportsSection,
-  InterfaceSection vTy (Just "UIView") properties []]
+  uiKitImportsSection] ++
+  rest
     where vTy = viewType view
-          subs = subviews view
+          subs = allChildViews view
           properties = map (propertyForSubview True) subs
+          interfaceSection = InterfaceSection vTy (Just "UIView") Nothing properties []
+          rest = case forwardClassSection view of
+                  Nothing -> [interfaceSection]
+                  Just declSection -> [declSection, interfaceSection]
 
 -- | 'objcImplementationFromView' takes the app info and a view and returns
 -- the structure for the view's implementation file.
 objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcImplementationFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".m") appInfo,
-  importsSection vTy (appPrefix appInfo),
-  InterfaceSection vTy Nothing properties [],
-  ImplementationSection vTy impSections]
+  importsSection view (appPrefix appInfo),
+  InterfaceSection vTy Nothing Nothing properties [],
+  ImplementationSection vTy Nothing impSections]
     where vTy = viewType view
-          subs = subviews view
+          subs = allChildViews view
           properties = map (propertyForSubview False) subs
           impSections = if not (null subs)
                           then [lifecycleSection, setupSection view, lazyGetterSection view]
@@ -52,13 +57,26 @@ objcImplementationFromView appInfo view = ObjcFile
 --------------------------SECTION HELPERS---------------------------------------
 --------------------------------------------------------------------------------
 
-importsSection :: String -> String -> FileSection
-importsSection viewType appPrefix = ImportsSection
-  [FileImport (viewType ++ ".h"),
+forwardClassSection :: OWAView -> Maybe FileSection
+forwardClassSection view = case classesToImportForView view of
+  [] -> Nothing
+  classes -> Just $ ForwardDeclarationSection $ map ClassDecl classes
+
+importsSection :: OWAView -> String -> FileSection
+importsSection view appPrefix = ImportsSection $
+  [FileImport $ viewType view ++ ".h",
   FileImport colorFileName,
-  FileImport fontFileName]
+  FileImport fontFileName] ++
+  map (FileImport . (++ ".h")) classes
     where colorFileName = "UIColor+" ++ appPrefix ++ "Colors.h"
           fontFileName = "UIFont+" ++ appPrefix ++ "Fonts.h" 
+          classes = classesToImportForView view
+
+classesToImportForView :: OWAView -> [String]
+classesToImportForView view = Set.toList $ foldl tailFunc Set.empty (allChildViews view)
+  where tailFunc set v = case v of
+                      (CustomViewElement viewRecord) -> Set.insert (viewRecordType viewRecord) set
+                      _ -> set
 
 lifecycleSection :: FileSection
 lifecycleSection = MethodImplementationListSection (Just "Lifecycle") [initMethod]
@@ -69,7 +87,18 @@ setupSection view = MethodImplementationListSection (Just "Setup")
 
 lazyGetterSection :: OWAView -> FileSection
 lazyGetterSection view = MethodImplementationListSection (Just "Lazy Getters")
-  (map lazyGetterForView (subviews view))
+  (map lazyGetterForView (allChildViews view))
+
+allChildViews :: OWAView -> [OWAViewElement]
+allChildViews view = concatMap allNestedSubviews (subviews view)
+
+allNestedSubviews :: OWAViewElement -> [OWAViewElement]
+allNestedSubviews containerElem@(ContainerViewElement container) = containerElem :
+  concatMap allNestedSubviews (containerSubviews container)
+allNestedSubviews scrollElem@(ScrollViewElement scrollView) = scrollElem : ContainerViewElement container :
+  concatMap allNestedSubviews (containerSubviews container)
+  where container = scrollViewContainer scrollView
+allNestedSubviews otherElem = [otherElem]
 
 --------------------------------------------------------------------------------
 --------------------------PROPERTIES--------------------------------------------
@@ -88,6 +117,9 @@ typeNameForElement (LabelElement _) = "UILabel"
 typeNameForElement (TextFieldElement _) = "UITextField"
 typeNameForElement (ButtonElement _) = "UIButton"
 typeNameForElement (ImageElement _) = "UIImageView"
+typeNameForElement (CustomViewElement record) = viewRecordType record
+typeNameForElement (ContainerViewElement _) = "UIView"
+typeNameForElement (ScrollViewElement _) = "UIScrollView"
 
 typeForElement :: OWAViewElement -> ObjcType
 typeForElement element = PointerType $ typeNameForElement element
@@ -97,9 +129,12 @@ nameForElement (LabelElement label) = labelName label
 nameForElement (TextFieldElement textField) = textFieldName textField
 nameForElement (ButtonElement button) = buttonName button
 nameForElement (ImageElement image) = imageViewName image
+nameForElement (CustomViewElement record) = viewRecordName record
+nameForElement (ContainerViewElement container) = containerName container
+nameForElement (ScrollViewElement scrollView) = scrollViewName scrollView
 
 selfExprForName :: String -> ObjcExpression
-selfExprForName = PropertyCall (Var "self")
+selfExprForName = PropertyCall SelfExpr
 
 selfExprForElement :: OWAViewElement -> ObjcExpression
 selfExprForElement element = selfExprForName (nameForElement element)
@@ -123,10 +158,10 @@ initMethod = ObjcMethod {
   methodBody = initBody
 }
   where superCall = MethodCall (Var "super") libInit []
-        superStatement = ExpressionStatement $ BinOp (Var "self") Assign superCall
-        ifBody = [ExpressionStatement $ MethodCall (Var "self") (UserMethod setupViewsMethodBase) [],
-                  ExpressionStatement $ MethodCall (Var "self") (UserMethod setupConstraintsMethodBase) []]
-        ifBlock = IfBlock (Var "self") ifBody
+        superStatement = AssignStatement SelfExpr superCall
+        ifBody = [ExpressionStatement $ MethodCall SelfExpr (UserMethod setupViewsMethodBase) [],
+                  ExpressionStatement $ MethodCall SelfExpr (UserMethod setupConstraintsMethodBase) []]
+        ifBlock = IfBlock SelfExpr ifBody
         returnStatement = ReturnStatement $ Var "self"
         initBody = [superStatement, ifBlock, returnStatement]
 
@@ -141,15 +176,37 @@ setupViewsMethodBase = ObjcMethod {
 
 setupViewsMethod :: [OWAViewElement] -> ObjcMethod
 setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
-  where arrayDecl = ExpressionStatement $ BinOp
-                      (VarDecl (PointerType "NSArray") "subviews")
-                      Assign
-                      (ArrayLit $ map selfExprForElement subviews)
-        setMaskStatement = ExpressionStatement $ BinOp
+  where superViewSection = setupViewsSectionForNameAndElements "" subviews
+        containers = concatMap searchSubviewsForContainers subviews
+        otherContainerSections = concatMap setupViewsSectionForElement containers
+        setupViewsBody = superViewSection ++ otherContainerSections
+
+searchSubviewsForContainers :: OWAViewElement -> [OWAViewElement]
+searchSubviewsForContainers containerElem@(ContainerViewElement container) = 
+  containerElem : concatMap searchSubviewsForContainers (containerSubviews container)
+searchSubviewsForContainers scrollElem@(ScrollViewElement scrollView) = 
+  scrollElem : searchSubviewsForContainers (ContainerViewElement $ scrollViewContainer scrollView)
+searchSubviewsForContainers _ = []
+
+setupViewsSectionForElement :: OWAViewElement -> [ObjcStatement]
+setupViewsSectionForElement (ContainerViewElement container) = setupViewsSectionForNameAndElements 
+  (containerName container) 
+  (containerSubviews container)
+setupViewsSectionForElement (ScrollViewElement scrollView) = setupViewsSectionForNameAndElements
+  (scrollViewName scrollView)
+  [ContainerViewElement $ scrollViewContainer scrollView]
+
+setupViewsSectionForNameAndElements :: String -> [OWAViewElement] -> [ObjcStatement]
+setupViewsSectionForNameAndElements name elems = [arrayDecl, forBlock]
+  where subviewsVarName = if null name then "subviews" else name ++ "Subviews"
+        superExpr = if null name then SelfExpr else selfExprForName name
+        arrayDecl = AssignStatement
+                      (VarDecl (PointerType "NSArray") subviewsVarName)
+                      (ArrayLit $ map selfExprForElement elems)
+        setMaskStatement = AssignStatement
                             (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
-                            Assign
-                            (Var "NO")
-        addSubviewStatement = ExpressionStatement $ MethodCall (Var "self")
+                            (BoolLit False) 
+        addSubviewStatement = ExpressionStatement $ MethodCall superExpr
                                 LibMethod {
                                   libNameIntro = "add",
                                   libParams = ["Subview"]
@@ -157,10 +214,9 @@ setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
                                 [Var "view"]
         forBlock = ForEachBlock
                     (VarDecl (PointerType "UIView") "view")
-                    (Var "subviews")
+                    (Var subviewsVarName)
                     [setMaskStatement, addSubviewStatement]
-        setupViewsBody = [arrayDecl, forBlock]
-
+        
 setupConstraintsMethodBase :: ObjcMethod
 setupConstraintsMethodBase = ObjcMethod {
   isStatic = False,
@@ -182,26 +238,25 @@ constraintStatements constraint = [createConstraint, addConstraint]
         secondItemExpr = case secondElementName constraint of
           Nothing -> Var "nil"
           Just "Super" -> Var "self"
-          Just secondName -> PropertyCall (Var "self") secondName
+          Just secondName -> PropertyCall SelfExpr secondName
         constraintInitialization = MethodCall 
           (Var "NSLayoutConstraint")
           LibMethod {
             libNameIntro = "constraintWith",
             libParams = ["Item", "attribute", "relatedBy", "toItem", "attribute", "multiplier", "constant"]
           }
-          [PropertyCall (Var "self") firstName,
+          [PropertyCall SelfExpr firstName,
           Var $ objcStringForAttribute (Just firstAttr),
-          Var "NSLayoutRelationEquality",
+          Var "NSLayoutRelationEqual",
           secondItemExpr,
           Var $ objcStringForAttribute (secondAttribute constraint),
           FloatLit $ multiplier constraint,
           FloatLit $ constant constraint]
-        createConstraint = ExpressionStatement $ BinOp
+        createConstraint = AssignStatement
           (VarDecl (PointerType "NSLayoutConstraint") constraintName)
-          Assign
           constraintInitialization
         addConstraint = ExpressionStatement $ MethodCall 
-          (Var "self")
+          SelfExpr
           LibMethod {
             libNameIntro = "add",
             libParams = ["Constraint"]
@@ -226,14 +281,17 @@ lazyGetterBody element = [lazyIfReturn, initialization] ++ customization ++ [rtr
   where prop = propExprForElement element
         rtrnStatement = ReturnStatement prop
         lazyIfReturn = IfBlock prop [rtrnStatement]
-        initialization = ExpressionStatement $ BinOp prop
-          Assign
+        initialization = AssignStatement 
+          prop
           (MethodCall (MethodCall (Var $ typeNameForElement element) libAlloc []) libInit [])
         customization = case element of
           (LabelElement label) -> labelCustomization label
           (TextFieldElement textField) -> textFieldCustomization textField
           (ButtonElement button) -> buttonCustomization button
           (ImageElement image) -> imageCustomization image
+          (CustomViewElement _) -> []
+          (ContainerViewElement container) -> containerCustomization container
+          (ScrollViewElement scrollView) -> scrollViewCustomization scrollView
 
 libAlloc :: CalledMethod
 libAlloc = LibMethod {
@@ -296,9 +354,8 @@ placeholderStatements textField = if noPlaceholders then [] else statements
           Nothing -> Nothing
           Just font -> Just (Var "NSFontAttributeName", libMethodForFont font)
         dictionary = DictionaryLit $ catMaybes [colorAttrPair, fontAttrPair]
-        dictAssign = ExpressionStatement $ BinOp 
+        dictAssign = AssignStatement
           (VarDecl (PointerType "NSDictionary") "placeholderAttributes")
-          Assign
           dictionary
         initExpr = MethodCall (MethodCall (Var "NSAttributedString") libAlloc [])
           LibMethod {
@@ -306,23 +363,24 @@ placeholderStatements textField = if noPlaceholders then [] else statements
             libParams = ["String", "attributes"]
           }
           [localizedStringExpr (fromMaybe "" pText), Var "placeholderAttributes"]
-        placeholderInit = ExpressionStatement $ BinOp
+        placeholderInit = AssignStatement
           (VarDecl (PointerType "NSAttributedString") "placeholder")
-          Assign
           initExpr
         propExpr = propExprForName $ textFieldName textField
         placeholderAssign = valueAssignment propExpr "attributedPlaceholder" (Var "placeholder")
         statements = [dictAssign, placeholderInit, placeholderAssign]
 
 buttonCustomization :: OWAButton -> [ObjcStatement]
-buttonCustomization button = textStatement:otherStatements
+buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssign, backgroundAssign, imageAssign]
   where propExpr = propExprForName $ buttonName button
-        textStatement = ExpressionStatement $ MethodCall propExpr
-          LibMethod {
-            libNameIntro = "set",
-            libParams = ["Title", "forState"]
-          }
-          [localizedStringExpr $ buttonText button, Var "UIControlStateNormal"]
+        textStatement = case buttonText button of
+          Nothing -> Nothing
+          Just text -> Just $ ExpressionStatement $ MethodCall propExpr
+            LibMethod {
+              libNameIntro = "set",
+              libParams = ["Title", "forState"]
+            }
+            [localizedStringExpr text, Var "UIControlStateNormal"]
         textColorAssign = case buttonTextColorName button of
           Nothing -> Nothing
           Just color -> Just $ ExpressionStatement $ MethodCall propExpr
@@ -330,19 +388,40 @@ buttonCustomization button = textStatement:otherStatements
               libNameIntro = "set",
               libParams = ["TitleColor", "forState"]
             }
-            [libMethodForColor color, Var "UIControlStateNormal"];
+            [libMethodForColor color, Var "UIControlStateNormal"]
         fontAssign = case buttonFontName button of
           Nothing -> Nothing
           Just font -> Just $ valueAssignment (PropertyCall propExpr "titleLabel") "font" (libMethodForFont font)
         backgroundAssign = case buttonBackgroundColorName button of
           Nothing -> Nothing
           Just bColor -> Just $ valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)
-        otherStatements = catMaybes [textColorAssign, fontAssign, backgroundAssign]
+        imageAssign = case buttonBackgroundImageSourceName button of
+          Nothing -> Nothing
+          Just img -> Just $ ExpressionStatement $ MethodCall propExpr
+            LibMethod {
+              libNameIntro = "set",
+              libParams = ["Image", "forState"]
+            }
+            [libMethodForImage img, Var "UIControlStateNormal"]
 
 imageCustomization :: OWAImageView -> [ObjcStatement]
 imageCustomization image = [imageSourceAssign]
   where propExpr = propExprForName $ imageViewName image
         imageSourceAssign = valueAssignment propExpr "image" (libMethodForImage $ imageSourceName image)
+
+containerCustomization :: OWAContainer -> [ObjcStatement]
+containerCustomization container = case containerBackgroundColorName container of
+  Nothing -> []
+  Just bColor -> [valueAssignment propExpr "backgroundColor" (libMethodForColor bColor)]
+    where propExpr = propExprForName $ containerName container
+
+scrollViewCustomization :: OWAScrollView -> [ObjcStatement]
+scrollViewCustomization scrollView = case scrollViewBackgroundColorName scrollView of
+  Just color -> [valueAssignment 
+    (propExprForName $ scrollViewName scrollView) 
+    "backgroundColor" 
+    (libMethodForColor color)]
+  _ -> []
 
 libMethodForColor :: String -> ObjcExpression
 libMethodForColor colorName = MethodCall
@@ -372,7 +451,5 @@ libMethodForImage imageSrc = MethodCall
   [StringLit imageSrc]
 
 valueAssignment :: ObjcExpression -> String -> ObjcExpression -> ObjcStatement
-valueAssignment exp1 valueName newValue = ExpressionStatement $ BinOp
+valueAssignment exp1 valueName = AssignStatement
   (PropertyCall exp1 valueName) 
-  Assign
-  newValue

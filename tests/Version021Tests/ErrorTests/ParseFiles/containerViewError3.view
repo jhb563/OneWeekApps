@@ -1,0 +1,7 @@
+View myView
+  Elements
+    ContainerView myContainer
+      Text "Hello"
+      Elements
+        Button myButton
+          Text "Hi"

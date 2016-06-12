@@ -1,0 +1,33 @@
+View myView
+  Type IGAScrollView2
+  Elements
+    ScrollView scrollView
+      ScrollDirection Horizontal
+      Elements
+        Label nextLabel
+          Text "Next"
+          Layout
+            AlignTop 20
+            AlignLeft 100
+            Height 30
+            Width 100
+        Button nextButton
+          Text "Next"
+          Layout
+            AlignLeft 150
+            AlignRight -150
+            Below nextLabel 30
+            Height 30
+            Width 300
+      Layout
+        AlignTop 40
+        AlignLeft 20
+        AlignRight -20
+        Above myImage 30
+        Height 200
+    Image myImage
+      ImageSrc "file1.png"
+      Layout
+        CenterX
+        Width 80
+        Height 80
