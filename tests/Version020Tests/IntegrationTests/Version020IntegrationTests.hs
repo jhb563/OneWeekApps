@@ -3,9 +3,7 @@
 -- which will run the One Week Apps program, searching for
 -- an app directory, finding relevant files, and producing
 -- the correct output files. We will test this on the cases
--- included in Version 0.1.5. These include localized string
--- creation, commenting of files, indentation flexibility,
--- parse failures, and the app.info files.
+-- included in Version 0.2.0, namely creation of views files.
 
 module Version020IntegrationTests (
   runV020IntegrationTests

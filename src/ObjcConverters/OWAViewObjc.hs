@@ -73,7 +73,7 @@ importsSection view appPrefix = ImportsSection $
           classes = classesToImportForView view
 
 classesToImportForView :: OWAView -> [String]
-classesToImportForView view = Set.toList $ foldl tailFunc Set.empty (subviews view)
+classesToImportForView view = Set.toList $ foldl tailFunc Set.empty (allChildViews view)
   where tailFunc set v = case v of
                       (CustomViewElement viewRecord) -> Set.insert (viewRecordType viewRecord) set
                       _ -> set

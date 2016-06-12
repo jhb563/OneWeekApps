@@ -150,7 +150,8 @@ test-suite Version021Tests
                   tests/Version021Tests/CustomViewTests,
                   tests/Version021Tests/ContainerViewTests,
                   tests/Version021Tests/ErrorTests,
-                  tests/Version021Tests/ImageBackgroundTests
+                  tests/Version021Tests/ImageBackgroundTests,
+                  tests/Version021Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
