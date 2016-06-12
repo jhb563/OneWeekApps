@@ -1,0 +1,122 @@
+//
+// MSAFirstView.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "MSAFirstView.h"
+#import "UIColor+IGAColors.h"
+#import "UIFont+IGAFonts.h"
+
+@interface MSAFirstView ()
+
+@property (nonatomic, strong) UIView* myContainer;
+@property (nonatomic, strong) UILabel* firstLabel;
+@property (nonatomic, strong) UIButton* firstButton;
+@property (nonatomic, strong) UIImageView* myImage;
+
+@end
+
+@implementation MSAFirstView
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.myContainer, self.myImage];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+  NSArray myContainerSubviews = @[self.firstLabel, self.firstButton];
+  for (UIView* view in myContainerSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.myContainer addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* myContainerHeight = [NSLayoutConstraint constraintWithItem:self.myContainer attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:300.0];
+  [self addConstraint:myContainerHeight];
+  NSLayoutConstraint* myContainerWidth = [NSLayoutConstraint constraintWithItem:self.myContainer attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:300.0];
+  [self addConstraint:myContainerWidth];
+  NSLayoutConstraint* myContainerTop = [NSLayoutConstraint constraintWithItem:self.myContainer attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:myContainerTop];
+  NSLayoutConstraint* myContainerLeft = [NSLayoutConstraint constraintWithItem:self.myContainer attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:myContainerLeft];
+  NSLayoutConstraint* firstLabelTop = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.myContainer attribute:NSLayoutAttributeTop multiplier:1.0 constant:40.0];
+  [self addConstraint:firstLabelTop];
+  NSLayoutConstraint* firstLabelLeft = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.myContainer attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0];
+  [self addConstraint:firstLabelLeft];
+  NSLayoutConstraint* firstLabelHeight = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:firstLabelHeight];
+  NSLayoutConstraint* firstLabelWidth = [NSLayoutConstraint constraintWithItem:self.firstLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:100.0];
+  [self addConstraint:firstLabelWidth];
+  NSLayoutConstraint* firstButtonTop = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeBottom multiplier:1.0 constant:20.0];
+  [self addConstraint:firstButtonTop];
+  NSLayoutConstraint* firstButtonLeft = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:firstButtonLeft];
+  NSLayoutConstraint* firstButtonHeight = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:40.0];
+  [self addConstraint:firstButtonHeight];
+  NSLayoutConstraint* firstButtonWidth = [NSLayoutConstraint constraintWithItem:self.firstButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:150.0];
+  [self addConstraint:firstButtonWidth];
+  NSLayoutConstraint* myImageTop = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.myContainer attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageTop];
+  NSLayoutConstraint* myImageLeft = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.myContainer attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:myImageLeft];
+  NSLayoutConstraint* myImageHeight = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
+  [self addConstraint:myImageHeight];
+  NSLayoutConstraint* myImageWidth = [NSLayoutConstraint constraintWithItem:self.myImage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:80.0];
+  [self addConstraint:myImageWidth];
+}
+
+#pragma mark - Lazy Getters
+
+- (UIView*)myContainer {
+  if (_myContainer) {
+    return _myContainer;
+  }
+  _myContainer = [[UIView alloc] init];
+  return _myContainer;
+}
+
+- (UILabel*)firstLabel {
+  if (_firstLabel) {
+    return _firstLabel;
+  }
+  _firstLabel = [[UILabel alloc] init];
+  _firstLabel.text = NSLocalizedString(@"Hi", nil);
+  return _firstLabel;
+}
+
+- (UIButton*)firstButton {
+  if (_firstButton) {
+    return _firstButton;
+  }
+  _firstButton = [[UIButton alloc] init];
+  [_firstButton setImage:[UIImage imageNamed:@"file1.png" forState:UIControlStateNormal];
+  return _firstButton;
+}
+
+- (UIImageView*)myImage {
+  if (_myImage) {
+    return _myImage;
+  }
+  _myImage = [[UIImageView alloc] init];
+  _myImage.image = [UIImage imageNamed:@"file2.png"];
+  return _myImage;
+}
+
+@end

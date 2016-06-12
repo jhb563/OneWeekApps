@@ -1,0 +1,126 @@
+//
+// MSASecondView.m
+// ViewIntegrationApp
+//
+// Created By James Bowen 3/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "MSASecondView.h"
+#import "UIColor+IGAColors.h"
+#import "UIFont+IGAFonts.h"
+#import "MSAFirstView.h"
+
+@interface MSASecondView ()
+
+@property (nonatomic, strong) UIScrollView* scrollView;
+@property (nonatomic, strong) UIView* scrollViewContainerView;
+@property (nonatomic, strong) MSAFirstView* firstView;
+@property (nonatomic, strong) UILabel* myLabel;
+
+@end
+
+@implementation MSASecondView
+
+#pragma mark - Lifecycle
+
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    [self setupViews];
+    [self setupConstraints];
+  }
+  return self;
+}
+
+#pragma mark - Setup
+
+- (void)setupViews {
+  NSArray* subviews = @[self.scrollView];
+  for (UIView* view in subviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:view];
+  }
+  NSArray scrollViewSubviews = @[self.scrollViewContainerView];
+  for (UIView* view in scrollViewSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:view];
+  }
+  NSArray* scrollViewContainerViewSubviews = @[self.firstView, self.myLabel];
+  for (UIView* view in scrollViewContainerViewSubviews) {
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollViewContainerView addSubview:view];
+  }
+}
+
+- (void)setupConstraints {
+  NSLayoutConstraint* scrollViewTop = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewTop];
+  NSLayoutConstraint* scrollViewLeft = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewLeft];
+  NSLayoutConstraint* scrollViewRight = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewRight];
+  NSLayoutConstraint* scrollViewBottom = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewBottom];
+  NSLayoutConstraint* scrollViewContainerViewTop = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewContainerViewTop];
+  NSLayoutConstraint* scrollViewContainerViewBottom = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.scrollView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewContainerViewBottom];
+  NSLayoutConstraint* scrollViewContainerViewLeft = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewContainerViewLeft];
+  NSLayoutConstraint* scrollViewContainerViewRight = [NSLayoutConstraint constraintWithItem:self.scrollViewContainerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
+  [self addConstraint:scrollViewContainerViewRight];
+  NSLayoutConstraint* firstViewTop = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+  [self addConstraint:firstViewTop];
+  NSLayoutConstraint* firstViewCenterX = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.scrollViewContainerView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+  [self addConstraint:firstViewCenterX];
+  NSLayoutConstraint* firstViewHeight = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:firstViewHeight];
+  NSLayoutConstraint* firstViewWidth = [NSLayoutConstraint constraintWithItem:self.firstView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:101.0];
+  [self addConstraint:firstViewWidth];
+  NSLayoutConstraint* myLabelHeight = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0];
+  [self addConstraint:myLabelHeight];
+  NSLayoutConstraint* myLabelWidth = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:101.0];
+  [self addConstraint:myLabelWidth];
+  NSLayoutConstraint* myLabelTop = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10.0];
+  [self addConstraint:myLabelTop];
+  NSLayoutConstraint* myLabelLeft = [NSLayoutConstraint constraintWithItem:self.myLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.firstView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
+  [self addConstraint:myLabelLeft];
+}
+
+#pragma mark - Lazy Getters
+
+- (UIScrollView*)scrollView {
+  if (_scrollView) {
+    return _scrollView;
+  }
+  _scrollView = [[UIScrollView alloc] init];
+  return _scrollView
+}
+
+- (UIView*)scrollViewContainerView {
+  if (_scrollViewContainerView) {
+    return _scrollViewContainerView;
+  }
+  _scrollViewContainerView = [[UIView alloc] init];
+  return _scrollViewContainerView;
+}
+
+- (MSAFirstView*)firstView {
+  if (_firstView) {
+    return _firstView;
+  }
+  _firstView = [[MSAFirstView alloc] init];
+  return _firstView;
+}
+
+- (UILabel*)myLabel {
+  if (_myLabel) {
+    return _myLabel;
+  }
+  _myLabel = [[UILabel alloc] init];
+  _myLabel.text = NSLocalizedString(@"Hi", nil);
+  return _myLabel;
+}
+
+@end
