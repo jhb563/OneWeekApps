@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                OneWeekApps
-version:             0.2.1
+version:             0.2.2
 synopsis:            Haskell platform for rapidly developing mobile apps
 -- description:         
 license:             MIT
