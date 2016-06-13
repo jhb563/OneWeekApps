@@ -1,10 +1,16 @@
 machine:
   ghc:
-    version: 7.10.2
+    version: 8.0.1 
 
 dependencies:
+  pre:
+    - mkdir -p ~/.cache || true
+    - mkdir -p ~/.stack || true
+
   override:
-    - cabal update
-    - cabal install --dependencies-only --enable-tests
-    - cabal configure --enable-tests
-    - cabal build
+    - stack setup
+    - stack build
+
+test:
+  override:
+    stack test
