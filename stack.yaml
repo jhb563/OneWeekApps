@@ -5,6 +5,10 @@ packages:
 
 extra-deps: [directory-1.2.6.3
   , wl-pprint-1.2
+  , mtl-2.2.1
+  , parsec-3.1.11
+  , split-0.2.3.1
+  , text-1.2.2.1
   , hspec-2.2.3
   , process-1.4.2.0
   , hspec-core-2.2.3
