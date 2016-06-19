@@ -14,7 +14,7 @@ Prioritize fixing bugs first! If you are new to the project and/or Haskell, look
 The master branch is the latest released build. The dev branch contains work for the next version. All new features and bug fixes should be worked on in new branches off of dev. The branch name should contain your initials and the name of the feature/bug (e.g. `jb-colors-parsing`). 
 
 # Testing
-OWA uses hspec for feature testing. Only behavior of public methods should be tested. Most tests are either parsing or printing related. See STYLE_GUIDE.md for more details, both on testing and generally. 
+OWA uses hspec for feature testing. Only behavior of public methods should be tested. Most tests are either parsing or printing related. See the [style guide](STYLE_GUIDE.md) for more details, both on testing and generally. 
 
 # Submitting Pull Requests
 Once you are done implementing and testing the feature, submit a pull request to merge into dev. Before merging a PR, it must:

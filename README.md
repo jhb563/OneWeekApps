@@ -59,4 +59,4 @@ Longer term goals include generating code for more types of objects (such as Vie
 If you spot a bug, create an issue for it, being sure to add the “Bug” label. If you have an idea for a feature, you can create an issue for that as well, just use the “Feature Request (Future)” label. Depending on the request it may get tracked into the current version. Of course if you implement the feature yourself and submit a Pull Request, this is much more likely! 
 
 # Collaborating
-If you are interested in helping out by fixing bugs or adding features, please do! You do not need to be a Haskell wizard to help out! See Collaborating.md for more details. If you fix a bug, be sure to add a log of it to  the bug_fixes file for the current version. 
+If you are interested in helping out by fixing bugs or adding features, please do! You do not need to be a Haskell wizard to help out! See the [collaborating guide](Collaborating.md) for more details. If you fix a bug, be sure to add a log of it to  the bug_fixes file for the current version. 
