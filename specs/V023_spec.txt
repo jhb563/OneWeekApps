@@ -1,0 +1,76 @@
+////////////////////////////////////////////////////////////////////////////////
+////////// USER EXPERIENCE AND XCODE INTEGRATION ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* The OneWeekApps should now respond to two different commands:
+
+- owa new
+This command should begin a new project by using a CLI to get app info
+information from the user. It should then create the app directory as a child
+of the current directory. It should also create a new folder with the name
+of the app as given by the user, where the XCode project should go. It should
+also create the necessary bare bones starter files for the XCode project. 
+
+- owa gen(erate)
+This command should effectively be the functionality which currently exists
+with the OneWeekApps executable. It should find the app directory, locate files
+to parse (depending on the arguments), and output the code to the directory for
+the XCode project. For this version, generated code for the files need not be
+automatically added to the XCode project. 
+
+Options include the current -v(erbose) and -s(ilent) options, as well as the
+following, which each indicate which files to parse and which language to use.
+--swift (generate swift code instead of default Objective C)
+--colors (generate code only for colors files)
+--fonts
+--alerts
+--errors
+--strings
+--views
+
+Multiple options should allow multiple types of file generate. For instance,
+owa gen --colors --fonts
+should generate both colors AND fonts code. 
+
+* Lazy Code Generation
+
+Before generating code from particular OWA files, we should first verify that
+the files have been updated since the last run of owa gen. For instance, if
+there are no .colors files which have been updated since the last generate, then
+we should NOT remake UIColor+XXXColors.h/m. However, if a single colors file has
+been updated, then the output file should be remade. 
+
+This will require storing a file with meta data about the time of the last 
+build. 
+
+////////////////////////////////////////////////////////////////////////////////
+////////// SWIFT FUNCTIONALITY /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* All Objective C code generation features present in Version 0.2.2 should have
+parallel Swift code generation. 
+
+This will consist of four steps for each feature:
+
+1. Create test swift code files to parallel the current Objective C test files.
+2. Create appropriate Swift abstract syntax data structures to represent the 
+generated Swift code (if necessary). 
+3. Write code for a SwiftConverter, to convert the element ADT (e.g. OWAColor) 
+into Swift abstract syntax.
+4. Write code for pretty printing the new Swift abstract syntax elements.
+
+A checklist of elements to create is included for completeness.
+
+* Colors
+* Fonts
+* Alerts
+* Errors
+* Localized Stings
+* Views
+- Label Elements
+- Button Elements
+- Textfield Elements
+- Imageview Elements
+- UIView sub-containers
+- UIScrollView sub-containers
+- Embedded custom views
