@@ -23,7 +23,7 @@ Once you are done implementing and testing the feature, submit a pull request to
 3. Have a successful build on CircleCI
 4. Pass hlint
 
-If the PR is for a Bug Fix, it should include an entry in the bug_fixes file for the current version. If it is a feature request, it should correspond to an existing entry in the spec file for the current version. 
+If the PR is for a Bug Fix, it should include an entry in the bug_fixes file for the current version. If it is a feature, it should correspond to an existing entry in the spec file for the current version. 
 
 # Don't be shy!
 Haskell is hard. I am by no means an expert and I don’t expect you to be. If you want to contribute to this project as one of your first steps into the larger world of Haskell, that’s great! I will try to mark certain tickets with the “Easy” flag if I think they’d be good for someone just getting into the project. 
