@@ -48,7 +48,7 @@ build.
 ////////////////////////////////////////////////////////////////////////////////
 
 * All Objective C code generation features present in Version 0.2.2 should have
-parallel Swift code generation. 
+parallel Swift code generation.
 
 This will consist of four steps for each feature:
 
@@ -65,7 +65,6 @@ A checklist of elements to create is included for completeness.
 * Fonts
 * Alerts
 * Errors
-* Localized Stings
 * Views
 - Label Elements
 - Button Elements
@@ -74,3 +73,6 @@ A checklist of elements to create is included for completeness.
 - UIView sub-containers
 - UIScrollView sub-containers
 - Embedded custom views
+
+Note that we do NOT need to generate any new code for Localized Strings. Swift
+and Objective C can use the same format there.
