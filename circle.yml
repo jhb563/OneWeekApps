@@ -16,3 +16,9 @@ dependencies:
 test:
   override:
     - stack test
+
+deployment:
+  ftp:
+    branch: [dev]
+    commands:
+      - ./scripts/ftp_deploy.sh

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ftp -n $FTP_ADDR <<END_SCRIPT
+quote USER $FTP_USER
+quote PASS $FTP_PASSWORD
+put $FTP_INPUT_FILE $FTP_OUTPUT_FILE
+END_SCRIPT
+exit 0
