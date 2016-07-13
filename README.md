@@ -1,6 +1,14 @@
 # One Week Apps
 One Week Apps is a template language for mobile development. The goal is to generate large amounts of tedious boilerplate code with clean and easy description of particular elements of a mobile application. 
 
+# Website
+
+[Check it out!](https://www.oneweekapps.com)
+
+# Documentation
+
+More detailed information can be found [here.](https://www.oneweekapps.com/documentation)
+
 # How does it work?
 To generate code using OWA, you must first have a directory called “app”, and run the OWA executable from within or above this directory. OWA will then search the directory for files with specific extensions, such as .colors, .font, or .view. Depending on the extension, OWA will parse the file as a particular kind of element or collection of elements, and generate Objective C code in the app directory corresponding to those elements. You can then add the generated code into an XCode project to use it. 
 
