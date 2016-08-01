@@ -43,9 +43,14 @@ type OWAReaderT = ReaderT OutputMode IO
 -- for a directory to search from, and generates all files.
 runOWA :: FilePath -> [String] -> IO ()
 runOWA filePath args = do
-  let outputMode = outputModeFromArgs args
-  runReaderT (runOWAReader filePath) outputMode
-
+  case args of
+    [] -> putStrLn "owa: No command entered!"
+    _ -> if head args == "new"
+      then putStrLn "Creating new OWA project!"
+      else if head args == "gen" || head args == "generate"
+        then runReaderT (runOWAReader filePath) (outputModeFromArgs $ tail args)
+        else putStrLn  $ "owa: unrecognized command \"" ++ head args ++ "\"!"
+      
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
   printIfNotSilent ("Searching For app directory from " ++ filePath)
