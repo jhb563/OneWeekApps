@@ -42,15 +42,15 @@ type OWAReaderT = ReaderT OutputMode IO
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
 runOWA :: FilePath -> [String] -> IO ()
-runOWA filePath args = do
-  case args of
-    [] -> putStrLn "owa: No command entered!"
-    _ -> if head args == "new"
-      then putStrLn "Creating new OWA project!"
-      else if head args == "gen" || head args == "generate"
-        then runReaderT (runOWAReader filePath) (outputModeFromArgs $ tail args)
-        else putStrLn  $ "owa: unrecognized command \"" ++ head args ++ "\"!"
-      
+runOWA filePath args = if null args
+  then putStrLn "owa: No command entered!"
+  else case head args of
+    "new" -> putStrLn "Creating new OWA project!"
+    "gen" -> genFiles
+    "generate" -> genFiles
+    unrecognizedCmd -> putStrLn  $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
+    where genFiles = runReaderT (runOWAReader filePath) (outputModeFromArgs $ tail args)
+
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
   printIfNotSilent ("Searching For app directory from " ++ filePath)
