@@ -17,7 +17,7 @@ import Test.Hspec
 runIntegrationTests :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()
 runIntegrationTests testDirectory specs additionalFiles = hspec $
   beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
-  beforeAll_ (runOWA testDirectory [])
+  beforeAll_ (runOWA testDirectory ["generate"])
   . afterAll_ (removeProducedFiles testDirectory additionalFiles) $
     mapM_ (\specFun -> specFun testDirectory) specs
 
