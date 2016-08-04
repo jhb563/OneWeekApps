@@ -1,0 +1,21 @@
+Color view1LabelColor
+  Hex 0x404040
+
+Color view1TextFieldColor
+  Hex 0x000000
+
+Color placeholderTextFieldColor
+  Hex 0x8F8F8F
+
+Color view1ButtonColor
+  Hex 0xFF0000
+
+Color view2TextColor
+  Hex 0x0080FF
+
+Color view3TextColor
+  Hex 0xFF00FF
+
+Color elementBackgroundColor
+  Hex 0x0000FF
+  Alpha 0.5
