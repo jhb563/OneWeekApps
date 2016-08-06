@@ -13,6 +13,7 @@ module OWALib (
 import Control.Monad
 import Control.Monad.Reader
 import Data.Either
+import Data.Time.Clock
 import OWAAlert
 import OWAAlertObjc
 import OWAAlertParser
@@ -36,8 +37,15 @@ import OWAStringsObjc
 import OWAView
 import OWAViewObjc
 import OWAViewParser
+import System.Directory
+import System.IO
 
-type OWAReaderT = ReaderT OutputMode IO
+type OWAReaderT = ReaderT OWAReaderInfo IO
+
+data OWAReaderInfo = OWAReaderInfo {
+  outputMode  :: OutputMode,
+  lastGenTime :: Maybe UTCTime
+}
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -49,7 +57,11 @@ runOWA filePath args = if null args
     "gen" -> genFiles
     "generate" -> genFiles
     unrecognizedCmd -> putStrLn  $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
-    where genFiles = runReaderT (runOWAReader filePath) (outputModeFromArgs $ tail args)
+    where initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing
+          genFiles = do
+                       lastGenTime <- lastCodeGenerationTime filePath
+                       let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
+                       runReaderT (runOWAReader filePath) newReaderInfo
 
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
@@ -69,6 +81,36 @@ runOWAReader filePath = do
           produceErrorsFiles appDirectory appInfo
           produceStringsFile appDirectory appInfo
           produceViewsFiles appDirectory appInfo
+          liftIO $ modifyLastGenTime filePath
+
+---------------------------------------------------------------------------
+------------------------LAZY CODE TIME-------------------------------------
+---------------------------------------------------------------------------
+
+lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime)
+lastCodeGenerationTime filePath = do
+  let lastGenFilePath = filePath ++ lastGenFileExtension
+  lastGenExists <- doesFileExist lastGenFilePath
+  if lastGenExists
+    then do
+      lastModified <- getModificationTime lastGenFilePath
+      return $ Just lastModified
+    else return Nothing
+
+modifyLastGenTime :: FilePath -> IO ()
+modifyLastGenTime filePath = do
+  let lastGenFilePath = (filePath ++ lastGenFileExtension) 
+  lastModFileExists <- doesFileExist lastGenFilePath
+  if lastModFileExists
+    then do
+      currentTime <- getCurrentTime
+      setModificationTime lastGenFilePath currentTime
+    else do
+      handle <- openFile lastGenFilePath WriteMode
+      hClose handle
+  
+lastGenFileExtension :: FilePath
+lastGenFileExtension = "/.owa_last_gen"
 
 ---------------------------------------------------------------------------
 ------------------------PROGRAM STATUS PRINTING----------------------------
@@ -86,12 +128,14 @@ outputModeFromArgs args
 
 printIfNotSilent :: String -> OWAReaderT ()
 printIfNotSilent str = do
-  mode <- ask
+  info <- ask
+  let mode = outputMode info
   Control.Monad.when (mode /= Silent) $ liftIO $ putStrLn str
 
 printIfVerbose :: String -> OWAReaderT ()
 printIfVerbose str = do
-  mode <- ask
+  info <- ask
+  let mode = outputMode info
   Control.Monad.when (mode == Verbose) $ liftIO $ putStrLn str
 
 printErrors :: [OWAParseError] -> OWAReaderT ()
