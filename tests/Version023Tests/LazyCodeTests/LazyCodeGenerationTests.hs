@@ -197,10 +197,13 @@ runATest currentDirectory = do
 
 removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles testDirectory = removeFiles $ 
-  map (testDirectory ++) producedFiles
+  map (testDirectory ++) (lastGenFile : producedFiles)
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/app"
+
+lastGenFile :: FilePath
+lastGenFile = "/.owa_last_gen"
 
 producedFiles :: [FilePath]
 producedFiles = [producedColorHeader, producedColorM,
