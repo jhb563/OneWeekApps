@@ -1,0 +1,5 @@
+
+Error myError12
+  Domain OWAFirstErrors
+  Code NetworkingError2
+  Description "DESCRIPTION_KEY"

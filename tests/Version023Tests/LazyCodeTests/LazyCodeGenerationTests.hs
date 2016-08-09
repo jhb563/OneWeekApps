@@ -11,6 +11,7 @@ module LazyCodeGenerationTests (
   runLazyCodeGenerationTests
 ) where
 
+import Control.Monad
 import qualified Data.Map as Map
 import Data.Time.Clock
 import OWALib
@@ -27,11 +28,11 @@ runLazyCodeGenerationTests currentDirectory = do
   let testDirectory = currentDirectory ++ appDirectoryExtension
   resultBools <- createTestResults testDirectory
   let [noImmediateChanges, allChangedAfterAppInfo,
-        alertsUnchanged, alertsChangedCorrectly,
-        colorsUnchanged, colorsChangedCorrectly,
-        errorsUnchanged, errorsChangedCorrectly,
-        fontsUnchanged, fontsChangedCorrectly,
-        stringsUnchanged, stringsChangedCorrectly,
+        alertsUnchanged, alertsChangedCorrectly1, alertsChangedCorrectly2,
+        colorsUnchanged, colorsChangedCorrectly1, colorsChangedCorrectly2,
+        errorsUnchanged, errorsChangedCorrectly1, errorsChangedCorrectly2,
+        fontsUnchanged, fontsChangedCorrectly1, fontsChangedCorrectly2,
+        stringsUnchanged, stringsChangedCorrectly1, stringsChangedCorrectly2,
         firstViewUnchanged, firstViewChangedCorrectly,
         secondViewUnchanged, secondViewChangedCorrectly,
         thirdViewUnchanged, thirdViewChangedCorrectly] = resultBools
@@ -39,11 +40,11 @@ runLazyCodeGenerationTests currentDirectory = do
     afterAll_ (removeProducedFiles testDirectory) $ do
       runImmediateChangeTest noImmediateChanges
       runAppInfoChangeTest allChangedAfterAppInfo
-      runAlertChangeTest alertsUnchanged alertsChangedCorrectly
-      runColorChangeTest colorsUnchanged colorsChangedCorrectly
-      runErrorChangeTest errorsUnchanged errorsChangedCorrectly
-      runFontChangeTest fontsUnchanged fontsChangedCorrectly
-      runStringsChangeTest stringsUnchanged stringsChangedCorrectly
+      runAlertChangeTest alertsUnchanged alertsChangedCorrectly1 alertsChangedCorrectly2
+      runColorChangeTest colorsUnchanged colorsChangedCorrectly1 colorsChangedCorrectly2
+      runErrorChangeTest errorsUnchanged errorsChangedCorrectly1 errorsChangedCorrectly2
+      runFontChangeTest fontsUnchanged fontsChangedCorrectly1 fontsChangedCorrectly2
+      runStringsChangeTest stringsUnchanged stringsChangedCorrectly1 stringsChangedCorrectly2
       runFirstViewChangeTest firstViewUnchanged firstViewChangedCorrectly
       runSecondViewChangeTest secondViewUnchanged secondViewChangedCorrectly
       runThirdViewChangeTest thirdViewUnchanged thirdViewChangedCorrectly
@@ -60,50 +61,65 @@ runAppInfoChangeTest changedAfterAppInfo = do
     it "Should have changed all the files" $
       changedAfterAppInfo `shouldBe` True
 
-runAlertChangeTest :: Bool -> Bool -> Spec
-runAlertChangeTest unchangedBefore changedAfterModification = do
+runAlertChangeTest :: Bool -> Bool -> Bool -> Spec
+runAlertChangeTest unchangedBefore changedAfterModification1 changedAfterModification2 = do
   describe "Test for Alerts changing after modifying .alerts file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
 
     it "Should have changed after modifying .alerts file" $
-      changedAfterModification `shouldBe` True
+      changedAfterModification1 `shouldBe` True
 
-runColorChangeTest :: Bool -> Bool -> Spec
-runColorChangeTest unchangedBefore changedAfterModification = do
+    it "Should have changed after modifying different .alerts file" $
+      changedAfterModification2 `shouldBe` True
+
+runColorChangeTest :: Bool -> Bool -> Bool -> Spec
+runColorChangeTest unchangedBefore changedAfterModification1 changedAfterModification2 = do
   describe "Test for Colors changing after modifying .colors file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
 
     it "Should have changed after modifying .colors file" $
-      changedAfterModification `shouldBe` True
+      changedAfterModification1 `shouldBe` True
 
-runErrorChangeTest :: Bool -> Bool -> Spec
-runErrorChangeTest unchangedBefore changedAfterModification = do
+    it "Should have changed after modifying different .colors file" $
+      changedAfterModification2 `shouldBe` True
+
+runErrorChangeTest :: Bool -> Bool -> Bool -> Spec
+runErrorChangeTest unchangedBefore changedAfterModification1 changedAfterModification2 = do
   describe "Test for Errors changing after modifying .errors file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
 
     it "Should have changed after modifying .errors file" $
-      changedAfterModification `shouldBe` True
+      changedAfterModification1 `shouldBe` True
 
-runFontChangeTest :: Bool -> Bool -> Spec
-runFontChangeTest unchangedBefore changedAfterModification = do
+    it "Should have changed after modifying different .errors file" $
+      changedAfterModification2 `shouldBe` True
+
+runFontChangeTest :: Bool -> Bool -> Bool -> Spec
+runFontChangeTest unchangedBefore changedAfterModification1 changedAfterModification2 = do
   describe "Test for Fonts changing after modifying .fonts file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
 
     it "Should have changed after modifying .fonts file" $
-      changedAfterModification `shouldBe` True
+      changedAfterModification1 `shouldBe` True
 
-runStringsChangeTest :: Bool -> Bool -> Spec
-runStringsChangeTest unchangedBefore changedAfterModification = do
+    it "Should have changed after modifying different .fonts file" $
+      changedAfterModification2 `shouldBe` True
+
+runStringsChangeTest :: Bool -> Bool -> Bool -> Spec
+runStringsChangeTest unchangedBefore changedAfterModification1 changedAfterModification2 = do
   describe "Test for Strings changing after modifying .strings file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
 
     it "Should have changed after modifying .strings file" $
-      changedAfterModification `shouldBe` True
+      changedAfterModification1 `shouldBe` True
+
+    it "Should have changed after modifying different .strings file" $
+      changedAfterModification2 `shouldBe` True
 
 runFirstViewChangeTest :: Bool -> Bool -> Spec
 runFirstViewChangeTest unchangedBefore changedAfterModification = do
@@ -160,16 +176,21 @@ checkAllChanged oldMap newMap = all id (map checkDifferent $ Map.keys oldMap)
 timeChangesAfterModification
   :: FilePath -- The path to run generate on
   -> FileTimeMap -- The map containing the files and times
-  -> (FilePath, [FilePath]) -- The change pair
+  -> ([FilePath], [FilePath]) -- The change set
   -> IO [Bool]
-timeChangesAfterModification testDirectory fileTimeMap (fileToChange, producedFiles) = do
-  initialResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
-  nanosleep 1000000000
-  currentTime <- getCurrentTime
-  setModificationTime fileToChange currentTime
-  runOWA testDirectory ["generate"]
-  finalResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
-  return [(all id initialResults), (not $ any id finalResults)]
+timeChangesAfterModification testDirectory fileTimeMap (filesToChange, producedFiles) = do
+  -- First detect that none of the files have been changed by any other generate runs
+  noChangeResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
+  -- Now for each "change file" (first part of the tuple), change its modification time,
+  -- and verify that the produced file does get generated again after this change.
+  allChangeResults <- forM filesToChange $ \file -> do
+    nanosleep 1000000000
+    currentTime <- getCurrentTime
+    setModificationTime file currentTime
+    runOWA testDirectory ["generate"]
+    finalResults <- mapM (fileHasBeenModifiedSince currentTime) producedFiles
+    return $ not (any id finalResults)
+  return $ (all id noChangeResults) : allChangeResults
 
 fileTimeMatches :: FileTimeMap -> FilePath -> IO Bool
 fileTimeMatches map_ file = do
@@ -177,6 +198,11 @@ fileTimeMatches map_ file = do
   case Map.lookup file map_ of
     Nothing -> return False
     Just time -> return $ trueModTime == time
+
+fileHasBeenModifiedSince :: UTCTime -> FilePath -> IO Bool
+fileHasBeenModifiedSince time file = do
+  modTime <- getModificationTime file
+  return $ time <= modTime
 
 createFileTimeMap :: [FilePath] -> IO FileTimeMap
 createFileTimeMap files = do
@@ -263,15 +289,16 @@ producedView3M = "/VIAThirdView.m"
 appInfoFile :: FilePath
 appInfoFile = "/app.info"
 
-changePairs :: [(FilePath, [FilePath])]
-changePairs = [("/viaalerts.alerts", [producedAlertHeader, producedAlertM]),
-  ("/viacolors.colors", [producedColorHeader, producedColorM]),
-  ("/viaerrors.errors", [producedErrorHeader, producedErrorM]),
-  ("/viafonts.fonts", [producedFontHeader, producedFontM]),
-  ("/views/VIAFirstView.view", [producedView1Header, producedView1M]),
-  ("/views/VIASecondView.view", [producedView2Header, producedView2M]),
-  ("/views/thirdview.view", [producedView3Header, producedView3M]),
-  ("/viastrings.strings", [producedStrings])]
+changePairs :: [([FilePath], [FilePath])]
+changePairs = [(["/viaalerts.alerts", "/viaalerts2.alerts"], [producedAlertHeader, producedAlertM]),
+  (["/viacolors.colors", "/viacolors2.colors"], [producedColorHeader, producedColorM]),
+  (["/viaerrors.errors", "/viaerrors2.errors"], [producedErrorHeader, producedErrorM]),
+  (["/viafonts.fonts", "/viafonts2.fonts"], [producedFontHeader, producedFontM]),
+  (["/views/VIAFirstView.view"], [producedView1Header, producedView1M]),
+  (["/views/VIASecondView.view"], [producedView2Header, producedView2M]),
+  (["/views/thirdview.view"], [producedView3Header, producedView3M]),
+  (["/viastrings.strings", "/viastrings2.strings"], [producedStrings])]
 
-modifyPair :: FilePath -> (FilePath, [FilePath]) -> (FilePath, [FilePath])
-modifyPair base (srcFile, prodFiles) = (base ++ srcFile, map (base ++) prodFiles)
+modifyPair :: FilePath -> ([FilePath], [FilePath]) -> ([FilePath], [FilePath])
+modifyPair base (srcFile, prodFiles) = (map addBase srcFile, map addBase prodFiles)
+  where addBase = (base ++)

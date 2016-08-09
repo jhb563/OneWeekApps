@@ -1,0 +1,4 @@
+Alert escapedQuotes2
+  Title "KEY_TITLE"
+  Message "This message has \"quotes\" in it"
+  NeutralButton "\"Hi\""
