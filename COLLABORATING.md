@@ -1,7 +1,7 @@
 # Collaborating with OWA
 
 ## Instructions
-1. Email me at james.oneweekapps@gmail.com and say hi! Include your Github username so I can add you as a collaborator.
+1. Email me at james@oneweekapps.com and say hi! Include your Github username so I can add you as a collaborator.
 2. Install [GHC Platform](https://www.haskell.org/platform/) and [Haskell stack](https://docs.haskellstack.org/en/stable/README/)
 3. Install [hspec](http://hspec.github.io/) and [hlint](https://hackage.haskell.org/package/hlint)
 4. Clone the repo
@@ -29,7 +29,7 @@ Once you are done implementing and testing the feature, submit a pull request to
  3. Have a successful build on CircleCI
  4. Pass [hlint](https://hackage.haskell.org/package/hlint)
 
-If the PR is for a Bug Fix, it should include an entry in the bug_fixes file for the current version. If it is a feature, it should correspond to an existing entry in the spec file for the current version. Email me with any questions: james.oneweekapps@gmail.com
+If the PR is for a Bug Fix, it should include an entry in the bug_fixes file for the current version. If it is a feature, it should correspond to an existing entry in the spec file for the current version. Email me with any questions: james@oneweekapps.com
 
 ## Don't be a Jerk!
 We must strive to help everyone become better developers rather than tear them down with disparaging comments. Mean-spirited or intentionally hurtful comments on PRs will not be tolerated! 
