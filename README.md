@@ -20,7 +20,7 @@ More detailed information can be found [here](https://www.oneweekapps.com/docume
 * You can then add the generated code into an XCode project to use it. 
 
 ### Running the Program
-1. To run the program, first install [GHC Platform](https://www.haskell.org/platform/), [Haskell stack](https://docs.haskellstack.org/en/stable/README/)
+1. To run the program, first install [GHC Platform](https://www.haskell.org/platform/) and [Haskell Stack](https://docs.haskellstack.org/en/stable/README/)
 2. In the project directory, you should be able to run `stack build`
 3. The executable should be created in .stack-work/dist/x86_64-osx/Cabal-1.24.0.0/build/OneWeekApps
 4. It can be run from within the project directory by running `stack exec OneWeekApps`
