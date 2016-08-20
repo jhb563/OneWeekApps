@@ -191,7 +191,7 @@ timeChangesAfterModification testDirectory fileTimeMap (filesToChange, producedF
     currentTime <- getCurrentTime
     setModificationTime file currentTime
     runOWA testDirectory ["generate"]
-    finalResults <- sequence $ map (fileHasBeenModifiedSince currentTime) producedFiles
+    finalResults <- mapM (fileHasBeenModifiedSince currentTime) producedFiles
     return $ not (any id finalResults)) filesToChange
   return $ (all id noChangeResults) : allChangeResults
 
