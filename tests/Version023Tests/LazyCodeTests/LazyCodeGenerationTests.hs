@@ -24,7 +24,7 @@ import Test.Hspec
 type FileTimeMap = Map.Map FilePath UTCTime
 
 sleepTime :: Integer
-sleepTime = 1000000000
+sleepTime = 2000000000
 
 runLazyCodeGenerationTests :: FilePath -> IO ()
 runLazyCodeGenerationTests currentDirectory = do
@@ -186,13 +186,13 @@ timeChangesAfterModification testDirectory fileTimeMap (filesToChange, producedF
   noChangeResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
   -- Now for each "change file" (first part of the tuple), change its modification time,
   -- and verify that the produced file does get generated again after this change.
-  allChangeResults <- sequence $ map (\file -> do
+  allChangeResults <- forM filesToChange $ \file -> do
     nanosleep sleepTime
     currentTime <- getCurrentTime
     setModificationTime file currentTime
     runOWA testDirectory ["generate"]
     finalResults <- mapM (fileHasBeenModifiedSince currentTime) producedFiles
-    return $ not (any id finalResults)) filesToChange
+    return $ not (any id finalResults)
   return $ (all id noChangeResults) : allChangeResults
 
 fileTimeMatches :: FileTimeMap -> FilePath -> IO Bool
