@@ -1,0 +1,42 @@
+// This view has one of each type of element
+View firstView
+  Elements
+    // This is where we list the elements
+    Label view1label
+      Text "GREETING" // This must be a localized string
+      TextColor view1labelColor // This should use a color name
+      Font standardFont
+      Layout // These are the constraints we want
+        Height 50
+        Width 100
+        AlignLeft 40
+        AlignTop 40
+    TextField view1Field
+      TextColor view1TextFieldColor
+      Font standardFont
+      PlaceholderText "VIEW_1_PLACEHOLDER"
+      PlaceholderFont placeholderFont
+      PlaceholderTextColor placeholderTextFieldColor
+      Layout
+        Height 50
+        Width 200
+        AlignLeft view1label
+        Below view1label 20 // Some constraints are more complicated
+    Button view1Button
+      Text "NEXT"
+      TextColor view1ButtonColor
+      Font buttonFont
+      Layout
+        Height 50
+        Width 100
+        AlignLeft view1label
+        Below view1Field 30
+    Image view1Image
+      ImageSrc "firstImage" // Images only have one attribute
+      Layout
+        Height 80
+        Width 80
+        AlignLeft view1label
+        Below view1Button 20
+
+// We can also add some trailing comments

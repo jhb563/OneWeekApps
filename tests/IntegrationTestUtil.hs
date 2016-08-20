@@ -141,8 +141,12 @@ localizedStringFileExtension = "/app/Localizable.strings"
 localizedStringsTestExtension :: String
 localizedStringsTestExtension = "/app/Localizable.strings.test"
 
+lastGenFileExtension :: String
+lastGenFileExtension = "/.owa_last_gen"
+
 producedFiles :: [FilePath]
-producedFiles = [colorHeaderFileExtension, colorImplementationFileExtension,
+producedFiles = [lastGenFileExtension,
+  colorHeaderFileExtension, colorImplementationFileExtension,
   fontHeaderFileExtension, fontImplementationFileExtension,
   alertHeaderFileExtension, alertImplementationFileExtension,
   errorHeaderFileExtension, errorImplementationFileExtension,

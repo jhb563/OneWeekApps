@@ -13,6 +13,7 @@ module OWALib (
 import Control.Monad
 import Control.Monad.Reader
 import Data.Either
+import Data.Time.Clock
 import OWAAlert
 import OWAAlertObjc
 import OWAAlertParser
@@ -36,8 +37,15 @@ import OWAStringsObjc
 import OWAView
 import OWAViewObjc
 import OWAViewParser
+import System.Directory
+import System.IO
 
-type OWAReaderT = ReaderT OutputMode IO
+type OWAReaderT = ReaderT OWAReaderInfo IO
+
+data OWAReaderInfo = OWAReaderInfo {
+  outputMode  :: OutputMode,
+  lastGenTime :: Maybe UTCTime
+}
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -49,7 +57,11 @@ runOWA filePath args = if null args
     "gen" -> genFiles
     "generate" -> genFiles
     unrecognizedCmd -> putStrLn  $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
-    where genFiles = runReaderT (runOWAReader filePath) (outputModeFromArgs $ tail args)
+    where initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing
+          genFiles = do
+                       lastGenTime <- lastCodeGenerationTime filePath
+                       let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
+                       runReaderT (runOWAReader filePath) newReaderInfo
 
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
@@ -69,6 +81,48 @@ runOWAReader filePath = do
           produceErrorsFiles appDirectory appInfo
           produceStringsFile appDirectory appInfo
           produceViewsFiles appDirectory appInfo
+          liftIO $ modifyLastGenTime filePath
+
+---------------------------------------------------------------------------
+------------------------LAZY CODE GENERATION HANDLERS----------------------
+---------------------------------------------------------------------------
+
+lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime)
+lastCodeGenerationTime filePath = do
+  let lastGenFilePath = filePath ++ lastGenFileExtension
+  lastGenExists <- doesFileExist lastGenFilePath
+  if lastGenExists
+    then do
+      lastModified <- getModificationTime lastGenFilePath
+      return $ Just lastModified
+    else return Nothing
+
+modifyLastGenTime :: FilePath -> IO ()
+modifyLastGenTime filePath = do
+  let lastGenFilePath = (filePath ++ lastGenFileExtension) 
+  lastModFileExists <- doesFileExist lastGenFilePath
+  if lastModFileExists
+    then do
+      currentTime <- getCurrentTime
+      setModificationTime lastGenFilePath currentTime
+    else do
+      handle <- openFile lastGenFilePath WriteMode
+      hClose handle
+  
+lastGenFileExtension :: FilePath
+lastGenFileExtension = "/.owa_last_gen"
+
+appInfoFileExtension :: FilePath
+appInfoFileExtension = "/app.info"
+
+shouldRegenerateFromFiles :: [FilePath] -> OWAReaderT Bool
+shouldRegenerateFromFiles sourceFiles = do
+  info <- ask
+  let genTime = lastGenTime info
+  sourceTimes <- liftIO $ mapM getModificationTime sourceFiles
+  case genTime of
+    Nothing -> return True
+    Just time -> return $ any id (map (time <) sourceTimes)
 
 ---------------------------------------------------------------------------
 ------------------------PROGRAM STATUS PRINTING----------------------------
@@ -86,12 +140,14 @@ outputModeFromArgs args
 
 printIfNotSilent :: String -> OWAReaderT ()
 printIfNotSilent str = do
-  mode <- ask
+  info <- ask
+  let mode = outputMode info
   Control.Monad.when (mode /= Silent) $ liftIO $ putStrLn str
 
 printIfVerbose :: String -> OWAReaderT ()
 printIfVerbose str = do
-  mode <- ask
+  info <- ask
+  let mode = outputMode info
   Control.Monad.when (mode == Verbose) $ liftIO $ putStrLn str
 
 printErrors :: [OWAParseError] -> OWAReaderT ()
@@ -134,22 +190,28 @@ produceStringsFile appDirectory appInfo = do
   stringsFiles <- liftIO $ findStringsFiles appDirectory
   printIfVerbose "Found strings files at: "
   mapM_ printIfVerbose stringsFiles
-  listOfParseResults <- liftIO $ mapM parseStringsFromFile stringsFiles
-  let errors = concat $ lefts listOfParseResults
-  if not (null errors)
+  regenFiles <- shouldRegenerateFromFiles ((appDirectory ++ appInfoFileExtension) : stringsFiles)
+  if not regenFiles
     then do
-      printIfNotSilent "Encountered errors parsing strings..."
-      printErrors errors
-    else printIfVerbose "No errors parsing strings!"
-  let stringSets = rights listOfParseResults
-  printIfVerbose ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
-  let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
-  printIfVerbose "Printing strings file..."
-  let fullStringsPath = appDirectory ++ stringsFileExtension
-  liftIO $ printStructureToFile stringsFileStructure fullStringsPath
-  printIfVerbose "Printed strings to :" 
-  printIfVerbose fullStringsPath
-  printIfNotSilent "Finished generating strings!"
+      printIfNotSilent "No strings modifications since last generate!"
+      printIfNotSilent "Skipping strings files generation!"
+    else do
+      listOfParseResults <- liftIO $ mapM parseStringsFromFile stringsFiles
+      let errors = concat $ lefts listOfParseResults
+      if not (null errors)
+        then do
+          printIfNotSilent "Encountered errors parsing strings..."
+          printErrors errors
+        else printIfVerbose "No errors parsing strings!"
+      let stringSets = rights listOfParseResults
+      printIfVerbose ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
+      let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
+      printIfVerbose "Printing strings file..."
+      let fullStringsPath = appDirectory ++ stringsFileExtension
+      liftIO $ printStructureToFile stringsFileStructure fullStringsPath
+      printIfVerbose "Printed strings to :" 
+      printIfVerbose fullStringsPath
+      printIfNotSilent "Finished generating strings!"
 
 stringsFileExtension :: String
 stringsFileExtension = "/Localizable.strings"
@@ -165,26 +227,33 @@ produceColorsFiles appDirectory appInfo = do
   colorFiles <- liftIO $ findColorsFiles appDirectory
   printIfVerbose "Found colors files at: "
   mapM_ printIfVerbose colorFiles
-  listOfParseResults <- liftIO $ mapM parseColorsFromFile colorFiles
-  let errors = concat $ lefts listOfParseResults 
-  if not (null errors)
+  regenFiles <- shouldRegenerateFromFiles ((appDirectory ++ appInfoFileExtension) : colorFiles)
+  if not regenFiles
     then do
-      printIfNotSilent "Encountered errors parsing colors..."
-      printErrors errors
-    else printIfVerbose "No errors parsing colors!"
-  let colors = concat $ rights listOfParseResults
-  let prefix = appPrefix appInfo
-  printIfVerbose ("Successfully parsed " ++ show (length colors) ++ " colors")
-  let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
-  let colorMFileStructure = objcImplementationFromColors appInfo colors
-  printIfVerbose "Printing colors files..."
-  let fullHeaderPath = appDirectory ++ colorHeaderFileExtension prefix
-  let fullMPath = appDirectory ++ colorImplementationFileExtension prefix
-  liftIO $ printStructureToFile colorHeaderFileStructure fullHeaderPath
-  liftIO $ printStructureToFile colorMFileStructure fullMPath
-  printIfVerbose "Printed colors to files:"
-  printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
-  printIfNotSilent "Finished generating colors!"
+      printIfNotSilent "No colors modifications since last generate!"
+      printIfNotSilent "Skipping colors files generation!"
+      return ()
+    else do
+      listOfParseResults <- liftIO $ mapM parseColorsFromFile colorFiles
+      let errors = concat $ lefts listOfParseResults 
+      if not (null errors)
+        then do
+          printIfNotSilent "Encountered errors parsing colors..."
+          printErrors errors
+        else printIfVerbose "No errors parsing colors!"
+      let colors = concat $ rights listOfParseResults
+      let prefix = appPrefix appInfo
+      printIfVerbose ("Successfully parsed " ++ show (length colors) ++ " colors")
+      let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
+      let colorMFileStructure = objcImplementationFromColors appInfo colors
+      printIfVerbose "Printing colors files..."
+      let fullHeaderPath = appDirectory ++ colorHeaderFileExtension prefix
+      let fullMPath = appDirectory ++ colorImplementationFileExtension prefix
+      liftIO $ printStructureToFile colorHeaderFileStructure fullHeaderPath
+      liftIO $ printStructureToFile colorMFileStructure fullMPath
+      printIfVerbose "Printed colors to files:"
+      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfNotSilent "Finished generating colors!"
 
 colorHeaderFileExtension :: String -> FilePath
 colorHeaderFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.h"
@@ -203,26 +272,32 @@ produceFontsFiles appDirectory appInfo = do
   fontFiles <- liftIO $ findFontsFiles appDirectory
   printIfVerbose "Found fonts files at: "
   mapM_ printIfVerbose fontFiles
-  listOfParseResults <- liftIO $ mapM parseFontsFromFile fontFiles
-  let errors = concat $ lefts listOfParseResults 
-  if not (null errors)
+  regenFiles <- shouldRegenerateFromFiles ((appDirectory ++ appInfoFileExtension) : fontFiles)
+  if not regenFiles
     then do
-      printIfNotSilent "Encountered errors parsing fonts..."
-      printErrors errors
-    else printIfVerbose "No errors parsing fonts!"
-  let fonts = concat $ rights listOfParseResults 
-  let prefix = appPrefix appInfo
-  printIfVerbose ("Found " ++ show (length fonts) ++ " fonts")
-  let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
-  let fontMFileStructure = objcImplementationFromFonts appInfo fonts
-  printIfVerbose "Printing fonts files..."
-  let fullHeaderPath = appDirectory ++ fontHeaderFileExtension prefix
-  let fullMPath = appDirectory ++ fontImplementationFileExtension prefix
-  liftIO $ printStructureToFile fontHeaderFileStructure fullHeaderPath
-  liftIO $ printStructureToFile fontMFileStructure fullMPath
-  printIfVerbose "Printed fonts to files:"
-  printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
-  printIfNotSilent "Finished generating fonts!"
+      printIfNotSilent "No fonts modifications since last generate!"
+      printIfNotSilent "Skipping fonts files generation!"
+    else do
+      listOfParseResults <- liftIO $ mapM parseFontsFromFile fontFiles
+      let errors = concat $ lefts listOfParseResults 
+      if not (null errors)
+        then do
+          printIfNotSilent "Encountered errors parsing fonts..."
+          printErrors errors
+        else printIfVerbose "No errors parsing fonts!"
+      let fonts = concat $ rights listOfParseResults 
+      let prefix = appPrefix appInfo
+      printIfVerbose ("Found " ++ show (length fonts) ++ " fonts")
+      let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
+      let fontMFileStructure = objcImplementationFromFonts appInfo fonts
+      printIfVerbose "Printing fonts files..."
+      let fullHeaderPath = appDirectory ++ fontHeaderFileExtension prefix
+      let fullMPath = appDirectory ++ fontImplementationFileExtension prefix
+      liftIO $ printStructureToFile fontHeaderFileStructure fullHeaderPath
+      liftIO $ printStructureToFile fontMFileStructure fullMPath
+      printIfVerbose "Printed fonts to files:"
+      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfNotSilent "Finished generating fonts!"
 
 fontHeaderFileExtension :: String -> FilePath
 fontHeaderFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.h"
@@ -241,26 +316,32 @@ produceAlertsFiles appDirectory appInfo = do
   alertFiles <- liftIO $ findAlertsFiles appDirectory
   printIfVerbose "Found alerts files at: "
   mapM_ printIfVerbose alertFiles
-  listOfParseResults <- liftIO $ mapM parseAlertsFromFile alertFiles
-  let errors = concat $ lefts listOfParseResults 
-  if not (null errors)
+  regenFiles <- shouldRegenerateFromFiles ((appDirectory ++ appInfoFileExtension) : alertFiles)
+  if not regenFiles
     then do
-      printIfNotSilent "Encountered errors parsing alerts..."
-      printErrors errors
-    else printIfVerbose "No errors parsing alerts!"
-  let alerts = concat $ rights listOfParseResults
-  let prefix = appPrefix appInfo
-  printIfVerbose ("Found " ++ show (length alerts) ++ " alerts")
-  let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
-  let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
-  printIfVerbose "Printing alerts files..."
-  let fullHeaderPath = appDirectory ++ alertHeaderFileExtension prefix
-  let fullMPath = appDirectory ++ alertImplementationFileExtension prefix
-  liftIO $ printStructureToFile alertHeaderFileStructure fullHeaderPath
-  liftIO $ printStructureToFile alertMFileStructure fullMPath
-  printIfVerbose "Printed alerts to files:"
-  printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
-  printIfNotSilent "Finished generating alerts!"
+      printIfNotSilent "No alerts modifications since last generate!"
+      printIfNotSilent "Skipping alerts files generation!"
+    else do
+      listOfParseResults <- liftIO $ mapM parseAlertsFromFile alertFiles
+      let errors = concat $ lefts listOfParseResults 
+      if not (null errors)
+        then do
+          printIfNotSilent "Encountered errors parsing alerts..."
+          printErrors errors
+        else printIfVerbose "No errors parsing alerts!"
+      let alerts = concat $ rights listOfParseResults
+      let prefix = appPrefix appInfo
+      printIfVerbose ("Found " ++ show (length alerts) ++ " alerts")
+      let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
+      let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
+      printIfVerbose "Printing alerts files..."
+      let fullHeaderPath = appDirectory ++ alertHeaderFileExtension prefix
+      let fullMPath = appDirectory ++ alertImplementationFileExtension prefix
+      liftIO $ printStructureToFile alertHeaderFileStructure fullHeaderPath
+      liftIO $ printStructureToFile alertMFileStructure fullMPath
+      printIfVerbose "Printed alerts to files:"
+      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfNotSilent "Finished generating alerts!"
 
 alertHeaderFileExtension :: String -> FilePath
 alertHeaderFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.h"
@@ -279,26 +360,32 @@ produceErrorsFiles appDirectory appInfo = do
   errorFiles <- liftIO $ findErrorsFiles appDirectory
   printIfVerbose "Found errors files at: "
   mapM_ printIfVerbose errorFiles
-  listOfParseResults <- liftIO $ mapM parseErrorsFromFile errorFiles
-  let errors = concat $ lefts listOfParseResults 
-  if not (null errors)
+  regenFiles <- shouldRegenerateFromFiles ((appDirectory ++ appInfoFileExtension) : errorFiles)
+  if not regenFiles
     then do
-      printIfNotSilent "Encountered errors parsing errors..."
-      printErrors errors
-    else printIfVerbose "No errors parsing errors!"
-  let errors = concat $ rights listOfParseResults
-  let prefix = appPrefix appInfo
-  printIfVerbose ("Found " ++ show (length errors) ++ " errors")
-  let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
-  let errorMFileStructure = objcImplementationFromErrors appInfo errors
-  printIfVerbose "Printing errors files..."
-  let fullHeaderPath = appDirectory ++ errorHeaderFileExtension prefix
-  let fullMPath = appDirectory ++ errorImplementationFileExtension prefix
-  liftIO $ printStructureToFile errorHeaderFileStructure fullHeaderPath
-  liftIO $ printStructureToFile errorMFileStructure fullMPath
-  printIfVerbose "Printed errors to files:"
-  printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
-  printIfNotSilent "Finished generating errors!"
+      printIfNotSilent "No errors modifications since last generate!"
+      printIfNotSilent "Skipping errors files generation!"
+    else do
+      listOfParseResults <- liftIO $ mapM parseErrorsFromFile errorFiles
+      let errors = concat $ lefts listOfParseResults 
+      if not (null errors)
+        then do
+          printIfNotSilent "Encountered errors parsing errors..."
+          printErrors errors
+        else printIfVerbose "No errors parsing errors!"
+      let errors = concat $ rights listOfParseResults
+      let prefix = appPrefix appInfo
+      printIfVerbose ("Found " ++ show (length errors) ++ " errors")
+      let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
+      let errorMFileStructure = objcImplementationFromErrors appInfo errors
+      printIfVerbose "Printing errors files..."
+      let fullHeaderPath = appDirectory ++ errorHeaderFileExtension prefix
+      let fullMPath = appDirectory ++ errorImplementationFileExtension prefix
+      liftIO $ printStructureToFile errorHeaderFileStructure fullHeaderPath
+      liftIO $ printStructureToFile errorMFileStructure fullMPath
+      printIfVerbose "Printed errors to files:"
+      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfNotSilent "Finished generating errors!"
 
 errorHeaderFileExtension :: String -> FilePath
 errorHeaderFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.h"
@@ -317,7 +404,9 @@ produceViewsFiles appDirectory appInfo = do
   viewFiles <- liftIO $ findViewsFiles appDirectory
   printIfVerbose "Found view files at: "
   mapM_ printIfVerbose viewFiles
-  listOfParseResults <- liftIO $ mapM parseViewFromFile viewFiles
+  let appInfoFile = appDirectory ++ appInfoFileExtension
+  viewFilesToRegen <- filterM (\v -> shouldRegenerateFromFiles [appInfoFile, v]) viewFiles
+  listOfParseResults <- liftIO $ mapM parseViewFromFile viewFilesToRegen
   let errors = concat $ lefts listOfParseResults
   if not (null errors)
     then do
@@ -328,7 +417,7 @@ produceViewsFiles appDirectory appInfo = do
   printIfVerbose ("Found" ++ show (length views) ++ " views")
   if not (null views)
     then printIfVerbose "Printing views..."
-    else printIfVerbose "No views to print!"
+    else printIfVerbose "All views are up to date!"
   mapM_ (printViewFiles appDirectory appInfo) views
   printIfNotSilent "Finished generating views!"
    
