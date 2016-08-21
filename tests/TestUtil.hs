@@ -17,6 +17,8 @@ import Data.List
 import OWAObjcAbSyn
 import OWAObjcPrint
 import OWAParseError
+import OWASwiftAbSyn
+import OWASwiftPrint
 import System.Directory
 import System.IO
 import System.Process

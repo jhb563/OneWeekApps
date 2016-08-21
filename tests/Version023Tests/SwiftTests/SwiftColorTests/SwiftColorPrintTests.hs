@@ -15,6 +15,7 @@ module SwiftColorPrintTests (
   runSwiftColorPrintTests
 ) where
 
+import OWAAppInfo
 import OWAColorSwift
 import OWASwiftAbSyn
 import SwiftTestColors
@@ -70,4 +71,4 @@ emptyTestFile :: String
 emptyTestFile = "UIColor+EmptyCategory.swift.test"
 
 fullTestFile :: String
-fullTestFile = "UIColor+MSAColors.swift.colors"
+fullTestFile = "UIColor+MSAColors.swift.test"

@@ -16,6 +16,7 @@ import Text.PrettyPrint.Leijen as PPrint
 
 printSwiftStructureToFile :: SwiftFile -> FilePath -> IO ()
 printSwiftStructureToFile swiftFile filePath = do
+  let doc = docFromFile swiftFile
   handle <- openFile filePath WriteMode
   hPutDoc handle doc
   hClose handle

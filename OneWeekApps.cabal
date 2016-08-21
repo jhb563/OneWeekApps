@@ -49,7 +49,8 @@ library
                        OWAElements,
                        OWAObjcAbSyn,
                        OWAObjcPrint,
-                       OWASwiftAbSyn
+                       OWASwiftAbSyn,
+                       OWASwiftPrint
   other-modules:       ParseUtil,
                        ObjcUtil,
                        SwiftUtil
@@ -171,7 +172,8 @@ test-suite Version023Tests
   main-is: OWAVersion023Tests.hs
   hs-source-dirs: tests,
                   tests/Version023Tests,
-                  tests/Version023Tests/LazyCodeTests
+                  tests/Version023Tests/LazyCodeTests,
+                  tests/Version023Tests/SwiftTests/SwiftColorTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
