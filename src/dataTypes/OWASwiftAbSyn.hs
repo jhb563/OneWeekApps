@@ -6,6 +6,8 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
+module OWASwiftAbSyn where
+
 -- | 'Identifier' is a typedef for String, signaling that we are using
 -- a variable name in Swift
 type Identifier = String
@@ -36,8 +38,8 @@ data Import =
 data SwiftMethod = SwiftMethod {
   isClass :: Bool,
   name :: String,
-  returnType :: SwiftType
-  params :: [ParamDef]
+  returnType :: SwiftType,
+  params :: [ParamDef],
   methodBody :: [SwiftStatement]
 } deriving (Show, Eq)
 

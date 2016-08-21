@@ -13,6 +13,7 @@ module OWAColorSwift (
 import OWAAppInfo
 import OWAColor
 import OWASwiftAbSyn
+import SwiftUtil
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
@@ -23,26 +24,27 @@ import OWASwiftAbSyn
 -- Swift file
 swiftExtensionFromColors :: OWAAppInfo -> [OWAColor] -> SwiftFile
 swiftExtensionFromColors appInfo colors = SwiftFile
-  [extensionCommentSection appInfo originalColorTypeName categoryName,
+  [extensionCommentSection filename appInfo,
   uiKitImportSection,
   listSectionForColors colors]
+  where filename = colorExtensionFileName appInfo
 
 --------------------------------------------------------------------------------
 --------------------------EXTENSION CONSTRUCTION--------------------------------
 --------------------------------------------------------------------------------
 
 listSectionForColors :: [OWAColor] -> FileSection
-listSectionForColors = ExtensionSection 
+listSectionForColors colors = ExtensionSection 
   originalColorTypeName
-  (map methodForColor colors)
+  [MethodImplementationListSection $ map methodForColor colors]
 
 methodForColor :: OWAColor -> SwiftMethod
 methodForColor color = SwiftMethod
   True
-  colorName color,
-  returnType = originalColorTypeName,
-  params = [],
-  methodBody = [ReturnStatement $ returnExpressionForColor color]
+  (colorName color)
+  originalColorTypeName
+  []
+  [ReturnStatement $ returnExpressionForColor color]
 
 returnExpressionForColor :: OWAColor -> SwiftExpression
 returnExpressionForColor color = MethodCall 
@@ -67,3 +69,7 @@ colorWithRGBAMethod = LibMethod
 
 originalColorTypeName :: String
 originalColorTypeName = "UIColor"
+
+colorExtensionFileName :: OWAAppInfo -> String
+colorExtensionFileName appInfo = originalColorTypeName ++
+  ('+' : (appPrefix appInfo) ++ "Colors.swift")
