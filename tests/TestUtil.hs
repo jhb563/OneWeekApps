@@ -7,6 +7,7 @@ module TestUtil (
   filesShouldMatch,
   createFileAndClose,
   createResultsFiles,
+  createSwiftResultsFiles,
   removeResultsFiles,
   removeFiles,
   removeDiffFiles
@@ -95,6 +96,11 @@ createResultsFiles :: FilePath -> [String] -> [ObjcFile] -> IO ()
 createResultsFiles outputDirectory extensions structures = do
   let testFilePaths = map (outputDirectory ++) extensions
   mapM_ (uncurry printStructureToFile) (zip structures testFilePaths)
+
+createSwiftResultsFiles :: FilePath -> [String] -> [SwiftFile] -> IO ()
+createSwiftResultsFiles outputDirectory extensions structures = do
+  let testFilePaths = map (outputDirectory ++) extensions
+  mapM_ (uncurry printSwiftStructureToFile) (zip structures testFilePaths)
 
 removeResultsFiles :: FilePath -> [String] -> IO ()
 removeResultsFiles outputDirectory resultsFiles = removeFiles (map (outputDirectory ++) resultsFiles)
