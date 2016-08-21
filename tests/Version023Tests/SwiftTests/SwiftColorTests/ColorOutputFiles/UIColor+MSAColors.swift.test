@@ -1,0 +1,55 @@
+//
+// UIColor+MSAColors.swift
+// MySampleApp
+//
+// Create By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+extension UIColor {
+
+  class func aTest12() -> UIColor {
+    return UIColor(red:0.961, green:0.678, blue:0.478, alpha:0.94)
+  }
+
+  class func black() -> UIColor {
+    return UIColor(red:0.0, green:0.0, blue:0.0, alpha:1.0)
+  }
+  
+  class func christmas() -> UIColor {
+    return UIColor(red:0.501, green:0.645, blue:0.0, alpha:1.0)
+  }
+
+  class func christmas2() -> UIColor {
+    return UIColor(red:0.501, green:0.645, blue:0.0, alpha:1.0)
+  }
+  
+  class func color1() -> UIColor {
+    return UIColor(red:0.698, green:0.878, blue:0.263, alpha:1.0)
+  }
+
+  class func color2() -> UIColor {
+    return UIColor(red:0.038, green:1.0, blue:0.0, alpha:1.0)
+  }
+
+  class func hex2() -> UIColor {
+    return UIColor(red:0.871, green:0.678, blue:0.753, alpha:1.0)
+  }
+  
+  class func hexAlpha2() -> UIColor {
+    return UIColor(red:0.871, green:0.678, blue:0.753, alpha:1.0)
+  }
+
+  class func hexa2() -> UIColor {
+    return UIColor(red:0.871, green:0.678, blue:0.753, alpha:1.0)
+  }
+
+  class func purple() -> UIColor {
+    return UIColor(red:1.0, green:0.0, blue:1.0, alpha:1.0)
+  }
+
+  class func white() -> UIColor {
+    return UIColor(red:1.0, green:1.0, blue:1.0, alpha:1.0)
+  }
+
+}
