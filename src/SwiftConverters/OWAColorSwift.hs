@@ -10,6 +10,7 @@ module OWAColorSwift (
   swiftExtensionFromColors
 ) where
 
+import Data.List
 import OWAAppInfo
 import OWAColor
 import OWASwiftAbSyn
@@ -26,8 +27,9 @@ swiftExtensionFromColors :: OWAAppInfo -> [OWAColor] -> SwiftFile
 swiftExtensionFromColors appInfo colors = SwiftFile
   [extensionCommentSection filename appInfo,
   uiKitImportSection,
-  listSectionForColors colors]
+  listSectionForColors sortedColors]
   where filename = colorExtensionFileName appInfo
+        sortedColors = sortBy sortColorsByName colors
 
 --------------------------------------------------------------------------------
 --------------------------EXTENSION CONSTRUCTION--------------------------------
@@ -36,7 +38,10 @@ swiftExtensionFromColors appInfo colors = SwiftFile
 listSectionForColors :: [OWAColor] -> FileSection
 listSectionForColors colors = ExtensionSection 
   originalColorTypeName
-  [MethodImplementationListSection $ map methodForColor colors]
+  maybeMethodSection
+  where maybeMethodSection = if null colors
+          then []
+          else [MethodImplementationListSection $ map methodForColor colors] 
 
 methodForColor :: OWAColor -> SwiftMethod
 methodForColor color = SwiftMethod
@@ -73,3 +78,10 @@ originalColorTypeName = "UIColor"
 colorExtensionFileName :: OWAAppInfo -> String
 colorExtensionFileName appInfo = originalColorTypeName ++
   ('+' : (appPrefix appInfo) ++ "Colors.swift")
+
+--------------------------------------------------------------------------------
+--------------------------SORT HELPER-------------------------------------------
+--------------------------------------------------------------------------------
+
+sortColorsByName :: OWAColor -> OWAColor -> Ordering
+sortColorsByName color1 color2 = colorName color1 `compare` colorName color2
