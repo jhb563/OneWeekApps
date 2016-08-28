@@ -49,19 +49,19 @@ runLazyCodeGenerationTests currentDirectory = do
       runThirdViewChangeTest thirdViewUnchanged thirdViewChangedCorrectly
 
 runImmediateChangeTest :: Bool -> Spec
-runImmediateChangeTest noImmediateChanges = do
+runImmediateChangeTest noImmediateChanges =
   describe "Test for new code generation after repeat generate" $
     it "Should not have made any changes to the produced files" $
       noImmediateChanges `shouldBe` True
 
 runAppInfoChangeTest :: Bool -> Spec
-runAppInfoChangeTest changedAfterAppInfo = do
+runAppInfoChangeTest changedAfterAppInfo =
   describe "Test that all files changed after updating the app info" $
     it "Should have changed all the files" $
       changedAfterAppInfo `shouldBe` True
 
 runAlertChangeTest :: Bool -> Bool -> Spec
-runAlertChangeTest unchangedBefore changedAfterModification = do
+runAlertChangeTest unchangedBefore changedAfterModification =
   describe "Test for Alerts changing after modifying .alerts file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -70,7 +70,7 @@ runAlertChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runColorChangeTest :: Bool -> Bool -> Spec
-runColorChangeTest unchangedBefore changedAfterModification = do
+runColorChangeTest unchangedBefore changedAfterModification =
   describe "Test for Colors changing after modifying .colors file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -79,7 +79,7 @@ runColorChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runErrorChangeTest :: Bool -> Bool -> Spec
-runErrorChangeTest unchangedBefore changedAfterModification = do
+runErrorChangeTest unchangedBefore changedAfterModification =
   describe "Test for Errors changing after modifying .errors file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -88,7 +88,7 @@ runErrorChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runFontChangeTest :: Bool -> Bool -> Spec
-runFontChangeTest unchangedBefore changedAfterModification = do
+runFontChangeTest unchangedBefore changedAfterModification =
   describe "Test for Fonts changing after modifying .fonts file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -97,7 +97,7 @@ runFontChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runStringsChangeTest :: Bool -> Bool -> Spec
-runStringsChangeTest unchangedBefore changedAfterModification = do
+runStringsChangeTest unchangedBefore changedAfterModification =
   describe "Test for Strings changing after modifying .strings file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -106,7 +106,7 @@ runStringsChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runFirstViewChangeTest :: Bool -> Bool -> Spec
-runFirstViewChangeTest unchangedBefore changedAfterModification = do
+runFirstViewChangeTest unchangedBefore changedAfterModification =
   describe "Test for First View changing after modifying .view file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -115,7 +115,7 @@ runFirstViewChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runSecondViewChangeTest :: Bool -> Bool -> Spec
-runSecondViewChangeTest unchangedBefore changedAfterModification = do
+runSecondViewChangeTest unchangedBefore changedAfterModification =
   describe "Test for Second View changing after modifying .view file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -124,7 +124,7 @@ runSecondViewChangeTest unchangedBefore changedAfterModification = do
       changedAfterModification `shouldBe` True
 
 runThirdViewChangeTest :: Bool -> Bool -> Spec
-runThirdViewChangeTest unchangedBefore changedAfterModification = do
+runThirdViewChangeTest unchangedBefore changedAfterModification =
   describe "Test for Third View changing after modifying .view file" $ do
     it "Should not have changed before the modification" $
       unchangedBefore `shouldBe` True
@@ -152,7 +152,7 @@ createTestResults testDirectory = do
   return $ noImmediateChanges : allChangedAfterAppInfo : concat modificationChanges
 
 checkAllChanged :: FileTimeMap -> FileTimeMap -> Bool
-checkAllChanged oldMap newMap = all id (map checkDifferent $ Map.keys oldMap)
+checkAllChanged oldMap newMap = all checkDifferent (Map.keys oldMap)
   where checkDifferent fp = case (Map.lookup fp oldMap, Map.lookup fp newMap) of
                               (Just t1, Just t2) -> t1 /= t2
                               _ -> False
@@ -169,7 +169,7 @@ timeChangesAfterModification testDirectory fileTimeMap (fileToChange, producedFi
   setModificationTime fileToChange currentTime
   runOWA testDirectory ["generate"]
   finalResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
-  return [(all id initialResults), (not $ any id finalResults)]
+  return [and initialResults, not $ or finalResults]
 
 fileTimeMatches :: FileTimeMap -> FilePath -> IO Bool
 fileTimeMatches map_ file = do
@@ -182,18 +182,6 @@ createFileTimeMap :: [FilePath] -> IO FileTimeMap
 createFileTimeMap files = do
   modificationTimes <- mapM getModificationTime files
   return $ Map.fromList (zip files modificationTimes)
-
-runATest :: FilePath -> Spec
-runATest currentDirectory = do
-  describe "Prelude.head" $ do
-    it "returns the first element of a list" $ do
-      head [23 ..] `shouldBe` (23 :: Int)
-
-    it "returns the first element of an *arbitrary* list" $
-      1 `shouldBe` (2 - 1)
-
-    it "throws an exception if used with an empty list" $ do
-      2 `shouldBe` (4 - 2)
 
 removeProducedFiles :: FilePath -> IO ()
 removeProducedFiles testDirectory = removeFiles $ 

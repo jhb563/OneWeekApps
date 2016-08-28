@@ -33,13 +33,13 @@ runSwiftColorPrintTests currentDirectory = do
       fullExtensionTests testDirectory
 
 emptyExtensionTests :: FilePath -> Spec
-emptyExtensionTests testDirectory = describe "Print File Structure for Empty Extension" $ do
+emptyExtensionTests testDirectory = describe "Print File Structure for Empty Extension" $
   it "The printed file should match" $
     (testDirectory ++ emptyResultFile) `filesShouldMatch`
       (testDirectory ++ emptyTestFile)
 
 fullExtensionTests :: FilePath -> Spec
-fullExtensionTests testDirectory = describe "Print File Structure for Full Extension" $ do
+fullExtensionTests testDirectory = describe "Print File Structure for Full Extension" $
   it "The printed file should match" $
     (testDirectory ++ fullResultFile) `filesShouldMatch`
       (testDirectory ++ fullTestFile)

@@ -77,7 +77,7 @@ originalColorTypeName = "UIColor"
 
 colorExtensionFileName :: OWAAppInfo -> String
 colorExtensionFileName appInfo = originalColorTypeName ++
-  ('+' : (appPrefix appInfo) ++ "Colors.swift")
+  ('+' : appPrefix appInfo ++ "Colors.swift")
 
 --------------------------------------------------------------------------------
 --------------------------SORT HELPER-------------------------------------------
