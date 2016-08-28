@@ -11,7 +11,7 @@ module OWASwiftPrint (
 ) where
 
 import Data.List
-import qualified Numeric
+import OWAPrintUtil
 import OWASwiftAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
@@ -81,33 +81,3 @@ expressionDoc (MethodCall method paramExps) = text (libMethodName method) <>
         pairedDocs = map (\(name, exprDoc) -> text name <> colon <> exprDoc) zippedPairs
         fullParamListDoc = hcat $ punctuate (text ", ") pairedDocs
 expressionDoc (FloatLit flt) = text $ truncatedFloatString flt
-        
--------------------------------------------------------------------------------
----------------------------Pretty Print Formatting Helpers --------------------
--------------------------------------------------------------------------------
-
-indentBlock :: Doc -> Doc -> Doc
-indentBlock doc1 doc2 = nest 2 (doc1 <+> text "{" PPrint.<$> doc2) PPrint.<$> text "}"
-
-spaceOut :: [Doc] -> Doc
-spaceOut [] = empty
-spaceOut (headDoc:restDocs) = foldl (\d1 d2 -> d1 PPrint.<$> empty PPrint.<$> d2)
-  headDoc restDocs PPrint.<$> empty
-
-vcatWithSpace :: [Doc] -> Doc
-vcatWithSpace [] = empty
-vcatWithSpace docs = empty PPrint.<$> vcat docs
-
--------------------------------------------------------------------------------
----------------------------Float Formatting Helper ----------------------------
--------------------------------------------------------------------------------
-
-truncatedFloatString :: Float -> String
-truncatedFloatString flt = case decimalIndex of
-  Nothing -> initialString
-  Just index -> case reverse initialString of
-    '0':'0':rest -> reverse rest
-    '0':rest -> reverse rest
-    _ -> initialString
-  where initialString = Numeric.showFFloat (Just 3) flt ""
-        decimalIndex = elemIndex '.' initialString

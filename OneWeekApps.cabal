@@ -53,7 +53,8 @@ library
                        OWASwiftPrint
   other-modules:       ParseUtil,
                        ObjcUtil,
-                       SwiftUtil
+                       SwiftUtil,
+                       OWAPrintUtil
   hs-source-dirs:      src,
                        src/Parsers,
                        src/ObjcConverters,
