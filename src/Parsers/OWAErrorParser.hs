@@ -16,7 +16,7 @@ import Data.List
 import Data.Maybe
 import OWAError
 import OWAParseError
-import ParseUtil
+import OWAParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
 import Text.Parsec.Error

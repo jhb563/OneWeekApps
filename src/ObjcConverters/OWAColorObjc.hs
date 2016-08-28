@@ -12,10 +12,10 @@ module OWAColorObjc (
 ) where
 
 import Data.List
-import ObjcUtil
 import OWAAppInfo
 import OWAColor
 import OWAObjcAbSyn
+import OWAObjcUtil
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

@@ -51,9 +51,9 @@ library
                        OWAObjcPrint,
                        OWASwiftAbSyn,
                        OWASwiftPrint
-  other-modules:       ParseUtil,
-                       ObjcUtil,
-                       SwiftUtil,
+  other-modules:       OWAParseUtil,
+                       OWAObjcUtil,
+                       OWASwiftUtil,
                        OWAPrintUtil
   hs-source-dirs:      src,
                        src/Parsers,

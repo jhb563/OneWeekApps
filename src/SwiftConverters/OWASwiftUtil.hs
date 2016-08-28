@@ -1,12 +1,12 @@
 {-|
-Module      : SwiftUtil
+Module      : OWASwiftUtil
 Description : Utility module for common functions converting items to Swift Syntax
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module SwiftUtil (
+module OWASwiftUtil (
   extensionCommentSection,
   uiKitImportSection
 ) where

@@ -14,7 +14,7 @@ import Data.List
 import OWAAppInfo
 import OWAColor
 import OWASwiftAbSyn
-import SwiftUtil
+import OWASwiftUtil
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

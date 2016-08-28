@@ -12,10 +12,10 @@ module OWAErrorObjc (
 ) where
 
 import Data.List
-import ObjcUtil
 import OWAAppInfo
 import OWAError
 import OWAObjcAbSyn
+import OWAObjcUtil
 import qualified Data.Map.Strict as Map
 
 type DomainMap = Map.Map String [OWAError]

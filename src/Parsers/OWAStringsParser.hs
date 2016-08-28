@@ -14,7 +14,7 @@ import Control.Monad.Identity
 import qualified Data.List.Split as Split
 import OWALocalizedStringSet
 import OWAParseError
-import ParseUtil
+import OWAParseUtil
 import qualified Data.Map.Strict as Map
 import Text.Parsec
 import Text.Parsec.Error
