@@ -14,8 +14,8 @@ import Data.Either
 import Data.Maybe
 import OWAElements
 import OWAParseError
+import OWAParseUtil
 import OWAView
-import ParseUtil
 import qualified Data.List.Split as Split
 import qualified Data.Map.Strict as Map
 import Text.Parsec

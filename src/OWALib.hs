@@ -99,7 +99,7 @@ lastCodeGenerationTime filePath = do
 
 modifyLastGenTime :: FilePath -> IO ()
 modifyLastGenTime filePath = do
-  let lastGenFilePath = (filePath ++ lastGenFileExtension) 
+  let lastGenFilePath = filePath ++ lastGenFileExtension
   lastModFileExists <- doesFileExist lastGenFilePath
   if lastModFileExists
     then do
@@ -122,7 +122,7 @@ shouldRegenerateFromFiles sourceFiles = do
   sourceTimes <- liftIO $ mapM getModificationTime sourceFiles
   case genTime of
     Nothing -> return True
-    Just time -> return $ any id (map (time <) sourceTimes)
+    Just time -> return $ any (time <) sourceTimes
 
 ---------------------------------------------------------------------------
 ------------------------PROGRAM STATUS PRINTING----------------------------

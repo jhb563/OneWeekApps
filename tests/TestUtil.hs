@@ -7,6 +7,7 @@ module TestUtil (
   filesShouldMatch,
   createFileAndClose,
   createResultsFiles,
+  createSwiftResultsFiles,
   removeResultsFiles,
   removeFiles,
   removeDiffFiles
@@ -16,6 +17,8 @@ import Data.List
 import OWAObjcAbSyn
 import OWAObjcPrint
 import OWAParseError
+import OWASwiftAbSyn
+import OWASwiftPrint
 import System.Directory
 import System.IO
 import System.Process
@@ -95,6 +98,11 @@ createResultsFiles :: FilePath -> [String] -> [ObjcFile] -> IO ()
 createResultsFiles outputDirectory extensions structures = do
   let testFilePaths = map (outputDirectory ++) extensions
   mapM_ (uncurry printStructureToFile) (zip structures testFilePaths)
+
+createSwiftResultsFiles :: FilePath -> [String] -> [SwiftFile] -> IO ()
+createSwiftResultsFiles outputDirectory extensions structures = do
+  let testFilePaths = map (outputDirectory ++) extensions
+  mapM_ (uncurry printSwiftStructureToFile) (zip structures testFilePaths)
 
 removeResultsFiles :: FilePath -> [String] -> IO ()
 removeResultsFiles outputDirectory resultsFiles = removeFiles (map (outputDirectory ++) resultsFiles)

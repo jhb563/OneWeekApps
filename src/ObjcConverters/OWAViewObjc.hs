@@ -12,10 +12,10 @@ module OWAViewObjc (
 ) where
 
 import Data.Maybe
-import ObjcUtil
 import OWAAppInfo
-import OWAObjcAbSyn
 import OWAElements
+import OWAObjcAbSyn
+import OWAObjcUtil
 import OWAView
 import qualified Data.Set as Set
 

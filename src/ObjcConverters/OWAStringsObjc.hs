@@ -11,10 +11,10 @@ module OWAStringsObjc (
 ) where
 
 import Data.List
-import ObjcUtil
 import OWAAppInfo
 import OWALocalizedStringSet
 import OWAObjcAbSyn
+import OWAObjcUtil
 import qualified Data.Map.Strict as Map
 
 --------------------------------------------------------------------------------

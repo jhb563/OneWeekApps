@@ -27,6 +27,7 @@ library
                        OWAColor,
                        OWAColorParser,
                        OWAColorObjc,
+                       OWAColorSwift,
                        OWAFont,
                        OWAFontParser,
                        OWAFontObjc,
@@ -47,12 +48,17 @@ library
                        OWAViewObjc,
                        OWAElements,
                        OWAObjcAbSyn,
-                       OWAObjcPrint
-  other-modules:       ParseUtil,
-                       ObjcUtil
+                       OWAObjcPrint,
+                       OWASwiftAbSyn,
+                       OWASwiftPrint
+  other-modules:       OWAParseUtil,
+                       OWAObjcUtil,
+                       OWASwiftUtil,
+                       OWAPrintUtil
   hs-source-dirs:      src,
                        src/Parsers,
                        src/ObjcConverters,
+                       src/SwiftConverters,
                        src/dataTypes
   default-language: Haskell2010
 
@@ -167,7 +173,8 @@ test-suite Version023Tests
   main-is: OWAVersion023Tests.hs
   hs-source-dirs: tests,
                   tests/Version023Tests,
-                  tests/Version023Tests/LazyCodeTests
+                  tests/Version023Tests/LazyCodeTests,
+                  tests/Version023Tests/SwiftTests/SwiftColorTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

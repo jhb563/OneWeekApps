@@ -12,10 +12,10 @@ module OWAAlertObjc (
 ) where
 
 import Data.List
-import ObjcUtil
 import OWAAppInfo
 import OWAAlert
 import OWAObjcAbSyn
+import OWAObjcUtil
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

@@ -1,4 +1,4 @@
-module TestColors where
+module SwiftTestColors where
 
 import OWAColor
 

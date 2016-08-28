@@ -12,10 +12,10 @@ module OWAFontObjc (
 ) where
 
 import Data.List
-import ObjcUtil
 import OWAAppInfo
 import OWAFont
 import OWAObjcAbSyn
+import OWAObjcUtil
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

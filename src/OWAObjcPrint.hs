@@ -11,8 +11,8 @@ module OWAObjcPrint (
 ) where
 
 import Data.List
-import Numeric
 import OWAObjcAbSyn
+import OWAPrintUtil
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
@@ -197,35 +197,5 @@ opDoc Assign = equals
 pragmaDoc :: String -> Doc
 pragmaDoc sectionName = text "#pragma mark -" <+> text sectionName
 
--------------------------------------------------------------------------------
----------------------------Pretty Print Formatting Helpers --------------------
--------------------------------------------------------------------------------
-
-indentBlock :: Doc -> Doc -> Doc
-indentBlock doc1 doc2 = nest 2 (doc1 <+> text "{" PPrint.<$> doc2) PPrint.<$> text "}"
-
-vcatWithSpace :: [Doc] -> Doc
-vcatWithSpace [] = empty
-vcatWithSpace docs = empty PPrint.<$> vcat docs
-
-spaceOut :: [Doc] -> Doc
-spaceOut [] = empty
-spaceOut (headDoc:restDocs) = foldl (\d1 d2 -> d1 PPrint.<$> empty PPrint.<$> d2)
-  headDoc restDocs PPrint.<$> empty
-
 endDoc :: Doc
 endDoc = text "@end" PPrint.<$> empty
-
--------------------------------------------------------------------------------
----------------------------Float Formatting Helper ----------------------------
--------------------------------------------------------------------------------
-
-truncatedFloatString :: Float -> String
-truncatedFloatString flt = case decimalIndex of
-  Nothing -> initialString
-  Just index -> case reverse initialString of
-    '0':'0':rest -> reverse rest
-    '0':rest -> reverse rest
-    _ -> initialString
-  where initialString = Numeric.showFFloat (Just 3) flt ""
-        decimalIndex = elemIndex '.' initialString
