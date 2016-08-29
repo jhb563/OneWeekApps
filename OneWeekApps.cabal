@@ -174,7 +174,8 @@ test-suite Version023Tests
   hs-source-dirs: tests,
                   tests/Version023Tests,
                   tests/Version023Tests/LazyCodeTests,
-                  tests/Version023Tests/SwiftTests/SwiftColorTests
+                  tests/Version023Tests/SwiftTests/SwiftColorTests,
+                  tests/Version023Tests/SwiftTests/SwiftFontTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
