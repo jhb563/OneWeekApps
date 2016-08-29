@@ -27,3 +27,15 @@ data OWAFont = OWAFont {
   fontSize :: Float,
   fontStyles :: [FontStyle]
 } deriving (Show, Eq)
+
+-- | Ord instance, which just compares the names given to the fonts
+instance Ord OWAFont where
+  font1 `compare` font2 = fontName font1 `compare` fontName font2
+
+-- | 'fullNameForFont' Takes a font and determines the full family name
+-- to use based on the family name and styles list.
+fullNameForFont :: OWAFont -> String
+fullNameForFont font = case fontStyles font of
+  [] -> fontFamily font
+  styles -> fontFamily font ++ ('-':styleList)
+    where styleList = foldl (\str style -> str ++ show style) "" styles

@@ -45,9 +45,8 @@ objcImplementationFromFonts appInfo fonts = ObjcFile
 
 builderInfo :: OWAAppInfo -> [OWAFont] -> (String, Category)
 builderInfo appInfo fonts = (categoryName,
-  fontCategoryFromFonts categoryName sortedFonts)
+  fontCategoryFromFonts categoryName (sort fonts))
     where categoryName = appPrefix appInfo ++ "Fonts"
-          sortedFonts = sortBy sortFontsByName fonts
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------
@@ -71,12 +70,6 @@ returnExpressionForFont font = MethodCall (Var originalFontTypeName) fontWithNam
   [StringLit $ fullNameForFont font,
   FloatLit $ fontSize font]
 
-fullNameForFont :: OWAFont -> String
-fullNameForFont font = case fontStyles font of
-  [] -> fontFamily font
-  styles -> fontFamily font ++ ('-':styleList)
-    where styleList = foldl (\str style -> str ++ show style) "" styles
-
 --------------------------------------------------------------------------------
 --------------------------LIBRARY METHOD----------------------------------------
 --------------------------------------------------------------------------------
@@ -93,10 +86,3 @@ fontWithNameMethod = LibMethod {
 
 originalFontTypeName :: String
 originalFontTypeName = "UIFont"
-
---------------------------------------------------------------------------------
---------------------------SORT HELPER-------------------------------------------
---------------------------------------------------------------------------------
-
-sortFontsByName :: OWAFont -> OWAFont -> Ordering
-sortFontsByName font1 font2 = fontName font1 `compare` fontName font2

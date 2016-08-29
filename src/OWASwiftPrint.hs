@@ -64,7 +64,7 @@ methodDoc swiftMethod = indentBlock methodDef methodBodyDoc
 
 typeDoc :: SwiftType -> Doc
 typeDoc (SimpleType typ) = text typ
-typeDoc (OptionalType typ) = (text typ) <> text "?"
+typeDoc (OptionalType typ) = text typ <> text "?"
 
 paramDoc :: ParamDef -> Doc
 paramDoc _ = empty

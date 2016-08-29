@@ -45,9 +45,8 @@ objcImplementationFromColors appInfo colors = ObjcFile
 
 builderInfo :: OWAAppInfo -> [OWAColor] -> (String, Category)
 builderInfo appInfo colors = (categoryName,
-  colorCategoryFromColors categoryName sortedColors)
+  colorCategoryFromColors categoryName (sort colors))
     where categoryName = appPrefix appInfo ++ "Colors"
-          sortedColors = sortBy sortColorsByName colors
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------
@@ -89,10 +88,3 @@ colorWithRGBAMethod = LibMethod {
 
 originalColorTypeName :: String
 originalColorTypeName = "UIColor"
-
---------------------------------------------------------------------------------
---------------------------SORT HELPER-------------------------------------------
---------------------------------------------------------------------------------
-
-sortColorsByName :: OWAColor -> OWAColor -> Ordering
-sortColorsByName color1 color2 = colorName color1 `compare` colorName color2

@@ -27,9 +27,8 @@ swiftExtensionFromFonts :: OWAAppInfo -> [OWAFont] -> SwiftFile
 swiftExtensionFromFonts appInfo fonts = SwiftFile
   [extensionCommentSection filename appInfo,
   uiKitImportSection,
-  listSectionForFonts sortedFonts]
+  listSectionForFonts (sort fonts)]
   where filename = fontExtensionFileName appInfo
-        sortedFonts = sortBy sortFontsByName fonts
 
 --------------------------------------------------------------------------------
 --------------------------EXTENSION CONSTRUCTION--------------------------------
@@ -57,12 +56,6 @@ returnExpressionForFont font = MethodCall
   [StringLit $ fullNameForFont font,
   FloatLit $ fontSize font]
 
-fullNameForFont :: OWAFont -> String
-fullNameForFont font = case fontStyles font of
-  [] -> fontFamily font
-  styles -> fontFamily font ++ ('-':styleList)
-    where styleList = foldl (\str style -> str ++ show style) "" styles
-
 --------------------------------------------------------------------------------
 --------------------------LIBRARY METHOD----------------------------------------
 --------------------------------------------------------------------------------
@@ -82,10 +75,3 @@ originalFontTypeName = "UIFont"
 fontExtensionFileName :: OWAAppInfo -> String
 fontExtensionFileName appInfo = originalFontTypeName ++
   ('+' : appPrefix appInfo ++ "Fonts.swift")
-
---------------------------------------------------------------------------------
---------------------------SORT HELPER-------------------------------------------
---------------------------------------------------------------------------------
-
-sortFontsByName :: OWAFont -> OWAFont -> Ordering
-sortFontsByName font1 font2 = fontName font1 `compare` fontName font2

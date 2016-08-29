@@ -22,6 +22,10 @@ data OWAColor = OWAColor {
   alpha :: Float
 } deriving (Show, Eq)
 
+-- | Compare two colors just by comparing their names
+instance Ord OWAColor where
+  color1 `compare` color2 = colorName color1 `compare` colorName color2
+
 -- | 'colorFromTuple' is a convenience constructor taking a tuple
 -- with a name and 4 float values for RGBA
 colorFromTuple :: (String, Float, Float, Float, Float) -> OWAColor
