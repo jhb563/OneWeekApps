@@ -51,8 +51,8 @@ data CalledMethod = UserMethod SwiftMethod |
     libParams :: [String]
   } deriving (Show, Eq)
 
--- 'SwiftType' is a typedef for String, signaling that we are using a
--- type name in Swift.
+-- 'SwiftType' combines the possible types we can have in Swift. Currently
+-- we have normal/simple types, and optional types (which are printed with a '?')
 data SwiftType = SimpleType String |
   OptionalType String
   deriving (Show, Eq)
