@@ -47,7 +47,7 @@ methodForColor :: OWAColor -> SwiftMethod
 methodForColor color = SwiftMethod
   True
   (colorName color)
-  originalColorTypeName
+  (SimpleType originalColorTypeName)
   []
   [ReturnStatement $ returnExpressionForColor color]
 

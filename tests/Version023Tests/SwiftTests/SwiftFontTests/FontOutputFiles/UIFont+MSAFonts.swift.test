@@ -15,7 +15,7 @@ extension UIFont {
   }
   
   class func labelFont() -> UIFont? {
-    return UIFont(name:"SanFranciscoDisplay-Regular, size:14.569)
+    return UIFont(name:"SanFranciscoDisplay-Regular", size:14.569)
   }
   
   class func myFont() -> UIFont? {

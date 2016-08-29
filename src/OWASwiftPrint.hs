@@ -63,7 +63,8 @@ methodDoc swiftMethod = indentBlock methodDef methodBodyDoc
         methodBodyDoc = vcat (map statementDoc $ methodBody swiftMethod)
 
 typeDoc :: SwiftType -> Doc
-typeDoc = text
+typeDoc (SimpleType typ) = text typ
+typeDoc (OptionalType typ) = (text typ) <> text "?"
 
 paramDoc :: ParamDef -> Doc
 paramDoc _ = empty
@@ -81,3 +82,4 @@ expressionDoc (MethodCall method paramExps) = text (libMethodName method) <>
         pairedDocs = map (\(name, exprDoc) -> text name <> colon <> exprDoc) zippedPairs
         fullParamListDoc = hcat $ punctuate (text ", ") pairedDocs
 expressionDoc (FloatLit flt) = text $ truncatedFloatString flt
+expressionDoc (StringLit str) = dquotes $ text str
