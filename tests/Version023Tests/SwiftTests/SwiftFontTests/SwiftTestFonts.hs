@@ -2,8 +2,8 @@ module SwiftTestFonts where
 
 import OWAFont
 
-allTestFonts :: [OWAFont]
-allTestFonts = [myFont,
+swiftTestFonts :: [OWAFont]
+swiftTestFonts = [myFont,
   titleFont,
   labelFont,
   thinFont,

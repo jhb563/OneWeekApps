@@ -31,6 +31,7 @@ library
                        OWAFont,
                        OWAFontParser,
                        OWAFontObjc,
+                       OWAFontSwift,
                        OWAAlert,
                        OWAAlertParser,
                        OWAAlertObjc,
