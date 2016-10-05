@@ -1,0 +1,108 @@
+//
+// VIAElementTest2.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+class VIAElementTest2: UIView {
+
+  // MARK: Lifecycle Methods
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    initCommon()
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initCommon()
+  }
+
+  func initCommon() {
+    setupViews()
+    setupConstraints()
+  }
+
+  // MARK: Setup Methods
+
+  func setupViews() {
+    let subviews = [firstLabel, firstTextfield, secondLabel, nextButton, prevButton, firstImage, secondTextfield, secondImage]
+    for view in subviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      addSubview(view)
+    }
+  }
+
+  func setupConstraints() {
+  
+  }
+
+  // MARK: Lazy Getters
+
+  lazy var firstLabel: UILabel! = {
+    let v = UILabel()
+    v.text = NSLocalizedString("FIRST", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
+    v.textColor = UIColor.view1LabelColor()
+    return v
+  }
+
+  lazy var firstTextfield: UITextField! = {
+    let v = UITextField()
+    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.view1TextFieldColor, NSFontAttributeName : UIFont.placeholderFont()]
+    let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("ENTER_NAME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
+    v.attributedPlaceholder = attributedPlaceholder
+    return v
+  }
+
+  lazy var secondLabel: UILabel! = {
+    let v = UILabel()
+    v.text = NSLocalizedString("SECOND", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
+    v.font = UIColor.placeholderFont()
+    v.backgroundColor = UIColor.backgroundColor();
+    return v
+  }
+
+  lazy var nextButton: UIButton {
+    let v = UIButton()
+    v.setTitle(NSLocalizedString("NEXT", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
+    v.setTitleColor(UIColor.view2Color(), forState: .Normal)
+    v.titleLabel.font = UIFont.standardFont() 
+    return v
+  }
+
+  lazy var prevButton: UIButton {
+    let v = UIButton()
+    v.setTitle(NSLocalizedString("PREV", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
+    v.setTitleColor(UIColor.view2Color(), forState: .Normal)
+    v.titleLabel.font = UIFont.placeholderFont() 
+    v.backgroundColor = UIColor.elementBackgroundColor()
+    return v
+  }
+
+  lazy var firstImage: UIImageView! = {
+    let v = UIImageView()
+    v.image = UIImage(imageLiteral: "file1.png")
+    return v
+  }()
+
+  lazy var secondTextField: UITextField! = {
+    let v = UITextField()
+    v.textColor = UIColor.view2Color()
+    v.font = UIFont.standardFont()
+    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.placeholderColor(), NSFontAttributeName : UIFont.placeholderFont()]
+    let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("ENTER_LOCATION", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
+    v.attributedPlaceholder = attributedPlaceholder
+    return v
+  }
+
+  lazy var secondImage: UIImageView! = {
+    let v = UIImageView()
+    v.image = UIImage(imageLiteral: "file2.png")
+    return v
+  }()
+
+}

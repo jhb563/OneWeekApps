@@ -1,0 +1,63 @@
+//
+// VIAElementTest3.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+class VIAElementTest3: UIView {
+
+  // MARK: Lifecycle Methods
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    initCommon()
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initCommon()
+  }
+
+  func initCommon() {
+    setupViews()
+    setupConstraints()
+  }
+
+  // MARK: Setup Methods
+
+  func setupViews() {
+    let subviews = [lab, txt]
+    for view in subviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      addSubview(view)
+    }
+  }
+
+  func setupConstraints() {
+  
+  }
+
+  // MARK: Lazy Getters
+
+  lazy var lab: UILabel! = {
+    let v = UILabel()
+    v.text = NSLocalizedString("HERE_IS_YOUR_NAME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
+    v.textColor = UIColor.labelTextColor()
+    v.font = UIFont.standardFont()
+    v.backgroundColor = UIColor.elementBackgroundColor()
+    return v
+  }
+
+  lazy var txt: UITextField! = {
+    let v = UITextField()
+    v.textColor = UIColor.blueColor()
+    v.font = UIFont.standardFont()
+    v.backgroundColor = UIColor.redColor()
+    return v
+  }
+
+}
