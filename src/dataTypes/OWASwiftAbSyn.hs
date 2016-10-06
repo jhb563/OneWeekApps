@@ -78,3 +78,9 @@ data SwiftExpression =
   FloatLit Float |
   StringLit String
   deriving (Show, Eq)
+
+-- We will need additional syntax for:
+-- 1. Setting variables as arrays, dictionaries
+-- 2. Calling methods with certain parameters named and others not
+-- 3. Assignment of properties
+-- 4. Statements which are not return statements.

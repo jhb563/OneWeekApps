@@ -23,6 +23,8 @@ printSwiftStructureToFile swiftFile filePath = do
   hPutDoc handle doc
   hClose handle
 
+-- For every new Swift AbSyn construct we create, we'll need to print it.
+
 -------------------------------------------------------------------------------
 ---------------------------SWIFT ELEMENT PRINTERS------------------------------
 -------------------------------------------------------------------------------
