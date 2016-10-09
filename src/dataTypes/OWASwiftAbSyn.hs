@@ -24,7 +24,9 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ExtensionSection String [FileSection] |
-  MethodImplementationListSection [SwiftMethod]
+  ClassSection Identifier Identifier [FileSection] |
+  MethodImplementationListSection (Maybe String) [SwiftMethod] |
+  StatementListSection (Maybe String) [SwiftStatement]
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of a
@@ -69,20 +71,25 @@ data ParamDef = ParamDef {
 
 -- | 'SwiftStatement' is a signel unit of a Swift method implementation.
 data SwiftStatement =
-  ReturnStatement SwiftExpression
+  ReturnStatement SwiftExpression |
+  ExpressionStatement SwiftExpression |
+  LetDecl Identifier SwiftExpression |
+  VarDecl [String] Identifier SwiftType SwiftExpression |
+  AssignStatement SwiftExpression SwiftExpression |
+  ForEachBlock SwiftExpression SwiftExpression [SwiftStatement]
   deriving (Show, Eq)
 
 -- | 'SwiftExpression' represents an expression within Swift syntax.
 -- These can vary from literal values to method calls and 
 -- mathematical expressions.
 data SwiftExpression =
-  MethodCall CalledMethod [SwiftExpression] |
+  MethodCall (Maybe SwiftExpression) CalledMethod [SwiftExpression] |
+  PropertyCall SwiftExpression Identifier |
+  Closure [SwiftStatement] | -- For now the only closures we need have no arguments
+  Var Identifier |
   FloatLit Float |
-  StringLit String
+  StringLit String |
+  BoolLit Bool |
+  ArrayLit [SwiftExpression] |
+  DictionaryLit [(SwiftExpression, SwiftExpression)]
   deriving (Show, Eq)
-
--- We will need additional syntax for:
--- 1. Setting variables as arrays, dictionaries
--- 2. Calling methods with certain parameters named and others not
--- 3. Assignment of properties
--- 4. Statements which are not return statements.
