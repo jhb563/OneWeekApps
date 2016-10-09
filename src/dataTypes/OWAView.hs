@@ -86,8 +86,7 @@ data OWAScrollView = OWAScrollView {
 } deriving (Show, Eq)
 
 -- | OWAViewElement provides a wrapper around the different types of subviews
--- that a view can have. This will soon be expanded to include other OWAViews,
--- as well as simple container views.
+-- that a view can have. 
 data OWAViewElement = LabelElement OWALabel |
   TextFieldElement OWATextField |
   ButtonElement OWAButton |
@@ -97,6 +96,8 @@ data OWAViewElement = LabelElement OWALabel |
   ScrollViewElement OWAScrollView
   deriving (Show, Eq)
 
+-- | NameForElement provides a common interface for accessing the name of a
+-- view element. We should perhaps make a typeclass for this instead. 
 nameForElement :: OWAViewElement -> String
 nameForElement (LabelElement label) = labelName label
 nameForElement (TextFieldElement textField) = textFieldName textField
@@ -106,6 +107,8 @@ nameForElement (CustomViewElement record) = viewRecordName record
 nameForElement (ContainerViewElement container) = containerName container
 nameForElement (ScrollViewElement scrollView) = scrollViewName scrollView
 
+-- | typeNameForElement provides a common interface for accessing the type
+-- of a view element. This should also be done as a typeclass.
 typeNameForElement :: OWAViewElement -> String
 typeNameForElement (LabelElement _) = "UILabel"
 typeNameForElement (TextFieldElement _) = "UITextField"

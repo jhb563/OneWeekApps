@@ -57,9 +57,9 @@ initWithFrameMethod = SwiftMethod
   where
     superInitCall = ExpressionStatement $ MethodCall 
       (Just (Var "super")) 
-      (LibMethod
+      LibMethod
         { libMethodName = "init"
-        , libParams = [Just "frame"] })
+        , libParams = [Just "frame"] }
       [Var "frame"]
     initCommonCall = ExpressionStatement $
       MethodCall Nothing (UserMethod initCommonMethod) []
@@ -75,9 +75,9 @@ initWithCoderMethod = SwiftMethod
   where
     superInitCall = ExpressionStatement $ MethodCall
       (Just (Var "super")) 
-      (LibMethod
+      LibMethod
         { libMethodName = "init"
-        , libParams = [Just "coder"] })
+        , libParams = [Just "coder"] }
       [Var "aDecoder"]
     initCommonCall = ExpressionStatement $
       MethodCall Nothing (UserMethod initCommonMethod) []
@@ -112,13 +112,13 @@ setupViewsMethod view = setupViewsBase {
   where
     assignOfArray = LetDecl
       "subviews"
-      (ArrayLit $ map (\subElem -> Var (nameForElement subElem)) (subviews view))
+      (ArrayLit $ map (Var . nameForElement) (subviews view))
     translatesStatement = AssignStatement
       (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
       (BoolLit False)
     addSubviewStatement = ExpressionStatement $ MethodCall
       Nothing
-      (LibMethod { libMethodName = "addSubview", libParams = [Nothing]})
+      LibMethod { libMethodName = "addSubview", libParams = [Nothing]}
       [Var "view"]
     forBlock = ForEachBlock (Var "view") (Var "subviews")
       [translatesStatement, addSubviewStatement]
@@ -176,7 +176,7 @@ lazyGetterForElement element = VarDecl
     initMethod = LibMethod {libMethodName = typeName, libParams = []}
     initStatement = LetDecl "v" (MethodCall Nothing initMethod [])
     returnStatement = ReturnStatement (Var "v")
-    allStatements = initStatement : (lazyGetterCustomization element) ++ [returnStatement]
+    allStatements = initStatement : lazyGetterCustomization element ++ [returnStatement]
 
 lazyGetterCustomization :: OWAViewElement -> [SwiftStatement]
 lazyGetterCustomization (LabelElement label) = labelCustomization label
@@ -199,7 +199,7 @@ labelCustomization label = textAssign:catMaybes [textColorAssign, fontAssign, ba
       Nothing -> Nothing
       Just bColor -> Just $ propAssign "backgroundColor"
         (MethodCall (Just (Var "UIColor"))
-          (LibMethod { libMethodName = bColor, libParams = []})
+          LibMethod { libMethodName = bColor, libParams = []}
           [])
 
 buttonCustomization :: OWAButton -> [SwiftStatement]
@@ -209,13 +209,13 @@ buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssi
       Nothing -> Nothing
       Just text -> Just $ ExpressionStatement $ MethodCall 
         (Just (Var "v"))
-        (LibMethod { libMethodName = "setTitle", libParams = [Nothing, Just "forState"] })
+        LibMethod { libMethodName = "setTitle", libParams = [Nothing, Just "forState"] }
         [localizedStringForText text, Var ".Normal"]
     textColorAssign = case buttonTextColorName button of
       Nothing -> Nothing
       Just textColor -> Just $ ExpressionStatement $ MethodCall
         (Just (Var "v"))
-        (LibMethod { libMethodName = "setTitleColor", libParams = [Nothing, Just "forState"] })
+        LibMethod { libMethodName = "setTitleColor", libParams = [Nothing, Just "forState"] }
         [colorMethodCall textColor, Var ".Normal"]
     fontAssign = case buttonFontName button of
       Nothing -> Nothing
@@ -229,10 +229,10 @@ buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssi
       Nothing -> Nothing
       Just img -> Just $ ExpressionStatement $ MethodCall
         (Just (Var "v"))
-        (LibMethod { libMethodName = "setImage", libParams = [Nothing, Just "forState"] })
-        [(MethodCall Nothing 
-            (LibMethod { libMethodName = "UIImage", libParams = [Just "imageLiteral"]})
-            [StringLit img]),
+        LibMethod { libMethodName = "setImage", libParams = [Nothing, Just "forState"] }
+        [MethodCall Nothing 
+            LibMethod { libMethodName = "UIImage", libParams = [Just "imageLiteral"]}
+            [StringLit img],
           Var ".Normal"]
         
 textFieldCustomization :: OWATextField -> [SwiftStatement]
@@ -269,9 +269,9 @@ placeholderStatements textField = if noPlaceholders then [] else statements
     dictionary = DictionaryLit $ catMaybes [colorAttrPair, fontAttrPair]
     dictAssign = LetDecl "placeholderAttributes" dictionary
     placeholderInit = LetDecl "attributedPlaceholder" $ MethodCall Nothing
-      (LibMethod { 
+      LibMethod { 
         libMethodName = "NSAttributedString", 
-        libParams = map Just ["string", "attributes"] })
+        libParams = map Just ["string", "attributes"] }
       [localizedStringForText (fromMaybe "" pText), Var "placeholderAttributes"]
     placeholderAssign = propAssign "attributedPlaceholder" (Var "attributedPlaceholder")
     statements = [dictAssign, placeholderInit, placeholderAssign]
@@ -282,7 +282,7 @@ imageCustomization image = [imageSourceAssign]
     imageSourceAssign = AssignStatement
       (PropertyCall (Var "v") "image")
       (MethodCall Nothing 
-        (LibMethod { libMethodName = "UIImage", libParams = [Just "imageLiteral"]})
+        LibMethod { libMethodName = "UIImage", libParams = [Just "imageLiteral"]}
         [StringLit (imageSourceName image)])
 
 --------------------------------------------------------------------------------
@@ -296,28 +296,28 @@ swiftVarForAttribute (Just attr) = Var ('.' : show attr)
 localizedStringForText :: String -> SwiftExpression
 localizedStringForText txt = MethodCall
   Nothing
-  (LibMethod { libMethodName = "NSLocalizedString",
-    libParams = Nothing : map Just ["tableName", "bundle", "value", "comment"]})
+  LibMethod { libMethodName = "NSLocalizedString",
+    libParams = Nothing : map Just ["tableName", "bundle", "value", "comment"]}
   [StringLit txt, Var "nil", bundleExpr, StringLit "", StringLit ""]
   where
     bundleExpr = MethodCall 
       (Just (Var "NSBundle"))
-      (LibMethod { libMethodName = "mainBundle", libParams = []})
+      LibMethod { libMethodName = "mainBundle", libParams = []}
       []
 
 propAssign :: String -> SwiftExpression -> SwiftStatement
-propAssign prop expr = AssignStatement (PropertyCall (Var "v") prop) expr
+propAssign prop = AssignStatement (PropertyCall (Var "v") prop)
 
 colorMethodCall :: String -> SwiftExpression
 colorMethodCall color = MethodCall 
   (Just (Var "UIColor")) 
-  (LibMethod { libMethodName = color, libParams = [] })
+  LibMethod { libMethodName = color, libParams = [] }
   []
 
 fontMethodCall :: String -> SwiftExpression
 fontMethodCall font = MethodCall
   (Just (Var "UIFont"))
-  (LibMethod { libMethodName = font, libParams = []})
+  LibMethod { libMethodName = font, libParams = []}
   []
 
 --------------------------------------------------------------------------------

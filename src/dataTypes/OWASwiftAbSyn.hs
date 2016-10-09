@@ -1,4 +1,4 @@
-{-
+{-|
 Module      : OWASwiftAbSyn
 Description : Module for Swift abstract syntax
 Copyright   : (c) James Bowen, 2016
@@ -54,7 +54,7 @@ data CalledMethod = UserMethod SwiftMethod |
     libParams :: [Maybe String]
   } deriving (Show, Eq)
 
--- 'SwiftType' combines the possible types we can have in Swift. Currently
+-- | 'SwiftType' combines the possible types we can have in Swift. Currently
 -- we have normal/simple types, and optional types (which are printed with a '?')
 data SwiftType = SimpleType String |
   OptionalType String |

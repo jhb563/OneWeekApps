@@ -16,6 +16,12 @@ import OWASwiftAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
+-------------------------------------------------------------------------------
+---------------------------ENTRY METHOD----------------------------------------
+-------------------------------------------------------------------------------
+
+-- | Takes a Swift File Structure, converts it to a Doc, and
+-- prints the doc out to the given file.
 printSwiftStructureToFile :: SwiftFile -> FilePath -> IO ()
 printSwiftStructureToFile swiftFile filePath = do
   let doc = docFromFile swiftFile
@@ -127,7 +133,7 @@ expressionDoc (MethodCall callerExp method paramExps) = case callerExp of
   where 
     methodName = case method of
       LibMethod { libMethodName = lMN} -> lMN
-      UserMethod (SwiftMethod { name = n }) -> n
+      UserMethod SwiftMethod { name = n } -> n
     mParamNames = case method of
       UserMethod swiftMethod -> map paramLabelName (params swiftMethod)
       LibMethod {libParams = lParams} -> lParams
