@@ -1,4 +1,4 @@
-{-
+{-|
 Module      : OWASwiftAbSyn
 Description : Module for Swift abstract syntax
 Copyright   : (c) James Bowen, 2016
@@ -24,7 +24,9 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ExtensionSection String [FileSection] |
-  MethodImplementationListSection [SwiftMethod]
+  ClassSection Identifier Identifier [FileSection] |
+  MethodImplementationListSection (Maybe String) [SwiftMethod] |
+  StatementListSection (Maybe String) [SwiftStatement]
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of a
@@ -36,9 +38,10 @@ data Import =
 -- | 'SwiftMethod' stores the structure of a particular method
 -- implemented in our code.
 data SwiftMethod = SwiftMethod {
-  isClass :: Bool,
+  isInitializer :: Bool,
+  qualifiers :: [String],
   name :: String,
-  returnType :: SwiftType,
+  returnType :: Maybe SwiftType,
   params :: [ParamDef],
   methodBody :: [SwiftStatement]
 } deriving (Show, Eq)
@@ -48,33 +51,45 @@ data SwiftMethod = SwiftMethod {
 data CalledMethod = UserMethod SwiftMethod |
   LibMethod {
     libMethodName :: String,
-    libParams :: [String]
+    libParams :: [Maybe String]
   } deriving (Show, Eq)
 
--- 'SwiftType' combines the possible types we can have in Swift. Currently
+-- | 'SwiftType' combines the possible types we can have in Swift. Currently
 -- we have normal/simple types, and optional types (which are printed with a '?')
 data SwiftType = SimpleType String |
-  OptionalType String
+  OptionalType String |
+  ExplicitType String
   deriving (Show, Eq)
 
 -- | 'ParamDef' abstracts the three parts describing a method parameter
 -- in Swift. It contains a title, type, and a name.
 data ParamDef = ParamDef {
+  paramLabelName :: Maybe String,
   paramTitle :: String,
-  paramType :: SwiftType,
-  paramName :: String
+  paramType :: SwiftType
 } deriving (Show, Eq)
 
 -- | 'SwiftStatement' is a signel unit of a Swift method implementation.
 data SwiftStatement =
-  ReturnStatement SwiftExpression
+  ReturnStatement SwiftExpression |
+  ExpressionStatement SwiftExpression |
+  LetDecl Identifier SwiftExpression |
+  VarDecl [String] Identifier SwiftType SwiftExpression |
+  AssignStatement SwiftExpression SwiftExpression |
+  ForEachBlock SwiftExpression SwiftExpression [SwiftStatement]
   deriving (Show, Eq)
 
 -- | 'SwiftExpression' represents an expression within Swift syntax.
 -- These can vary from literal values to method calls and 
 -- mathematical expressions.
 data SwiftExpression =
-  MethodCall CalledMethod [SwiftExpression] |
+  MethodCall (Maybe SwiftExpression) CalledMethod [SwiftExpression] |
+  PropertyCall SwiftExpression Identifier |
+  Closure [SwiftStatement] | -- For now the only closures we need have no arguments
+  Var Identifier |
   FloatLit Float |
-  StringLit String
+  StringLit String |
+  BoolLit Bool |
+  ArrayLit [SwiftExpression] |
+  DictionaryLit [(SwiftExpression, SwiftExpression)]
   deriving (Show, Eq)

@@ -9,26 +9,26 @@
 import UIKit
 
 class VIAConstraintTest2: UIView {
-
+  
   // MARK: Lifecycle Methods
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     initCommon()
   }
-
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
   }
-
+  
   func initCommon() {
     setupViews()
     setupConstraints()
   }
-
+  
   // MARK: Setup Methods
-
+  
   func setupViews() {
     let subviews = [viewField, viewButton, viewImage, viewLabel]
     for view in subviews {
@@ -36,7 +36,7 @@ class VIAConstraintTest2: UIView {
       addSubview(view)
     }
   }
-
+  
   func setupConstraints() {
     NSLayoutConstraint(item: viewField, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
     NSLayoutConstraint(item: viewField, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
@@ -47,9 +47,9 @@ class VIAConstraintTest2: UIView {
     NSLayoutConstraint(item: viewLabel, attribute: .Height, relatedBy: .Equal, toItem: viewField, attribute: .Height, multiplier: 1.0, constant: 5.0).active = true
     NSLayoutConstraint(item: viewLabel, attribute: .Width, relatedBy: .Equal, toItem: viewField, attribute: .Width, multiplier: 1.0, constant: -5.0).active = true
   }
-
+  
   // MARK: Lazy Getters
-
+  
   lazy var viewField: UITextField! = {
     let v = UITextField()
     v.text = NSLocalizedString("HELLO_WORLD", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
@@ -57,23 +57,23 @@ class VIAConstraintTest2: UIView {
     v.font = UIFont.standardFont()
     return v
   }()
-
+  
   lazy var viewButton: UIButton! = {
     let v = UIButton()
     v.setTitle(NSLocalizedString("CLICK_ME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     return v
   }()
-
+  
   lazy var viewImage: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "profileImage.png")
     return v
   }()
-
+  
   lazy var viewLabel: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
 }

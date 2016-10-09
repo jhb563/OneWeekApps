@@ -47,6 +47,7 @@ library
                        OWAView,
                        OWAViewParser,
                        OWAViewObjc,
+                       OWAViewSwift,
                        OWAElements,
                        OWAObjcAbSyn,
                        OWAObjcPrint,
@@ -176,7 +177,8 @@ test-suite Version023Tests
                   tests/Version023Tests,
                   tests/Version023Tests/LazyCodeTests,
                   tests/Version023Tests/SwiftTests/SwiftColorTests,
-                  tests/Version023Tests/SwiftTests/SwiftFontTests
+                  tests/Version023Tests/SwiftTests/SwiftFontTests,
+                  tests/Version023Tests/SwiftTests/SwiftViewTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,

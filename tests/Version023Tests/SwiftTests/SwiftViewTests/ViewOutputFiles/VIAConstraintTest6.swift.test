@@ -9,26 +9,26 @@
 import UIKit
 
 class VIAConstraintTest6: UIView {
-
+  
   // MARK: Lifecycle Methods
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     initCommon()
   }
-
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
   }
-
+  
   func initCommon() {
     setupViews()
     setupConstraints()
   }
-
+  
   // MARK: Setup Methods
-
+  
   func setupViews() {
     let subviews = [l1, b1, t1, i1]
     for view in subviews {
@@ -36,8 +36,8 @@ class VIAConstraintTest6: UIView {
       addSubview(view)
     }
   }
-
-  func setupConstraints {
+  
+  func setupConstraints() {
     NSLayoutConstraint(item: l1, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: l1, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: b1, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 10.0).active = true
@@ -47,31 +47,31 @@ class VIAConstraintTest6: UIView {
     NSLayoutConstraint(item: i1, attribute: .CenterX, relatedBy: .Equal, toItem: b1, attribute: .CenterX, multiplier: 1.0, constant: 5.5).active = true
     NSLayoutConstraint(item: i1, attribute: .CenterY, relatedBy: .Equal, toItem: l1, attribute: .CenterY, multiplier: 1.0, constant: 3.2).active = true
   }
-
+  
   // MARK: Lazy Getters
-
+  
   lazy var l1: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var b1: UIButton! = {
     let v = UIButton()
     v.setTitle(NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     return v
   }()
-
+  
   lazy var t1: UITextField! = {
     let v = UITextField()
     v.text = NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var i1: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "file1.png")
     return v
   }()
-
+  
 }

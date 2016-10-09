@@ -40,18 +40,20 @@ listSectionForFonts fonts = ExtensionSection
   maybeMethodSection
   where maybeMethodSection = if null fonts
           then []
-          else [MethodImplementationListSection $ map methodForFont fonts] 
+          else [MethodImplementationListSection Nothing $ map methodForFont fonts] 
 
 methodForFont :: OWAFont -> SwiftMethod
 methodForFont font = SwiftMethod
-  True
+  False
+  ["class"]
   (fontName font)
-  (OptionalType originalFontTypeName)
+  (Just $ OptionalType originalFontTypeName)
   []
   [ReturnStatement $ returnExpressionForFont font]
 
 returnExpressionForFont :: OWAFont -> SwiftExpression
 returnExpressionForFont font = MethodCall 
+  Nothing
   fontWithFamilySizeMethod
   [StringLit $ fullNameForFont font,
   FloatLit $ fontSize font]
@@ -63,7 +65,7 @@ returnExpressionForFont font = MethodCall
 fontWithFamilySizeMethod :: CalledMethod
 fontWithFamilySizeMethod = LibMethod
   "UIFont"
-  ["name", "size"]
+  [Just "name", Just "size"]
 
 --------------------------------------------------------------------------------
 --------------------------TYPE KEYWORDS-----------------------------------------

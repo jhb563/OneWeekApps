@@ -9,26 +9,26 @@
 import UIKit
 
 class VIAConstraintTest4: UIView {
-
+  
   // MARK: Lifecycle Methods
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     initCommon()
   }
-
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
   }
-
+  
   func initCommon() {
     setupViews()
     setupConstraints()
   }
-
+  
   // MARK: Setup Methods
-
+  
   func setupViews() {
     let subviews = [iBase1, iBase2, l1, b1, t1, i1, l2, b2, t2, i2]
     for view in subviews {
@@ -36,11 +36,11 @@ class VIAConstraintTest4: UIView {
       addSubview(view)
     }
   }
-
-  func setupConstraints {
+  
+  func setupConstraints() {
     NSLayoutConstraint(item: l1, attribute: .Top, relatedBy: .Equal, toItem: iBase1, attribute: .Top, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: l1, attribute: .Right, relatedBy: .Equal, toItem: iBase1, attribute: .Right, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: b1, attribute: .Top, relatedBy: .Equal, toItem: iBase1, attribute: .Top, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: b1, attribute: .Top, relatedBy: .Equal, toItem: iBase1, attribute: .Top, multiplier: 1.0, constant: 14.3).active = true
     NSLayoutConstraint(item: b1, attribute: .Right, relatedBy: .Equal, toItem: iBase1, attribute: .Right, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: t1, attribute: .Top, relatedBy: .Equal, toItem: iBase1, attribute: .Top, multiplier: 1.0, constant: 12.5).active = true
     NSLayoutConstraint(item: t1, attribute: .Left, relatedBy: .Equal, toItem: iBase1, attribute: .Left, multiplier: 1.0, constant: -3.4).active = true
@@ -55,67 +55,67 @@ class VIAConstraintTest4: UIView {
     NSLayoutConstraint(item: i2, attribute: .Bottom, relatedBy: .Equal, toItem: iBase2, attribute: .Bottom, multiplier: 1.0, constant: 1.0).active = true
     NSLayoutConstraint(item: i2, attribute: .Right, relatedBy: .Equal, toItem: iBase2, attribute: .Right, multiplier: 1.0, constant: 1.0).active = true
   }
-
+  
   // MARK: Lazy Getters
-
+  
   lazy var iBase1: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "file1.png")
     return v
   }()
-
+  
   lazy var iBase2: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "file2.png")
     return v
   }()
-
+  
   lazy var l1: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var b1: UIButton! = {
     let v = UIButton()
     v.setTitle(NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     return v
   }()
-
+  
   lazy var t1: UITextField! = {
     let v = UITextField()
     v.text = NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var i1: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "file1.png")
     return v
   }()
-
+  
   lazy var l2: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("Bye", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var b2: UIButton! = {
     let v = UIButton()
     v.setTitle(NSLocalizedString("Bye", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     return v
   }()
-
+  
   lazy var t2: UITextField! = {
     let v = UITextField()
     v.text = NSLocalizedString("Bye", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var i2: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "file2.png")
     return v
   }()
-
+  
 }

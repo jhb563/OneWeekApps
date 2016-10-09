@@ -40,18 +40,20 @@ listSectionForColors colors = ExtensionSection
   maybeMethodSection
   where maybeMethodSection = if null colors
           then []
-          else [MethodImplementationListSection $ map methodForColor colors] 
+          else [MethodImplementationListSection Nothing $ map methodForColor colors] 
 
 methodForColor :: OWAColor -> SwiftMethod
 methodForColor color = SwiftMethod
-  True
+  False
+  ["class"]
   (colorName color)
-  (SimpleType originalColorTypeName)
+  (Just $ SimpleType originalColorTypeName)
   []
   [ReturnStatement $ returnExpressionForColor color]
 
 returnExpressionForColor :: OWAColor -> SwiftExpression
 returnExpressionForColor color = MethodCall 
+  Nothing
   colorWithRGBAMethod
   [FloatLit $ red color,
   FloatLit $ green color,
@@ -65,7 +67,7 @@ returnExpressionForColor color = MethodCall
 colorWithRGBAMethod :: CalledMethod
 colorWithRGBAMethod = LibMethod 
   "UIColor"
-  ["red", "green", "blue", "alpha"]
+  [Just "red", Just "green", Just "blue", Just "alpha"]
 
 --------------------------------------------------------------------------------
 --------------------------TYPE KEYWORDS-----------------------------------------

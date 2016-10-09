@@ -19,6 +19,8 @@ import OWASwiftAbSyn
 -------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------
 -------------------------------------------------------------------------------
 
+-- | Takes the file name and app info, and creates a file section for the
+-- block comment at the top of all swift files.
 extensionCommentSection :: String -> OWAAppInfo -> FileSection
 extensionCommentSection filename appInfo = BlockCommentSection
   (definiteSection ++ possibleCompanySection)
@@ -42,5 +44,6 @@ extensionCommentSection filename appInfo = BlockCommentSection
 -------------------IMPORT SECTIONS---------------------------------------------
 -------------------------------------------------------------------------------
 
+-- | A simple file section importing UIKit
 uiKitImportSection :: FileSection
 uiKitImportSection = ImportsSection [ModuleImport "UIKit"]
