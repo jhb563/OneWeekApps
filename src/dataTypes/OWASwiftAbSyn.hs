@@ -36,9 +36,10 @@ data Import =
 -- | 'SwiftMethod' stores the structure of a particular method
 -- implemented in our code.
 data SwiftMethod = SwiftMethod {
-  isClass :: Bool,
+  isInitializer :: Bool,
+  qualifiers :: [String],
   name :: String,
-  returnType :: SwiftType,
+  returnType :: Maybe SwiftType,
   params :: [ParamDef],
   methodBody :: [SwiftStatement]
 } deriving (Show, Eq)
@@ -48,21 +49,22 @@ data SwiftMethod = SwiftMethod {
 data CalledMethod = UserMethod SwiftMethod |
   LibMethod {
     libMethodName :: String,
-    libParams :: [String]
+    libParams :: [Maybe String]
   } deriving (Show, Eq)
 
 -- 'SwiftType' combines the possible types we can have in Swift. Currently
 -- we have normal/simple types, and optional types (which are printed with a '?')
 data SwiftType = SimpleType String |
-  OptionalType String
+  OptionalType String |
+  ExplicitType String
   deriving (Show, Eq)
 
 -- | 'ParamDef' abstracts the three parts describing a method parameter
 -- in Swift. It contains a title, type, and a name.
 data ParamDef = ParamDef {
+  paramLabelName :: Maybe String,
   paramTitle :: String,
-  paramType :: SwiftType,
-  paramName :: String
+  paramType :: SwiftType
 } deriving (Show, Eq)
 
 -- | 'SwiftStatement' is a signel unit of a Swift method implementation.
