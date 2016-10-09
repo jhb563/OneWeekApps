@@ -9,26 +9,26 @@
 import UIKit
 
 class VIAElementTest3: UIView {
-
+  
   // MARK: Lifecycle Methods
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     initCommon()
   }
-
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
   }
-
+  
   func initCommon() {
     setupViews()
     setupConstraints()
   }
-
+  
   // MARK: Setup Methods
-
+  
   func setupViews() {
     let subviews = [lab, txt]
     for view in subviews {
@@ -36,13 +36,13 @@ class VIAElementTest3: UIView {
       addSubview(view)
     }
   }
-
-  func setupConstraints() {
   
+  func setupConstraints() {
+    
   }
-
+  
   // MARK: Lazy Getters
-
+  
   lazy var lab: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("HERE_IS_YOUR_NAME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
@@ -50,14 +50,14 @@ class VIAElementTest3: UIView {
     v.font = UIFont.standardFont()
     v.backgroundColor = UIColor.elementBackgroundColor()
     return v
-  }
-
+  }()
+  
   lazy var txt: UITextField! = {
     let v = UITextField()
     v.textColor = UIColor.blueColor()
     v.font = UIFont.standardFont()
     v.backgroundColor = UIColor.redColor()
     return v
-  }
-
+  }()
+  
 }

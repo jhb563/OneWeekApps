@@ -9,26 +9,26 @@
 import UIKit
 
 class VIAElementTest1: UIView {
-
+  
   // MARK: Lifecycle Methods
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     initCommon()
   }
-
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
   }
-
+  
   func initCommon() {
     setupViews()
     setupConstraints()
   }
-
+  
   // MARK: Setup Methods
-
+  
   func setupViews() {
     let subviews = [viewField, viewButton, viewImage, viewLabel]
     for view in subviews {
@@ -40,9 +40,9 @@ class VIAElementTest1: UIView {
   func setupConstraints() {
     
   }
-
+  
   // MARK: Lazy Getters
-
+  
   lazy var viewField: UITextField! = {
     let v = UITextField()
     v.text = NSLocalizedString("HELLO_WORLD", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
@@ -50,23 +50,23 @@ class VIAElementTest1: UIView {
     v.font = UIFont.standardFont()
     return v
   }()
-
+  
   lazy var viewButton: UIButton! = {
     let v = UIButton()
     v.setTitle(NSLocalizedString("CLICK_ME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     return v
   }()
-
+  
   lazy var viewImage: UIImageView! = {
     let v = UIImageView()
     v.image = UIImage(imageLiteral: "profileImage.png")
     return v
   }()
-
+  
   lazy var viewLabel: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
 }
