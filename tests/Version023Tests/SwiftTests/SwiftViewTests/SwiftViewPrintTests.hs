@@ -31,7 +31,6 @@ runSwiftViewPrintTests currentDirectory = do
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       elementTests testDirectory
       constraintTests testDirectory
-  putStrLn "Running Swift View Print Tests!"
 
 elementTests :: FilePath -> Spec
 elementTests testDirectory = describe "Print File Structure for Swift views with sub-elements" $ do
@@ -67,12 +66,6 @@ constraintTests testDirectory = describe "Print File Structure for Swift views w
     (testDirectory ++ centerResultFile) `filesShouldMatch`
       (testDirectory ++ centerTestFile)
 
-{- noLayoutTest parseDirectory
-  heightWidthTest parseDirectory
-  alignTest parseDirectory
-  placementTest parseDirectory
-  centerTest parseDirectory -}
-
 dirExtension :: FilePath
 dirExtension = "/tests/Version023Tests/SwiftTests/SwiftViewTests/ViewOutputFiles/"
 
@@ -81,7 +74,7 @@ sampleAppInfo = OWAAppInfo {
   appName = "MySampleApp",
   appPrefix = "MSA",
   authorName = "James Bowen",
-  dateCreatedString = "2/16/2016",
+  dateCreatedString = "4/30/2016",
   companyName = Just "One Week Apps"
 }
 

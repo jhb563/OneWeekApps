@@ -227,7 +227,7 @@ nextButton = OWAButton {
   buttonTextColorName = Just "view2Color",
   buttonFontName = Just "standardFont",
   buttonBackgroundColorName = Nothing,
-  buttonBackgroundImageSourceName = Nothing
+  buttonBackgroundImageSourceName = Just "file1.png"
 }
 
 prevButton :: OWAButton
