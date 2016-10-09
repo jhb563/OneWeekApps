@@ -112,26 +112,8 @@ propertyForSubview isReadonly subview = ObjcProperty {
   propertyName = nameForElement subview
 }
 
-typeNameForElement :: OWAViewElement -> String
-typeNameForElement (LabelElement _) = "UILabel"
-typeNameForElement (TextFieldElement _) = "UITextField"
-typeNameForElement (ButtonElement _) = "UIButton"
-typeNameForElement (ImageElement _) = "UIImageView"
-typeNameForElement (CustomViewElement record) = viewRecordType record
-typeNameForElement (ContainerViewElement _) = "UIView"
-typeNameForElement (ScrollViewElement _) = "UIScrollView"
-
 typeForElement :: OWAViewElement -> ObjcType
 typeForElement element = PointerType $ typeNameForElement element
-
-nameForElement :: OWAViewElement -> String
-nameForElement (LabelElement label) = labelName label
-nameForElement (TextFieldElement textField) = textFieldName textField
-nameForElement (ButtonElement button) = buttonName button
-nameForElement (ImageElement image) = imageViewName image
-nameForElement (CustomViewElement record) = viewRecordName record
-nameForElement (ContainerViewElement container) = containerName container
-nameForElement (ScrollViewElement scrollView) = scrollViewName scrollView
 
 selfExprForName :: String -> ObjcExpression
 selfExprForName = PropertyCall SelfExpr
