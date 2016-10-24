@@ -1,0 +1,105 @@
+//
+// IGAScrollView3.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+class IGAScrollView3: UIView {
+  
+  // MARK: Lifecycle Methods
+  
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    initCommon()
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initCommon()
+  }
+  
+  func initCommon() {
+    setupViews()
+    setupConstraints()
+  }
+
+  // MARK: Setup Methods
+  
+  func setupViews() {
+    let subviews = [scrollView, myImage]
+    for view in subviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      addSubview(view)
+    }
+    let scrollViewSubviews = [scrollViewContainerView]
+    for view in scrollViewSubviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      scrollView.addSubview(view)
+    }
+    let scrollViewContainerViewSubviews = [nextLabel, nextButton]
+    for view in scrollViewContainerViewSubviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      scrollViewContainerView.addSubview(view)
+    }
+  }
+
+  func setupConstraints() {
+    NSLayoutConstraint(item: scrollView, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, mutiplier: 1.0, constant: 40.0).active = true
+    NSLayoutConstraint(item: scrollView, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, mutiplier: 1.0, constant: 20.0).active = true
+    NSLayoutConstraint(item: scrollView, attribute: .Right, relatedBy: .Equal, toItem: self, attribute: .Right, mutiplier: 1.0, constant: -20.0).active = true
+    NSLayoutConstraint(item: scrollView, attribute: .Bottom, relatedBy: .Equal, toItem: myImage, attribute: .Top, mutiplier: 1.0, constant: -30.0).active = true
+    NSLayoutConstraint(item: scrollView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 200.0).active = true
+    NSLayoutConstraint(item: scrollViewContainerView, attribute: .Top, relatedBy: .Equal, toItem: scrollView, attribute: .Top, mutiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: scrollViewContainerView, attribute: .Bottom, relatedBy: .Equal, toItem: scrollView, attribute: .Bottom, mutiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: scrollViewContainerView, attribute: .Left, relatedBy: .Equal, toItem: scrollView, attribute: .Left, mutiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: scrollViewContainerView, attribute: .Right, relatedBy: .Equal, toItem: scrollView, attribute: .Right, mutiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: nextLabel, attribute: .Top, relatedBy: .Equal, toItem: scrollViewContainerView, attribute: .Top, mutiplier: 1.0, constant: 20.0).active = true
+    NSLayoutConstraint(item: nextLabel, attribute: .Left, relatedBy: .Equal, toItem: scrollViewContainerView, attribute: .Left, mutiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: nextLabel, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 30.0).active = true
+    NSLayoutConstraint(item: nextLabel, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: nextButton, attribute: .Left, relatedBy: .Equal, toItem: scrollViewContainerView, attribute: .Left, mutiplier: 1.0, constant: 150.0).active = true
+    NSLayoutConstraint(item: nextButton, attribute: .Right, relatedBy: .Equal, toItem: scrollViewContainerView, attribute: .Right, mutiplier: 1.0, constant: -150.0).active = true
+    NSLayoutConstraint(item: nextButton, attribute: .Top, relatedBy: .Equal, toItem: nextLabel, attribute: .Bottom, mutiplier: 1.0, constant: 300.0).active = true
+    NSLayoutConstraint(item: nextButton, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 30.0).active = true
+    NSLayoutConstraint(item: nextButton, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 300.0).active = true
+    NSLayoutConstraint(item: nextButton, attribute: .Bottom, relatedBy: .Equal, toItem: scrollViewContainerView, attribute: .Bottom, mutiplier: 1.0, constant: -10.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, mutiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 80.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, mutiplier: 1.0, constant: 80.0).active = true
+  }
+  
+  // MARK: Lazy Getters
+  
+  lazy var scrollView: UIScrollView! = {
+    let v = UIScrollView()
+    return v
+  }()
+  
+  lazy var scrollViewContainerView: UIView! = {
+    let v = UIView()
+    return v
+  }()
+  
+  lazy var nextLabel: UILabel! = {
+    let v = UILabel()
+    v.text = NSLocalizedString("Next", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
+    return v
+  }()
+   
+  lazy var nextButton: UIButton! = {
+    let v = UIButton()
+    v.setTitle(NSLocalizedString("Next", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
+    return v
+  }()
+  
+  lazy var myImage: UIImageView! = {
+    let v = UIImageView()
+    v.image = UIImage(imageLiteral: "file1.png")
+    return v
+  }()
+  
+}

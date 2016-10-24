@@ -74,6 +74,8 @@ class IGAContainerView3: UIView {
     NSLayoutConstraint(item: myField2, attribute: .Height, relatedBy:.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
   }
   
+  // MARK: Lazy Getters
+
   lazy var firstLabel: UILabel! = {
       let v = UILabel()
       v.text = NSLocalizedString("Name", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
