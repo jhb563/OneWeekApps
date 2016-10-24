@@ -1,0 +1,63 @@
+//
+// IGACustomTest2.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+class IGACustomTest2: UIView {
+  
+  // MARK: Lifecycle Methods
+  
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    initCommon()
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initCommon()
+  }
+  
+  func initCommon() {
+    setupViews()
+    setupConstraints()
+  }
+  
+  // MARK: Setup Methods
+
+  func setupViews() {
+    let subviews = [custom1, custom2]
+    for view in subviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      addSubview(view)
+    }
+  }
+
+  func setupConstraints() {
+    NSLayoutConstraint(item: custom1, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 40.0).active = true
+    NSLayoutConstraint(item: custom1, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: custom1, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 200.0).active = true
+    NSLayoutConstraint(item: custom1, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 200.0).active = true
+    NSLayoutConstraint(item: custom2, attribute: .Top, relatedBy: .Equal, toItem: custom1, attribute: .Bottom, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: custom2, attribute: .CenterX, relatedBy: .Equal, toItem: custom1, attribute: .CenterX, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: custom2, attribute: .Width, relatedBy: .Equal, toItem: custom1, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: custom2, attribute: .Height, relatedBy: .Equal, toItem: custom1, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
+  }
+
+  // MARK: Lazy Getters
+
+  lazy var custom1: OWACustomView! = {
+    let v = OWACustomView()
+    return v
+  }()
+
+  lazy var custom2: OWACustomView! = {
+    let v = OWACustomView()
+    return v
+  }()
+
+}
