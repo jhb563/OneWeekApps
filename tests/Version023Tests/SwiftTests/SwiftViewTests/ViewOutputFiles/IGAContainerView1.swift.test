@@ -1,5 +1,5 @@
 //
-// IGAContainerView3.swift
+// IGAContainerView1.swift
 // MySampleApp
 //
 // Created By James Bowen 4/30/2016
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IGAContainerView3: UIView {
+class IGAContainerView1: UIView {
   
   // MARK: Lifecycle Methods
    
@@ -20,6 +20,11 @@ class IGAContainerView3: UIView {
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
+  }
+
+  func initCommon() {
+    setupViews()
+    setupConstraints()
   }
    
   // MARK: Setup Methods

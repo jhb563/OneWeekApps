@@ -21,6 +21,11 @@ class IGAContainerView2: UIView {
     super.init(coder: aDecoder)
     initCommon()
   }
+
+  func initCommon() {
+    setupViews()
+    setupConstraints()
+  }
    
   // MARK: Setup Methods
    
@@ -61,11 +66,6 @@ class IGAContainerView2: UIView {
 
   // MARK: Lazy Getters
   
-  func initCommon() {
-    setupViews()
-    setupConstraints()
-  }
-
   lazy var topContainer: UIView! = {
     let v = UIView()
     return v
