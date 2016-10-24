@@ -18,6 +18,7 @@ module SwiftViewPrintTests (
 import OWAAppInfo
 import OWASwiftAbSyn
 import OWAViewSwift
+import SwiftCustomTestViews
 import SwiftTestViews
 import TestUtil
 import Test.Hspec
@@ -31,6 +32,7 @@ runSwiftViewPrintTests currentDirectory = do
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       elementTests testDirectory
       constraintTests testDirectory
+      customViewTests testDirectory
 
 elementTests :: FilePath -> Spec
 elementTests testDirectory = describe "Print File Structure for Swift views with sub-elements" $ do
@@ -66,6 +68,12 @@ constraintTests testDirectory = describe "Print File Structure for Swift views w
     (testDirectory ++ centerResultFile) `filesShouldMatch`
       (testDirectory ++ centerTestFile)
 
+customViewTests :: FilePath -> Spec
+customViewTests testDirectory = describe "Print File Structure for Swift views with custom views" $ do
+  it "The printed file should match when the view contains a custom view" $
+    (testDirectory ++ customViewResultFile) `filesShouldMatch`
+      (testDirectory ++ customViewTestFile)
+
 dirExtension :: FilePath
 dirExtension = "/tests/Version023Tests/SwiftTests/SwiftViewTests/ViewOutputFiles/"
 
@@ -87,7 +95,8 @@ testFileStructures =
   , swiftFileFromView sampleAppInfo align1TestView
   , swiftFileFromView sampleAppInfo align2TestView
   , swiftFileFromView sampleAppInfo placementTestView
-  , swiftFileFromView sampleAppInfo centerTestView ]
+  , swiftFileFromView sampleAppInfo centerTestView 
+  , swiftFileFromView sampleAppInfo basicCustomTest ]
 
 resultsFiles :: [FilePath]
 resultsFiles = 
@@ -98,7 +107,8 @@ resultsFiles =
   , align1ResultFile
   , align2ResultFile
   , placementResultFile
-  , centerResultFile ]
+  , centerResultFile 
+  , customViewResultFile ]
 
 element1ResultFile :: FilePath
 element1ResultFile = "/VIAElementTest1.swift"
@@ -124,6 +134,9 @@ placementResultFile = "VIAConstraintTest5.swift"
 centerResultFile :: FilePath
 centerResultFile = "VIAConstraintTest6.swift"
 
+customViewResultFile :: FilePath
+customViewResultFile = "IGACustomTest1.swift"
+
 element1TestFile :: FilePath
 element1TestFile = "/VIAElementTest1.swift.test"
 
@@ -147,3 +160,6 @@ placementTestFile = "VIAConstraintTest5.swift.test"
 
 centerTestFile :: FilePath
 centerTestFile = "VIAConstraintTest6.swift.test"
+
+customViewTestFile :: FilePath
+customViewTestFile = "IGACustomTest1.swift.test"

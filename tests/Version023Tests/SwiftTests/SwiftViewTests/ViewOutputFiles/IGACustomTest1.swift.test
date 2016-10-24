@@ -1,0 +1,74 @@
+//
+// IGACustomTest1.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+class IGACustomTest1: UIView {
+  
+  // MARK: Lifecycle Methods
+  
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    initCommon()
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    initCommon()
+  }
+  
+  func initCommon() {
+    setupViews()
+    setupConstraints()
+  }
+  
+  // MARK: Setup Methods
+  
+  func setupViews() {
+    let subviews = [myLabel, firstView, myButton]
+    for view in subviews {
+      view.translatesAutoresizingMaskIntoConstraints = false
+      addSubview(view)
+    }
+  }
+  
+  func setupConstraints() {
+    NSLayoutConstraint(item: myLabel, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 60.0).active = true
+    NSLayoutConstraint(item: myLabel, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 30.0).active = true
+    NSLayoutConstraint(item: myLabel, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
+    NSLayoutConstraint(item: myLabel, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: firstView, attribute: .Top, relatedBy: .Equal, toItem: myLabel, attribute: .Bottom, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: firstView, attribute: .Left, relatedBy: .Equal, toItem: myLabel, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: firstView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: firstView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 200.0).active = true
+    NSLayoutConstraint(item: myButton, attribute: .Top, relatedBy: .Equal, toItem: firstView, attribute: .Bottom, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myButton, attribute: .Left, relatedBy: .Equal, toItem: firstView, attribute: .Left, multiplier: 1.0, constant: 10.0).active = true
+    NSLayoutConstraint(item: myButton, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 50.0).active = true
+    NSLayoutConstraint(item: myButton, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+  }
+  
+  // MARK: Lazy Getters
+  
+  lazy var myLabel: UILabel! = {
+    let v = UILabel()
+    v.text = NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
+    return v
+  }()
+  
+  lazy var firstView: OWAFirstView! = {
+    let v = OWAFirstView()
+    return v
+  }()
+  
+  lazy var myButton: UIButton! = {
+    let v = UIButton()
+    v.setTitle(NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
+    return v
+  }()
+  
+}
