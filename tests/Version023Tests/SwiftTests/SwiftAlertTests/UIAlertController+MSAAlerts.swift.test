@@ -11,6 +11,7 @@ import UIKit
 typealias AlertHandler = () -> Void
 
 extension UIAlertController {
+
   class func blankMessage(handler: AlertHandler) -> UIAlertController {
     let alert = UIAlertController(title: NSLocalizedString("Hi", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
     let neutralAction = UIAlertAction(title: NSLocalizedString("NOTHING", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
