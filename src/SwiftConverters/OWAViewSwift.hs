@@ -36,7 +36,7 @@ swiftFileFromView appInfo view = SwiftFile
     setupSection = MethodImplementationListSection (Just "Setup Methods") 
       [setupViewsMethod view, setupConstraintsMethod view]
     lazyGetterSection = StatementListSection (Just "Lazy Getters")
-      (map lazyGetterForElement (subviews view))
+      (map lazyGetterForElement (allChildViews view))
     viewClassSection = ClassSection typeName originalViewType 
       [ lifecycleSection
       , setupSection
@@ -164,6 +164,17 @@ constraintStatement constraint = AssignStatement
 --------------------------------------------------------------------------------
 --------------------------LAZY GETTERS------------------------------------------
 --------------------------------------------------------------------------------
+
+allChildViews :: OWAView -> [OWAViewElement]
+allChildViews view = concatMap allNestedSubviews (subviews view)
+
+allNestedSubviews :: OWAViewElement -> [OWAViewElement]
+allNestedSubviews containerElem@(ContainerViewElement container) = containerElem :
+  concatMap allNestedSubviews (containerSubviews container)
+allNestedSubviews scrollElem@(ScrollViewElement scrollView) = scrollElem : ContainerViewElement container :
+  concatMap allNestedSubviews (containerSubviews container)
+  where container = scrollViewContainer scrollView
+allNestedSubviews otherElem = [otherElem]
 
 lazyGetterForElement :: OWAViewElement -> SwiftStatement
 lazyGetterForElement element = VarDecl 

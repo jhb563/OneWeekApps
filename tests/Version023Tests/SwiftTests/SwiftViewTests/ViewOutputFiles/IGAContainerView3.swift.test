@@ -106,7 +106,7 @@ class IGAContainerView3: UIView {
   
   lazy var myField: UITextField! = {
     let v = UITextField()
-    let placeholerAttributes = []
+    let placeholderAttributes = []
     let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Enter Location", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
     v.attributedPlaceholder = attributedPlaceholder
     return v
