@@ -34,6 +34,7 @@ runSwiftViewPrintTests currentDirectory = do
       constraintTests testDirectory
       customViewTests testDirectory
       containerViewTests testDirectory
+      scrollViewTests testDirectory
 
 elementTests :: FilePath -> Spec
 elementTests testDirectory = describe "Print File Structure for Swift views with sub-elements" $ do
@@ -69,20 +70,6 @@ constraintTests testDirectory = describe "Print File Structure for Swift views w
     (testDirectory ++ centerResultFile) `filesShouldMatch`
       (testDirectory ++ centerTestFile)
 
-containerViewTests :: FilePath -> Spec
-containerViewTests testDirectory = describe "Print File Structure for Swift views with container views" $ do
-  it "The printed file should match for a basic container view" $
-    (testDirectory ++ container1ResultFile) `filesShouldMatch`
-      (testDirectory ++ container1TestFile)
-
-  it "The printed file should match for a view with nested container views" $
-    (testDirectory ++ container2ResultFile) `filesShouldMatch`
-      (testDirectory ++ container2TestFile)
-
-  it "The printed file should match for a view with two different container views" $
-    (testDirectory ++ container3ResultFile) `filesShouldMatch`
-      (testDirectory ++ container3TestFile)
-
 customViewTests :: FilePath -> Spec
 customViewTests testDirectory = describe "Print File Structure for Swift views with custom views" $ do
   it "The printed file should match for a basic custom view" $
@@ -97,6 +84,34 @@ customViewTests testDirectory = describe "Print File Structure for Swift views w
     (testDirectory ++ custom3ResultFile) `filesShouldMatch`
       (testDirectory ++ custom3TestFile)
 
+containerViewTests :: FilePath -> Spec
+containerViewTests testDirectory = describe "Print File Structure for Swift views with container views" $ do
+  it "The printed file should match for a basic container view" $
+    (testDirectory ++ container1ResultFile) `filesShouldMatch`
+      (testDirectory ++ container1TestFile)
+
+  it "The printed file should match for a view with nested container views" $
+    (testDirectory ++ container2ResultFile) `filesShouldMatch`
+      (testDirectory ++ container2TestFile)
+
+  it "The printed file should match for a view with two different container views" $
+    (testDirectory ++ container3ResultFile) `filesShouldMatch`
+      (testDirectory ++ container3TestFile)
+
+scrollViewTests :: FilePath -> Spec
+scrollViewTests testDirectory = describe "Print File Structure for Swift views with scroll views" $ do
+  it "The printed file should match for a default scroll view" $
+    (testDirectory ++ scroll1ResultFile) `filesShouldMatch`
+      (testDirectory ++ scroll1TestFile)
+
+  it "The printed file should match for a view with a vertical scroll view" $
+    (testDirectory ++ scroll2ResultFile) `filesShouldMatch`
+      (testDirectory ++ scroll2TestFile)
+
+  it "The printed file should match for a view with a horizontal scroll view" $
+    (testDirectory ++ scroll3ResultFile) `filesShouldMatch`
+      (testDirectory ++ scroll3TestFile)
+
 dirExtension :: FilePath
 dirExtension = "/tests/Version023Tests/SwiftTests/SwiftViewTests/ViewOutputFiles/"
 
@@ -110,7 +125,7 @@ sampleAppInfo = OWAAppInfo {
 }
 
 testFileStructures :: [SwiftFile]
-testFileStructures = 
+testFileStructures =
   [ swiftFileFromView sampleAppInfo elementTest1
   , swiftFileFromView sampleAppInfo elementTest2
   , swiftFileFromView sampleAppInfo elementTest3
@@ -118,30 +133,36 @@ testFileStructures =
   , swiftFileFromView sampleAppInfo align1TestView
   , swiftFileFromView sampleAppInfo align2TestView
   , swiftFileFromView sampleAppInfo placementTestView
-  , swiftFileFromView sampleAppInfo centerTestView 
-  , swiftFileFromView sampleAppInfo basicCustomTest 
+  , swiftFileFromView sampleAppInfo centerTestView
+  , swiftFileFromView sampleAppInfo basicCustomTest
   , swiftFileFromView sampleAppInfo twoSameCustomTest
-  , swiftFileFromView sampleAppInfo twoDifferentCustomTest 
+  , swiftFileFromView sampleAppInfo twoDifferentCustomTest
   , swiftFileFromView sampleAppInfo basicContainerTest
   , swiftFileFromView sampleAppInfo nestedContainerTest
-  , swiftFileFromView sampleAppInfo twoContainersTest ]
+  , swiftFileFromView sampleAppInfo twoContainersTest
+  , swiftFileFromView sampleAppInfo scrollViewVerticalTestView
+  , swiftFileFromView sampleAppInfo scrollViewHorizontalTestView 
+  , swiftFileFromView sampleAppInfo scrollViewBothTestView ]
 
 resultsFiles :: [FilePath]
-resultsFiles = 
+resultsFiles =
   [ element1ResultFile
   , element2ResultFile
   , element3ResultFile
-  , heightWidthResultFile 
+  , heightWidthResultFile
   , align1ResultFile
   , align2ResultFile
   , placementResultFile
-  , centerResultFile 
-  , custom1ResultFile 
+  , centerResultFile
+  , custom1ResultFile
   , custom2ResultFile
-  , custom3ResultFile 
-  , container1ResultFile 
+  , custom3ResultFile
+  , container1ResultFile
   , container2ResultFile
-  , container3ResultFile ]
+  , container3ResultFile
+  , scroll1ResultFile
+  , scroll2ResultFile
+  , scroll3ResultFile ]
 
 element1ResultFile :: FilePath
 element1ResultFile = "VIAElementTest1.swift"
