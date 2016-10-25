@@ -9,7 +9,7 @@
 import UIKit
 
 class IGAContainerView3: UIView {
-
+  
   // MARK: Lifecycle Methods
   
   override init(frame: CGRect) {
@@ -35,12 +35,12 @@ class IGAContainerView3: UIView {
       view.translatesAutoresizingMaskIntoConstraints = false
       addSubview(view)
     }
-    let container1Subviews = [myField1]
+    let container1Subviews = [myImage]
     for view in container1Subviews {
       view.translatesAutoresizingMaskIntoConstraints = false;
       container1.addSubview(view)
     }
-    let container2Subviews = [myField2]
+    let container2Subviews = [myField]
     for view in container2Subviews {
       view.translatesAutoresizingMaskIntoConstraints = false;
       container2.addSubview(view)
@@ -48,48 +48,48 @@ class IGAContainerView3: UIView {
   }
   
   func setupConstraints() {
-    NSLayoutConstraint(item: firstLabel, attribute: .Top, relatedBy:.Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 20.0).active = true
-    NSLayoutConstraint(item: firstLabel, attribute: .Left, relatedBy:.Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 20.0).active = true
-    NSLayoutConstraint(item: firstLabel, attribute: .Height, relatedBy:.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
-    NSLayoutConstraint(item: firstLabel, attribute: .Width, relatedBy:.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
-    NSLayoutConstraint(item: container1, attribute: .Top, relatedBy:.Equal, toItem: self.firstLabel, attribute: .Bottom, multiplier: 1.0, constant: 10.0).active = true
-    NSLayoutConstraint(item: container1, attribute: .Left, relatedBy:.Equal, toItem: self.firstLabel, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: container1, attribute: .Height, relatedBy:.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
-    NSLayoutConstraint(item: container1, attribute: .Width, relatedBy:.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
-    NSLayoutConstraint(item: myField1, attribute: .Height, relatedBy:.Equal, toItem: self.container1, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField1, attribute: .Width, relatedBy:.Equal, toItem: self.container1, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField1, attribute: .CenterX, relatedBy:.Equal, toItem: self.container1, attribute: .CenterX, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField1, attribute: .CenterY, relatedBy:.Equal, toItem: self.container1, attribute: .CenterY, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: secondLabel, attribute: .Top, relatedBy:.Equal, toItem: self.container1, attribute: .Bottom, multiplier: 1.0, constant: 20.0).active = true
-    NSLayoutConstraint(item: secondLabel, attribute: .Left, relatedBy:.Equal, toItem: self.firstLabel, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: secondLabel, attribute: .Height, relatedBy:.Equal, toItem: self.firstLabel, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: secondLabel, attribute: .Width, relatedBy:.Equal, toItem: self.firstLabel, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: container2, attribute: .Top, relatedBy:.Equal, toItem: self.secondLabel, attribute: .Bottom, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: container2, attribute: .Left, relatedBy:.Equal, toItem: self.container1, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: container2, attribute: .Height, relatedBy:.Equal, toItem: self.container1, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: container2, attribute: .Width, relatedBy:.Equal, toItem: self.container1, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField2, attribute: .CenterY, relatedBy:.Equal, toItem: self.container2, attribute: .CenterY, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField2, attribute: .Left, relatedBy:.Equal, toItem: self.container2, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField2, attribute: .Right, relatedBy:.Equal, toItem: self.container2, attribute: .Right, multiplier: 1.0, constant: 0.0).active = true
-    NSLayoutConstraint(item: myField2, attribute: .Height, relatedBy:.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
+    NSLayoutConstraint(item: firstLabel, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 20.0).active = true
+    NSLayoutConstraint(item: firstLabel, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 20.0).active = true
+    NSLayoutConstraint(item: firstLabel, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
+    NSLayoutConstraint(item: firstLabel, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: container1, attribute: .Top, relatedBy: .Equal, toItem: firstLabel, attribute: .Bottom, multiplier: 1.0, constant: 10.0).active = true
+    NSLayoutConstraint(item: container1, attribute: .Left, relatedBy: .Equal, toItem: firstLabel, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: container1, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: container1, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .Height, relatedBy: .Equal, toItem: container1, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .Width, relatedBy: .Equal, toItem: container1, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .CenterX, relatedBy: .Equal, toItem: container1, attribute: .CenterX, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myImage, attribute: .CenterY, relatedBy: .Equal, toItem: container1, attribute: .CenterY, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: secondLabel, attribute: .Top, relatedBy: .Equal, toItem: container1, attribute: .Bottom, multiplier: 1.0, constant: 20.0).active = true
+    NSLayoutConstraint(item: secondLabel, attribute: .Left, relatedBy: .Equal, toItem: firstLabel, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: secondLabel, attribute: .Height, relatedBy: .Equal, toItem: firstLabel, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: secondLabel, attribute: .Width, relatedBy: .Equal, toItem: firstLabel, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: container2, attribute: .Top, relatedBy: .Equal, toItem: secondLabel, attribute: .Bottom, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: container2, attribute: .Left, relatedBy: .Equal, toItem: container1, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: container2, attribute: .Height, relatedBy: .Equal, toItem: container1, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: container2, attribute: .Width, relatedBy: .Equal, toItem: container1, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myField, attribute: .CenterY, relatedBy: .Equal, toItem: container2, attribute: .CenterY, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myField, attribute: .Left, relatedBy: .Equal, toItem: container2, attribute: .Left, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myField, attribute: .Right, relatedBy: .Equal, toItem: container2, attribute: .Right, multiplier: 1.0, constant: 0.0).active = true
+    NSLayoutConstraint(item: myField, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
   }
   
   // MARK: Lazy Getters
-
+  
   lazy var firstLabel: UILabel! = {
-      let v = UILabel()
-      v.text = NSLocalizedString("Name", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
-      return v
-    }()
+    let v = UILabel()
+    v.text = NSLocalizedString("Name", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
+    return v
+  }()
   
   lazy var container1: UIView! = {
     let v = UIView()
     return v
   }()
   
-  lazy var myField1: UITextField! = {
-    let v = UITextField()
-    v.backgroundColor = UIColor.blueColor()
+  lazy var myImage: UIImageView! = {
+    let v = UIImageView()
+    v.image = UIImage(imageLiteral: "file1.png")
     return v
   }()
   
@@ -104,9 +104,11 @@ class IGAContainerView3: UIView {
     return v
   }()
   
-  lazy var myField2: UITextField! = {
+  lazy var myField: UITextField! = {
     let v = UITextField()
-    v.backgroundColor = UIColor.greenColor()
+    let placeholerAttributes = []
+    let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("Enter Location", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
+    v.attributedPlaceholder = attributedPlaceholder
     return v
   }()
   

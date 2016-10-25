@@ -72,7 +72,7 @@ class IGAScrollView2: UIView {
   }
   
   // MARK: Lazy Getters
-   
+  
   lazy var scrollView: UIScrollView! = {
     let v = UIScrollView()
     return v
