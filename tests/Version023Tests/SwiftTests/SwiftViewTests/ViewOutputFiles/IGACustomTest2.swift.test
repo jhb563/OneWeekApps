@@ -28,7 +28,7 @@ class IGACustomTest2: UIView {
   }
   
   // MARK: Setup Methods
-
+  
   func setupViews() {
     let subviews = [custom1, custom2]
     for view in subviews {
@@ -36,7 +36,7 @@ class IGACustomTest2: UIView {
       addSubview(view)
     }
   }
-
+  
   func setupConstraints() {
     NSLayoutConstraint(item: custom1, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 40.0).active = true
     NSLayoutConstraint(item: custom1, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0).active = true
@@ -47,17 +47,17 @@ class IGACustomTest2: UIView {
     NSLayoutConstraint(item: custom2, attribute: .Width, relatedBy: .Equal, toItem: custom1, attribute: .Width, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: custom2, attribute: .Height, relatedBy: .Equal, toItem: custom1, attribute: .Height, multiplier: 1.0, constant: 0.0).active = true
   }
-
+  
   // MARK: Lazy Getters
-
+  
   lazy var custom1: OWACustomView! = {
     let v = OWACustomView()
     return v
   }()
-
+  
   lazy var custom2: OWACustomView! = {
     let v = OWACustomView()
     return v
   }()
-
+  
 }

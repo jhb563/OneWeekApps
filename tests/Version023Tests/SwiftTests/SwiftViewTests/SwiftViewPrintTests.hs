@@ -18,6 +18,7 @@ module SwiftViewPrintTests (
 import OWAAppInfo
 import OWASwiftAbSyn
 import OWAViewSwift
+import SwiftSpecialTestViews
 import SwiftTestViews
 import TestUtil
 import Test.Hspec
@@ -31,6 +32,7 @@ runSwiftViewPrintTests currentDirectory = do
     . afterAll_ (removeResultsFiles testDirectory resultsFiles) $ do
       elementTests testDirectory
       constraintTests testDirectory
+      customViewTests testDirectory
 
 elementTests :: FilePath -> Spec
 elementTests testDirectory = describe "Print File Structure for Swift views with sub-elements" $ do
@@ -66,6 +68,20 @@ constraintTests testDirectory = describe "Print File Structure for Swift views w
     (testDirectory ++ centerResultFile) `filesShouldMatch`
       (testDirectory ++ centerTestFile)
 
+customViewTests :: FilePath -> Spec
+customViewTests testDirectory = describe "Print File Structure for Swift views with custom views" $ do
+  it "The printed file should match for a basic custom view" $
+    (testDirectory ++ custom1ResultFile) `filesShouldMatch`
+      (testDirectory ++ custom1TestFile)
+
+  it "The printed file should match for a view with two of the same custom views" $
+    (testDirectory ++ custom2ResultFile) `filesShouldMatch`
+      (testDirectory ++ custom2TestFile)
+
+  it "The printed file should match for a view with two different custom views" $
+    (testDirectory ++ custom3ResultFile) `filesShouldMatch`
+      (testDirectory ++ custom3TestFile)
+
 dirExtension :: FilePath
 dirExtension = "/tests/Version023Tests/SwiftTests/SwiftViewTests/ViewOutputFiles/"
 
@@ -87,7 +103,10 @@ testFileStructures =
   , swiftFileFromView sampleAppInfo align1TestView
   , swiftFileFromView sampleAppInfo align2TestView
   , swiftFileFromView sampleAppInfo placementTestView
-  , swiftFileFromView sampleAppInfo centerTestView ]
+  , swiftFileFromView sampleAppInfo centerTestView 
+  , swiftFileFromView sampleAppInfo basicCustomTest 
+  , swiftFileFromView sampleAppInfo twoSameCustomTest
+  , swiftFileFromView sampleAppInfo twoDifferentCustomTest ]
 
 resultsFiles :: [FilePath]
 resultsFiles = 
@@ -98,16 +117,19 @@ resultsFiles =
   , align1ResultFile
   , align2ResultFile
   , placementResultFile
-  , centerResultFile ]
+  , centerResultFile 
+  , custom1ResultFile 
+  , custom2ResultFile
+  , custom3ResultFile ]
 
 element1ResultFile :: FilePath
-element1ResultFile = "/VIAElementTest1.swift"
+element1ResultFile = "VIAElementTest1.swift"
 
 element2ResultFile :: FilePath
-element2ResultFile = "/VIAElementTest2.swift"
+element2ResultFile = "VIAElementTest2.swift"
 
 element3ResultFile :: FilePath
-element3ResultFile = "/VIAElementTest3.swift"
+element3ResultFile = "VIAElementTest3.swift"
 
 heightWidthResultFile :: FilePath
 heightWidthResultFile = "VIAConstraintTest2.swift"
@@ -152,13 +174,13 @@ scroll3ResultFile :: FilePath
 scroll3ResultFile = "IGAScrollView3.swift"
 
 element1TestFile :: FilePath
-element1TestFile = "/VIAElementTest1.swift.test"
+element1TestFile = "VIAElementTest1.swift.test"
 
 element2TestFile :: FilePath
-element2TestFile = "/VIAElementTest2.swift.test"
+element2TestFile = "VIAElementTest2.swift.test"
 
 element3TestFile :: FilePath
-element3TestFile = "/VIAElementTest3.swift.test"
+element3TestFile = "VIAElementTest3.swift.test"
 
 heightWidthTestFile :: FilePath
 heightWidthTestFile = "VIAConstraintTest2.swift.test"
