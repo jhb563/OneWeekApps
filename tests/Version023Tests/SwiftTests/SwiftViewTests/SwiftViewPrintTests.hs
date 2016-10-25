@@ -124,6 +124,33 @@ placementResultFile = "VIAConstraintTest5.swift"
 centerResultFile :: FilePath
 centerResultFile = "VIAConstraintTest6.swift"
 
+custom1ResultFile :: FilePath
+custom1ResultFile = "IGACustomTest1.swift"
+
+custom2ResultFile :: FilePath
+custom2ResultFile = "IGACustomTest2.swift"
+
+custom3ResultFile :: FilePath
+custom3ResultFile = "IGACustomTest3.swift"
+
+container1ResultFile :: FilePath
+container1ResultFile = "IGAContainerView1.swift"
+
+container2ResultFile :: FilePath
+container2ResultFile = "IGAContainerView2.swift"
+
+container3ResultFile :: FilePath
+container3ResultFile = "IGAContainerView3.swift"
+
+scroll1ResultFile :: FilePath
+scroll1ResultFile = "IGAScrollView1.swift"
+
+scroll2ResultFile :: FilePath
+scroll2ResultFile = "IGAScrollView2.swift"
+
+scroll3ResultFile :: FilePath
+scroll3ResultFile = "IGAScrollView3.swift"
+
 element1TestFile :: FilePath
 element1TestFile = "/VIAElementTest1.swift.test"
 
@@ -147,3 +174,30 @@ placementTestFile = "VIAConstraintTest5.swift.test"
 
 centerTestFile :: FilePath
 centerTestFile = "VIAConstraintTest6.swift.test"
+
+custom1TestFile :: FilePath
+custom1TestFile = "IGACustomTest1.swift.test"
+
+custom2TestFile :: FilePath
+custom2TestFile = "IGACustomTest2.swift.test"
+
+custom3TestFile :: FilePath
+custom3TestFile = "IGACustomTest3.swift.test"
+
+container1TestFile :: FilePath
+container1TestFile = "IGAContainerView1.swift.test"
+
+container2TestFile :: FilePath
+container2TestFile = "IGAContainerView2.swift.test"
+
+container3TestFile :: FilePath
+container3TestFile = "IGAContainerView3.swift.test"
+
+scroll1TestFile :: FilePath
+scroll1TestFile = "IGAScrollView1.swift.test"
+
+scroll2TestFile :: FilePath
+scroll2TestFile = "IGAScrollView2.swift.test"
+
+scroll3TestFile :: FilePath
+scroll3TestFile = "IGAScrollView3.swift.test"
