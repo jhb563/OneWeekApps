@@ -53,6 +53,7 @@ uiKitImportSection = ImportsSection [ModuleImport "UIKit"]
 -------------------LOCALIZED STRINGS-------------------------------------------
 -------------------------------------------------------------------------------
 
+-- | Creates an expression for a localized string, given the key string.
 localizedStringForText :: String -> SwiftExpression
 localizedStringForText txt = MethodCall
   Nothing

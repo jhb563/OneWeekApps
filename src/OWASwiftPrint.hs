@@ -151,7 +151,7 @@ expressionDoc (MethodCall callerExp method paramExps) = case callerExp of
 expressionDoc (PropertyCall expr ident) = expressionDoc expr <> text "." <> text ident
 expressionDoc (ClosureExpr closure) = nest 2 
   (headDoc PPrint.<$> 
-    (vcat (map statementDoc (closureBody closure))))
+    vcat (map statementDoc (closureBody closure)))
   PPrint.<$> text "}"
   where
     ps = closureParams closure

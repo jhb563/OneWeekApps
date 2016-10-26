@@ -54,6 +54,8 @@ data CalledMethod = UserMethod SwiftMethod |
     libParams :: [Maybe String]
   } deriving (Show, Eq)
 
+-- | 'Closure' represents a block which can be called with certain 
+-- arguments. An anonymous function of sorts.
 data Closure = Closure {
   closureParams :: [ParamDef],
   closureBody :: [SwiftStatement]

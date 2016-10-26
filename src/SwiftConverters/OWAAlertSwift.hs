@@ -54,7 +54,7 @@ methodForAlert alert = SwiftMethod
   (Just $ SimpleType originalAlertTypeName)
   (paramsForFormat format)
   (alertConstructor :
-    (actionStatementsForFormat format) ++
+    actionStatementsForFormat format ++
     [ReturnStatement (Var "alert")])
   where
     format = alertButtonFormat alert
