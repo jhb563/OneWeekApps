@@ -37,12 +37,12 @@ class IGAContainerView3: UIView {
     }
     let container1Subviews = [myImage]
     for view in container1Subviews {
-      view.translatesAutoresizingMaskIntoConstraints = false;
+      view.translatesAutoresizingMaskIntoConstraints = false
       container1.addSubview(view)
     }
     let container2Subviews = [myField]
     for view in container2Subviews {
-      view.translatesAutoresizingMaskIntoConstraints = false;
+      view.translatesAutoresizingMaskIntoConstraints = false
       container2.addSubview(view)
     }
   }

@@ -43,7 +43,7 @@ class IGAContainerView2: UIView {
     let insideContainerSubviews = [insideLabel]
     for view in insideContainerSubviews {
       view.translatesAutoresizingMaskIntoConstraints = false
-      insideContainerSubviews.addSubview(view)
+      insideContainer.addSubview(view)
     }
   }
   
