@@ -94,6 +94,9 @@ typeDoc :: SwiftType -> Doc
 typeDoc (SimpleType typ) = text typ
 typeDoc (OptionalType typ) = text typ <> text "?"
 typeDoc (ExplicitType typ) = text typ <> text "!"
+typeDoc (FunctionType argTypes returnType) = parens 
+  (hcat $ punctuate (text ", ") (map typeDoc argTypes)) <+>
+  text "->" <+> typeDoc returnType
 
 paramDoc :: ParamDef -> Doc
 paramDoc pDef = case label of
@@ -116,6 +119,8 @@ statementDoc (LetDecl name expr) = text "let" <+> text name <+>
 statementDoc (VarDecl declQualfiers name varType expr) = hsep 
   (map text (declQualfiers ++ ["var"])) <+>
   text name <> colon <+> typeDoc varType <+> text "=" <> expressionDoc expr
+statementDoc (TypeAliasDecl name typ) = text "typealias" <+> text name <+> text "=" <+>
+  typeDoc typ
 statementDoc (AssignStatement expr1 expr2) = expressionDoc expr1 <+> text "=" <+>
   expressionDoc expr2
 statementDoc (ForEachBlock varExpr containerExpr statements) = indentBlock

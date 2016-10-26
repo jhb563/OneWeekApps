@@ -54,11 +54,11 @@ data CalledMethod = UserMethod SwiftMethod |
     libParams :: [Maybe String]
   } deriving (Show, Eq)
 
--- | 'SwiftType' combines the possible types we can have in Swift. Currently
--- we have normal/simple types, and optional types (which are printed with a '?')
+-- | 'SwiftType' combines the possible types of types we can have in Swift.
 data SwiftType = SimpleType String |
   OptionalType String |
-  ExplicitType String
+  ExplicitType String |
+  FunctionType [SwiftType] SwiftType
   deriving (Show, Eq)
 
 -- | 'ParamDef' abstracts the three parts describing a method parameter
@@ -75,6 +75,7 @@ data SwiftStatement =
   ExpressionStatement SwiftExpression |
   LetDecl Identifier SwiftExpression |
   VarDecl [String] Identifier SwiftType SwiftExpression |
+  TypeAliasDecl Identifier SwiftType |
   AssignStatement SwiftExpression SwiftExpression |
   ForEachBlock SwiftExpression SwiftExpression [SwiftStatement]
   deriving (Show, Eq)

@@ -27,3 +27,7 @@ data OWAAlert = OWAAlert {
   alertMessage :: LocalizedKey,
   alertButtonFormat :: AlertButtonFormat
 } deriving (Show, Eq)
+
+-- | Compare two alerts just by comparing their names
+instance Ord OWAAlert where
+  alert1 `compare` alert2 = alertName alert1 `compare` alertName alert2
