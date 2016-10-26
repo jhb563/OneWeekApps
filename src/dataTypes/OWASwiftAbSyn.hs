@@ -54,11 +54,18 @@ data CalledMethod = UserMethod SwiftMethod |
     libParams :: [Maybe String]
   } deriving (Show, Eq)
 
--- | 'SwiftType' combines the possible types we can have in Swift. Currently
--- we have normal/simple types, and optional types (which are printed with a '?')
+-- | 'Closure' represents a block which can be called with certain 
+-- arguments. An anonymous function of sorts.
+data Closure = Closure {
+  closureParams :: [ParamDef],
+  closureBody :: [SwiftStatement]
+} deriving (Show, Eq)
+
+-- | 'SwiftType' combines the possible types of types we can have in Swift.
 data SwiftType = SimpleType String |
   OptionalType String |
-  ExplicitType String
+  ExplicitType String |
+  FunctionType [SwiftType] SwiftType
   deriving (Show, Eq)
 
 -- | 'ParamDef' abstracts the three parts describing a method parameter
@@ -75,6 +82,7 @@ data SwiftStatement =
   ExpressionStatement SwiftExpression |
   LetDecl Identifier SwiftExpression |
   VarDecl [String] Identifier SwiftType SwiftExpression |
+  TypeAliasDecl Identifier SwiftType |
   AssignStatement SwiftExpression SwiftExpression |
   ForEachBlock SwiftExpression SwiftExpression [SwiftStatement]
   deriving (Show, Eq)
@@ -85,7 +93,8 @@ data SwiftStatement =
 data SwiftExpression =
   MethodCall (Maybe SwiftExpression) CalledMethod [SwiftExpression] |
   PropertyCall SwiftExpression Identifier |
-  Closure [SwiftStatement] | -- For now the only closures we need have no arguments
+  ClosureExpr Closure |
+  CalledClosure Closure [SwiftExpression] |
   Var Identifier |
   FloatLit Float |
   StringLit String |
