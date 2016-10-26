@@ -11,24 +11,24 @@ import UIKit
 class IGAContainerView2: UIView {
   
   // MARK: Lifecycle Methods
-   
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     initCommon()
   }
-   
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     initCommon()
   }
-
+  
   func initCommon() {
     setupViews()
     setupConstraints()
   }
-   
+  
   // MARK: Setup Methods
-   
+  
   func setupViews() {
     let subviews = [topContainer]
     for view in subviews {
@@ -43,10 +43,10 @@ class IGAContainerView2: UIView {
     let insideContainerSubviews = [insideLabel]
     for view in insideContainerSubviews {
       view.translatesAutoresizingMaskIntoConstraints = false
-      insideContainerSubviews.addSubview(view)
+      insideContainer.addSubview(view)
     }
   }
-
+  
   func setupConstraints() {
     NSLayoutConstraint(item: topContainer, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: topContainer, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1.0, constant: 0.0).active = true
@@ -61,31 +61,31 @@ class IGAContainerView2: UIView {
     NSLayoutConstraint(item: topButton, attribute: .CenterY, relatedBy: .Equal, toItem: topContainer, attribute: .CenterY, multiplier: 1.0, constant: 0.0).active = true
     NSLayoutConstraint(item: topButton, attribute: .Left, relatedBy: .Equal, toItem: insideContainer, attribute: .Right, multiplier: 1.0, constant: 20.0).active = true
     NSLayoutConstraint(item: topButton, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 30.0).active = true
-    NSLayoutConstraint(item: self.topButton, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
+    NSLayoutConstraint(item: topButton, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 100.0).active = true
   }
-
+  
   // MARK: Lazy Getters
   
   lazy var topContainer: UIView! = {
     let v = UIView()
     return v
   }()
-
+  
   lazy var insideContainer: UIView! = {
     let v = UIView()
     return v
   }()
-
+  
   lazy var insideLabel: UILabel! = {
     let v = UILabel()
     v.text = NSLocalizedString("Hello from the inside", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     return v
   }()
-
+  
   lazy var topButton: UIButton! = {
     let v = UIButton()
     v.setTitle(NSLocalizedString("Hello from not so inside", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     return v
   }()
-
+  
 }

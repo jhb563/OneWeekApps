@@ -36,7 +36,7 @@ swiftFileFromView appInfo view = SwiftFile
     setupSection = MethodImplementationListSection (Just "Setup Methods") 
       [setupViewsMethod view, setupConstraintsMethod view]
     lazyGetterSection = StatementListSection (Just "Lazy Getters")
-      (map lazyGetterForElement (subviews view))
+      (map lazyGetterForElement (allChildViews view))
     viewClassSection = ClassSection typeName originalViewType 
       [ lifecycleSection
       , setupSection
@@ -107,20 +107,44 @@ setupViewsBase = SwiftMethod
 
 setupViewsMethod :: OWAView -> SwiftMethod
 setupViewsMethod view = setupViewsBase {
-    methodBody = [assignOfArray, forBlock]
+    methodBody = superViewSection ++ otherContainerSections
   }
   where
+    subs = subviews view
+    superViewSection = setupViewsSectionForNameAndElements "" subs
+    containers = concatMap searchSubviewsForContainers subs
+    otherContainerSections = concatMap setupViewsSectionForElement containers
+
+searchSubviewsForContainers :: OWAViewElement -> [OWAViewElement]
+searchSubviewsForContainers containerElem@(ContainerViewElement container) = 
+  containerElem : concatMap searchSubviewsForContainers (containerSubviews container)
+searchSubviewsForContainers scrollElem@(ScrollViewElement scrollView) = 
+  scrollElem : searchSubviewsForContainers (ContainerViewElement $ scrollViewContainer scrollView)
+searchSubviewsForContainers _ = []
+
+setupViewsSectionForElement :: OWAViewElement -> [SwiftStatement]
+setupViewsSectionForElement (ContainerViewElement container) = setupViewsSectionForNameAndElements 
+  (containerName container) 
+  (containerSubviews container)
+setupViewsSectionForElement (ScrollViewElement scrollView) = setupViewsSectionForNameAndElements
+  (scrollViewName scrollView)
+  [ContainerViewElement $ scrollViewContainer scrollView]
+
+setupViewsSectionForNameAndElements :: String -> [OWAViewElement] -> [SwiftStatement]
+setupViewsSectionForNameAndElements name elems = [assignOfArray, forBlock]
+  where
+    subviewsName = if null name then "subviews" else name ++ "Subviews"
     assignOfArray = LetDecl
-      "subviews"
-      (ArrayLit $ map (Var . nameForElement) (subviews view))
+      subviewsName
+      (ArrayLit $ map (Var . nameForElement) elems)
     translatesStatement = AssignStatement
       (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
       (BoolLit False)
     addSubviewStatement = ExpressionStatement $ MethodCall
-      Nothing
+      (if null name then Nothing else Just (Var name))
       LibMethod { libMethodName = "addSubview", libParams = [Nothing]}
       [Var "view"]
-    forBlock = ForEachBlock (Var "view") (Var "subviews")
+    forBlock = ForEachBlock (Var "view") (Var subviewsName)
       [translatesStatement, addSubviewStatement]
 
 setupConstraintsBase :: SwiftMethod
@@ -164,6 +188,17 @@ constraintStatement constraint = AssignStatement
 --------------------------------------------------------------------------------
 --------------------------LAZY GETTERS------------------------------------------
 --------------------------------------------------------------------------------
+
+allChildViews :: OWAView -> [OWAViewElement]
+allChildViews view = concatMap allNestedSubviews (subviews view)
+
+allNestedSubviews :: OWAViewElement -> [OWAViewElement]
+allNestedSubviews containerElem@(ContainerViewElement container) = containerElem :
+  concatMap allNestedSubviews (containerSubviews container)
+allNestedSubviews scrollElem@(ScrollViewElement scrollView) = scrollElem : ContainerViewElement container :
+  concatMap allNestedSubviews (containerSubviews container)
+  where container = scrollViewContainer scrollView
+allNestedSubviews otherElem = [otherElem]
 
 lazyGetterForElement :: OWAViewElement -> SwiftStatement
 lazyGetterForElement element = VarDecl 
