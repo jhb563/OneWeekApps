@@ -44,7 +44,107 @@ listSectionForAlerts alerts = ExtensionSection
   where
     maybeMethodSection = if null alerts
       then []
-      else []
+      else [MethodImplementationListSection Nothing $ map methodForAlert alerts]
+
+methodForAlert :: OWAAlert -> SwiftMethod
+methodForAlert alert = SwiftMethod
+  False
+  ["class"]
+  (alertName alert)
+  (Just $ SimpleType originalAlertTypeName)
+  (paramsForFormat format)
+  (alertConstructor :
+    (actionStatementsForFormat format) ++
+    [ReturnStatement (Var "alert")])
+  where
+    format = alertButtonFormat alert
+    alertConstructor = LetDecl "alert" $
+      MethodCall 
+      Nothing 
+      alertConstructorMethod
+      [ localizedStringForText (alertTitle alert)
+      , localizedStringForText (alertMessage alert)
+      , Var ".Alert" ]
+
+paramsForFormat :: AlertButtonFormat -> [ParamDef]
+paramsForFormat (DismissButton _) = []
+paramsForFormat (NeutralButton _) = 
+  [ ParamDef 
+    { paramLabelName = Just "handler"
+    , paramTitle = "handler"
+    , paramType = SimpleType "AlertHandler" } ]
+paramsForFormat (YesNoButtons _ _) =
+  [ ParamDef
+    { paramLabelName = Just "yesHandler"
+    , paramTitle = "yesHandler"
+    , paramType = SimpleType "AlertHandler" }
+  , ParamDef
+    { paramLabelName = Just "noHandler"
+    , paramTitle = "noHandler"
+    , paramType = SimpleType "AlertHandler" } ]
+
+actionStatementsForFormat :: AlertButtonFormat -> [SwiftStatement]
+actionStatementsForFormat (DismissButton name) = actionStatements name "dismissAction" ""
+actionStatementsForFormat (NeutralButton name) = actionStatements name "neutralAction" "handler"
+actionStatementsForFormat (YesNoButtons yesName noName) =
+  actionStatements yesName "yesAction" "yesHandler" ++ actionStatements noName "noAction" "noHandler"
+
+actionStatements :: String -> String -> String -> [SwiftStatement]
+actionStatements buttonName actionName handlerName = 
+  [ constructActionStatement
+  , addActionStatement actionName]
+  where
+    handlerCall = ExpressionStatement $ MethodCall
+      Nothing 
+      (handlerMethod handlerName)
+      []
+    handlerClosure = Closure
+      { closureParams = 
+          [ ParamDef
+            { paramLabelName = Just "alert"
+            , paramTitle = "alert"
+            , paramType = ExplicitType "UIAlertAction" } ] 
+      , closureBody = [ handlerCall ] }
+    handlerArg = if null handlerName
+      then Var "nil"
+      else ClosureExpr handlerClosure
+    constructActionStatement = LetDecl actionName $
+      MethodCall
+        Nothing
+        actionConstructorMethod
+        [ localizedStringForText buttonName
+        , Var ".Default"
+        , handlerArg ]
+
+addActionStatement :: String -> SwiftStatement
+addActionStatement actionName = ExpressionStatement $ MethodCall
+  (Just (Var "alert"))
+  addActionMethod
+  [Var actionName]
+
+--------------------------------------------------------------------------------
+--------------------------ALERT LIBRARY METHODS---------------------------------
+--------------------------------------------------------------------------------
+
+alertConstructorMethod :: CalledMethod
+alertConstructorMethod = LibMethod
+  { libMethodName = "UIAlertController"
+  , libParams = map Just ["title", "message", "preferredStyle"] }
+
+actionConstructorMethod :: CalledMethod
+actionConstructorMethod = LibMethod
+  { libMethodName = "UIAlertAction"
+  , libParams = map Just ["title", "style", "handler"] }
+
+addActionMethod :: CalledMethod
+addActionMethod = LibMethod
+  { libMethodName = "addAction"
+  , libParams = [Nothing] }
+
+handlerMethod :: String -> CalledMethod
+handlerMethod hName = LibMethod
+  { libMethodName = hName
+  , libParams = [] }
 
 --------------------------------------------------------------------------------
 --------------------------TYPE ALIAS STATEMENT----------------------------------

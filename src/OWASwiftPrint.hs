@@ -118,7 +118,7 @@ statementDoc (LetDecl name expr) = text "let" <+> text name <+>
   text "=" <+> expressionDoc expr
 statementDoc (VarDecl declQualfiers name varType expr) = hsep 
   (map text (declQualfiers ++ ["var"])) <+>
-  text name <> colon <+> typeDoc varType <+> text "=" <> expressionDoc expr
+  text name <> colon <+> typeDoc varType <+> text "=" <+> expressionDoc expr
 statementDoc (TypeAliasDecl name typ) = text "typealias" <+> text name <+> text "=" <+>
   typeDoc typ
 statementDoc (AssignStatement expr1 expr2) = expressionDoc expr1 <+> text "=" <+>
@@ -149,7 +149,17 @@ expressionDoc (MethodCall callerExp method paramExps) = case callerExp of
     fullParamListDoc = hcat $ punctuate (text ", ") pairedDocs
     fullMethodCall = text methodName <> parens fullParamListDoc
 expressionDoc (PropertyCall expr ident) = expressionDoc expr <> text "." <> text ident
-expressionDoc (Closure statements) = indentBlock empty (vcat (map statementDoc statements)) <> text "()"
+expressionDoc (ClosureExpr closure) = nest 2 
+  (headDoc PPrint.<$> 
+    (vcat (map statementDoc (closureBody closure))))
+  PPrint.<$> text "}"
+  where
+    ps = closureParams closure
+    headDoc = if null ps 
+      then text "{"
+      else text "{" <> parens (hcat $ punctuate (text ", ") (map paramDoc ps)) <+> text "in"
+expressionDoc (CalledClosure closure params) = expressionDoc (ClosureExpr closure) <>
+  parens (hcat $ punctuate (text ", ") (map expressionDoc params))
 expressionDoc (Var ident) = text ident
 expressionDoc (FloatLit flt) = text $ truncatedFloatString flt
 expressionDoc (StringLit str) = dquotes $ text str

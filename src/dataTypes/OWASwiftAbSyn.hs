@@ -54,6 +54,11 @@ data CalledMethod = UserMethod SwiftMethod |
     libParams :: [Maybe String]
   } deriving (Show, Eq)
 
+data Closure = Closure {
+  closureParams :: [ParamDef],
+  closureBody :: [SwiftStatement]
+} deriving (Show, Eq)
+
 -- | 'SwiftType' combines the possible types of types we can have in Swift.
 data SwiftType = SimpleType String |
   OptionalType String |
@@ -86,7 +91,8 @@ data SwiftStatement =
 data SwiftExpression =
   MethodCall (Maybe SwiftExpression) CalledMethod [SwiftExpression] |
   PropertyCall SwiftExpression Identifier |
-  Closure [SwiftStatement] | -- For now the only closures we need have no arguments
+  ClosureExpr Closure |
+  CalledClosure Closure [SwiftExpression] |
   Var Identifier |
   FloatLit Float |
   StringLit String |

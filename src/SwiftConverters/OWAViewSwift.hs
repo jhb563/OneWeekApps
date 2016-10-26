@@ -205,13 +205,14 @@ lazyGetterForElement element = VarDecl
   ["lazy"] 
   (nameForElement element)
   (ExplicitType typeName)
-  (Closure allStatements)
+  (CalledClosure lazyClosure [])
   where
     typeName = typeNameForElement element
     initMethod = LibMethod {libMethodName = typeName, libParams = []}
     initStatement = LetDecl "v" (MethodCall Nothing initMethod [])
     returnStatement = ReturnStatement (Var "v")
     allStatements = initStatement : lazyGetterCustomization element ++ [returnStatement]
+    lazyClosure = Closure [] allStatements
 
 lazyGetterCustomization :: OWAViewElement -> [SwiftStatement]
 lazyGetterCustomization (LabelElement label) = labelCustomization label
@@ -327,18 +328,6 @@ imageCustomization image = [imageSourceAssign]
 swiftVarForAttribute :: Maybe OWALayoutAttribute -> SwiftExpression
 swiftVarForAttribute Nothing = Var ".NotAnAttribute"
 swiftVarForAttribute (Just attr) = Var ('.' : show attr)
-
-localizedStringForText :: String -> SwiftExpression
-localizedStringForText txt = MethodCall
-  Nothing
-  LibMethod { libMethodName = "NSLocalizedString",
-    libParams = Nothing : map Just ["tableName", "bundle", "value", "comment"]}
-  [StringLit txt, Var "nil", bundleExpr, StringLit "", StringLit ""]
-  where
-    bundleExpr = MethodCall 
-      (Just (Var "NSBundle"))
-      LibMethod { libMethodName = "mainBundle", libParams = []}
-      []
 
 propAssign :: String -> SwiftExpression -> SwiftStatement
 propAssign prop = AssignStatement (PropertyCall (Var "v") prop)

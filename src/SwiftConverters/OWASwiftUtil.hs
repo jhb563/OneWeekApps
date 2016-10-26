@@ -8,7 +8,8 @@ Maintainer  : jhbowen047@gmail.com
 
 module OWASwiftUtil (
   extensionCommentSection,
-  uiKitImportSection
+  uiKitImportSection,
+  localizedStringForText
 ) where
 
 import Data.List.Split
@@ -47,3 +48,19 @@ extensionCommentSection filename appInfo = BlockCommentSection
 -- | A simple file section importing UIKit
 uiKitImportSection :: FileSection
 uiKitImportSection = ImportsSection [ModuleImport "UIKit"]
+
+-------------------------------------------------------------------------------
+-------------------LOCALIZED STRINGS-------------------------------------------
+-------------------------------------------------------------------------------
+
+localizedStringForText :: String -> SwiftExpression
+localizedStringForText txt = MethodCall
+  Nothing
+  LibMethod { libMethodName = "NSLocalizedString",
+    libParams = Nothing : map Just ["tableName", "bundle", "value", "comment"]}
+  [StringLit txt, Var "nil", bundleExpr, StringLit "", StringLit ""]
+  where
+    bundleExpr = MethodCall 
+      (Just (Var "NSBundle"))
+      LibMethod { libMethodName = "mainBundle", libParams = []}
+      []
