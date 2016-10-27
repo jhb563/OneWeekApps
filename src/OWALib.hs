@@ -44,11 +44,18 @@ type OWAReaderT = ReaderT OWAReaderInfo IO
 
 data OWAReaderInfo = OWAReaderInfo {
   outputMode  :: OutputMode,
-  lastGenTime :: Maybe UTCTime
-  -- Add list of generated types
+  lastGenTime :: Maybe UTCTime,
+  codeTypes   :: [OWACodeType]
 }
 
--- Type for code types
+data OWACodeType = 
+  CodeTypeColors |
+  CodeTypeFonts |
+  CodeTypeAlerts |
+  CodeTypeErrors |
+  CodeTypeViews |
+  CodeTypeStrings
+  deriving (Show, Eq)
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -57,15 +64,16 @@ runOWA filePath args = if null args
   then putStrLn "owa: No command entered!"
   else case head args of
     "new" -> putStrLn "Creating new OWA project!"
-    -- Get the list of code types to generate from args and put in initial info
     "gen" -> genFiles
     "generate" -> genFiles
     unrecognizedCmd -> putStrLn  $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
-    where initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing
-          genFiles = do
-                       lastGenTime <- lastCodeGenerationTime filePath
-                       let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
-                       runReaderT (runOWAReader filePath) newReaderInfo
+    where
+      types = codeTypesFromArgs args 
+      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types
+      genFiles = do
+                   lastGenTime <- lastCodeGenerationTime filePath
+                   let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
+                   runReaderT (runOWAReader filePath) newReaderInfo
 
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
@@ -158,9 +166,38 @@ printErrors :: [OWAParseError] -> OWAReaderT ()
 printErrors [] = return ()
 printErrors errors = mapM_ (printIfNotSilent . show) errors
 
--- Section on code types
--- Code types from args
--- Method for whenCodeTypePresent
+---------------------------------------------------------------------------
+------------------------EVALUATING CODE TYPES------------------------------
+---------------------------------------------------------------------------
+
+allCodeTypes :: [OWACodeType]
+allCodeTypes = 
+  [ CodeTypeColors
+  , CodeTypeFonts
+  , CodeTypeAlerts
+  , CodeTypeErrors
+  , CodeTypeViews
+  , CodeTypeStrings ]
+
+codeTypesFromArgs :: [String] -> [OWACodeType]
+codeTypesFromArgs args = if null typesInArgs
+  then allCodeTypes
+  else typesInArgs
+  where
+    evaluateAndAdd arg accum = case arg of
+      "--colors" -> CodeTypeColors : accum
+      "--fonts" -> CodeTypeFonts : accum
+      "--alerts" -> CodeTypeAlerts : accum
+      "--errors" -> CodeTypeErrors : accum
+      "--views" -> CodeTypeViews : accum
+      "--strings" -> CodeTypeStrings : accum
+      _ -> accum
+    typesInArgs = foldr evaluateAndAdd [] args
+
+whenCodeTypePresent :: OWACodeType -> OWAReaderT () -> OWAReaderT ()
+whenCodeTypePresent codeType action = do
+  types <- codeTypes <$> ask
+  when (elem codeType types) action
 
 ---------------------------------------------------------------------------
 ------------------------LOADING APP INFO-----------------------------------
@@ -191,9 +228,8 @@ loadAppInfo appDirectory = do
 ------------------------PRODUCING STRINGS FILES----------------------------
 ---------------------------------------------------------------------------
 
--- Call when method
 produceStringsFile :: FilePath -> OWAAppInfo -> OWAReaderT ()
-produceStringsFile appDirectory appInfo = do
+produceStringsFile appDirectory appInfo = whenCodeTypePresent CodeTypeStrings $ do
   printIfNotSilent "Generating strings..."
   printIfVerbose "Searching for strings files..."
   stringsFiles <- liftIO $ findStringsFiles appDirectory
@@ -229,9 +265,8 @@ stringsFileExtension = "/Localizable.strings"
 ------------------------PRODUCING COLORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
--- Call when method
 produceColorsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
-produceColorsFiles appDirectory appInfo = do
+produceColorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeColors $ do
   printIfNotSilent "Generating colors..."
   printIfVerbose "Searching for colors files..."
   colorFiles <- liftIO $ findColorsFiles appDirectory
@@ -275,9 +310,8 @@ colorImplementationFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.m"
 ------------------------PRODUCING FONTS FILES------------------------------
 ---------------------------------------------------------------------------
 
--- Call when method
 produceFontsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
-produceFontsFiles appDirectory appInfo = do
+produceFontsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeFonts $ do
   printIfNotSilent "Generating fonts..."
   printIfVerbose "Searching for fonts files..."
   fontFiles <- liftIO $ findFontsFiles appDirectory
@@ -320,9 +354,8 @@ fontImplementationFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.m"
 ------------------------PRODUCING ALERTS FILES-----------------------------
 ---------------------------------------------------------------------------
 
--- Call when method
 produceAlertsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
-produceAlertsFiles appDirectory appInfo = do
+produceAlertsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeAlerts $ do
   printIfNotSilent "Generating alerts..."
   printIfVerbose "Searching for alerts files..."
   alertFiles <- liftIO $ findAlertsFiles appDirectory
@@ -365,9 +398,8 @@ alertImplementationFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Al
 ------------------------PRODUCING ERRORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
--- Call when method
 produceErrorsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
-produceErrorsFiles appDirectory appInfo = do
+produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ do
   printIfNotSilent "Generating errors..."
   printIfVerbose "Searching for errors files..."
   errorFiles <- liftIO $ findErrorsFiles appDirectory
@@ -410,9 +442,8 @@ errorImplementationFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.m"
 ------------------------PRODUCING VIEWS FILES------------------------------
 ---------------------------------------------------------------------------
 
--- Call when method
 produceViewsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
-produceViewsFiles appDirectory appInfo = do
+produceViewsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeViews $ do
   printIfNotSilent "Generating views..."
   printIfVerbose "Searching for views files..."
   viewFiles <- liftIO $ findViewsFiles appDirectory
