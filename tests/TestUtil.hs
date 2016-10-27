@@ -108,7 +108,11 @@ removeResultsFiles :: FilePath -> [String] -> IO ()
 removeResultsFiles outputDirectory resultsFiles = removeFiles (map (outputDirectory ++) resultsFiles)
 
 removeFiles :: [FilePath] -> IO ()
-removeFiles = mapM_ removeFile
+removeFiles = mapM_ $ (\file -> do
+  exists <- doesFileExist file
+  if exists
+    then removeFile file
+    else return ())
 
 removeDiffFiles :: FilePath -> IO ()
 removeDiffFiles directory = do

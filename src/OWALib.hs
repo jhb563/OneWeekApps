@@ -45,7 +45,10 @@ type OWAReaderT = ReaderT OWAReaderInfo IO
 data OWAReaderInfo = OWAReaderInfo {
   outputMode  :: OutputMode,
   lastGenTime :: Maybe UTCTime
+  -- Add list of generated types
 }
+
+-- Type for code types
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
@@ -54,6 +57,7 @@ runOWA filePath args = if null args
   then putStrLn "owa: No command entered!"
   else case head args of
     "new" -> putStrLn "Creating new OWA project!"
+    -- Get the list of code types to generate from args and put in initial info
     "gen" -> genFiles
     "generate" -> genFiles
     unrecognizedCmd -> putStrLn  $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
@@ -154,6 +158,10 @@ printErrors :: [OWAParseError] -> OWAReaderT ()
 printErrors [] = return ()
 printErrors errors = mapM_ (printIfNotSilent . show) errors
 
+-- Section on code types
+-- Code types from args
+-- Method for whenCodeTypePresent
+
 ---------------------------------------------------------------------------
 ------------------------LOADING APP INFO-----------------------------------
 ---------------------------------------------------------------------------
@@ -183,6 +191,7 @@ loadAppInfo appDirectory = do
 ------------------------PRODUCING STRINGS FILES----------------------------
 ---------------------------------------------------------------------------
 
+-- Call when method
 produceStringsFile :: FilePath -> OWAAppInfo -> OWAReaderT ()
 produceStringsFile appDirectory appInfo = do
   printIfNotSilent "Generating strings..."
@@ -220,6 +229,7 @@ stringsFileExtension = "/Localizable.strings"
 ------------------------PRODUCING COLORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
+-- Call when method
 produceColorsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
 produceColorsFiles appDirectory appInfo = do
   printIfNotSilent "Generating colors..."
@@ -265,6 +275,7 @@ colorImplementationFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.m"
 ------------------------PRODUCING FONTS FILES------------------------------
 ---------------------------------------------------------------------------
 
+-- Call when method
 produceFontsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
 produceFontsFiles appDirectory appInfo = do
   printIfNotSilent "Generating fonts..."
@@ -309,6 +320,7 @@ fontImplementationFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.m"
 ------------------------PRODUCING ALERTS FILES-----------------------------
 ---------------------------------------------------------------------------
 
+-- Call when method
 produceAlertsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
 produceAlertsFiles appDirectory appInfo = do
   printIfNotSilent "Generating alerts..."
@@ -353,6 +365,7 @@ alertImplementationFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Al
 ------------------------PRODUCING ERRORS FILES-----------------------------
 ---------------------------------------------------------------------------
 
+-- Call when method
 produceErrorsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
 produceErrorsFiles appDirectory appInfo = do
   printIfNotSilent "Generating errors..."
@@ -397,6 +410,7 @@ errorImplementationFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.m"
 ------------------------PRODUCING VIEWS FILES------------------------------
 ---------------------------------------------------------------------------
 
+-- Call when method
 produceViewsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
 produceViewsFiles appDirectory appInfo = do
   printIfNotSilent "Generating views..."
