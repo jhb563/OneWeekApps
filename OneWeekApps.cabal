@@ -68,7 +68,6 @@ library
 
 executable owa
   main-is:             owa.hs
-  -- other-modules:       
   -- other-extensions:    
   build-depends:       base,
                        directory >= 1.2.5,
@@ -80,6 +79,10 @@ executable owa
                        time,
                        OneWeekApps
   hs-source-dirs:      src
+  other-modules:       OWAFileSearch
+                     , OWALib
+                     , OWAObjcPrint
+                     , OWAPrintUtil
   default-language:    Haskell2010
 
 test-suite Version010Tests
@@ -100,6 +103,23 @@ test-suite Version010Tests
                  process,
                  parsec,
                  OneWeekApps
+  other-modules: AlertParseTests
+               , AlertPrintTests
+               , AppDirectoryTests
+               , ColorParseTests
+               , ColorPrintTests
+               , ErrorParseTests
+               , ErrorPrintTests
+               , FileSearchTests
+               , FontParseTests
+               , FontPrintTests
+               , IntegrationTestUtil
+               , TestAlerts
+               , TestColors
+               , TestErrors
+               , TestFonts
+               , TestUtil
+               , Version010IntegrationTests
   default-language: Haskell2010
 
 test-suite Version015Tests
@@ -127,6 +147,31 @@ test-suite Version015Tests
                  parsec,
                  containers,
                  OneWeekApps
+  other-modules: AlertParseFailureTests
+               , ColorParseFailureTests
+               , CommentTests
+               , DefaultsFileTests
+               , ErrorParseFailureTests
+               , FontParseFailureTests
+               , IntegrationTestUtil
+               , ItemFailureTests
+               , SpacingIndentTests
+               , StringsParseTests
+               , StringsPrintTests
+               , StringsSearchTests
+               , TabTests
+               , TestAlertErrors
+               , TestAppInfo
+               , TestColorErrors
+               , TestDefaultErrors
+               , TestErrorErrors
+               , TestFontErrors
+               , TestParseErrors
+               , TestSpacingIndentErrors
+               , TestStringErrors
+               , TestStringSets
+               , TestUtil
+               , Version015IntegrationTests
   default-language: Haskell2010
 
 test-suite Version020Tests
@@ -147,6 +192,18 @@ test-suite Version020Tests
                  parsec,
                  containers,
                  OneWeekApps
+  other-modules: IntegrationTestUtil
+               , TestErrors
+               , TestUtil
+               , TestViews
+               , Version020IntegrationTests
+               , ViewConstraintTests
+               , ViewElementTests
+               , ViewFileSearchTests
+               , ViewItemErrorTests
+               , ViewNameTests
+               , ViewParseErrorTests
+               , ViewPrintTests
   default-language: Haskell2010
 
 test-suite Version021Tests
@@ -168,6 +225,17 @@ test-suite Version021Tests
                  parsec,
                  containers,
                  OneWeekApps
+  other-modules: ContainerViewTests
+               , CustomViewTests
+               , ImageButtonTests
+               , IntegrationTestUtil
+               , TestButtonObjects
+               , TestContainerViews
+               , TestCustomViews
+               , TestErrors
+               , TestUtil
+               , Version021IntegrationTests
+    ViewErrorTests
   default-language: Haskell2010
 
 test-suite Version023Tests
@@ -193,4 +261,17 @@ test-suite Version023Tests
                  mtl,
                  unix,
                  OneWeekApps
+  other-modules: LazyCodeGenerationTests
+               , SwiftAlertPrintTests
+               , SwiftColorPrintTests
+               , SwiftErrorPrintTests
+               , SwiftFontPrintTests
+               , SwiftSpecialTestViews
+               , SwiftTestAlerts
+               , SwiftTestColors
+               , SwiftTestErrors
+               , SwiftTestFonts
+               , SwiftTestViews
+               , SwiftViewPrintTests
+                TestUtil
   default-language: Haskell2010
