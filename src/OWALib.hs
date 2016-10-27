@@ -197,7 +197,7 @@ codeTypesFromArgs args = if null typesInArgs
 whenCodeTypePresent :: OWACodeType -> OWAReaderT () -> OWAReaderT ()
 whenCodeTypePresent codeType action = do
   types <- codeTypes <$> ask
-  when (elem codeType types) action
+  when (codeType `elem` types) action
 
 ---------------------------------------------------------------------------
 ------------------------LOADING APP INFO-----------------------------------

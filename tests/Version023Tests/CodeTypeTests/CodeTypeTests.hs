@@ -100,7 +100,7 @@ checkExactlyFilesExist testDirectory expectedFiles = do
     test `shouldBe` FileDoesNotExist file)
   return ()
   where
-    notExpected filePath = notElem filePath expectedFiles
+    notExpected filePath = filePath `notElem` expectedFiles
 
 fileTest :: FilePath -> IO FileTest
 fileTest file = do

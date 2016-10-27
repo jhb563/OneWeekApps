@@ -13,6 +13,7 @@ module TestUtil (
   removeDiffFiles
 ) where
 
+import Control.Monad (when)
 import Data.List
 import OWAObjcAbSyn
 import OWAObjcPrint
@@ -108,11 +109,9 @@ removeResultsFiles :: FilePath -> [String] -> IO ()
 removeResultsFiles outputDirectory resultsFiles = removeFiles (map (outputDirectory ++) resultsFiles)
 
 removeFiles :: [FilePath] -> IO ()
-removeFiles = mapM_ $ (\file -> do
+removeFiles = mapM_ (\file -> do
   exists <- doesFileExist file
-  if exists
-    then removeFile file
-    else return ())
+  when exists $ removeFile file)
 
 removeDiffFiles :: FilePath -> IO ()
 removeDiffFiles directory = do
