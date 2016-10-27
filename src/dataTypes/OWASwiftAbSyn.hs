@@ -26,7 +26,8 @@ data FileSection =
   ExtensionSection String [FileSection] |
   ClassSection Identifier Identifier [FileSection] |
   MethodImplementationListSection (Maybe String) [SwiftMethod] |
-  StatementListSection (Maybe String) [SwiftStatement]
+  StatementListSection (Maybe String) [SwiftStatement] |
+  EnumSection Identifier SwiftType [Identifier]
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of a

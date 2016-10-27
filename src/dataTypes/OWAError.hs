@@ -24,3 +24,8 @@ data OWAError = OWAError {
   errorCode :: String,
   errorDescription :: LocalizedKey
 } deriving (Show, Eq)
+
+instance Ord OWAError where
+  error1 `compare` error2 = case errorDomain error1 `compare` errorDomain error2 of
+    EQ -> errorName error1 `compare` errorName error2
+    unequal -> unequal
