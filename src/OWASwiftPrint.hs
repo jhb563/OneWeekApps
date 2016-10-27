@@ -44,6 +44,7 @@ sectionDoc (ExtensionSection extensionName sections) = extensionDoc extensionNam
 sectionDoc (ClassSection typeName superclassName sections) = classDoc typeName superclassName sections PPrint.<$> empty
 sectionDoc (MethodImplementationListSection sectionTitle methods) = methodListSection sectionTitle methods
 sectionDoc (StatementListSection sectionTitle statements) = statementListSection sectionTitle statements
+sectionDoc (EnumSection enumName enumBaseType cases) = enumSection enumName enumBaseType cases PPrint.<$> empty
 
 commentDoc :: String -> Doc
 commentDoc str = if null str
@@ -72,6 +73,12 @@ statementListSection :: Maybe String -> [SwiftStatement] -> Doc
 statementListSection Nothing statements = spaceOut (map statementDoc statements)
 statementListSection (Just title) statements = markDoc title PPrint.<$> empty PPrint.<$>
   spaceOut (map statementDoc statements)
+
+enumSection :: String -> SwiftType -> [String] -> Doc
+enumSection name typ cases = indentBlock headerDoc body
+  where
+    headerDoc = text "enum" <+> text name <> colon <+> typeDoc typ
+    body = vcat $ map (\ident -> text "case" <+> text ident) cases
 
 methodDoc :: SwiftMethod -> Doc
 methodDoc swiftMethod = indentBlock methodDef methodBodyDoc

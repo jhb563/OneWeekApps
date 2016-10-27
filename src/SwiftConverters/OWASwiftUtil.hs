@@ -9,6 +9,7 @@ Maintainer  : jhbowen047@gmail.com
 module OWASwiftUtil (
   extensionCommentSection,
   uiKitImportSection,
+  foundationImportSection,
   localizedStringForText
 ) where
 
@@ -45,9 +46,13 @@ extensionCommentSection filename appInfo = BlockCommentSection
 -------------------IMPORT SECTIONS---------------------------------------------
 -------------------------------------------------------------------------------
 
--- | A simple file section importing UIKit
+-- | A simple file section importing UIKit framework
 uiKitImportSection :: FileSection
 uiKitImportSection = ImportsSection [ModuleImport "UIKit"]
+
+-- | A simple file section importing Foundation framework
+foundationImportSection :: FileSection
+foundationImportSection = ImportsSection [ModuleImport "Foundation"]
 
 -------------------------------------------------------------------------------
 -------------------LOCALIZED STRINGS-------------------------------------------

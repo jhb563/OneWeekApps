@@ -39,6 +39,7 @@ library
                        OWAError,
                        OWAErrorParser,
                        OWAErrorObjc,
+                       OWAErrorSwift,
                        OWAAppInfo,
                        OWAAppInfoParser,
                        OWALocalizedStringSet,
@@ -180,6 +181,7 @@ test-suite Version023Tests
                   tests/Version023Tests/SwiftTests/SwiftColorTests,
                   tests/Version023Tests/SwiftTests/SwiftFontTests,
                   tests/Version023Tests/SwiftTests/SwiftAlertTests,
+                  tests/Version023Tests/SwiftTests/SwiftErrorTests,
                   tests/Version023Tests/SwiftTests/SwiftViewTests
   build-depends: base,
                  hspec     >= 1.8,

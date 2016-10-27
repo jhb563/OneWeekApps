@@ -3,6 +3,7 @@ module Main where
 import LazyCodeGenerationTests
 import SwiftAlertPrintTests
 import SwiftColorPrintTests
+import SwiftErrorPrintTests
 import SwiftFontPrintTests
 import SwiftViewPrintTests
 import System.Directory
@@ -14,4 +15,5 @@ main = do
   runSwiftColorPrintTests currentDirectory
   runSwiftFontPrintTests currentDirectory
   runSwiftAlertPrintTests currentDirectory
+  runSwiftErrorPrintTests currentDirectory
   runSwiftViewPrintTests currentDirectory
