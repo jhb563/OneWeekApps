@@ -41,6 +41,8 @@ import System.Directory
 import System.IO
 
 type OWAReaderT = ReaderT OWAReaderInfo IO
+type InputHandle = Handle
+type OutputHandle = Handle
 
 data OWAReaderInfo = OWAReaderInfo {
   outputMode  :: OutputMode,
@@ -59,8 +61,8 @@ data OWACodeType =
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
-runOWA :: FilePath -> [String] -> IO ()
-runOWA filePath args = if null args
+runOWA :: InputHandle -> OutputHandle -> FilePath -> [String] -> IO ()
+runOWA _ _ filePath args = if null args
   then putStrLn "owa: No command entered!"
   else case head args of
     "new" -> putStrLn "Creating new OWA project!"

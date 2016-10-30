@@ -11,6 +11,7 @@ module Main where
 
 import System.Environment
 import System.Directory
+import System.IO
 import OWALib
 
 -- | 'main' runs the main progream
@@ -18,4 +19,4 @@ main :: IO ()
 main = do
   currentFilePath <- getCurrentDirectory
   args <- getArgs
-  runOWA currentFilePath args
+  runOWA stdin stdout currentFilePath args

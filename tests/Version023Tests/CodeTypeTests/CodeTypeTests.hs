@@ -9,6 +9,7 @@ module CodeTypeTests (
 import Control.Monad (forM)
 import OWALib (runOWA)
 import System.Directory (doesFileExist)
+import System.IO (stdin, stdout)
 import Test.Hspec
 import TestUtil
 
@@ -31,44 +32,44 @@ runCodeTypeTests currentDirectory = do
 
 colorsTest :: FilePath -> Spec
 colorsTest testDirectory = describe "When only generating colors files" $ 
-  before_ (runOWA testDirectory ["generate", "--colors"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--colors"]) $
     it "Should only generate colors files" $
       checkExactlyFilesExist testDirectory [producedColorHeader, producedColorM]
 
 fontsTest :: FilePath -> Spec
 fontsTest testDirectory = describe "When only generating fonts files" $ 
-  before_ (runOWA testDirectory ["generate", "--fonts"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--fonts"]) $
     it "Should only generate fonts files" $
       checkExactlyFilesExist testDirectory [producedFontHeader, producedFontM]
 
 alertsTest :: FilePath -> Spec
 alertsTest testDirectory = describe "When only generating alerts files" $ 
-  before_ (runOWA testDirectory ["generate", "--alerts"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--alerts"]) $
     it "Should only generate alerts files" $
       checkExactlyFilesExist testDirectory [producedAlertHeader, producedAlertM]
 
 errorsTest :: FilePath -> Spec
 errorsTest testDirectory = describe "When only generating errors files" $ 
-  before_ (runOWA testDirectory ["generate", "--errors"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--errors"]) $
     it "Should only generate errors files" $
       checkExactlyFilesExist testDirectory [producedErrorHeader, producedErrorM]
 
 viewsTest :: FilePath -> Spec
 viewsTest testDirectory = describe "When only generating views files" $ 
-  before_ (runOWA testDirectory ["generate", "--views"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--views"]) $
     it "Should only generate views files" $
       checkExactlyFilesExist testDirectory 
         [producedView1Header, producedView1M, producedView2Header, producedView2M]
 
 stringsTest :: FilePath -> Spec
 stringsTest testDirectory = describe "When only generating strings files" $ 
-  before_ (runOWA testDirectory ["generate", "--strings"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--strings"]) $
     it "Should only generate strings files" $
       checkExactlyFilesExist testDirectory [producedStrings]
 
 colorsPlusViewsTest :: FilePath -> Spec
 colorsPlusViewsTest testDirectory = describe "When generating colors and views" $ 
-  before_ (runOWA testDirectory ["generate", "--views", "--colors"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--views", "--colors"]) $
     it "Should generate views and colors files" $
       checkExactlyFilesExist testDirectory 
         [producedView1Header, producedView1M
@@ -77,14 +78,14 @@ colorsPlusViewsTest testDirectory = describe "When generating colors and views" 
 
 alertsPlusStringsTest :: FilePath -> Spec
 alertsPlusStringsTest testDirectory = describe "When generating alerts and strings" $ 
-  before_ (runOWA testDirectory ["generate", "--strings", "--alerts"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate", "--strings", "--alerts"]) $
     it "Should generate strings and alerts files" $
       checkExactlyFilesExist testDirectory 
         [producedStrings, producedAlertHeader, producedAlertM ]
 
 noArgsTest :: FilePath -> Spec
 noArgsTest testDirectory = describe "When generating with no arguments" $
-  before_ (runOWA testDirectory ["generate"]) $
+  before_ (runOWA stdin stdout testDirectory ["generate"]) $
     it "Should generate all files" $
       checkExactlyFilesExist testDirectory allPossibleProducedFiles
 
