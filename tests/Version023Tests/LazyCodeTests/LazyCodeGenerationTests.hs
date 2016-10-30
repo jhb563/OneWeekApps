@@ -23,12 +23,44 @@ runLazyCodeGenerationTests currentDirectory = do
   hspec $ do
     testCorrectFilesChange testDirectory noChangePair "If no files changed, no regeneration"
     testCorrectFilesChange testDirectory appInfoPair "If app info changes, all files regenerate"
+    testCorrectFilesChange testDirectory colorsPair "Colors regenerated properly"
+    testCorrectFilesChange testDirectory fontsPair "Fonts regenerated properly"
+    testCorrectFilesChange testDirectory alertsPair "Alerts regenerated properly"
+    testCorrectFilesChange testDirectory errorsPair "Errors regenerated properly"
+    testCorrectFilesChange testDirectory view1Pair "View 1 regenerated properly"
+    testCorrectFilesChange testDirectory view2Pair "View 2 regenerated properly"
+    testCorrectFilesChange testDirectory view3Pair "View 3 regenerated properly"
+    testCorrectFilesChange testDirectory stringsPair "Strings regenerated properly"
 
 noChangePair :: ([FilePath], [FilePath])
 noChangePair = ([], [])
 
 appInfoPair :: ([FilePath], [FilePath])
 appInfoPair = ([appInfoFile], producedFiles)
+
+colorsPair :: ([FilePath], [FilePath])
+colorsPair = ([colorsInput1], [producedColorHeader, producedColorM])
+
+fontsPair :: ([FilePath], [FilePath])
+fontsPair = ([fontsInput1], [producedFontHeader, producedFontM])
+
+alertsPair :: ([FilePath], [FilePath])
+alertsPair = ([alertsInput1], [producedAlertHeader, producedAlertM])
+
+errorsPair :: ([FilePath], [FilePath])
+errorsPair = ([errorsInput1], [producedErrorHeader, producedErrorM])
+
+view1Pair :: ([FilePath], [FilePath])
+view1Pair = ([viewsInput1], [producedView1Header, producedView1M])
+
+view2Pair :: ([FilePath], [FilePath])
+view2Pair = ([viewsInput2], [producedView2Header, producedView2M])
+
+view3Pair :: ([FilePath], [FilePath])
+view3Pair = ([viewsInput3], [producedView3Header, producedView3M])
+
+stringsPair :: ([FilePath], [FilePath])
+stringsPair = ([stringsInput1], [producedStrings])
 
 beforeTestHook :: FilePath -> [FilePath] -> IO ()
 beforeTestHook testDirectory inputFiles = do
@@ -43,7 +75,7 @@ beforeTestHook testDirectory inputFiles = do
 setModificationTimesBack :: FilePath -> IO ()
 setModificationTimesBack testDirectory = do
   earlierTime <- addUTCTime (-5) <$> getCurrentTime  
-  mapM_ ((flip setModificationTime) earlierTime) (map (testDirectory ++) allFiles)
+  mapM_ ((flip setModificationTime) earlierTime) (map (testDirectory ++) (allInputFiles ++ allFiles))
 
 modifyInputFiles ::  [FilePath] -> IO ()
 modifyInputFiles files = do
@@ -97,8 +129,23 @@ producedFiles = [producedColorHeader, producedColorM,
   producedView2Header, producedView2M,
   producedView3Header, producedView3M]
 
+allInputFiles :: [FilePath]
+allInputFiles = 
+  [ appInfoFile
+  , colorsInput1
+  , fontsInput1
+  , alertsInput1
+  , errorsInput1
+  , viewsInput1
+  , viewsInput2
+  , viewsInput3 
+  , stringsInput1 ]
+
 lastGenFile :: FilePath
 lastGenFile = "/.owa_last_gen"
+
+colorsInput1 :: FilePath
+colorsInput1 = "/viacolors.colors"
 
 producedColorHeader :: FilePath
 producedColorHeader = "/UIColor+IGAColors.h"
@@ -106,11 +153,17 @@ producedColorHeader = "/UIColor+IGAColors.h"
 producedColorM :: FilePath
 producedColorM  = "/UIColor+IGAColors.m"
 
+fontsInput1 :: FilePath
+fontsInput1 = "/viafonts.fonts"
+
 producedFontHeader :: FilePath
 producedFontHeader = "/UIFont+IGAFonts.h"
 
 producedFontM :: FilePath
 producedFontM  = "/UIFont+IGAFonts.m"
+
+alertsInput1 :: FilePath
+alertsInput1 = "/viaalerts.alerts"
 
 producedAlertHeader :: FilePath
 producedAlertHeader = "/UIAlertController+IGAAlerts.h"
@@ -118,11 +171,17 @@ producedAlertHeader = "/UIAlertController+IGAAlerts.h"
 producedAlertM :: FilePath
 producedAlertM  = "/UIAlertController+IGAAlerts.m"
 
+errorsInput1 :: FilePath
+errorsInput1 = "/viaerrors.errors"
+
 producedErrorHeader :: FilePath
 producedErrorHeader = "/NSError+IGAErrors.h"
 
 producedErrorM :: FilePath
 producedErrorM  = "/NSError+IGAErrors.m"
+
+stringsInput1 :: FilePath
+stringsInput1 = "/viastrings.strings"
 
 producedStrings :: FilePath
 producedStrings = "/Localizable.strings"
@@ -130,14 +189,23 @@ producedStrings = "/Localizable.strings"
 producedView1Header :: FilePath
 producedView1Header = "/VIAFirstView.h"
 
+viewsInput1 :: FilePath
+viewsInput1 = "/views/VIAFirstView.view"
+
 producedView1M :: FilePath
 producedView1M = "/VIAFirstView.m"
+
+viewsInput2 :: FilePath
+viewsInput2 = "/views/VIASecondView.view"
 
 producedView2Header :: FilePath
 producedView2Header = "/VIASecondView.h"
 
 producedView2M :: FilePath
 producedView2M = "/VIASecondView.m"
+
+viewsInput3 :: FilePath
+viewsInput3 = "/views/thirdview.view"
 
 producedView3Header :: FilePath
 producedView3Header = "/VIAThirdView.h"
