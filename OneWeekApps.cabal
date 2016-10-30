@@ -247,6 +247,7 @@ test-suite Version023Tests
                   tests/Version023Tests,
                   tests/Version023Tests/LazyCodeTests,
                   tests/Version023Tests/CodeTypeTests,
+                  tests/Version023Tests/AppInfoCLITests,
                   tests/Version023Tests/SwiftTests/SwiftColorTests,
                   tests/Version023Tests/SwiftTests/SwiftFontTests,
                   tests/Version023Tests/SwiftTests/SwiftAlertTests,
