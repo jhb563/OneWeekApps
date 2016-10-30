@@ -31,6 +31,9 @@ runLazyCodeGenerationTests currentDirectory = do
     testCorrectFilesChange testDirectory view2Pair "View 2 regenerated properly"
     testCorrectFilesChange testDirectory view3Pair "View 3 regenerated properly"
     testCorrectFilesChange testDirectory stringsPair "Strings regenerated properly"
+    testCorrectFilesChange testDirectory colorFontsPair "Colors and fonts regenerated together"
+    testCorrectFilesChange testDirectory alertStringsViewPair 
+      "Alerts, strings, and a view regenerated together"
 
 noChangePair :: ([FilePath], [FilePath])
 noChangePair = ([], [])
@@ -61,6 +64,16 @@ view3Pair = ([viewsInput3], [producedView3Header, producedView3M])
 
 stringsPair :: ([FilePath], [FilePath])
 stringsPair = ([stringsInput1], [producedStrings])
+
+colorFontsPair :: ([FilePath], [FilePath])
+colorFontsPair = ([colorsInput2, fontsInput2], 
+  [producedColorHeader, producedColorM, producedFontHeader, producedFontM])
+
+alertStringsViewPair :: ([FilePath], [FilePath])
+alertStringsViewPair = ([alertsInput1, stringsInput1, viewsInput2],
+  [ producedAlertHeader, producedAlertM
+  , producedStrings
+  , producedView2Header, producedView2M])
 
 beforeTestHook :: FilePath -> [FilePath] -> IO ()
 beforeTestHook testDirectory inputFiles = do
@@ -133,7 +146,9 @@ allInputFiles :: [FilePath]
 allInputFiles = 
   [ appInfoFile
   , colorsInput1
+  , colorsInput2
   , fontsInput1
+  , fontsInput2
   , alertsInput1
   , errorsInput1
   , viewsInput1
@@ -147,6 +162,9 @@ lastGenFile = "/.owa_last_gen"
 colorsInput1 :: FilePath
 colorsInput1 = "/viacolors.colors"
 
+colorsInput2 :: FilePath
+colorsInput2 = "/viacolors2.colors"
+
 producedColorHeader :: FilePath
 producedColorHeader = "/UIColor+IGAColors.h"
 
@@ -155,6 +173,9 @@ producedColorM  = "/UIColor+IGAColors.m"
 
 fontsInput1 :: FilePath
 fontsInput1 = "/viafonts.fonts"
+
+fontsInput2 :: FilePath
+fontsInput2 = "/viafonts2.fonts"
 
 producedFontHeader :: FilePath
 producedFontHeader = "/UIFont+IGAFonts.h"

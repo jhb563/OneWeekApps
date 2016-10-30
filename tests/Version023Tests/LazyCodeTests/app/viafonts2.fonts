@@ -1,0 +1,11 @@
+Font standardFont2
+  FontFamily HelveticaNeue
+  Size 14.0
+
+Font buttonFont2
+  FontFamily Verdana
+  Size 18.0
+
+Font placeholderFont2
+  FontFamily Arial
+  Size 14.0
