@@ -45,9 +45,10 @@ type InputHandle = Handle
 type OutputHandle = Handle
 
 data OWAReaderInfo = OWAReaderInfo {
-  outputMode  :: OutputMode,
-  lastGenTime :: Maybe UTCTime,
-  codeTypes   :: [OWACodeType]
+  outputMode   :: OutputMode,
+  lastGenTime  :: Maybe UTCTime,
+  codeTypes    :: [OWACodeType],
+  outputHandle :: OutputHandle
 }
 
 data OWACodeType = 
@@ -62,16 +63,16 @@ data OWACodeType =
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
 runOWA :: InputHandle -> OutputHandle -> FilePath -> [String] -> IO ()
-runOWA _ _ filePath args = if null args
-  then putStrLn "owa: No command entered!"
+runOWA _ outputHandle filePath args = if null args
+  then hPutStrLn outputHandle "owa: No command entered!"
   else case head args of
-    "new" -> putStrLn "Creating new OWA project!"
+    "new" -> hPutStrLn outputHandle "Creating new OWA project!"
     "gen" -> genFiles
     "generate" -> genFiles
-    unrecognizedCmd -> putStrLn  $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
+    unrecognizedCmd -> hPutStrLn outputHandle $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
     where
       types = codeTypesFromArgs args 
-      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types
+      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types outputHandle
       genFiles = do
                    lastGenTime <- lastCodeGenerationTime filePath
                    let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
@@ -156,13 +157,15 @@ printIfNotSilent :: String -> OWAReaderT ()
 printIfNotSilent str = do
   info <- ask
   let mode = outputMode info
-  Control.Monad.when (mode /= Silent) $ liftIO $ putStrLn str
+  let handle = outputHandle info
+  Control.Monad.when (mode /= Silent) $ liftIO $ hPutStrLn handle str
 
 printIfVerbose :: String -> OWAReaderT ()
 printIfVerbose str = do
   info <- ask
   let mode = outputMode info
-  Control.Monad.when (mode == Verbose) $ liftIO $ putStrLn str
+  let handle = outputHandle info
+  Control.Monad.when (mode == Verbose) $ liftIO $ hPutStrLn handle str
 
 printErrors :: [OWAParseError] -> OWAReaderT ()
 printErrors [] = return ()
