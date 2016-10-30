@@ -88,21 +88,21 @@ beforeTestHook testDirectory inputFiles = do
 setModificationTimesBack :: FilePath -> IO ()
 setModificationTimesBack testDirectory = do
   earlierTime <- addUTCTime (-5) <$> getCurrentTime  
-  mapM_ ((flip setModificationTime) earlierTime) (map (testDirectory ++) (allInputFiles ++ allFiles))
+  mapM_ ((`setModificationTime` earlierTime) . (testDirectory ++)) (allInputFiles ++ allFiles)
 
 modifyInputFiles ::  [FilePath] -> IO ()
 modifyInputFiles files = do
   currentTime <- getCurrentTime
-  mapM_ ((flip setModificationTime) currentTime) files
+  mapM_ (`setModificationTime` currentTime) files
     
 -- Takes the Input Files which we're going to modify, then the files which
 -- we expect to have been modified.
 testCorrectFilesChange :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
 testCorrectFilesChange testDirectory (inputFiles, outputFiles) description = beforeAll_ (beforeTestHook testDirectory inputFiles)
-  . afterAll_ (removeResultsFiles testDirectory allFiles) $ do
+  . afterAll_ (removeResultsFiles testDirectory allFiles) $
     describe description $ do
       let expectedRegeneratedFiles = map (testDirectory ++) outputFiles
-      let staleOutputFiles = filter (\file -> not (file `elem` outputFiles)) producedFiles 
+      let staleOutputFiles = filter (`notElem` outputFiles) producedFiles 
       let expectedUnregeneratedFiles = map (testDirectory ++) staleOutputFiles
       it "Certain files should be regenerated" $
         mapM_ shouldBeRegenerated expectedRegeneratedFiles
@@ -122,7 +122,7 @@ expectRegenerated :: RegenTest -> FilePath -> Expectation
 expectRegenerated regenTest file = do
   currentTime <- getCurrentTime
   modificationTime <- getModificationTime file
-  if (diffUTCTime currentTime modificationTime) < 3
+  if diffUTCTime currentTime modificationTime < 3
     then FileWasRegenerated file `shouldBe` regenTest 
     else FileWasNotRegenerated file `shouldBe` regenTest
 
