@@ -11,187 +11,81 @@ module LazyCodeGenerationTests (
   runLazyCodeGenerationTests
 ) where
 
-import qualified Data.Map as Map
 import Data.Time.Clock
 import OWALib
 import System.Directory
-import System.Posix.Unistd
 import TestUtil
 import Test.Hspec
-
--- Maps from produced files to their creation times
-type FileTimeMap = Map.Map FilePath UTCTime
 
 runLazyCodeGenerationTests :: FilePath -> IO ()
 runLazyCodeGenerationTests currentDirectory = do
   let testDirectory = currentDirectory ++ appDirectoryExtension
-  resultBools <- createTestResults testDirectory
-  let [noImmediateChanges, allChangedAfterAppInfo,
-        alertsUnchanged, alertsChangedCorrectly,
-        colorsUnchanged, colorsChangedCorrectly,
-        errorsUnchanged, errorsChangedCorrectly,
-        fontsUnchanged, fontsChangedCorrectly,
-        stringsUnchanged, stringsChangedCorrectly,
-        firstViewUnchanged, firstViewChangedCorrectly,
-        secondViewUnchanged, secondViewChangedCorrectly,
-        thirdViewUnchanged, thirdViewChangedCorrectly] = resultBools
-  hspec $
-    afterAll_ (removeProducedFiles testDirectory) $ do
-      runImmediateChangeTest noImmediateChanges
-      runAppInfoChangeTest allChangedAfterAppInfo
-      runAlertChangeTest alertsUnchanged alertsChangedCorrectly
-      runColorChangeTest colorsUnchanged colorsChangedCorrectly
-      runErrorChangeTest errorsUnchanged errorsChangedCorrectly
-      runFontChangeTest fontsUnchanged fontsChangedCorrectly
-      runStringsChangeTest stringsUnchanged stringsChangedCorrectly
-      runFirstViewChangeTest firstViewUnchanged firstViewChangedCorrectly
-      runSecondViewChangeTest secondViewUnchanged secondViewChangedCorrectly
-      runThirdViewChangeTest thirdViewUnchanged thirdViewChangedCorrectly
+  hspec $ do
+    testCorrectFilesChange testDirectory noChangePair "If no files changed, no regeneration"
+    testCorrectFilesChange testDirectory appInfoPair "If app info changes, all files regenerate"
 
-runImmediateChangeTest :: Bool -> Spec
-runImmediateChangeTest noImmediateChanges =
-  describe "Test for new code generation after repeat generate" $
-    it "Should not have made any changes to the produced files" $
-      noImmediateChanges `shouldBe` True
+noChangePair :: ([FilePath], [FilePath])
+noChangePair = ([], [])
 
-runAppInfoChangeTest :: Bool -> Spec
-runAppInfoChangeTest changedAfterAppInfo =
-  describe "Test that all files changed after updating the app info" $
-    it "Should have changed all the files" $
-      changedAfterAppInfo `shouldBe` True
+appInfoPair :: ([FilePath], [FilePath])
+appInfoPair = ([appInfoFile], producedFiles)
 
-runAlertChangeTest :: Bool -> Bool -> Spec
-runAlertChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Alerts changing after modifying .alerts file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .alerts file" $
-      changedAfterModification `shouldBe` True
-
-runColorChangeTest :: Bool -> Bool -> Spec
-runColorChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Colors changing after modifying .colors file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .colors file" $
-      changedAfterModification `shouldBe` True
-
-runErrorChangeTest :: Bool -> Bool -> Spec
-runErrorChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Errors changing after modifying .errors file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .errors file" $
-      changedAfterModification `shouldBe` True
-
-runFontChangeTest :: Bool -> Bool -> Spec
-runFontChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Fonts changing after modifying .fonts file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .fonts file" $
-      changedAfterModification `shouldBe` True
-
-runStringsChangeTest :: Bool -> Bool -> Spec
-runStringsChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Strings changing after modifying .strings file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .strings file" $
-      changedAfterModification `shouldBe` True
-
-runFirstViewChangeTest :: Bool -> Bool -> Spec
-runFirstViewChangeTest unchangedBefore changedAfterModification =
-  describe "Test for First View changing after modifying .view file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .view file" $
-      changedAfterModification `shouldBe` True
-
-runSecondViewChangeTest :: Bool -> Bool -> Spec
-runSecondViewChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Second View changing after modifying .view file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .view file" $
-      changedAfterModification `shouldBe` True
-
-runThirdViewChangeTest :: Bool -> Bool -> Spec
-runThirdViewChangeTest unchangedBefore changedAfterModification =
-  describe "Test for Third View changing after modifying .view file" $ do
-    it "Should not have changed before the modification" $
-      unchangedBefore `shouldBe` True
-
-    it "Should have changed after modifying .view file" $
-      changedAfterModification `shouldBe` True
-
-createTestResults :: FilePath -> IO [Bool]
-createTestResults testDirectory = do
+beforeTestHook :: FilePath -> [FilePath] -> IO ()
+beforeTestHook testDirectory inputFiles = do
   runOWA testDirectory ["generate"]
-  let trueProducedFiles = map (testDirectory ++) producedFiles
-  fileTimeMap <- createFileTimeMap trueProducedFiles
-  nanosleep 1000000000
+  setModificationTimesBack testDirectory
+  modifyInputFiles (map (testDirectory ++) inputFiles)
   runOWA testDirectory ["generate"]
-  newFileTimeMap <- createFileTimeMap trueProducedFiles
-  let noImmediateChanges = fileTimeMap == newFileTimeMap
-  nanosleep 1000000000
+
+-- Take each produced file and set its modification time 5 seconds in the past, so that we
+-- can see the immediate results of another run of runOWA without waiting a full second.
+-- (This is necessary because many File Systems only store file files to a full second resolution.
+setModificationTimesBack :: FilePath -> IO ()
+setModificationTimesBack testDirectory = do
+  earlierTime <- addUTCTime (-5) <$> getCurrentTime  
+  mapM_ ((flip setModificationTime) earlierTime) (map (testDirectory ++) allFiles)
+
+modifyInputFiles ::  [FilePath] -> IO ()
+modifyInputFiles files = do
   currentTime <- getCurrentTime
-  setModificationTime (testDirectory ++ appInfoFile) currentTime 
-  runOWA testDirectory ["generate"]
-  newestFileTimeMap <- createFileTimeMap trueProducedFiles
-  let allChangedAfterAppInfo = checkAllChanged fileTimeMap newestFileTimeMap
-  let modifiedPairs = map (modifyPair testDirectory) changePairs
-  modificationChanges <- mapM (timeChangesAfterModification testDirectory newestFileTimeMap) modifiedPairs
-  return $ noImmediateChanges : allChangedAfterAppInfo : concat modificationChanges
+  mapM_ ((flip setModificationTime) currentTime) files
+    
+-- Takes the Input Files which we're going to modify, then the files which
+-- we expect to have been modified.
+testCorrectFilesChange :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
+testCorrectFilesChange testDirectory (inputFiles, outputFiles) description = beforeAll_ (beforeTestHook testDirectory inputFiles)
+  . afterAll_ (removeResultsFiles testDirectory allFiles) $ do
+    describe description $ do
+      let expectedRegeneratedFiles = map (testDirectory ++) outputFiles
+      let staleOutputFiles = filter (\file -> not (file `elem` outputFiles)) producedFiles 
+      let expectedUnregeneratedFiles = map (testDirectory ++) staleOutputFiles
+      it "Certain files should be regenerated" $
+        mapM_ shouldBeRegenerated expectedRegeneratedFiles
+      it "Certain files should NOT be regenerated" $
+        mapM_ shouldNotBeRegenerated expectedUnregeneratedFiles
 
-checkAllChanged :: FileTimeMap -> FileTimeMap -> Bool
-checkAllChanged oldMap newMap = all checkDifferent (Map.keys oldMap)
-  where checkDifferent fp = case (Map.lookup fp oldMap, Map.lookup fp newMap) of
-                              (Just t1, Just t2) -> t1 /= t2
-                              _ -> False
+shouldBeRegenerated :: FilePath -> Expectation
+shouldBeRegenerated file = expectRegenerated (FileWasRegenerated file) file
 
-timeChangesAfterModification
-  :: FilePath -- The path to run generate on
-  -> FileTimeMap -- The map containing the files and times
-  -> (FilePath, [FilePath]) -- The change pair
-  -> IO [Bool]
-timeChangesAfterModification testDirectory fileTimeMap (fileToChange, producedFiles) = do
-  initialResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
-  nanosleep 1000000000
+shouldNotBeRegenerated :: FilePath -> Expectation
+shouldNotBeRegenerated file = expectRegenerated (FileWasNotRegenerated file) file
+
+data RegenTest = FileWasRegenerated FilePath | FileWasNotRegenerated FilePath
+  deriving (Show, Eq)
+
+expectRegenerated :: RegenTest -> FilePath -> Expectation
+expectRegenerated regenTest file = do
   currentTime <- getCurrentTime
-  setModificationTime fileToChange currentTime
-  runOWA testDirectory ["generate"]
-  finalResults <- mapM (fileTimeMatches fileTimeMap) producedFiles
-  return [and initialResults, not $ or finalResults]
-
-fileTimeMatches :: FileTimeMap -> FilePath -> IO Bool
-fileTimeMatches map_ file = do
-  trueModTime <- getModificationTime file
-  case Map.lookup file map_ of
-    Nothing -> return False
-    Just time -> return $ trueModTime == time
-
-createFileTimeMap :: [FilePath] -> IO FileTimeMap
-createFileTimeMap files = do
-  modificationTimes <- mapM getModificationTime files
-  return $ Map.fromList (zip files modificationTimes)
-
-removeProducedFiles :: FilePath -> IO ()
-removeProducedFiles testDirectory = removeFiles $ 
-  map (testDirectory ++) (lastGenFile : producedFiles)
+  modificationTime <- getModificationTime file
+  if (diffUTCTime currentTime modificationTime) < 3
+    then FileWasRegenerated file `shouldBe` regenTest 
+    else FileWasNotRegenerated file `shouldBe` regenTest
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/app"
 
-lastGenFile :: FilePath
-lastGenFile = "/.owa_last_gen"
+allFiles :: [FilePath]
+allFiles = lastGenFile : producedFiles
 
 producedFiles :: [FilePath]
 producedFiles = [producedColorHeader, producedColorM,
@@ -202,6 +96,9 @@ producedFiles = [producedColorHeader, producedColorM,
   producedView1Header, producedView1M,
   producedView2Header, producedView2M,
   producedView3Header, producedView3M]
+
+lastGenFile :: FilePath
+lastGenFile = "/.owa_last_gen"
 
 producedColorHeader :: FilePath
 producedColorHeader = "/UIColor+IGAColors.h"
@@ -250,16 +147,3 @@ producedView3M = "/VIAThirdView.m"
 
 appInfoFile :: FilePath
 appInfoFile = "/app.info"
-
-changePairs :: [(FilePath, [FilePath])]
-changePairs = [("/viaalerts.alerts", [producedAlertHeader, producedAlertM]),
-  ("/viacolors.colors", [producedColorHeader, producedColorM]),
-  ("/viaerrors.errors", [producedErrorHeader, producedErrorM]),
-  ("/viafonts.fonts", [producedFontHeader, producedFontM]),
-  ("/views/VIAFirstView.view", [producedView1Header, producedView1M]),
-  ("/views/VIASecondView.view", [producedView2Header, producedView2M]),
-  ("/views/thirdview.view", [producedView3Header, producedView3M]),
-  ("/viastrings.strings", [producedStrings])]
-
-modifyPair :: FilePath -> (FilePath, [FilePath]) -> (FilePath, [FilePath])
-modifyPair base (srcFile, prodFiles) = (base ++ srcFile, map (base ++) prodFiles)
