@@ -48,6 +48,7 @@ data OWAReaderInfo = OWAReaderInfo {
   outputMode   :: OutputMode,
   lastGenTime  :: Maybe UTCTime,
   codeTypes    :: [OWACodeType],
+  inputHandle  :: InputHandle,
   outputHandle :: OutputHandle
 }
 
@@ -63,16 +64,16 @@ data OWACodeType =
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
 runOWA :: InputHandle -> OutputHandle -> FilePath -> [String] -> IO ()
-runOWA _ outputHandle filePath args = if null args
-  then hPutStrLn outputHandle "owa: No command entered!"
+runOWA iHandle oHandle filePath args = if null args
+  then hPutStrLn oHandle "owa: No command entered!"
   else case head args of
-    "new" -> hPutStrLn outputHandle "Creating new OWA project!"
+    "new" -> runReaderT (findAppDirectoryAndRun filePath runNewCommand) initialReaderInfo
     "gen" -> genFiles
     "generate" -> genFiles
-    unrecognizedCmd -> hPutStrLn outputHandle $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
+    unrecognizedCmd -> hPutStrLn oHandle $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
     where
       types = codeTypesFromArgs args 
-      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types outputHandle
+      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types iHandle oHandle
       genFiles = do
                    lastGenTime <- lastCodeGenerationTime filePath
                    let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
@@ -80,23 +81,50 @@ runOWA _ outputHandle filePath args = if null args
 
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
-  printIfNotSilent ("Searching For app directory from " ++ filePath)
+  findAppDirectoryAndRun filePath generateFiles
+  liftIO $ modifyLastGenTime filePath
+
+generateFiles :: FilePath -> OWAReaderT ()
+generateFiles appDirectory = do
+  appInfo <- loadAppInfo appDirectory
+  case appInfo of
+    Nothing -> printIfNotSilent "Couldn't parse app info. Exiting."
+    Just appInfo -> do
+      produceColorsFiles appDirectory appInfo
+      produceFontsFiles appDirectory appInfo
+      produceAlertsFiles appDirectory appInfo
+      produceErrorsFiles appDirectory appInfo
+      produceStringsFile appDirectory appInfo
+      produceViewsFiles appDirectory appInfo
+
+-- ^^ Refactor this so that the searching for the app directory can be common to both
+
+findAppDirectoryAndRun :: FilePath -> (FilePath -> OWAReaderT ()) -> OWAReaderT ()
+findAppDirectoryAndRun filePath action = do
+  printIfNotSilent "Searching for app directory"
   maybeAppDirectory <- liftIO $ findAppDirectory filePath
   case maybeAppDirectory of 
     Nothing -> printIfNotSilent "Couldn't find app directory! Exiting"
     Just appDirectory -> do
-      printIfNotSilent ("Found app directory at " ++ appDirectory) 
-      appInfo <- loadAppInfo appDirectory
-      case appInfo of
-        Nothing -> printIfNotSilent "Exiting."
-        Just appInfo -> do
-          produceColorsFiles appDirectory appInfo
-          produceFontsFiles appDirectory appInfo
-          produceAlertsFiles appDirectory appInfo
-          produceErrorsFiles appDirectory appInfo
-          produceStringsFile appDirectory appInfo
-          produceViewsFiles appDirectory appInfo
-          liftIO $ modifyLastGenTime filePath
+      printIfNotSilent ("Found app directory") 
+      action appDirectory
+
+---------------------------------------------------------------------------
+------------------------MAKING NEW PROJECT---------------------------------
+---------------------------------------------------------------------------
+
+-- Initially just read and put out app info file in one case
+runNewCommand :: FilePath -> OWAReaderT ()
+runNewCommand appDirectory = do
+  iHandle <- inputHandle <$> ask
+  oHandle <- outputHandle <$> ask
+  input <- liftIO $ hGetLine iHandle
+  if input == "Hello"
+    then liftIO $ do
+      appInfoHandle <- openFile (appDirectory ++ appInfoFileExtension) WriteMode
+      hPutStrLn appInfoHandle "Name James"
+      hClose appInfoHandle
+    else return ()
 
 ---------------------------------------------------------------------------
 ------------------------LAZY CODE GENERATION HANDLERS----------------------
