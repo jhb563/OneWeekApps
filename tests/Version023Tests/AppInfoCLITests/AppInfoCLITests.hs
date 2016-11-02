@@ -13,7 +13,17 @@ runAppInfoCLITests currentDirectory = do
   let testDirectory = currentDirectory ++ testDirectoryExtension
   let appDirectory = currentDirectory ++ appDirectoryExtension
   hspec $ beforeAll_ (removeDiffFiles testDirectory >> removeDiffFiles appDirectory) $ do
-    runAppInfoTest testDirectory "test1" "First Test"
+    runAppInfoTest testDirectory "cancelAtAppName" "No input given"
+    runAppInfoTest testDirectory "cancelAtAppPrefix" "Cancel at prefix entry"
+    runAppInfoTest testDirectory "cancelAtName" "Cancel at name entry"
+    runAppInfoTest testDirectory "cancelAtCompany" "Cancel at company entry"
+    runAppInfoTest testDirectory "completeAppInfo" "Complete App Info"
+    runAppInfoTest testDirectory "appInfoWithoutCompany" "App Info without company"
+    runAppInfoTest testDirectory "blankAppName" "App Info with blank name"
+    runAppInfoTest testDirectory "blankAppNameRecovery" "Recover from blank name"
+    runAppInfoTest testDirectory "malformedPrefix1" "Lowercase prefix"
+    runAppInfoTest testDirectory "malformedPrefix2" "Too long prefix"
+    runAppInfoTest testDirectory "malformedPrefixRecovery" "Recover from prefix error"
 
 runAppInfoTest :: 
   FilePath -> -- Test Directory (will be appended to each filepath)
