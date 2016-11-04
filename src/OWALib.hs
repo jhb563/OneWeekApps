@@ -12,7 +12,13 @@ module OWALib (
 
 import Control.Monad
 import Control.Monad.Reader
+import Control.Monad.Except (runExceptT, ExceptT, ExceptT(..))
+import Control.Monad.Trans.Maybe (runMaybeT, MaybeT(..))
+import Data.Char (toUpper, isAlpha)
 import Data.Either
+import Control.Exception (handle)
+import Data.Maybe (isJust, fromJust)
+import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock
 import OWAAlert
 import OWAAlertObjc
@@ -67,7 +73,7 @@ runOWA :: InputHandle -> OutputHandle -> FilePath -> [String] -> IO ()
 runOWA iHandle oHandle filePath args = if null args
   then hPutStrLn oHandle "owa: No command entered!"
   else case head args of
-    "new" -> runReaderT (findAppDirectoryAndRun filePath runNewCommand) initialReaderInfo
+    "new" -> runNewCommand filePath initialReaderInfo
     "gen" -> genFiles
     "generate" -> genFiles
     unrecognizedCmd -> hPutStrLn oHandle $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
@@ -97,8 +103,6 @@ generateFiles appDirectory = do
       produceStringsFile appDirectory appInfo
       produceViewsFiles appDirectory appInfo
 
--- ^^ Refactor this so that the searching for the app directory can be common to both
-
 findAppDirectoryAndRun :: FilePath -> (FilePath -> OWAReaderT ()) -> OWAReaderT ()
 findAppDirectoryAndRun filePath action = do
   printIfNotSilent "Searching for app directory"
@@ -113,18 +117,106 @@ findAppDirectoryAndRun filePath action = do
 ------------------------MAKING NEW PROJECT---------------------------------
 ---------------------------------------------------------------------------
 
--- Initially just read and put out app info file in one case
-runNewCommand :: FilePath -> OWAReaderT ()
-runNewCommand appDirectory = do
-  iHandle <- inputHandle <$> ask
-  oHandle <- outputHandle <$> ask
-  input <- liftIO $ hGetLine iHandle
-  if input == "Hello"
-    then liftIO $ do
-      appInfoHandle <- openFile (appDirectory ++ appInfoFileExtension) WriteMode
-      hPutStrLn appInfoHandle "Name James"
-      hClose appInfoHandle
-    else return ()
+-- Have methods for each input element which loop back to themselves
+-- On invalid input but through an error when no more input (Either)
+-- Create the App directory (if it doesn't exist)
+-- When all elements have been read, print out the app file
+runNewCommand :: FilePath -> OWAReaderInfo -> IO ()
+runNewCommand filePath readerInfo = do
+    runReaderT (printIfNotSilent "Creating new OWA project!") readerInfo
+    maybeAppInfo <- runReaderT appInfoReaderAction readerInfo
+    case maybeAppInfo of
+      Nothing -> return ()
+      Just appInfo -> do
+        createAppInfo appInfo
+        flip runReaderT readerInfo (printIfNotSilent ("Your new app \"" ++ (appName appInfo) ++ "\" has been created!"))
+  where
+    appInfoReaderAction = runMaybeT $ do
+      appName_ <- readAppName
+      appPrefix_ <- readAppPrefix
+      author_ <- readAuthor
+      companyName_ <- readCompany
+      dateCreated_ <- dateCreatedStringFromTime <$> (liftIO getCurrentTime) 
+      return OWAAppInfo {
+        appName = appName_,
+        appPrefix = appPrefix_,
+        authorName = author_,
+        dateCreatedString = dateCreated_,
+        companyName = companyName_
+      }
+    createAppInfo appInfo = do
+      appDirectory <- createAppDirectory filePath
+      writeAppInfoToDirectory appDirectory appInfo
+
+createAppDirectory :: FilePath -> IO FilePath
+createAppDirectory filePath = do
+  createDirectoryIfMissing False appFilePath
+  return appFilePath
+  where
+    appFilePath = filePath ++ "/app"
+
+writeAppInfoToDirectory :: FilePath -> OWAAppInfo -> IO ()
+writeAppInfoToDirectory appDirectory appInfo = do
+  handle <- openFile appInfoFile WriteMode
+  hPutStrLn handle ("AppName: " ++ appName appInfo)
+  hPutStrLn handle ("Prefix: " ++ appPrefix appInfo)
+  hPutStrLn handle ("Author: " ++ authorName appInfo)
+  hPutStrLn handle ("Created: " ++ dateCreatedString appInfo)
+  when (isJust (companyName appInfo)) $ 
+    hPutStrLn handle ("Company: " ++ (fromJust (companyName appInfo)))
+  hClose handle
+  where
+    appInfoFile = appDirectory ++ appInfoFileExtension
+
+type OWAMaybeT a = MaybeT OWAReaderT a
+
+readAppName :: OWAMaybeT String
+readAppName = do
+  lift $ printIfNotSilent "What is the name of your app: "
+  action
+  where
+    action = do
+      name <- owaReadLine
+      if null name
+        then do
+          lift $ printIfNotSilent "Your app must have a (non-empty) name! Please enter one: "
+          action
+        else return name
+
+readAppPrefix :: OWAMaybeT String
+readAppPrefix = do
+  lift $ printIfNotSilent "What is the prefix of your app (3 letters): "
+  action
+  where
+    validatePrefix :: String -> Bool
+    validatePrefix prefix = length prefix == 3 && all isAlpha prefix
+    action = do
+      prefix <- owaReadLine
+      if not (validatePrefix prefix)
+        then do
+          lift $ printIfNotSilent "The prefix must be 3 letters! Please enter again: " 
+          action
+        else return $ map toUpper prefix
+
+readAuthor :: OWAMaybeT String
+readAuthor = do
+  lift $ printIfNotSilent "What is the author's name: "
+  owaReadLine
+
+readCompany :: OWAMaybeT (Maybe String)
+readCompany = do
+  lift $ printIfNotSilent "What is your company name (optional): "
+  company <- owaReadLine
+  if null company
+    then return Nothing
+    else return (Just company)
+
+dateCreatedStringFromTime :: UTCTime -> String
+dateCreatedStringFromTime time = finalString
+  where
+    day = utctDay time
+    (year, month, date) = toGregorian day
+    finalString = show month ++ "/" ++ show date ++ "/" ++ show year
 
 ---------------------------------------------------------------------------
 ------------------------LAZY CODE GENERATION HANDLERS----------------------
@@ -198,6 +290,15 @@ printIfVerbose str = do
 printErrors :: [OWAParseError] -> OWAReaderT ()
 printErrors [] = return ()
 printErrors errors = mapM_ (printIfNotSilent . show) errors
+
+owaReadLine :: OWAMaybeT String
+owaReadLine = do
+  iHandle <- (inputHandle <$> ask)
+  endOfFile <- liftIO $ hIsEOF iHandle
+  if endOfFile
+    then fail "Hi"
+    else do
+      liftIO $ hGetLine iHandle
 
 ---------------------------------------------------------------------------
 ------------------------EVALUATING CODE TYPES------------------------------

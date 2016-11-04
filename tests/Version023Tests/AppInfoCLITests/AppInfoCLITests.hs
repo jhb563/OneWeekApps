@@ -21,8 +21,7 @@ runAppInfoCLITests currentDirectory = do
     runAppInfoTest testDirectory "appInfoWithoutCompany" "App Info without company"
     runAppInfoTest testDirectory "blankAppName" "App Info with blank name"
     runAppInfoTest testDirectory "blankAppNameRecovery" "Recover from blank name"
-    runAppInfoTest testDirectory "malformedPrefix1" "Lowercase prefix"
-    runAppInfoTest testDirectory "malformedPrefix2" "Too long prefix"
+    runAppInfoTest testDirectory "malformedPrefix1" "Too long prefix"
     runAppInfoTest testDirectory "malformedPrefixRecovery" "Recover from prefix error"
 
 runAppInfoTest :: 

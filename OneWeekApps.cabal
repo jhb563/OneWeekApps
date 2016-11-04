@@ -21,7 +21,8 @@ library
                        wl-pprint >= 1.2,
                        mtl,
                        text,
-                       time
+                       time,
+                       transformers
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColor,
@@ -77,6 +78,7 @@ executable owa
                        wl-pprint >= 1.2,
                        mtl,
                        time,
+                       transformers,
                        OneWeekApps
   hs-source-dirs:      src
   other-modules:       OWAFileSearch
