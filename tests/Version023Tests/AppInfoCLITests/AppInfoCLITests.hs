@@ -2,6 +2,9 @@ module AppInfoCLITests (
   runAppInfoCLITests
 ) where
 
+import Data.List.Split (splitOn)
+import Data.Time.Calendar
+import Data.Time.Clock
 import OWALib
 import System.Directory (doesFileExist)
 import System.IO
@@ -31,8 +34,8 @@ runAppInfoTest ::
   Spec
 runAppInfoTest testDirectory testName description = do
   let (fullInput, fullTestOutput, fullResult, fullAppInfoTest, fullAppInfoResult) = fullTestFiles testDirectory testName
-  beforeAll_ (openHandlesForFiles fullInput fullResult >>= runOWAWithHandles testDirectory)
-    . afterAll_ (removeFiles [fullResult, fullAppInfoResult]) $
+  beforeAll_ (genFileForCurrentDate fullAppInfoTest >> openHandlesForFiles fullInput fullResult >>= runOWAWithHandles testDirectory)
+    . afterAll_ (removeFiles [fullResult, fullAppInfoResult, fullAppInfoTest]) $
       describe description $ do
         it "Output should match" $ \_ -> do
           fullResult `filesShouldMatch` fullTestOutput
@@ -70,11 +73,29 @@ runOWAWithHandles testDirectory (iHandle, oHandle) = do
   hClose iHandle
   hClose oHandle
 
+genFileForCurrentDate :: FilePath -> IO ()
+genFileForCurrentDate fullAppInfoFile = do
+  let tempAppInfoTestFile = fullAppInfoFile ++ ".temp"
+  isAppInfoTest <- doesFileExist tempAppInfoTestFile
+  if not isAppInfoTest
+    then return ()
+    else do
+      templateString <- readFile tempAppInfoTestFile
+      currentDateString <- dateCreatedStringFromTime <$> getCurrentTime
+      let splitTemplate = splitOn "@CURRENT_DATE@" templateString
+      case splitTemplate of
+        [beforeText, afterText] -> writeFile fullAppInfoFile (beforeText ++ currentDateString ++ afterText)
+        _ -> error "Incorrect format for app.info template"
+
+dateCreatedStringFromTime :: UTCTime -> String
+dateCreatedStringFromTime time = finalString
+  where
+    day = utctDay time
+    (year, month, date) = toGregorian day
+    finalString = show month ++ "/" ++ show date ++ "/" ++ show year
+
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/tests/Version023Tests/AppInfoCLITests/"
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = testDirectoryExtension ++ "app/"
-
-outputDirectoryExtension :: FilePath
-outputDirectoryExtension = "/tests/Version023Tests/AppInfoCLITests/OutputTestFiles/"
