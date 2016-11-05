@@ -47,15 +47,13 @@ import System.Directory
 import System.IO
 
 type OWAReaderT = ReaderT OWAReaderInfo IO
-type InputHandle = Handle
-type OutputHandle = Handle
 
 data OWAReaderInfo = OWAReaderInfo {
   outputMode   :: OutputMode,
   lastGenTime  :: Maybe UTCTime,
   codeTypes    :: [OWACodeType],
-  inputHandle  :: InputHandle,
-  outputHandle :: OutputHandle
+  inputHandle  :: Handle,
+  outputHandle :: Handle
 }
 
 data OWACodeType = 
@@ -69,7 +67,7 @@ data OWACodeType =
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
-runOWA :: InputHandle -> OutputHandle -> FilePath -> [String] -> IO ()
+runOWA :: Handle -> Handle -> FilePath -> [String] -> IO ()
 runOWA iHandle oHandle filePath args = if null args
   then hPutStrLn oHandle "owa: No command entered!"
   else case head args of
@@ -110,7 +108,7 @@ findAppDirectoryAndRun filePath action = do
   case maybeAppDirectory of 
     Nothing -> printIfNotSilent "Couldn't find app directory! Exiting"
     Just appDirectory -> do
-      printIfNotSilent ("Found app directory") 
+      printIfNotSilent "Found app directory"
       action appDirectory
 
 ---------------------------------------------------------------------------
@@ -129,14 +127,16 @@ runNewCommand filePath readerInfo = do
       Nothing -> return ()
       Just appInfo -> do
         createAppInfo appInfo
-        flip runReaderT readerInfo (printIfNotSilent ("Your new app \"" ++ (appName appInfo) ++ "\" has been created!"))
+        runReaderT 
+          (printIfNotSilent ("Your new app \"" ++ appName appInfo ++ "\" has been created!")) 
+          readerInfo
   where
     appInfoReaderAction = runMaybeT $ do
       appName_ <- readAppName
       appPrefix_ <- readAppPrefix
       author_ <- readAuthor
       companyName_ <- readCompany
-      dateCreated_ <- dateCreatedStringFromTime <$> (liftIO getCurrentTime) 
+      dateCreated_ <- dateCreatedStringFromTime <$> liftIO getCurrentTime
       return OWAAppInfo {
         appName = appName_,
         appPrefix = appPrefix_,
@@ -163,7 +163,7 @@ writeAppInfoToDirectory appDirectory appInfo = do
   hPutStrLn handle ("Author: " ++ authorName appInfo)
   hPutStrLn handle ("Created: " ++ dateCreatedString appInfo)
   when (isJust (companyName appInfo)) $ 
-    hPutStrLn handle ("Company: " ++ (fromJust (companyName appInfo)))
+    hPutStrLn handle ("Company: " ++ fromJust (companyName appInfo))
   hClose handle
   where
     appInfoFile = appDirectory ++ appInfoFileExtension
@@ -275,17 +275,19 @@ outputModeFromArgs args
 
 printIfNotSilent :: String -> OWAReaderT ()
 printIfNotSilent str = do
-  info <- ask
-  let mode = outputMode info
-  let handle = outputHandle info
+  (mode, handle) <- grabModeAndHandle
   Control.Monad.when (mode /= Silent) $ liftIO $ hPutStrLn handle str
 
 printIfVerbose :: String -> OWAReaderT ()
 printIfVerbose str = do
-  info <- ask
-  let mode = outputMode info
-  let handle = outputHandle info
+  (mode, handle) <- grabModeAndHandle
   Control.Monad.when (mode == Verbose) $ liftIO $ hPutStrLn handle str
+
+grabModeAndHandle :: OWAReaderT (OutputMode, Handle)
+grabModeAndHandle = do
+  info <- ask
+  return (outputMode info, outputHandle info)
+
 
 printErrors :: [OWAParseError] -> OWAReaderT ()
 printErrors [] = return ()
@@ -293,12 +295,11 @@ printErrors errors = mapM_ (printIfNotSilent . show) errors
 
 owaReadLine :: OWAMaybeT String
 owaReadLine = do
-  iHandle <- (inputHandle <$> ask)
+  iHandle <- inputHandle <$> ask
   endOfFile <- liftIO $ hIsEOF iHandle
   if endOfFile
     then fail "Hi"
-    else do
-      liftIO $ hGetLine iHandle
+    else liftIO $ hGetLine iHandle
 
 ---------------------------------------------------------------------------
 ------------------------EVALUATING CODE TYPES------------------------------

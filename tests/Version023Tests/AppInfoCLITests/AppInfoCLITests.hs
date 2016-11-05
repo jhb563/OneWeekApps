@@ -2,6 +2,7 @@ module AppInfoCLITests (
   runAppInfoCLITests
 ) where
 
+import Control.Monad (when)
 import Data.List.Split (splitOn)
 import Data.Time.Calendar
 import Data.Time.Clock
@@ -36,7 +37,7 @@ runAppInfoTest testDirectory testName description = do
   let (fullInput, fullTestOutput, fullResult, fullAppInfoTest, fullAppInfoResult) = fullTestFiles testDirectory testName
   beforeAll_ (genFileForCurrentDate fullAppInfoTest >> openHandlesForFiles fullInput fullResult >>= runOWAWithHandles testDirectory)
     . afterAll_ (removeFiles [fullResult, fullAppInfoResult, fullAppInfoTest]) $
-      describe description $ do
+      describe description $
         it "Output should match" $ \_ -> do
           fullResult `filesShouldMatch` fullTestOutput
           maybeAppInfoTest fullAppInfoTest fullAppInfoResult
@@ -49,9 +50,7 @@ maybeAppInfoTest testFile resultFile = do
     then expectationFailure "Should not have generated app.info!"
     else if not resultExists && testExists
       then expectationFailure "Should have generated app.info!"
-      else if resultExists && testExists
-        then resultFile `filesShouldMatch` testFile
-        else return ()
+      else when (resultExists && testExists) (resultFile `filesShouldMatch` testFile)
 
 fullTestFiles :: FilePath -> String -> (FilePath, FilePath, FilePath, FilePath, FilePath)
 fullTestFiles testDirectory testName =
@@ -77,15 +76,13 @@ genFileForCurrentDate :: FilePath -> IO ()
 genFileForCurrentDate fullAppInfoFile = do
   let tempAppInfoTestFile = fullAppInfoFile ++ ".temp"
   isAppInfoTest <- doesFileExist tempAppInfoTestFile
-  if not isAppInfoTest
-    then return ()
-    else do
-      templateString <- readFile tempAppInfoTestFile
-      currentDateString <- dateCreatedStringFromTime <$> getCurrentTime
-      let splitTemplate = splitOn "@CURRENT_DATE@" templateString
-      case splitTemplate of
-        [beforeText, afterText] -> writeFile fullAppInfoFile (beforeText ++ currentDateString ++ afterText)
-        _ -> error "Incorrect format for app.info template"
+  when isAppInfoTest $ do
+    templateString <- readFile tempAppInfoTestFile
+    currentDateString <- dateCreatedStringFromTime <$> getCurrentTime
+    let splitTemplate = splitOn "@CURRENT_DATE@" templateString
+    case splitTemplate of
+      [beforeText, afterText] -> writeFile fullAppInfoFile (beforeText ++ currentDateString ++ afterText)
+      _ -> error "Incorrect format for app.info template"
 
 dateCreatedStringFromTime :: UTCTime -> String
 dateCreatedStringFromTime time = finalString
