@@ -3,10 +3,15 @@
 
 module IntegrationTestUtil (
   runIntegrationTests,
+  runIntegrationTestsSwift,
   checkAlertsFiles,
   checkColorsFiles,
   checkErrorsFiles,
   checkFontsFiles,
+  checkAlertsFilesSwift,
+  checkColorsFilesSwift,
+  checkErrorsFilesSwift,
+  checkFontsFilesSwift,
   checkStringsFiles
 ) where
 
@@ -26,7 +31,7 @@ runIntegrationTestsSwift :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()
 runIntegrationTestsSwift testDirectory specs additionalFiles = hspec $
   beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
   beforeAll_ (runOWA stdin stdout testDirectory ["generate", "--swift"])
-  . afterAll_ (removeProducedFiles testDirectory additionalFiles) $
+  . afterAll_ (removeProducedFilesSwift testDirectory additionalFiles) $
     mapM_ (\specFun -> specFun testDirectory) specs
 
 checkColorsFiles :: FilePath -> Spec
@@ -44,8 +49,8 @@ checkColorsFiles testDirectory = do
 
 checkColorsFilesSwift :: FilePath -> Spec
 checkColorsFilesSwift testDirectory = do
-  let producedColorFilePath = testDirectory ++ colorHeaderFileExtension
-  let testColorFilePath = testDirectory ++ colorHeaderTestExtension
+  let producedColorFilePath = testDirectory ++ colorSwiftResult
+  let testColorFilePath = testDirectory ++ colorSwiftTest
   describe "Compare Produced Swift Colors Files" $ do
     it "The file should match" $
       producedColorFilePath `filesShouldMatch` testColorFilePath
@@ -65,8 +70,8 @@ checkFontsFiles testDirectory = do
 
 checkFontsFilesSwift :: FilePath -> Spec
 checkFontsFilesSwift testDirectory = do
-  let producedFontFilePath = testDirectory ++ fontHeaderFileExtension
-  let testFontFilePath = testDirectory ++ fontHeaderTestExtension
+  let producedFontFilePath = testDirectory ++ fontSwiftResult
+  let testFontFilePath = testDirectory ++ fontSwiftTest
   describe "Compare Produced Swift Fonts Files" $ do
     it "The file should match" $
       producedFontFilePath `filesShouldMatch` testFontFilePath
@@ -86,8 +91,8 @@ checkAlertsFiles testDirectory = do
 
 checkAlertsFilesSwift :: FilePath -> Spec
 checkAlertsFilesSwift testDirectory = do
-  let producedAlertFilePath = testDirectory ++ alertHeaderFileExtension
-  let testAlertFilePath = testDirectory ++ alertHeaderTestExtension
+  let producedAlertFilePath = testDirectory ++ alertSwiftResult
+  let testAlertFilePath = testDirectory ++ alertSwiftTest
   describe "Compare Produced Swift Alerts Files" $ do
     it "The file should match" $
       producedAlertFilePath `filesShouldMatch` testAlertFilePath
@@ -107,8 +112,8 @@ checkErrorsFiles testDirectory = do
 
 checkErrorsFilesSwift :: FilePath -> Spec
 checkErrorsFilesSwift testDirectory = do
-  let producedErrorFilePath = testDirectory ++ errorHeaderFileExtension
-  let testErrorFilePath = testDirectory ++ errorHeaderTestExtension
+  let producedErrorFilePath = testDirectory ++ errorSwiftResult
+  let testErrorFilePath = testDirectory ++ errorSwiftTest
   describe "Compare Produced Swift Errors Files" $ do
     it "The file should match" $
       producedErrorFilePath `filesShouldMatch` testErrorFilePath
@@ -123,6 +128,9 @@ checkStringsFiles testDirectory = do
 
 removeProducedFiles :: FilePath -> [String] -> IO ()
 removeProducedFiles testDirectory additionalFiles = removeFiles $ map (testDirectory ++) (producedFiles ++ additionalFiles)
+
+removeProducedFilesSwift :: FilePath -> [String] -> IO ()
+removeProducedFilesSwift testDirectory additionalFiles = removeFiles $ map (testDirectory ++) (swiftProducedFiles ++ additionalFiles)
 
 appExtension :: String
 appExtension = "/app"
@@ -140,10 +148,10 @@ colorImplementationTestExtension :: String
 colorImplementationTestExtension = "/app/UIColor+IGAColors.m.test"
 
 colorSwiftResult :: String
-colorSwiftResult = "/app/UIColor+IGAColors.swift"
+colorSwiftResult = "/app/UIColor+MSAColors.swift"
 
 colorSwiftTest :: String
-colorSwiftTest = "/app/UIColor+IGAColors.swift.test"
+colorSwiftTest = "/app/UIColor+MSAColors.swift.test"
 
 fontHeaderFileExtension :: String
 fontHeaderFileExtension = "/app/UIFont+IGAFonts.h"
@@ -158,10 +166,10 @@ fontImplementationTestExtension :: String
 fontImplementationTestExtension = "/app/UIFont+IGAFonts.m.test"
 
 fontSwiftResult :: String
-fontSwiftResult = "/app/UIFont+IGAFonts.swift"
+fontSwiftResult = "/app/UIFont+MSAFonts.swift"
 
 fontSwiftTest :: String
-fontSwiftTest = "/app/UIFont+IGAFonts.swift.test"
+fontSwiftTest = "/app/UIFont+MSAFonts.swift.test"
 
 alertHeaderFileExtension :: String
 alertHeaderFileExtension = "/app/UIAlertController+IGAAlerts.h"
@@ -176,10 +184,10 @@ alertImplementationTestExtension :: String
 alertImplementationTestExtension = "/app/UIAlertController+IGAAlerts.m.test"
 
 alertSwiftResult :: String
-alertSwiftResult = "/app/UIAlertController+IGAAlerts.swift"
+alertSwiftResult = "/app/UIAlertController+MSAAlerts.swift"
 
 alertSwiftTest :: String
-alertSwiftTest = "/app/UIAlertController+IGAAlerts.swift.test"
+alertSwiftTest = "/app/UIAlertController+MSAAlerts.swift.test"
 
 errorHeaderFileExtension :: String
 errorHeaderFileExtension = "/app/NSError+IGAErrors.h"
@@ -194,10 +202,10 @@ errorImplementationTestExtension :: String
 errorImplementationTestExtension = "/app/NSError+IGAErrors.m.test"
 
 errorSwiftResult :: String
-errorSwiftResult = "/app/NSError+IGAErrors.swift"
+errorSwiftResult = "/app/NSError+MSAErrors.swift"
 
 errorSwiftTest :: String
-errorSwiftTest = "/app/NSError+IGAErrors.swift.test"
+errorSwiftTest = "/app/NSError+MSAErrors.swift.test"
 
 localizedStringFileExtension :: String
 localizedStringFileExtension = "/app/Localizable.strings"

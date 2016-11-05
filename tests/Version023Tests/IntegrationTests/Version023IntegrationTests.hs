@@ -37,7 +37,7 @@ checkViewsFiles testDirectory = do
       fullView1Result `filesShouldMatch` fullView1Test
 
 additionalFiles :: [FilePath]
-additionalFiles = [view1Result, view1Test]
+additionalFiles = [view1Result]
 
 view1Result :: String
 view1Result = "/app/VIAConstraintTest2.swift"
