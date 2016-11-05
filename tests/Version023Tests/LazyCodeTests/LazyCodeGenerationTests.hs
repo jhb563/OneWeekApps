@@ -14,6 +14,7 @@ module LazyCodeGenerationTests (
 import Data.Time.Clock
 import OWALib
 import System.Directory
+import System.IO (stdin, stdout)
 import TestUtil
 import Test.Hspec
 
@@ -77,10 +78,10 @@ alertStringsViewPair = ([alertsInput1, stringsInput1, viewsInput2],
 
 beforeTestHook :: FilePath -> [FilePath] -> IO ()
 beforeTestHook testDirectory inputFiles = do
-  runOWA testDirectory ["generate"]
+  runOWA stdin stdout testDirectory ["generate"]
   setModificationTimesBack testDirectory
   modifyInputFiles (map (testDirectory ++) inputFiles)
-  runOWA testDirectory ["generate"]
+  runOWA stdin stdout testDirectory ["generate"]
 
 -- Take each produced file and set its modification time 5 seconds in the past, so that we
 -- can see the immediate results of another run of runOWA without waiting a full second.

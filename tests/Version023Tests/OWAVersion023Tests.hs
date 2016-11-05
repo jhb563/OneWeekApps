@@ -1,5 +1,6 @@
 module Main where
 
+import AppInfoCLITests
 import CodeTypeTests
 import LazyCodeGenerationTests
 import SwiftAlertPrintTests
@@ -19,3 +20,4 @@ main = do
   runSwiftErrorPrintTests currentDirectory
   runSwiftViewPrintTests currentDirectory
   runCodeTypeTests currentDirectory
+  runAppInfoCLITests currentDirectory
