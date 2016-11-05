@@ -1,0 +1,57 @@
+//
+// UIFont+MSAFonts.swift
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+extension UIFont {
+  
+  class func buttonFont() -> UIFont? {
+    return UIFont(name: "Avenir-Medium", size: 12.0)
+  }
+  
+  class func labelFont() -> UIFont? {
+    return UIFont(name: "SanFranciscoDisplay-Regular", size: 14.569)
+  }
+  
+  class func myFont() -> UIFont? {
+    return UIFont(name: "HelveticaNeue-Light", size: 16.0)
+  }
+  
+  class func noStyleFont() -> UIFont? {
+    return UIFont(name: "GillSans", size: 12.0)
+  }
+  
+  class func placeholderFont() -> UIFont? {
+    return UIFont(name: "Verdana-Italic", size: 0.5)
+  }
+  
+  class func randomFont() -> UIFont? {
+    return UIFont(name: "HelveticaNeue-MediumItalic", size: 13.6)
+  }
+  
+  class func styleInNameFont() -> UIFont? {
+    return UIFont(name: "Georgia-BoldItalic", size: 13.2)
+  }
+  
+  class func textfieldFont() -> UIFont? {
+    return UIFont(name: "Trebuchet-BoldItalic", size: 0.7)
+  }
+  
+  class func thinFont() -> UIFont? {
+    return UIFont(name: "HelveticaNeue-Thin", size: 14.023)
+  }
+  
+  class func timesFont() -> UIFont? {
+    return UIFont(name: "TimesNewRomanPSMT", size: 17.0)
+  }
+  
+  class func titleFont() -> UIFont? {
+    return UIFont(name: "Helvetica-Bold", size: 32.0)
+  }
+  
+}

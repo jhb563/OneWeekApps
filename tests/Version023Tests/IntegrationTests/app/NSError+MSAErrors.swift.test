@@ -1,0 +1,110 @@
+//
+// NSError+MSAErrors.swift
+// MySampleApp
+//
+// Created By James Bowen 2/16/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import Foundation
+
+enum MSAErrorsErrorCodes: Int {
+  case FirstFinalError
+  case belongsToFirstDomain
+  case MyAppFirstError
+  case noPrefix
+  case MyAppErrorsredundantCode
+  case MyAppErrorsSimpleError
+  case SecondError
+  case MyOwnDomainSoleDomainCode
+  case DisconnectError
+  case NetworkingError
+  case tears_of_failure
+  case AUTHERROR
+  case UserNotFound
+  case random
+  case InterloperDomainError
+  case SecondDomainWhichError
+}
+
+extension NSError {
+  
+  // MARK: FirstDomain
+  
+  class func finalError() -> NSError {
+    return NSError(domain: "FirstDomain", code: MSAErrorsErrorCodes.FirstFinalError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("This is the last", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func whatError() -> NSError {
+    return NSError(domain: "FirstDomain", code: MSAErrorsErrorCodes.belongsToFirstDomain.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("Wait an error happened?", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  // MARK: MyAppErrors
+  
+  class func firstPrefixedError() -> NSError {
+    return NSError(domain: "MyAppErrors", code: MSAErrorsErrorCodes.MyAppFirstError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("Use the different prefix", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func noPrefixError() -> NSError {
+    return NSError(domain: "MyAppErrors", code: MSAErrorsErrorCodes.noPrefix.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("I don't have a prefix", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func redundantDomain() -> NSError {
+    return NSError(domain: "MyAppErrors", code: MSAErrorsErrorCodes.MyAppErrorsredundantCode.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("Domain Respecified", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func simpleError() -> NSError {
+    return NSError(domain: "MyAppErrors", code: MSAErrorsErrorCodes.MyAppErrorsSimpleError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("SIMPLE_ERROR", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func unprefixedError() -> NSError {
+    return NSError(domain: "MyAppErrors", code: MSAErrorsErrorCodes.SecondError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("Use no prefix", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  // MARK: MyOwnDomain
+  
+  class func beforeDomainSpec() -> NSError {
+    return NSError(domain: "MyOwnDomain", code: MSAErrorsErrorCodes.MyOwnDomainSoleDomainCode.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("This appears before anything with a domain", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  // MARK: OWAFirstErrors
+  
+  class func disconnectError() -> NSError {
+    return NSError(domain: "OWAFirstErrors", code: MSAErrorsErrorCodes.DisconnectError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("DISCONNECTED!.&*", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func myError1() -> NSError {
+    return NSError(domain: "OWAFirstErrors", code: MSAErrorsErrorCodes.NetworkingError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("DESCRIPTION_KEY", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func sadError() -> NSError {
+    return NSError(domain: "OWAFirstErrors", code: MSAErrorsErrorCodes.tears_of_failure.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("Crying about stuff", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  // MARK: OWALogin
+  
+  class func authError() -> NSError {
+    return NSError(domain: "OWALogin", code: MSAErrorsErrorCodes.AUTHERROR.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("You can't \"Login\"", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func userNotFound() -> NSError {
+    return NSError(domain: "OWALogin", code: MSAErrorsErrorCodes.UserNotFound.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("You didn't \n make an account", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  // MARK: RandomDomain
+  
+  class func differentDomain() -> NSError {
+    return NSError(domain: "RandomDomain", code: MSAErrorsErrorCodes.random.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("This error doesn't belong", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  class func interloperDomain() -> NSError {
+    return NSError(domain: "RandomDomain", code: MSAErrorsErrorCodes.InterloperDomainError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("Why not?", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+  // MARK: SecondDomain
+  
+  class func whichError() -> NSError {
+    return NSError(domain: "SecondDomain", code: MSAErrorsErrorCodes.SecondDomainWhichError.rawValue, userInfo: [NSLocalizedDescriptionKey : NSLocalizedString("This should be in second domain", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")])
+  }
+  
+}

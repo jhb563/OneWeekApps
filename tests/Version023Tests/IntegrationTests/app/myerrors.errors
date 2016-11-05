@@ -1,0 +1,89 @@
+Error beforeDomainSpec
+  Domain MyOwnDomain
+  Code ...SoleDomainCode
+  Description "This appears before anything with a domain"
+
+Error myError1
+  Domain OWAFirstErrors
+  Code NetworkingError
+  Description "DESCRIPTION_KEY"
+
+Error disconnectError
+  Domain OWAFirstErrors
+  Code DisconnectError
+  Description "DISCONNECTED!.&*"
+
+
+Error authError
+  Domain OWALogin
+  Code AUTHERROR
+  Description "You can't \"Login\""
+
+Error sadError
+  Domain OWAFirstErrors
+  Code tears_of_failure
+  Description "Crying about stuff"
+
+Error userNotFound
+  Domain OWALogin
+  Code UserNotFound
+  Description "You didn't \n make an account"
+DefaultDomain MyAppErrors
+
+Error simpleError
+  Code ...SimpleError
+  Description "SIMPLE_ERROR"
+
+Error noPrefixError
+  Code noPrefix
+  Description "I don't have a prefix"
+
+Error redundantDomain
+  Domain MyAppErrors
+  Code ...redundantCode
+  Description "Domain Respecified"
+
+Error differentDomain
+  Domain RandomDomain
+  Code random
+  Description "This error doesn't belong"
+
+DefaultDomain MyAppErrors
+  Prefix MyApp
+
+Error firstPrefixedError
+  Code ...FirstError
+  Description "Use the different prefix"
+
+Error unprefixedError
+  Code SecondError
+  Description "Use no prefix"
+
+DefaultDomain FirstDomain
+
+Error whatError
+  Description "Wait an error happened?"
+  Code belongsToFirstDomain
+
+DefaultDomain SecondDomain
+  Prefix SecondDomain
+
+Error whichError
+  Description "This should be in second domain"
+  Code ...WhichError
+
+Error interloperDomain
+  Description "Why not?"
+  Code InterloperDomainError
+  Domain RandomDomain
+
+
+DefaultDomain FirstDomain
+  Prefix First
+
+Error finalError
+  Code ...FinalError
+  Description "This is the last"
+
+DefaultDomain EndWithRandomDomain
+
