@@ -16,8 +16,10 @@ import Control.Monad.Except (runExceptT, ExceptT, ExceptT(..))
 import Control.Monad.Trans.Maybe (runMaybeT, MaybeT(..))
 import Data.Char (toUpper, isAlpha)
 import Data.Either
+import Data.List (find)
+import Data.List.Split (splitOn)
 import Control.Exception (handle)
-import Data.Maybe (isJust, fromJust)
+import Data.Maybe (isJust, fromJust, catMaybes)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock
 import OWAAlert
@@ -55,12 +57,13 @@ import System.IO
 type OWAReaderT = ReaderT OWAReaderInfo IO
 
 data OWAReaderInfo = OWAReaderInfo {
-  outputMode   :: OutputMode,
-  lastGenTime  :: Maybe UTCTime,
-  codeTypes    :: [OWACodeType],
-  languageType :: OWALanguageType,
-  inputHandle  :: Handle,
-  outputHandle :: Handle
+  outputMode       :: OutputMode,
+  lastObjcGenTime  :: Maybe UTCTime,
+  lastSwiftGenTime :: Maybe UTCTime,
+  codeTypes        :: [OWACodeType],
+  languageType     :: OWALanguageType,
+  inputHandle      :: Handle,
+  outputHandle     :: Handle
 }
 
 data OWACodeType = 
@@ -90,16 +93,25 @@ runOWA iHandle oHandle filePath args = if null args
     where
       types = codeTypesFromArgs args 
       lang = languageTypeFromArgs args
-      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types lang iHandle oHandle
+      initialReaderInfo = OWAReaderInfo 
+        (outputModeFromArgs $ tail args) 
+        Nothing 
+        Nothing 
+        types 
+        lang 
+        iHandle 
+        oHandle
       genFiles = do
-                   lastGenTime <- lastCodeGenerationTime filePath
-                   let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
+                   (lastObjcTime, lastSwiftTime) <- lastCodeGenerationTime filePath
+                   let newReaderInfo = initialReaderInfo 
+                                        { lastObjcGenTime = lastObjcTime
+                                        , lastSwiftGenTime = lastSwiftTime }
                    runReaderT (runOWAReader filePath) newReaderInfo
 
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
   findAppDirectoryAndRun filePath generateFiles
-  liftIO $ modifyLastGenTime filePath
+  modifyLastGenTime filePath
 
 generateFiles :: FilePath -> OWAReaderT ()
 generateFiles appDirectory = do
@@ -235,27 +247,45 @@ dateCreatedStringFromTime time = finalString
 ------------------------LAZY CODE GENERATION HANDLERS----------------------
 ---------------------------------------------------------------------------
 
-lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime)
+lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime, Maybe UTCTime)
 lastCodeGenerationTime filePath = do
   let lastGenFilePath = filePath ++ lastGenFileExtension
   lastGenExists <- doesFileExist lastGenFilePath
   if lastGenExists
     then do
-      lastModified <- getModificationTime lastGenFilePath
-      return $ Just lastModified
-    else return Nothing
+      lastGenLines <- lines <$> readFile lastGenFilePath
+      let parsedLines = catMaybes $ map parseLastGenLine lastGenLines
+      let lastObjc = snd <$> find (\(typ, _) -> typ == LanguageTypeObjc) parsedLines
+      let lastSwift = snd <$> find (\(typ, _) -> typ == LanguageTypeSwift) parsedLines
+      return (lastObjc, lastSwift)
+    else return (Nothing, Nothing)
 
-modifyLastGenTime :: FilePath -> IO ()
+parseLastGenLine :: String -> Maybe (OWALanguageType, UTCTime)
+parseLastGenLine lastGenLine = case components of
+  [typeString, timeString] -> case (typeString, read timeString :: UTCTime) of
+    ("Objc", time) -> Just (LanguageTypeObjc, time)
+    ("Swift", time) -> Just (LanguageTypeSwift, time) 
+    _ -> Nothing
+  _ -> Nothing
+  where
+    components = splitOn ": " lastGenLine
+
+modifyLastGenTime :: FilePath -> OWAReaderT ()
 modifyLastGenTime filePath = do
+  lang <- languageType <$> ask
+  objcTime <- lastObjcGenTime <$> ask
+  swiftTime <- lastSwiftGenTime <$> ask
+  currentTime <- liftIO getCurrentTime
   let lastGenFilePath = filePath ++ lastGenFileExtension
-  lastModFileExists <- doesFileExist lastGenFilePath
-  if lastModFileExists
-    then do
-      currentTime <- getCurrentTime
-      setModificationTime lastGenFilePath currentTime
-    else do
-      handle <- openFile lastGenFilePath WriteMode
-      hClose handle
+  handle <- liftIO $ openFile lastGenFilePath WriteMode
+  liftIO $ case lang of
+    LanguageTypeObjc -> do
+      hPutStrLn handle ("Objc: " ++ show currentTime)
+      when (isJust swiftTime) (hPutStrLn handle ("Swift: " ++ show (fromJust swiftTime)))
+    LanguageTypeSwift -> do
+      hPutStrLn handle ("Swift: " ++ show currentTime)
+      when (isJust objcTime) (hPutStrLn handle ("Objc: " ++ show (fromJust objcTime)))
+  liftIO $ hClose handle
   
 lastGenFileExtension :: FilePath
 lastGenFileExtension = "/.owa_last_gen"
@@ -266,7 +296,10 @@ appInfoFileExtension = "/app.info"
 shouldRegenerateFromFiles :: [FilePath] -> OWAReaderT Bool
 shouldRegenerateFromFiles sourceFiles = do
   info <- ask
-  let genTime = lastGenTime info
+  let langType = languageType info 
+  let genTime = if langType == LanguageTypeObjc
+                  then lastObjcGenTime info
+                  else lastSwiftGenTime info
   sourceTimes <- liftIO $ mapM getModificationTime sourceFiles
   case genTime of
     Nothing -> return True
