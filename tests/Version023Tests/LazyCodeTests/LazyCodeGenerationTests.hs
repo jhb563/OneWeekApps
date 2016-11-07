@@ -52,7 +52,6 @@ runLazyCodeGenerationTests currentDirectory = do
       "Swift files should be generated even after Objc"
     testCorrectFilesSwiftBeforeObjc testDirectory swiftBeforeObjcPair
       "Objc files should be generated even after Swift"
-  
 
 noChangePair :: ([FilePath], [FilePath])
 noChangePair = ([], [])
@@ -149,17 +148,21 @@ swiftBeforeTestHook = beforeHookWithArgs ["generate", "--swift"] ["generate", "-
 beforeHookWithArgs :: [String] -> [String] -> [FilePath] -> FilePath -> [FilePath] -> IO ()
 beforeHookWithArgs args1 args2 outputFiles testDirectory inputFiles = do
   runOWA stdin stdout testDirectory args1
-  setModificationTimesBack testDirectory outputFiles
+  setModificationTimesBack testDirectory outputFiles timePrefix
   modifyInputFiles (map (testDirectory ++) inputFiles)
   runOWA stdin stdout testDirectory args2
+  where
+    timePrefix = if "--swift" `elem` args1 then "Swift: " else "Objc: "
 
 -- Take each produced file and set its modification time 5 seconds in the past, so that we
 -- can see the immediate results of another run of runOWA without waiting a full second.
 -- (This is necessary because many File Systems only store file files to a full second resolution.
-setModificationTimesBack :: FilePath -> [FilePath] -> IO ()
-setModificationTimesBack testDirectory files = do
+setModificationTimesBack :: FilePath -> [FilePath] -> String -> IO ()
+setModificationTimesBack testDirectory files timePrefix = do
   earlierTime <- addUTCTime (-5) <$> getCurrentTime  
   mapM_ ((`setModificationTime` earlierTime) . (testDirectory ++)) (allInputFiles ++ files)
+  let timeString = timePrefix ++ (show earlierTime) ++ "\n"
+  writeFile (testDirectory ++ lastGenFile) timeString
 
 modifyInputFiles ::  [FilePath] -> IO ()
 modifyInputFiles files = do
@@ -175,12 +178,12 @@ testCorrectFilesChangeSwift :: FilePath -> ([FilePath], [FilePath]) -> String ->
 testCorrectFilesChangeSwift = testCorrectFilesChange swiftBeforeTestHook producedFilesSwift
 
 testCorrectFilesObjcBeforeSwift :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
-testCorrectFilesObjcBeforeSwift = testCorrectFilesChange hook (allFiles ++ producedFilesSwift)
+testCorrectFilesObjcBeforeSwift = testCorrectFilesChange hook (producedFiles ++ producedFilesSwift)
   where
     hook = beforeHookWithArgs ["generate"] ["generate", "--swift"] producedFiles
 
 testCorrectFilesSwiftBeforeObjc :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
-testCorrectFilesSwiftBeforeObjc = testCorrectFilesChange hook (allFiles ++ producedFilesSwift)
+testCorrectFilesSwiftBeforeObjc = testCorrectFilesChange hook (producedFiles ++ producedFilesSwift)
   where
     hook = beforeHookWithArgs ["generate", "--swift"] ["generate"] producedFilesSwift
 

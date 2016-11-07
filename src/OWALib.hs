@@ -52,7 +52,7 @@ import OWAViewObjc
 import OWAViewSwift
 import OWAViewParser
 import System.Directory
-import System.IO
+import System.IO 
 
 type OWAReaderT = ReaderT OWAReaderInfo IO
 
@@ -111,7 +111,6 @@ runOWA iHandle oHandle filePath args = if null args
 runOWAReader :: FilePath -> OWAReaderT ()
 runOWAReader filePath = do
   findAppDirectoryAndRun filePath generateFiles
-  modifyLastGenTime filePath
 
 generateFiles :: FilePath -> OWAReaderT ()
 generateFiles appDirectory = do
@@ -125,6 +124,7 @@ generateFiles appDirectory = do
       produceErrorsFiles appDirectory appInfo
       produceStringsFile appDirectory appInfo
       produceViewsFiles appDirectory appInfo
+      modifyLastGenTime appDirectory
 
 findAppDirectoryAndRun :: FilePath -> (FilePath -> OWAReaderT ()) -> OWAReaderT ()
 findAppDirectoryAndRun filePath action = do
@@ -249,16 +249,22 @@ dateCreatedStringFromTime time = finalString
 
 lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime, Maybe UTCTime)
 lastCodeGenerationTime filePath = do
-  let lastGenFilePath = filePath ++ lastGenFileExtension
-  lastGenExists <- doesFileExist lastGenFilePath
-  if lastGenExists
-    then do
-      lastGenLines <- lines <$> readFile lastGenFilePath
-      let parsedLines = catMaybes $ map parseLastGenLine lastGenLines
-      let lastObjc = snd <$> find (\(typ, _) -> typ == LanguageTypeObjc) parsedLines
-      let lastSwift = snd <$> find (\(typ, _) -> typ == LanguageTypeSwift) parsedLines
-      return (lastObjc, lastSwift)
-    else return (Nothing, Nothing)
+  appDirectory <- findAppDirectory filePath
+  case appDirectory of
+    Nothing -> return (Nothing, Nothing)
+    Just appDirectory -> do
+      let lastGenFilePath = appDirectory ++ lastGenFileExtension
+      lastGenExists <- doesFileExist lastGenFilePath
+      if lastGenExists
+        then do
+          lastGenLines <- lines <$> readFile lastGenFilePath
+          -- We use seq here to force evaluation of the whole list, as otherwise, for some strange reason
+          -- it seems to keep the file open and cause permission issues later. 
+          let parsedLines = seq (length lastGenLines) (catMaybes $ map parseLastGenLine lastGenLines)
+          let lastObjc = snd <$> find (\(typ, _) -> typ == LanguageTypeObjc) parsedLines
+          let lastSwift = snd <$> find (\(typ, _) -> typ == LanguageTypeSwift) parsedLines
+          return (lastObjc, lastSwift)
+        else return (Nothing, Nothing)
 
 parseLastGenLine :: String -> Maybe (OWALanguageType, UTCTime)
 parseLastGenLine lastGenLine = case components of
@@ -277,15 +283,21 @@ modifyLastGenTime filePath = do
   swiftTime <- lastSwiftGenTime <$> ask
   currentTime <- liftIO getCurrentTime
   let lastGenFilePath = filePath ++ lastGenFileExtension
-  handle <- liftIO $ openFile lastGenFilePath WriteMode
   liftIO $ case lang of
     LanguageTypeObjc -> do
-      hPutStrLn handle ("Objc: " ++ show currentTime)
-      when (isJust swiftTime) (hPutStrLn handle ("Swift: " ++ show (fromJust swiftTime)))
+      let objcString = Just $ "Objc: " ++ show currentTime
+      let swiftString = case swiftTime of
+                          Nothing -> Nothing
+                          Just t -> Just $ "Swift: " ++ show t
+      let finalString = unlines (catMaybes [objcString, swiftString])
+      writeFile lastGenFilePath finalString
     LanguageTypeSwift -> do
-      hPutStrLn handle ("Swift: " ++ show currentTime)
-      when (isJust objcTime) (hPutStrLn handle ("Objc: " ++ show (fromJust objcTime)))
-  liftIO $ hClose handle
+      let swiftString = Just $ "Swift: " ++ show currentTime
+      let objcString = case objcTime of
+                          Nothing -> Nothing
+                          Just t -> Just $ "Objc: " ++ show t
+      let finalString = unlines (catMaybes [objcString, swiftString])
+      writeFile lastGenFilePath finalString
   
 lastGenFileExtension :: FilePath
 lastGenFileExtension = "/.owa_last_gen"

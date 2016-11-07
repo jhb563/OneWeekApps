@@ -282,4 +282,6 @@ test-suite Version023Tests
                , CodeTypeTests
                , AppInfoCLITests
                , TestUtil
+               , IntegrationTestUtil
+               , Version023IntegrationTests
   default-language: Haskell2010

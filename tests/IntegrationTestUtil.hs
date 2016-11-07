@@ -214,7 +214,7 @@ localizedStringsTestExtension :: String
 localizedStringsTestExtension = "/app/Localizable.strings.test"
 
 lastGenFileExtension :: String
-lastGenFileExtension = "/.owa_last_gen"
+lastGenFileExtension = "/app/.owa_last_gen"
 
 producedFiles :: [FilePath]
 producedFiles = [lastGenFileExtension,
