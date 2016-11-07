@@ -16,44 +16,54 @@ import Control.Monad.Except (runExceptT, ExceptT, ExceptT(..))
 import Control.Monad.Trans.Maybe (runMaybeT, MaybeT(..))
 import Data.Char (toUpper, isAlpha)
 import Data.Either
+import Data.List (find)
+import Data.List.Split (splitOn)
 import Control.Exception (handle)
-import Data.Maybe (isJust, fromJust)
+import Data.Maybe (isJust, fromJust, catMaybes, mapMaybe)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock
 import OWAAlert
 import OWAAlertObjc
+import OWAAlertSwift
 import OWAAlertParser
 import OWAAppInfo
 import OWAAppInfoParser
 import OWAColor
 import OWAColorObjc
 import OWAColorParser
+import OWAColorSwift
 import OWAError
 import OWAErrorObjc
+import OWAErrorSwift
 import OWAErrorParser
 import OWAFileSearch
 import OWAFont
 import OWAFontObjc
+import OWAFontSwift
 import OWAFontParser
 import OWALocalizedStringSet
 import OWAObjcPrint
+import OWASwiftPrint
 import OWAParseError
 import OWAStringsParser
 import OWAStringsObjc
 import OWAView
 import OWAViewObjc
+import OWAViewSwift
 import OWAViewParser
 import System.Directory
-import System.IO
+import System.IO 
 
 type OWAReaderT = ReaderT OWAReaderInfo IO
 
 data OWAReaderInfo = OWAReaderInfo {
-  outputMode   :: OutputMode,
-  lastGenTime  :: Maybe UTCTime,
-  codeTypes    :: [OWACodeType],
-  inputHandle  :: Handle,
-  outputHandle :: Handle
+  outputMode       :: OutputMode,
+  lastObjcGenTime  :: Maybe UTCTime,
+  lastSwiftGenTime :: Maybe UTCTime,
+  codeTypes        :: [OWACodeType],
+  languageType     :: OWALanguageType,
+  inputHandle      :: Handle,
+  outputHandle     :: Handle
 }
 
 data OWACodeType = 
@@ -63,6 +73,11 @@ data OWACodeType =
   CodeTypeErrors |
   CodeTypeViews |
   CodeTypeStrings
+  deriving (Show, Eq)
+
+data OWALanguageType =
+  LanguageTypeObjc |
+  LanguageTypeSwift
   deriving (Show, Eq)
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
@@ -77,16 +92,24 @@ runOWA iHandle oHandle filePath args = if null args
     unrecognizedCmd -> hPutStrLn oHandle $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
     where
       types = codeTypesFromArgs args 
-      initialReaderInfo = OWAReaderInfo (outputModeFromArgs $ tail args) Nothing types iHandle oHandle
+      lang = languageTypeFromArgs args
+      initialReaderInfo = OWAReaderInfo 
+        (outputModeFromArgs $ tail args) 
+        Nothing 
+        Nothing 
+        types 
+        lang 
+        iHandle 
+        oHandle
       genFiles = do
-                   lastGenTime <- lastCodeGenerationTime filePath
-                   let newReaderInfo = initialReaderInfo {lastGenTime = lastGenTime}
+                   (lastObjcTime, lastSwiftTime) <- lastCodeGenerationTime filePath
+                   let newReaderInfo = initialReaderInfo 
+                                        { lastObjcGenTime = lastObjcTime
+                                        , lastSwiftGenTime = lastSwiftTime }
                    runReaderT (runOWAReader filePath) newReaderInfo
 
 runOWAReader :: FilePath -> OWAReaderT ()
-runOWAReader filePath = do
-  findAppDirectoryAndRun filePath generateFiles
-  liftIO $ modifyLastGenTime filePath
+runOWAReader filePath = findAppDirectoryAndRun filePath generateFiles
 
 generateFiles :: FilePath -> OWAReaderT ()
 generateFiles appDirectory = do
@@ -100,6 +123,7 @@ generateFiles appDirectory = do
       produceErrorsFiles appDirectory appInfo
       produceStringsFile appDirectory appInfo
       produceViewsFiles appDirectory appInfo
+      modifyLastGenTime appDirectory
 
 findAppDirectoryAndRun :: FilePath -> (FilePath -> OWAReaderT ()) -> OWAReaderT ()
 findAppDirectoryAndRun filePath action = do
@@ -222,27 +246,57 @@ dateCreatedStringFromTime time = finalString
 ------------------------LAZY CODE GENERATION HANDLERS----------------------
 ---------------------------------------------------------------------------
 
-lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime)
+lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime, Maybe UTCTime)
 lastCodeGenerationTime filePath = do
-  let lastGenFilePath = filePath ++ lastGenFileExtension
-  lastGenExists <- doesFileExist lastGenFilePath
-  if lastGenExists
-    then do
-      lastModified <- getModificationTime lastGenFilePath
-      return $ Just lastModified
-    else return Nothing
+  appDirectory <- findAppDirectory filePath
+  case appDirectory of
+    Nothing -> return (Nothing, Nothing)
+    Just appDirectory -> do
+      let lastGenFilePath = appDirectory ++ lastGenFileExtension
+      lastGenExists <- doesFileExist lastGenFilePath
+      if lastGenExists
+        then do
+          lastGenLines <- lines <$> readFile lastGenFilePath
+          -- We use seq here to force evaluation of the whole list, as otherwise, for some strange reason
+          -- it seems to keep the file open and cause permission issues later. 
+          let parsedLines = seq (length lastGenLines) (mapMaybe parseLastGenLine lastGenLines)
+          let lastObjc = snd <$> find (\(typ, _) -> typ == LanguageTypeObjc) parsedLines
+          let lastSwift = snd <$> find (\(typ, _) -> typ == LanguageTypeSwift) parsedLines
+          return (lastObjc, lastSwift)
+        else return (Nothing, Nothing)
 
-modifyLastGenTime :: FilePath -> IO ()
+parseLastGenLine :: String -> Maybe (OWALanguageType, UTCTime)
+parseLastGenLine lastGenLine = case components of
+  [typeString, timeString] -> case (typeString, read timeString :: UTCTime) of
+    ("Objc", time) -> Just (LanguageTypeObjc, time)
+    ("Swift", time) -> Just (LanguageTypeSwift, time) 
+    _ -> Nothing
+  _ -> Nothing
+  where
+    components = splitOn ": " lastGenLine
+
+modifyLastGenTime :: FilePath -> OWAReaderT ()
 modifyLastGenTime filePath = do
+  lang <- languageType <$> ask
+  objcTime <- lastObjcGenTime <$> ask
+  swiftTime <- lastSwiftGenTime <$> ask
+  currentTime <- liftIO getCurrentTime
   let lastGenFilePath = filePath ++ lastGenFileExtension
-  lastModFileExists <- doesFileExist lastGenFilePath
-  if lastModFileExists
-    then do
-      currentTime <- getCurrentTime
-      setModificationTime lastGenFilePath currentTime
-    else do
-      handle <- openFile lastGenFilePath WriteMode
-      hClose handle
+  liftIO $ case lang of
+    LanguageTypeObjc -> do
+      let objcString = Just $ "Objc: " ++ show currentTime
+      let swiftString = case swiftTime of
+                          Nothing -> Nothing
+                          Just t -> Just $ "Swift: " ++ show t
+      let finalString = unlines (catMaybes [objcString, swiftString])
+      writeFile lastGenFilePath finalString
+    LanguageTypeSwift -> do
+      let swiftString = Just $ "Swift: " ++ show currentTime
+      let objcString = case objcTime of
+                          Nothing -> Nothing
+                          Just t -> Just $ "Objc: " ++ show t
+      let finalString = unlines (catMaybes [objcString, swiftString])
+      writeFile lastGenFilePath finalString
   
 lastGenFileExtension :: FilePath
 lastGenFileExtension = "/.owa_last_gen"
@@ -253,7 +307,10 @@ appInfoFileExtension = "/app.info"
 shouldRegenerateFromFiles :: [FilePath] -> OWAReaderT Bool
 shouldRegenerateFromFiles sourceFiles = do
   info <- ask
-  let genTime = lastGenTime info
+  let langType = languageType info 
+  let genTime = if langType == LanguageTypeObjc
+                  then lastObjcGenTime info
+                  else lastSwiftGenTime info
   sourceTimes <- liftIO $ mapM getModificationTime sourceFiles
   case genTime of
     Nothing -> return True
@@ -302,7 +359,7 @@ owaReadLine = do
     else liftIO $ hGetLine iHandle
 
 ---------------------------------------------------------------------------
-------------------------EVALUATING CODE TYPES------------------------------
+------------------------EVALUATING CODE AND LANGUAGE TYPES-----------------
 ---------------------------------------------------------------------------
 
 allCodeTypes :: [OWACodeType]
@@ -333,6 +390,11 @@ whenCodeTypePresent :: OWACodeType -> OWAReaderT () -> OWAReaderT ()
 whenCodeTypePresent codeType action = do
   types <- codeTypes <$> ask
   when (codeType `elem` types) action
+
+languageTypeFromArgs :: [String] -> OWALanguageType
+languageTypeFromArgs args = if "--swift" `elem` args
+  then LanguageTypeSwift
+  else LanguageTypeObjc
 
 ---------------------------------------------------------------------------
 ------------------------LOADING APP INFO-----------------------------------
@@ -424,15 +486,25 @@ produceColorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeColors $ d
       let colors = concat $ rights listOfParseResults
       let prefix = appPrefix appInfo
       printIfVerbose ("Successfully parsed " ++ show (length colors) ++ " colors")
-      let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
-      let colorMFileStructure = objcImplementationFromColors appInfo colors
-      printIfVerbose "Printing colors files..."
-      let fullHeaderPath = appDirectory ++ colorHeaderFileExtension prefix
-      let fullMPath = appDirectory ++ colorImplementationFileExtension prefix
-      liftIO $ printStructureToFile colorHeaderFileStructure fullHeaderPath
-      liftIO $ printStructureToFile colorMFileStructure fullMPath
+      lang <- languageType <$> ask
+      producedFiles <- if lang == LanguageTypeObjc
+        then do
+          let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
+          let colorMFileStructure = objcImplementationFromColors appInfo colors
+          printIfVerbose "Printing colors files..."
+          let fullHeaderPath = appDirectory ++ colorHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ colorImplementationFileExtension prefix
+          liftIO $ printStructureToFile colorHeaderFileStructure fullHeaderPath
+          liftIO $ printStructureToFile colorMFileStructure fullMPath
+          return $ fullHeaderPath ++ ", " ++ fullMPath
+        else do
+          let colorFileStructure = swiftExtensionFromColors appInfo colors
+          printIfVerbose "Printing colors files..."
+          let fullPath = appDirectory ++ colorSwiftFileExtension prefix
+          liftIO $ printSwiftStructureToFile colorFileStructure fullPath
+          return fullPath
       printIfVerbose "Printed colors to files:"
-      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfVerbose producedFiles
       printIfNotSilent "Finished generating colors!"
 
 colorHeaderFileExtension :: String -> FilePath
@@ -440,6 +512,9 @@ colorHeaderFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.h"
 
 colorImplementationFileExtension :: String -> FilePath
 colorImplementationFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.m"
+
+colorSwiftFileExtension :: String -> FilePath
+colorSwiftFileExtension prefix = "/UIColor+" ++ prefix ++ "Colors.swift"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING FONTS FILES------------------------------
@@ -468,15 +543,25 @@ produceFontsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeFonts $ do
       let fonts = concat $ rights listOfParseResults 
       let prefix = appPrefix appInfo
       printIfVerbose ("Found " ++ show (length fonts) ++ " fonts")
-      let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
-      let fontMFileStructure = objcImplementationFromFonts appInfo fonts
-      printIfVerbose "Printing fonts files..."
-      let fullHeaderPath = appDirectory ++ fontHeaderFileExtension prefix
-      let fullMPath = appDirectory ++ fontImplementationFileExtension prefix
-      liftIO $ printStructureToFile fontHeaderFileStructure fullHeaderPath
-      liftIO $ printStructureToFile fontMFileStructure fullMPath
+      lang <- languageType <$> ask
+      producedFiles <- if lang == LanguageTypeObjc
+        then do
+          let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
+          let fontMFileStructure = objcImplementationFromFonts appInfo fonts
+          printIfVerbose "Printing fonts files..."
+          let fullHeaderPath = appDirectory ++ fontHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ fontImplementationFileExtension prefix
+          liftIO $ printStructureToFile fontHeaderFileStructure fullHeaderPath
+          liftIO $ printStructureToFile fontMFileStructure fullMPath
+          return $ fullHeaderPath ++ ", " ++ fullMPath
+        else do
+          let fontFileStructure = swiftExtensionFromFonts appInfo fonts
+          printIfVerbose "Printing fonts files..."
+          let fullPath = appDirectory ++ fontSwiftFileExtension prefix
+          liftIO $ printSwiftStructureToFile fontFileStructure fullPath
+          return fullPath
       printIfVerbose "Printed fonts to files:"
-      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfVerbose producedFiles 
       printIfNotSilent "Finished generating fonts!"
 
 fontHeaderFileExtension :: String -> FilePath
@@ -484,6 +569,9 @@ fontHeaderFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.h"
 
 fontImplementationFileExtension :: String -> FilePath
 fontImplementationFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.m"
+
+fontSwiftFileExtension :: String -> FilePath
+fontSwiftFileExtension prefix = "/UIFont+" ++ prefix ++ "Fonts.swift"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ALERTS FILES-----------------------------
@@ -512,15 +600,25 @@ produceAlertsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeAlerts $ d
       let alerts = concat $ rights listOfParseResults
       let prefix = appPrefix appInfo
       printIfVerbose ("Found " ++ show (length alerts) ++ " alerts")
-      let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
-      let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
-      printIfVerbose "Printing alerts files..."
-      let fullHeaderPath = appDirectory ++ alertHeaderFileExtension prefix
-      let fullMPath = appDirectory ++ alertImplementationFileExtension prefix
-      liftIO $ printStructureToFile alertHeaderFileStructure fullHeaderPath
-      liftIO $ printStructureToFile alertMFileStructure fullMPath
+      lang <- languageType <$> ask
+      producedFiles <- if lang == LanguageTypeObjc
+        then do
+          let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
+          let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
+          printIfVerbose "Printing alerts files..."
+          let fullHeaderPath = appDirectory ++ alertHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ alertImplementationFileExtension prefix
+          liftIO $ printStructureToFile alertHeaderFileStructure fullHeaderPath
+          liftIO $ printStructureToFile alertMFileStructure fullMPath
+          return $ fullHeaderPath ++ ", " ++ fullMPath
+        else do
+          let alertFileStructure = swiftExtensionFromAlerts appInfo alerts
+          printIfVerbose "Printing alerts files..."
+          let fullPath = appDirectory ++ alertSwiftFileExtension prefix
+          liftIO $ printSwiftStructureToFile alertFileStructure fullPath
+          return fullPath
       printIfVerbose "Printed alerts to files:"
-      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfVerbose producedFiles
       printIfNotSilent "Finished generating alerts!"
 
 alertHeaderFileExtension :: String -> FilePath
@@ -528,6 +626,9 @@ alertHeaderFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.h"
 
 alertImplementationFileExtension :: String -> FilePath
 alertImplementationFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.m"
+
+alertSwiftFileExtension :: String -> FilePath
+alertSwiftFileExtension prefix = "/UIAlertController+" ++ prefix ++ "Alerts.swift"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING ERRORS FILES-----------------------------
@@ -556,15 +657,25 @@ produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ d
       let errors = concat $ rights listOfParseResults
       let prefix = appPrefix appInfo
       printIfVerbose ("Found " ++ show (length errors) ++ " errors")
-      let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
-      let errorMFileStructure = objcImplementationFromErrors appInfo errors
-      printIfVerbose "Printing errors files..."
-      let fullHeaderPath = appDirectory ++ errorHeaderFileExtension prefix
-      let fullMPath = appDirectory ++ errorImplementationFileExtension prefix
-      liftIO $ printStructureToFile errorHeaderFileStructure fullHeaderPath
-      liftIO $ printStructureToFile errorMFileStructure fullMPath
+      lang <- languageType <$> ask
+      producedFiles <- if lang == LanguageTypeObjc
+        then do
+          let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
+          let errorMFileStructure = objcImplementationFromErrors appInfo errors
+          printIfVerbose "Printing errors files..."
+          let fullHeaderPath = appDirectory ++ errorHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ errorImplementationFileExtension prefix
+          liftIO $ printStructureToFile errorHeaderFileStructure fullHeaderPath
+          liftIO $ printStructureToFile errorMFileStructure fullMPath
+          return $ fullHeaderPath ++ ", " ++ fullMPath
+        else do
+          let errorFileStructure = swiftExtensionFromErrors appInfo errors
+          printIfVerbose "Printing errors files..."
+          let fullPath = appDirectory ++ errorSwiftFileExtension prefix
+          liftIO $ printSwiftStructureToFile errorFileStructure fullPath
+          return fullPath
       printIfVerbose "Printed errors to files:"
-      printIfVerbose (fullHeaderPath ++ ", " ++ fullMPath)
+      printIfVerbose producedFiles 
       printIfNotSilent "Finished generating errors!"
 
 errorHeaderFileExtension :: String -> FilePath
@@ -572,6 +683,9 @@ errorHeaderFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.h"
 
 errorImplementationFileExtension :: String -> FilePath
 errorImplementationFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.m"
+
+errorSwiftFileExtension :: String -> FilePath
+errorSwiftFileExtension prefix = "/NSError+" ++ prefix ++ "Errors.swift"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING VIEWS FILES------------------------------
@@ -603,12 +717,21 @@ produceViewsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeViews $ do
    
 printViewFiles :: FilePath -> OWAAppInfo -> OWAView -> OWAReaderT ()
 printViewFiles appDirectory appInfo view = do
-  liftIO $ printStructureToFile headerStructure headerPath
-  liftIO $ printStructureToFile mStructure mPath
-  printIfVerbose headerPath
-  printIfVerbose mPath
-    where headerStructure = objcHeaderFromView appInfo view
-          mStructure = objcImplementationFromView appInfo view
-          vTy = viewType view
-          headerPath = appDirectory ++ '/':vTy ++ ".h"
-          mPath = appDirectory ++ '/':vTy ++ ".m"
+  lang <- languageType <$> ask
+  if lang == LanguageTypeObjc
+    then do
+      liftIO $ printStructureToFile headerStructure headerPath
+      liftIO $ printStructureToFile mStructure mPath
+      printIfVerbose headerPath
+      printIfVerbose mPath
+    else do
+      liftIO $ printSwiftStructureToFile swiftStructure swiftPath
+      printIfVerbose swiftPath
+  where 
+    headerStructure = objcHeaderFromView appInfo view
+    mStructure = objcImplementationFromView appInfo view
+    vTy = viewType view
+    headerPath = appDirectory ++ '/':vTy ++ ".h"
+    mPath = appDirectory ++ '/':vTy ++ ".m"
+    swiftStructure = swiftFileFromView appInfo view
+    swiftPath = appDirectory ++ '/':vTy ++ ".swift"

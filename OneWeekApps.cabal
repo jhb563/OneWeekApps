@@ -255,6 +255,7 @@ test-suite Version023Tests
                   tests/Version023Tests/SwiftTests/SwiftAlertTests,
                   tests/Version023Tests/SwiftTests/SwiftErrorTests,
                   tests/Version023Tests/SwiftTests/SwiftViewTests
+                  tests/Version023Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
@@ -281,4 +282,6 @@ test-suite Version023Tests
                , CodeTypeTests
                , AppInfoCLITests
                , TestUtil
+               , IntegrationTestUtil
+               , Version023IntegrationTests
   default-language: Haskell2010

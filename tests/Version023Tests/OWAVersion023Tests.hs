@@ -9,6 +9,7 @@ import SwiftErrorPrintTests
 import SwiftFontPrintTests
 import SwiftViewPrintTests
 import System.Directory
+import Version023IntegrationTests
 
 main :: IO ()
 main = do
@@ -21,3 +22,4 @@ main = do
   runSwiftViewPrintTests currentDirectory
   runCodeTypeTests currentDirectory
   runAppInfoCLITests currentDirectory
+  runV023IntegrationTests currentDirectory

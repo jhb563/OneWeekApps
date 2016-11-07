@@ -1,0 +1,15 @@
+//
+// Localizable.strings
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+// mystrings
+"ALERT_MESSAGE" = "You have a new message";
+"ALERT_TITLE" = "First Alert";
+"DifferentKeyFormat" = "&and|or!not";
+"FIRST_SCREEN_LABEL_ITEM" = "Hello!";
+"FIRST_SCREEN_TITLE" = "My First VC";
+"alllowercase" = "What's up!";

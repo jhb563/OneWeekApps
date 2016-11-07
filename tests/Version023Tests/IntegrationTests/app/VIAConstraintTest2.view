@@ -1,0 +1,24 @@
+View myView
+  Elements
+    TextField viewField
+      Text "HELLO_WORLD"
+      TextColor view1TextFieldColor
+      Font standardFont
+      Layout
+        Height 30
+        Width 100
+    Button viewButton
+      Text "CLICK_ME"
+      Layout
+        Height 50
+        Width 200
+    Image viewImage
+      ImageSrc "profileImage.png"
+      Layout
+        Height viewButton
+        Width viewButton
+    Label viewLabel
+      Text "TITLE"
+      Layout
+        Height viewField 5
+        Width viewField -5

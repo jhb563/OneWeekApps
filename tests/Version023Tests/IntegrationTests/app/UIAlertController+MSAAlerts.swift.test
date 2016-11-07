@@ -1,0 +1,111 @@
+//
+// UIAlertController+MSAAlerts.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import UIKit
+
+typealias AlertHandler = () -> Void
+
+extension UIAlertController {
+  
+  class func blankMessage(handler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let neutralAction = UIAlertAction(title: NSLocalizedString("NOTHING", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      handler()
+    })
+    alert.addAction(neutralAction)
+    return alert
+  }
+  
+  class func escapedQuotes(handler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("KEY_TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("This message has \"quotes\" in it", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let neutralAction = UIAlertAction(title: NSLocalizedString("\"Hi\"", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      handler()
+    })
+    alert.addAction(neutralAction)
+    return alert
+  }
+  
+  class func keyAlert(handler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("KEY_ALERT_TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("KEY_ALERT_MESSAGE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let neutralAction = UIAlertAction(title: NSLocalizedString("KEY_ALERT_BUTTON_TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      handler()
+    })
+    alert.addAction(neutralAction)
+    return alert
+  }
+  
+  class func myFirstAlert() -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("Error", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("You have encountered a fatal error. Goodbye", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let dismissAction = UIAlertAction(title: NSLocalizedString("OK", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: nil)
+    alert.addAction(dismissAction)
+    return alert
+  }
+  
+  class func noMessageAlert() -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("YOU_WIN", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let dismissAction = UIAlertAction(title: NSLocalizedString("GREAT", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: nil)
+    alert.addAction(dismissAction)
+    return alert
+  }
+  
+  class func noTitleAlert() -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("NO_TITLE_MESSAGE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let dismissAction = UIAlertAction(title: NSLocalizedString("Wut", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: nil)
+    alert.addAction(dismissAction)
+    return alert
+  }
+  
+  class func otherEscapeCharacters(yesHandler: AlertHandler, noHandler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("2TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("!./*&()[]15hasdf123\n\r\t", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let yesAction = UIAlertAction(title: NSLocalizedString("...", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      yesHandler()
+    })
+    alert.addAction(yesAction)
+    let noAction = UIAlertAction(title: NSLocalizedString("Whyyyy", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      noHandler()
+    })
+    alert.addAction(noAction)
+    return alert
+  }
+  
+  class func secondAlert(handler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("Game Over", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("Sorry, you appear to have lost.", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let neutralAction = UIAlertAction(title: NSLocalizedString("That Sucks", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      handler()
+    })
+    alert.addAction(neutralAction)
+    return alert
+  }
+  
+  class func twoButtonAlert(yesHandler: AlertHandler, noHandler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("QUIT_APP_TITLE", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("SHOULD_QUIT_APP", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let yesAction = UIAlertAction(title: NSLocalizedString("YES", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      yesHandler()
+    })
+    alert.addAction(yesAction)
+    let noAction = UIAlertAction(title: NSLocalizedString("NO", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      noHandler()
+    })
+    alert.addAction(noAction)
+    return alert
+  }
+  
+  class func twoButtonsNoKeys(yesHandler: AlertHandler, noHandler: AlertHandler) -> UIAlertController {
+    let alert = UIAlertController(title: NSLocalizedString("Quit App?", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), message: NSLocalizedString("Do you want to quit the app?", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), preferredStyle: .Alert)
+    let yesAction = UIAlertAction(title: NSLocalizedString("Yes", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      yesHandler()
+    })
+    alert.addAction(yesAction)
+    let noAction = UIAlertAction(title: NSLocalizedString("No", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), style: .Default, handler: {(alert: UIAlertAction!) in
+      noHandler()
+    })
+    alert.addAction(noAction)
+    return alert
+  }
+  
+}
