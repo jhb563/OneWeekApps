@@ -32,7 +32,7 @@ checkViewsFiles :: FilePath -> Spec
 checkViewsFiles testDirectory = do
   let fullView1Result = testDirectory ++ view1Result
   let fullView1Test = testDirectory ++ view1Test
-  describe "Compare Produced Swift Views Files" $ do
+  describe "Compare Produced Swift Views Files" $
     it "The file should match" $
       fullView1Result `filesShouldMatch` fullView1Test
 

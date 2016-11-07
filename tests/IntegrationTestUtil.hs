@@ -51,7 +51,7 @@ checkColorsFilesSwift :: FilePath -> Spec
 checkColorsFilesSwift testDirectory = do
   let producedColorFilePath = testDirectory ++ colorSwiftResult
   let testColorFilePath = testDirectory ++ colorSwiftTest
-  describe "Compare Produced Swift Colors Files" $ do
+  describe "Compare Produced Swift Colors Files" $
     it "The file should match" $
       producedColorFilePath `filesShouldMatch` testColorFilePath
 
@@ -72,7 +72,7 @@ checkFontsFilesSwift :: FilePath -> Spec
 checkFontsFilesSwift testDirectory = do
   let producedFontFilePath = testDirectory ++ fontSwiftResult
   let testFontFilePath = testDirectory ++ fontSwiftTest
-  describe "Compare Produced Swift Fonts Files" $ do
+  describe "Compare Produced Swift Fonts Files" $
     it "The file should match" $
       producedFontFilePath `filesShouldMatch` testFontFilePath
 
@@ -93,7 +93,7 @@ checkAlertsFilesSwift :: FilePath -> Spec
 checkAlertsFilesSwift testDirectory = do
   let producedAlertFilePath = testDirectory ++ alertSwiftResult
   let testAlertFilePath = testDirectory ++ alertSwiftTest
-  describe "Compare Produced Swift Alerts Files" $ do
+  describe "Compare Produced Swift Alerts Files" $
     it "The file should match" $
       producedAlertFilePath `filesShouldMatch` testAlertFilePath
 
@@ -114,7 +114,7 @@ checkErrorsFilesSwift :: FilePath -> Spec
 checkErrorsFilesSwift testDirectory = do
   let producedErrorFilePath = testDirectory ++ errorSwiftResult
   let testErrorFilePath = testDirectory ++ errorSwiftTest
-  describe "Compare Produced Swift Errors Files" $ do
+  describe "Compare Produced Swift Errors Files" $
     it "The file should match" $
       producedErrorFilePath `filesShouldMatch` testErrorFilePath
 

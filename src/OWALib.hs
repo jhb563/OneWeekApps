@@ -19,7 +19,7 @@ import Data.Either
 import Data.List (find)
 import Data.List.Split (splitOn)
 import Control.Exception (handle)
-import Data.Maybe (isJust, fromJust, catMaybes)
+import Data.Maybe (isJust, fromJust, catMaybes, mapMaybe)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock
 import OWAAlert
@@ -109,8 +109,7 @@ runOWA iHandle oHandle filePath args = if null args
                    runReaderT (runOWAReader filePath) newReaderInfo
 
 runOWAReader :: FilePath -> OWAReaderT ()
-runOWAReader filePath = do
-  findAppDirectoryAndRun filePath generateFiles
+runOWAReader filePath = findAppDirectoryAndRun filePath generateFiles
 
 generateFiles :: FilePath -> OWAReaderT ()
 generateFiles appDirectory = do
@@ -260,7 +259,7 @@ lastCodeGenerationTime filePath = do
           lastGenLines <- lines <$> readFile lastGenFilePath
           -- We use seq here to force evaluation of the whole list, as otherwise, for some strange reason
           -- it seems to keep the file open and cause permission issues later. 
-          let parsedLines = seq (length lastGenLines) (catMaybes $ map parseLastGenLine lastGenLines)
+          let parsedLines = seq (length lastGenLines) (mapMaybe parseLastGenLine lastGenLines)
           let lastObjc = snd <$> find (\(typ, _) -> typ == LanguageTypeObjc) parsedLines
           let lastSwift = snd <$> find (\(typ, _) -> typ == LanguageTypeSwift) parsedLines
           return (lastObjc, lastSwift)

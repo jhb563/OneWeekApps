@@ -161,7 +161,7 @@ setModificationTimesBack :: FilePath -> [FilePath] -> String -> IO ()
 setModificationTimesBack testDirectory files timePrefix = do
   earlierTime <- addUTCTime (-5) <$> getCurrentTime  
   mapM_ ((`setModificationTime` earlierTime) . (testDirectory ++)) (allInputFiles ++ files)
-  let timeString = timePrefix ++ (show earlierTime) ++ "\n"
+  let timeString = timePrefix ++ show earlierTime ++ "\n"
   writeFile (testDirectory ++ lastGenFile) timeString
 
 modifyInputFiles ::  [FilePath] -> IO ()
