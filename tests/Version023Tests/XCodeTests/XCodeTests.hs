@@ -10,7 +10,6 @@ module XCodeTests (
 
 import OWAAppInfo
 import OWAXCode
-import System.Directory
 import Test.Hspec
 import TestUtil
 
@@ -45,7 +44,7 @@ xcodeTest1 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo
       contents1 `filesShouldMatch` contents1Test
 
 xcodeTest2 :: FilePath -> Spec
-xcodeTest2 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo1) $
+xcodeTest2 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo2) $
   describe "Printed XCode Test 2" $ do
     it "Printed info.plist should match (case 2)" $
       info2 `filesShouldMatch` infoTest

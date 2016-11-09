@@ -6,4 +6,4 @@ import OWAAppInfo
 import System.Directory
 
 printBaseXCodeFiles :: FilePath -> OWAAppInfo -> IO ()
-printBaseXCodeFiles = return ()
+printBaseXCodeFiles _ _ = return ()
