@@ -55,7 +55,8 @@ library
                        OWAObjcAbSyn,
                        OWAObjcPrint,
                        OWASwiftAbSyn,
-                       OWASwiftPrint
+                       OWASwiftPrint,
+                       OWAXCode
   other-modules:       OWAParseUtil,
                        OWAObjcUtil,
                        OWASwiftUtil,
@@ -254,8 +255,9 @@ test-suite Version023Tests
                   tests/Version023Tests/SwiftTests/SwiftFontTests,
                   tests/Version023Tests/SwiftTests/SwiftAlertTests,
                   tests/Version023Tests/SwiftTests/SwiftErrorTests,
-                  tests/Version023Tests/SwiftTests/SwiftViewTests
-                  tests/Version023Tests/IntegrationTests
+                  tests/Version023Tests/SwiftTests/SwiftViewTests,
+                  tests/Version023Tests/IntegrationTests,
+                  tests/Version023Tests/XCodeTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
