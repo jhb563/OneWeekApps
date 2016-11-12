@@ -14,6 +14,7 @@ import OtherTemplates
 import OWAAppInfo
 import OWASwiftAbSyn
 import OWASwiftPrint
+import OWASwiftUtil
 import System.Directory
 
 ---------------------------------------------------------------------------
@@ -42,7 +43,9 @@ printVC dir info = printSwiftStructureToFile
   (vcPath dir (appName info)) 
 
 printAppDelegate :: FilePath -> OWAAppInfo -> IO ()
-printAppDelegate _ _ = return ()
+printAppDelegate dir info = printSwiftStructureToFile
+  (appDelegate info)
+  (appDelegatePath dir (appName info))
 
 printInfo :: FilePath -> String -> IO ()
 printInfo dir name = do
@@ -60,7 +63,44 @@ printContents _ _ = return ()
 ---------------------------------------------------------------------------
 
 initialVC :: OWAAppInfo -> SwiftFile
-initialVC _ = SwiftFile []
+initialVC appInfo = SwiftFile
+  [ extensionCommentSection "ViewController.swift" appInfo
+  , uiKitImportSection 
+  , ClassSection "ViewController" "UIViewController" [methodSection] ]
+  where
+    methodSection = MethodImplementationListSection 
+      Nothing
+      [ viewDidLoadMethod, updateViewConstraintsMethod ]
+
+viewDidLoadMethod :: SwiftMethod
+viewDidLoadMethod = SwiftMethod
+  { isInitializer = False
+  , qualifiers = ["override"]
+  , name = "viewDidLoad"
+  , returnType = Nothing
+  , params = []
+  , methodBody = [superStatement, viewUpdateStatement] }
+  where
+    superStatement = ExpressionStatement $
+      MethodCall (Just (Var "super")) (LibMethod "viewDidLoad" []) []
+    viewUpdateStatement = ExpressionStatement $
+      MethodCall (Just (Var "view")) (LibMethod "setNeedsUpdateConstraints" []) []
+
+updateViewConstraintsMethod :: SwiftMethod
+updateViewConstraintsMethod = SwiftMethod
+  { isInitializer = False
+  , qualifiers = ["override"]
+  , name = "updateViewConstraints"
+  , returnType = Nothing
+  , params = []
+  , methodBody = [superStatement] }
+  where
+    superStatement = ExpressionStatement $
+      MethodCall (Just (Var "super")) (LibMethod "updateViewConstraints" []) []
+
+appDelegate :: OWAAppInfo -> SwiftFile
+appDelegate appInfo = SwiftFile 
+  [ extensionCommentSection "AppDelegate.swift" appInfo ]
 
 ---------------------------------------------------------------------------
 ------------------------DIRECTORIES AND FILES------------------------------
