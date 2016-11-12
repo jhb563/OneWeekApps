@@ -16,8 +16,8 @@ import TestUtil
 runXCodeTests :: FilePath -> IO ()
 runXCodeTests currentDirectory = do
   let testDirectory = currentDirectory ++ testDirectoryExtension
-  let project1Directory = currentDirectory ++ project1Extension
-  let project2Directory = currentDirectory ++ project2Extension
+  let project1Directory = testDirectory ++ project1Extension
+  let project2Directory = testDirectory ++ project2Extension
   hspec $
     beforeAll_ (removeDiffFiles project1Directory) $
     beforeAll_ (removeDiffFiles project2Directory)
@@ -26,40 +26,60 @@ runXCodeTests currentDirectory = do
       xcodeTest2 testDirectory
 
 xcodeTest1 :: FilePath -> Spec
-xcodeTest1 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo1) $
+xcodeTest1 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo1) $ do
+  let fullInfo1 = testDirectory ++ info1
+  let fullInfoTest = testDirectory ++ infoTest
+  let fullAppDelegate1 = testDirectory ++ appDelegate1
+  let fullAppDelegate1Test = testDirectory ++ appDelegate1Test
+  let fullVC1 = testDirectory ++ vc1
+  let fullVC1Test = testDirectory ++ vc1Test
+  let fullPBX1 = testDirectory ++ pbx1
+  let fullPBX1Test = testDirectory ++ pbx1Test
+  let fullContents1 = testDirectory ++ contents1
+  let fullContents1Test = testDirectory ++ contents1Test
   describe "Printed XCode Test 1" $ do
     it "Printed info.plist should match (case 1)" $
-      info1 `filesShouldMatch` infoTest
+      fullInfo1 `filesShouldMatch` fullInfoTest
 
     it "Printed app delegate should match (case 1)" $
-      appDelegate1 `filesShouldMatch` appDelegate1Test
+      fullAppDelegate1 `filesShouldMatch` fullAppDelegate1Test
 
     it "Printed view controller should match (case 1)" $
-      vc1 `filesShouldMatch` vc1Test
+      fullVC1 `filesShouldMatch` fullVC1Test
 
     it "Printed pbxproj should match (case 1)" $
-      pbx1 `filesShouldMatch` pbx1Test
+      fullPBX1 `filesShouldMatch` fullPBX1Test
     
     it "Prints contents should match (case 1)" $
-      contents1 `filesShouldMatch` contents1Test
+      fullContents1 `filesShouldMatch` fullContents1Test
 
 xcodeTest2 :: FilePath -> Spec
-xcodeTest2 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo2) $
+xcodeTest2 testDirectory = beforeAll_ (printBaseXCodeFiles testDirectory appInfo2) $ do
+  let fullInfo2 = testDirectory ++ info2
+  let fullInfoTest = testDirectory ++ infoTest
+  let fullAppDelegate2 = testDirectory ++ appDelegate2
+  let fullAppDelegate2Test = testDirectory ++ appDelegate2Test
+  let fullVC2 = testDirectory ++ vc2
+  let fullVC2Test = testDirectory ++ vc2Test
+  let fullPBX2 = testDirectory ++ pbx2
+  let fullPBX2Test = testDirectory ++ pbx2Test
+  let fullContents2 = testDirectory ++ contents2
+  let fullContents2Test = testDirectory ++ contents2Test
   describe "Printed XCode Test 2" $ do
     it "Printed info.plist should match (case 2)" $
-      info2 `filesShouldMatch` infoTest
+      fullInfo2 `filesShouldMatch` fullInfoTest
 
     it "Printed app delegate should match (case 2)" $
-      appDelegate2 `filesShouldMatch` appDelegate2Test
+      fullAppDelegate2 `filesShouldMatch` fullAppDelegate2Test
 
     it "Printed view controller should match (case 2)" $
-      vc2 `filesShouldMatch` vc2Test
+      fullVC2 `filesShouldMatch` fullVC2Test
 
     it "Printed pbxproj should match (case 2)" $
-      pbx2 `filesShouldMatch` pbx2Test
+      fullPBX2 `filesShouldMatch` fullPBX2Test
     
     it "Prints contents should match (case 2)" $
-      contents2 `filesShouldMatch` contents2Test
+      fullContents2 `filesShouldMatch` fullContents2Test
 
 appInfo1 :: OWAAppInfo
 appInfo1 = OWAAppInfo 
@@ -127,31 +147,31 @@ contents2Test :: FilePath
 contents2Test = "/OutputFiles/contents.xcworkspacedata.test"
 
 info1 :: FilePath
-info1 = "/ios/XCodeTestProject/Info.plist.test"
+info1 = "/ios/XCodeTestProject/Info.plist"
 
 appDelegate1 :: FilePath
-appDelegate1 = "/ios/XCodeTestProject/AppDelegate.swift.test"
+appDelegate1 = "/ios/XCodeTestProject/AppDelegate.swift"
 
 vc1 :: FilePath
-vc1 = "/ios/XCodeTestProject/ViewController.swift.test"
+vc1 = "/ios/XCodeTestProject/ViewController.swift"
 
 pbx1 :: FilePath
-pbx1 = "/ios/XCodeTestProject/project.pbxproject.test"
+pbx1 = "/ios/XCodeTestProject.xcodeproj/project.pbxproject"
 
 contents1 :: FilePath
-contents1 = "/ios/XCodeTestProject/contents.xcworkspacedata.test"
+contents1 = "/ios/XCodeTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
 
 info2 :: FilePath
-info2 = "/ios/MyTestProject/Info.plist.test"
+info2 = "/ios/MyTestProject/Info.plist"
 
 appDelegate2 :: FilePath
-appDelegate2 = "/ios/MyTestProject/AppDelegate.swift.test"
+appDelegate2 = "/ios/MyTestProject/AppDelegate.swift"
 
 vc2 :: FilePath
-vc2 = "/ios/MyTestProject/ViewController.swift.test"
+vc2 = "/ios/MyTestProject/ViewController.swift"
 
 pbx2 :: FilePath
-pbx2 = "/ios/MyTestProject/project.pbxproject.test"
+pbx2 = "/ios/MyTestProject.xcodeproj/project.pbxproject"
 
 contents2 :: FilePath
-contents2 = "/ios/MyTestProject/contents.xcworkspacedata.test"
+contents2 = "/ios/MyTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
