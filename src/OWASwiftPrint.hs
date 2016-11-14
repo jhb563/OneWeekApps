@@ -41,10 +41,11 @@ sectionDoc :: FileSection -> Doc
 sectionDoc (BlockCommentSection commentLines) = vcat (map commentDoc commentLines) PPrint.<$> empty
 sectionDoc (ImportsSection imports) = vcat (map importDoc imports) PPrint.<$> empty
 sectionDoc (ExtensionSection extensionName sections) = extensionDoc extensionName sections PPrint.<$> empty
-sectionDoc (ClassSection typeName superclassName sections) = classDoc typeName superclassName sections PPrint.<$> empty
+sectionDoc (ClassSection typeName supers sections) = classDoc typeName supers sections PPrint.<$> empty
 sectionDoc (MethodImplementationListSection sectionTitle methods) = methodListSection sectionTitle methods
 sectionDoc (StatementListSection sectionTitle statements) = statementListSection sectionTitle statements
 sectionDoc (EnumSection enumName enumBaseType cases) = enumSection enumName enumBaseType cases PPrint.<$> empty
+sectionDoc (ClassSpecifierSection specifier) = text "@" <> text specifier PPrint.<$> empty
 
 commentDoc :: String -> Doc
 commentDoc str = if null str
@@ -59,10 +60,12 @@ extensionDoc extensionName sections = indentBlock
   (text "extension" <+> text extensionName) 
   (vcatWithSpace $ map sectionDoc sections)
 
-classDoc :: String -> String -> [FileSection] -> Doc
-classDoc typeName superclassName sections = indentBlock
-  (text "class" <+> text typeName <> colon <+> text superclassName)
+classDoc :: String -> [String] -> [FileSection] -> Doc
+classDoc typeName supers sections = indentBlock
+  (text "class" <+> text typeName <> colon <+> superDoc)
   (vcatWithSpace $ map sectionDoc sections)
+  where
+    superDoc = hcat $ punctuate (text ", ") (map text supers)
 
 methodListSection :: Maybe String -> [SwiftMethod] -> Doc
 methodListSection Nothing methods = spaceOut (map methodDoc methods)
@@ -99,11 +102,13 @@ methodDoc swiftMethod = indentBlock methodDef methodBodyDoc
 
 typeDoc :: SwiftType -> Doc
 typeDoc (SimpleType typ) = text typ
-typeDoc (OptionalType typ) = text typ <> text "?"
+typeDoc (OptionalType typ) = typeDoc typ <> text "?"
 typeDoc (ExplicitType typ) = text typ <> text "!"
 typeDoc (FunctionType argTypes returnType) = parens 
   (hcat $ punctuate (text ", ") (map typeDoc argTypes)) <+>
   text "->" <+> typeDoc returnType
+typeDoc (DictionaryType keyType valueType) = brackets $
+  typeDoc keyType <> colon <+> typeDoc valueType
 
 paramDoc :: ParamDef -> Doc
 paramDoc pDef = case label of
@@ -123,9 +128,13 @@ statementDoc (ReturnStatement expr) = text "return" <+> expressionDoc expr
 statementDoc (ExpressionStatement expr) = expressionDoc expr
 statementDoc (LetDecl name expr) = text "let" <+> text name <+>
   text "=" <+> expressionDoc expr
-statementDoc (VarDecl declQualfiers name varType expr) = hsep 
-  (map text (declQualfiers ++ ["var"])) <+>
-  text name <> colon <+> typeDoc varType <+> text "=" <+> expressionDoc expr
+statementDoc (VarDecl declQualfiers name varType maybeExpr) = case maybeExpr of
+  Nothing -> declDoc
+  Just expr -> declDoc <+> text "=" <+> expressionDoc expr
+  where
+    declDoc = hsep 
+      (map text (declQualfiers ++ ["var"])) <+>
+      text name <> colon <+> typeDoc varType
 statementDoc (TypeAliasDecl name typ) = text "typealias" <+> text name <+> text "=" <+>
   typeDoc typ
 statementDoc (AssignStatement expr1 expr2) = expressionDoc expr1 <+> text "=" <+>
@@ -178,6 +187,8 @@ expressionDoc (DictionaryLit exprPairs) = brackets $ hcat $ punctuate (text ", "
   where
     exprPairToDoc (keyExpr, valueExpr) = expressionDoc keyExpr <+> colon <+>
       expressionDoc valueExpr
+expressionDoc (ExplicitExpr expr) = expressionDoc expr <> text "!"
+expressionDoc (OptionalExpr expr) = expressionDoc expr <> text "?"
 
 markDoc :: String -> Doc
 markDoc title = text "// MARK:" <+> text title

@@ -37,7 +37,7 @@ swiftFileFromView appInfo view = SwiftFile
       [setupViewsMethod view, setupConstraintsMethod view]
     lazyGetterSection = StatementListSection (Just "Lazy Getters")
       (map lazyGetterForElement (allChildViews view))
-    viewClassSection = ClassSection typeName originalViewType 
+    viewClassSection = ClassSection typeName [originalViewType]
       [ lifecycleSection
       , setupSection
       , lazyGetterSection ]
@@ -205,7 +205,7 @@ lazyGetterForElement element = VarDecl
   ["lazy"] 
   (nameForElement element)
   (ExplicitType typeName)
-  (CalledClosure lazyClosure [])
+  (Just $ CalledClosure lazyClosure [])
   where
     typeName = typeNameForElement element
     initMethod = LibMethod {libMethodName = typeName, libParams = []}

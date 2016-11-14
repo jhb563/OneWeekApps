@@ -47,7 +47,7 @@ methodForFont font = SwiftMethod
   False
   ["class"]
   (fontName font)
-  (Just $ OptionalType originalFontTypeName)
+  (Just $ OptionalType (SimpleType originalFontTypeName))
   []
   [ReturnStatement $ returnExpressionForFont font]
 

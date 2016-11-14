@@ -24,10 +24,11 @@ data FileSection =
   BlockCommentSection [String] |
   ImportsSection [Import] |
   ExtensionSection String [FileSection] |
-  ClassSection Identifier Identifier [FileSection] |
+  ClassSection Identifier [Identifier] [FileSection] |
   MethodImplementationListSection (Maybe String) [SwiftMethod] |
   StatementListSection (Maybe String) [SwiftStatement] |
-  EnumSection Identifier SwiftType [Identifier]
+  EnumSection Identifier SwiftType [Identifier] |
+  ClassSpecifierSection Identifier
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of a
@@ -64,9 +65,10 @@ data Closure = Closure {
 
 -- | 'SwiftType' combines the possible types of types we can have in Swift.
 data SwiftType = SimpleType String |
-  OptionalType String |
+  OptionalType SwiftType |
   ExplicitType String |
-  FunctionType [SwiftType] SwiftType
+  FunctionType [SwiftType] SwiftType |
+  DictionaryType SwiftType SwiftType
   deriving (Show, Eq)
 
 -- | 'ParamDef' abstracts the three parts describing a method parameter
@@ -82,7 +84,7 @@ data SwiftStatement =
   ReturnStatement SwiftExpression |
   ExpressionStatement SwiftExpression |
   LetDecl Identifier SwiftExpression |
-  VarDecl [String] Identifier SwiftType SwiftExpression |
+  VarDecl [String] Identifier SwiftType (Maybe SwiftExpression) |
   TypeAliasDecl Identifier SwiftType |
   AssignStatement SwiftExpression SwiftExpression |
   ForEachBlock SwiftExpression SwiftExpression [SwiftStatement]
@@ -101,5 +103,7 @@ data SwiftExpression =
   StringLit String |
   BoolLit Bool |
   ArrayLit [SwiftExpression] |
-  DictionaryLit [(SwiftExpression, SwiftExpression)]
+  DictionaryLit [(SwiftExpression, SwiftExpression)] |
+  ExplicitExpr SwiftExpression |
+  OptionalExpr SwiftExpression
   deriving (Show, Eq)
