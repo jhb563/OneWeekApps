@@ -1,9 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+{-|
+Module      : OtherTemplates
+Description : Contains template strings for the Info.plist file and contents. 
+Copyright   : (c) James Bowen, 2016
+License     : MIT
+Maintainer  : jhbowen047@gmail.com
+-}
+
 module OtherTemplates where
 
 import Data.Text
 
+-- | Template string for info.plist. Uses String type since no interpolation is needed.
 infoPListTemplate :: String
 infoPListTemplate = "\
 \<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -43,6 +52,7 @@ infoPListTemplate = "\
 \</dict>\n\
 \</plist>\n"
 
+-- | Template for contents file. Subsitutes the project name. 
 contentsTemplate :: Text
 contentsTemplate = "\
 \<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\

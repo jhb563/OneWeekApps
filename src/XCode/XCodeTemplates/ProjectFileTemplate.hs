@@ -1,9 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+{-|
+Module      : ProjectFileTemplate
+Description : Contains template strings for the .pbxproj file.
+Copyright   : (c) James Bowen, 2016
+License     : MIT
+Maintainer  : jhbowen047@gmail.com
+-}
+
 module ProjectFileTemplate where
 
 import Data.Text
 
+-- | Template for for project.pbxproj file in XCode.
 pbxProjTemplate :: Text
 pbxProjTemplate = "\
 \// !$$*UTF8*$$!\n\

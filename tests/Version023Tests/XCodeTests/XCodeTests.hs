@@ -16,11 +16,9 @@ import TestUtil
 runXCodeTests :: FilePath -> IO ()
 runXCodeTests currentDirectory = do
   let testDirectory = currentDirectory ++ testDirectoryExtension
-  let project1Directory = testDirectory ++ project1Extension
-  let project2Directory = testDirectory ++ project2Extension
+  let fullDffDirectories = map (testDirectory ++) diffFileHomes
   hspec $
-    beforeAll_ (removeDiffFiles project1Directory) $
-    beforeAll_ (removeDiffFiles project2Directory)
+    beforeAll_ (mapM_ removeDiffFiles fullDffDirectories)
     . afterAll_ (removeResultsFiles testDirectory producedFiles) $ do
       xcodeTest1 testDirectory
       xcodeTest2 testDirectory
@@ -113,11 +111,15 @@ producedFiles =
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/tests/Version023Tests/XCodeTests/"
 
-project1Extension :: FilePath
-project1Extension = "/ios/XCodeTestProject/"
-
-project2Extension :: FilePath
-project2Extension = "/ios/XCodeTestProject/"
+-- All directories which may contain diffs
+diffFileHomes :: [FilePath]
+diffFileHomes =
+  [ "/ios/XCodeTestProject/"
+  , "/ios/MyTestProject/"
+  , "/ios/XCodeTestProject.pbxproj/"
+  , "/ios/MyTestProject.pbxproj/"
+  , "/ios/XCodeTestProject.pbxproj/.xcworkspacedata/"
+  , "/ios/MyTestProject.pbxproj/.xcworkspacedata/" ]
 
 infoTest :: FilePath
 infoTest = "/OutputFiles/Info.plist.test"
