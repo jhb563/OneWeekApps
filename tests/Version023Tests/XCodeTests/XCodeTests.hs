@@ -141,10 +141,10 @@ vc2Test :: FilePath
 vc2Test = "/OutputFiles/ViewController2.swift.test"
 
 pbx2Test :: FilePath
-pbx2Test = "/OutputFiles/project.pbxproject.test"
+pbx2Test = "/OutputFiles/project.pbxproject2.test"
 
 contents2Test :: FilePath
-contents2Test = "/OutputFiles/contents.xcworkspacedata.test"
+contents2Test = "/OutputFiles/contents2.xcworkspacedata.test"
 
 info1 :: FilePath
 info1 = "/ios/XCodeTestProject/Info.plist"

@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-|
 Module      : OWAXCode
 Description : Generates code and files related to XCode
@@ -10,6 +11,9 @@ module OWAXCode (
   printBaseXCodeFiles  
 ) where
 
+import qualified Data.Text as T
+import qualified Data.Text.Lazy as TL
+import Data.Text.Template
 import OtherTemplates
 import OWAAppInfo
 import OWASwiftAbSyn
@@ -28,8 +32,8 @@ printBaseXCodeFiles currentDirectory appInfo = do
   printVC currentDirectory appInfo
   printAppDelegate currentDirectory appInfo
   printInfo currentDirectory name
-  printPbxProj currentDirectory name
   printContents currentDirectory name 
+  printPbxProj currentDirectory name
   where
     name = appName appInfo
 
@@ -56,7 +60,12 @@ printPbxProj :: FilePath -> String -> IO ()
 printPbxProj _ _ = return ()
 
 printContents :: FilePath -> String -> IO ()
-printContents _ _ = return ()
+printContents dir name = writeFile fullPath (TL.unpack interpolatedText)
+  where
+    fullPath = contentsPath dir name
+    temp = template contentsTemplate
+    context str = if str == "projectname" then (T.pack name) else str
+    interpolatedText = render temp context
 
 ---------------------------------------------------------------------------
 ------------------------FILE BUILDERS--------------------------------------
@@ -192,4 +201,4 @@ baseProjectFilePath :: FilePath -> String -> FilePath
 baseProjectFilePath dir name = dir ++ "/ios/" ++ name ++ "/"
 
 pbxProjDirPath :: FilePath -> String -> FilePath
-pbxProjDirPath dir name = dir ++ "/ios/" ++ name ++ ".xcodeproj/"
+pbxProjDirPath dir name = dir ++ "ios/" ++ name ++ ".xcodeproj/"

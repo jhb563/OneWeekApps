@@ -22,7 +22,8 @@ library
                        mtl,
                        text,
                        time,
-                       transformers
+                       transformers,
+                       template
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColor,
@@ -83,6 +84,7 @@ executable owa
                        mtl,
                        time,
                        transformers,
+                       template,
                        OneWeekApps
   hs-source-dirs:      src
   other-modules:       OWAFileSearch

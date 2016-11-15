@@ -2,6 +2,8 @@
 
 module OtherTemplates where
 
+import Data.Text
+
 infoPListTemplate :: String
 infoPListTemplate = "\
 \<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -41,13 +43,12 @@ infoPListTemplate = "\
 \</dict>\n\
 \</plist>\n"
 
-{-contentsTemplate :: Text
-contentsTemplate = "
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<Workspace
-   version = \"1.0\">
-   <FileRef
-      location = \"self:$projectname.xcodeproj\">
-   </FileRef>
-</Workspace>
-"-}
+contentsTemplate :: Text
+contentsTemplate = "\
+\<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+\<Workspace\n\
+\   version = \"1.0\">\n\
+\   <FileRef\n\
+\      location = \"self:$projectname.xcodeproj\">\n\
+\   </FileRef>\n\
+\</Workspace>\n"
