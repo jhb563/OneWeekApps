@@ -129,7 +129,7 @@ vc1Test :: FilePath
 vc1Test = "/OutputFiles/ViewController.swift.test"
 
 pbx1Test :: FilePath
-pbx1Test = "/OutputFiles/project.pbxproject.test"
+pbx1Test = "/OutputFiles/project.pbxproj.test"
 
 contents1Test :: FilePath
 contents1Test = "/OutputFiles/contents.xcworkspacedata.test"
@@ -141,7 +141,7 @@ vc2Test :: FilePath
 vc2Test = "/OutputFiles/ViewController2.swift.test"
 
 pbx2Test :: FilePath
-pbx2Test = "/OutputFiles/project.pbxproject2.test"
+pbx2Test = "/OutputFiles/project2.pbxproj.test"
 
 contents2Test :: FilePath
 contents2Test = "/OutputFiles/contents2.xcworkspacedata.test"

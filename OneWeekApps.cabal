@@ -62,7 +62,8 @@ library
                        OWAObjcUtil,
                        OWASwiftUtil,
                        OWAPrintUtil,
-                       OtherTemplates
+                       OtherTemplates,
+                       ProjectFileTemplate
   hs-source-dirs:      src,
                        src/Parsers,
                        src/ObjcConverters,

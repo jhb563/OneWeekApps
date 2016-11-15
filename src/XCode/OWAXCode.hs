@@ -19,6 +19,7 @@ import OWAAppInfo
 import OWASwiftAbSyn
 import OWASwiftPrint
 import OWASwiftUtil
+import ProjectFileTemplate
 import System.Directory
 
 ---------------------------------------------------------------------------
@@ -57,7 +58,12 @@ printInfo dir name = do
   writeFile fullPath infoPListTemplate
 
 printPbxProj :: FilePath -> String -> IO ()
-printPbxProj _ _ = return ()
+printPbxProj dir name = writeFile fullPath (TL.unpack interpolatedText)
+  where
+    fullPath = pbxProjPath dir name
+    temp = template pbxProjTemplate
+    context str = if str == "projectname" then (T.pack name) else str
+    interpolatedText = render temp context
 
 printContents :: FilePath -> String -> IO ()
 printContents dir name = writeFile fullPath (TL.unpack interpolatedText)
