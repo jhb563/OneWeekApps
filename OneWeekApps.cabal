@@ -22,7 +22,8 @@ library
                        mtl,
                        text,
                        time,
-                       transformers
+                       transformers,
+                       template
   exposed-modules:     OWALib,
                        OWAFileSearch,
                        OWAColor,
@@ -55,16 +56,21 @@ library
                        OWAObjcAbSyn,
                        OWAObjcPrint,
                        OWASwiftAbSyn,
-                       OWASwiftPrint
+                       OWASwiftPrint,
+                       OWAXCode
   other-modules:       OWAParseUtil,
                        OWAObjcUtil,
                        OWASwiftUtil,
-                       OWAPrintUtil
+                       OWAPrintUtil,
+                       OtherTemplates,
+                       ProjectFileTemplate
   hs-source-dirs:      src,
                        src/Parsers,
                        src/ObjcConverters,
                        src/SwiftConverters,
-                       src/dataTypes
+                       src/dataTypes,
+                       src/XCode,
+                       src/XCode/XCodeTemplates
   default-language: Haskell2010
 
 executable owa
@@ -79,12 +85,14 @@ executable owa
                        mtl,
                        time,
                        transformers,
+                       template,
                        OneWeekApps
   hs-source-dirs:      src
   other-modules:       OWAFileSearch
                      , OWALib
                      , OWAObjcPrint
                      , OWAPrintUtil
+                     , OWASwiftPrint
   default-language:    Haskell2010
 
 test-suite Version010Tests
@@ -254,8 +262,9 @@ test-suite Version023Tests
                   tests/Version023Tests/SwiftTests/SwiftFontTests,
                   tests/Version023Tests/SwiftTests/SwiftAlertTests,
                   tests/Version023Tests/SwiftTests/SwiftErrorTests,
-                  tests/Version023Tests/SwiftTests/SwiftViewTests
-                  tests/Version023Tests/IntegrationTests
+                  tests/Version023Tests/SwiftTests/SwiftViewTests,
+                  tests/Version023Tests/IntegrationTests,
+                  tests/Version023Tests/XCodeTests
   build-depends: base,
                  hspec     >= 1.8,
                  directory >= 1.2.5,
@@ -281,6 +290,7 @@ test-suite Version023Tests
                , SwiftViewPrintTests
                , CodeTypeTests
                , AppInfoCLITests
+               , XCodeTests
                , TestUtil
                , IntegrationTestUtil
                , Version023IntegrationTests

@@ -115,9 +115,11 @@ removeFiles = mapM_ (\file -> do
 
 removeDiffFiles :: FilePath -> IO ()
 removeDiffFiles directory = do
-  allFiles <- listDirectory directory
-  let diffFiles = map (\fp -> directory ++ '/':fp) (filter isDiffFile allFiles)
-  removeFiles diffFiles
+  dirExists <- doesDirectoryExist directory
+  when dirExists $ do
+    allFiles <- listDirectory directory
+    let diffFiles = map (\fp -> directory ++ '/':fp) (filter isDiffFile allFiles)
+    removeFiles diffFiles
 
 diffExtension :: String
 diffExtension = ".diff"

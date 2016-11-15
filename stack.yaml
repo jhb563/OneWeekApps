@@ -27,4 +27,5 @@ extra-deps:
 - text-1.2.2.1
 - tf-random-0.5
 - wl-pprint-1.2
+- template-0.2.0.10
 resolver: ghc-7.10

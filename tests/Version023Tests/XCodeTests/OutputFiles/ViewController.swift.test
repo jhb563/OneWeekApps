@@ -2,20 +2,21 @@
 // ViewController.swift
 // XCodeTestProject
 //
-// Created by James Bowen on 4/30/2016.
-// Copyright (c) 2016 One Week Apps. All rights reserved.
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
 import UIKit
 
 class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-      super.viewDidLoad()
-      view.setNeedsUpdateConstraints()
-    }
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    view.setNeedsUpdateConstraints()
+  }
   
   override func updateViewConstraints() {
     super.updateViewConstraints()
   }
+  
 }
