@@ -114,12 +114,12 @@ testDirectoryExtension = "/tests/Version023Tests/XCodeTests/"
 -- All directories which may contain diffs
 diffFileHomes :: [FilePath]
 diffFileHomes =
-  [ "/ios/XCodeTestProject/"
-  , "/ios/MyTestProject/"
-  , "/ios/XCodeTestProject.pbxproj/"
-  , "/ios/MyTestProject.pbxproj/"
-  , "/ios/XCodeTestProject.pbxproj/.xcworkspacedata/"
-  , "/ios/MyTestProject.pbxproj/.xcworkspacedata/" ]
+  [ "ios/XCodeTestProject/"
+  , "ios/MyTestProject/"
+  , "ios/XCodeTestProject.pbxproj/"
+  , "ios/MyTestProject.pbxproj/"
+  , "ios/XCodeTestProject.pbxproj/.xcworkspacedata/"
+  , "ios/MyTestProject.pbxproj/.xcworkspacedata/" ]
 
 infoTest :: FilePath
 infoTest = "/OutputFiles/Info.plist.test"
@@ -149,31 +149,31 @@ contents2Test :: FilePath
 contents2Test = "/OutputFiles/contents2.xcworkspacedata.test"
 
 info1 :: FilePath
-info1 = "/ios/XCodeTestProject/Info.plist"
+info1 = "ios/XCodeTestProject/Info.plist"
 
 appDelegate1 :: FilePath
-appDelegate1 = "/ios/XCodeTestProject/AppDelegate.swift"
+appDelegate1 = "ios/XCodeTestProject/AppDelegate.swift"
 
 vc1 :: FilePath
-vc1 = "/ios/XCodeTestProject/ViewController.swift"
+vc1 = "ios/XCodeTestProject/ViewController.swift"
 
 pbx1 :: FilePath
-pbx1 = "/ios/XCodeTestProject.xcodeproj/project.pbxproject"
+pbx1 = "ios/XCodeTestProject.xcodeproj/project.pbxproject"
 
 contents1 :: FilePath
-contents1 = "/ios/XCodeTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
+contents1 = "ios/XCodeTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
 
 info2 :: FilePath
-info2 = "/ios/MyTestProject/Info.plist"
+info2 = "ios/MyTestProject/Info.plist"
 
 appDelegate2 :: FilePath
-appDelegate2 = "/ios/MyTestProject/AppDelegate.swift"
+appDelegate2 = "ios/MyTestProject/AppDelegate.swift"
 
 vc2 :: FilePath
-vc2 = "/ios/MyTestProject/ViewController.swift"
+vc2 = "ios/MyTestProject/ViewController.swift"
 
 pbx2 :: FilePath
-pbx2 = "/ios/MyTestProject.xcodeproj/project.pbxproject"
+pbx2 = "ios/MyTestProject.xcodeproj/project.pbxproject"
 
 contents2 :: FilePath
-contents2 = "/ios/MyTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
+contents2 = "ios/MyTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
