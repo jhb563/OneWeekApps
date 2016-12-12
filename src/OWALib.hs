@@ -10,22 +10,25 @@ module OWALib (
   runOWA
 ) where
 
+import Control.Exception (handle)
 import Control.Monad
-import Control.Monad.Reader
 import Control.Monad.Except (runExceptT, ExceptT, ExceptT(..))
+import Control.Monad.Reader
 import Control.Monad.Trans.Maybe (runMaybeT, MaybeT(..))
 import Data.Char (toUpper, isAlpha)
 import Data.Either
 import Data.List (find)
 import Data.List.Split (splitOn)
-import Control.Exception (handle)
 import Data.Maybe (isJust, fromJust, catMaybes, mapMaybe)
 import Data.Time.Calendar (toGregorian)
 import Data.Time.Clock
+import System.Directory
+import System.IO 
+
 import OWAAlert
 import OWAAlertObjc
-import OWAAlertSwift
 import OWAAlertParser
+import OWAAlertSwift
 import OWAAppInfo
 import OWAAppInfoParser
 import OWAColor
@@ -34,25 +37,23 @@ import OWAColorParser
 import OWAColorSwift
 import OWAError
 import OWAErrorObjc
-import OWAErrorSwift
 import OWAErrorParser
+import OWAErrorSwift
 import OWAFileSearch
 import OWAFont
 import OWAFontObjc
-import OWAFontSwift
 import OWAFontParser
+import OWAFontSwift
 import OWALocalizedStringSet
 import OWAObjcPrint
-import OWASwiftPrint
 import OWAParseError
-import OWAStringsParser
 import OWAStringsObjc
+import OWAStringsParser
+import OWASwiftPrint
 import OWAView
 import OWAViewObjc
-import OWAViewSwift
 import OWAViewParser
-import System.Directory
-import System.IO 
+import OWAViewSwift
 
 type OWAReaderT = ReaderT OWAReaderInfo IO
 
