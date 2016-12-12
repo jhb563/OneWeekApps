@@ -10,15 +10,16 @@ module OWAStringsParser (
   parseStringsFromFile,
 ) where
 
-import Control.Monad.Identity
+import           Control.Monad.Identity
 import qualified Data.List.Split as Split
-import OWALocalizedStringSet
-import OWAParseError
-import OWAParseUtil
 import qualified Data.Map.Strict as Map
-import Text.Parsec
-import Text.Parsec.Error
-import Text.ParserCombinators.Parsec
+import           Text.Parsec
+import           Text.Parsec.Error
+import           Text.ParserCombinators.Parsec
+
+import           OWALocalizedStringSet
+import           OWAParseError
+import           OWAParseUtil
 
 type LocalizedStringMap = Map.Map String String
 

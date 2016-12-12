@@ -10,15 +10,16 @@ module OWAAppInfoParser (
   parseAppInfoFromFile
 ) where
 
-import Control.Monad.Identity
-import Data.List
-import Data.List.Split
-import OWAAppInfo
-import OWAParseError
-import OWAParseUtil
+import           Control.Monad.Identity
+import           Data.List
+import           Data.List.Split
 import qualified Data.Map.Strict as Map
-import Text.Parsec
-import Text.ParserCombinators.Parsec
+import           Text.Parsec
+import           Text.ParserCombinators.Parsec
+
+import           OWAAppInfo
+import           OWAParseError
+import           OWAParseUtil
 
 type AppInfoAttr = String
 type AppInfoVal = String

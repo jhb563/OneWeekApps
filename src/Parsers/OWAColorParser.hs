@@ -10,18 +10,19 @@ module OWAColorParser (
   parseColorsFromFile,
 ) where
 
-import Data.Either
-import Data.List
-import Data.Maybe
-import OWAColor
-import OWAParseError
-import OWAParseUtil
+import           Data.Either
+import           Data.List
 import qualified Data.Map.Strict as Map
-import System.IO
-import Text.Parsec
-import Text.Parsec.Error
-import Text.Parsec.Char
-import Text.ParserCombinators.Parsec
+import           Data.Maybe
+import           System.IO
+import           Text.Parsec
+import           Text.Parsec.Char
+import           Text.Parsec.Error
+import           Text.ParserCombinators.Parsec
+
+import           OWAColor
+import           OWAParseError
+import           OWAParseUtil
 
 type ColorAttr = String
 type ColorVal = Float

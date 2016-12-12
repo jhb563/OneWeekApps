@@ -10,17 +10,18 @@ module OWAViewParser (
   parseViewFromFile
 ) where
 
-import Data.Either
-import Data.Maybe
-import OWAElements
-import OWAParseError
-import OWAParseUtil
-import OWAView
+import           Data.Either
 import qualified Data.List.Split as Split
 import qualified Data.Map.Strict as Map
-import Text.Parsec
-import Text.Parsec.Error
-import Text.ParserCombinators.Parsec
+import           Data.Maybe
+import           Text.Parsec
+import           Text.Parsec.Error
+import           Text.ParserCombinators.Parsec
+
+import           OWAElements
+import           OWAParseError
+import           OWAParseUtil
+import           OWAView
 
 type ViewAttr = String
 data ViewVal = TypeVal String |

@@ -27,10 +27,11 @@ module OWAParseUtil (
 ) where
 
 import qualified Data.Text 
-import OWAParseError
-import Text.Parsec
-import Text.Parsec.Error
-import Text.ParserCombinators.Parsec
+import           Text.Parsec
+import           Text.Parsec.Error
+import           Text.ParserCombinators.Parsec
+
+import           OWAParseError
 
 -------------------------------------------------------------------------------
 -------------------PARSER STATE------------------------------------------------
