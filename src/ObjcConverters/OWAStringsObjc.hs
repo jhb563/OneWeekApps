@@ -10,12 +10,13 @@ module OWAStringsObjc (
   objcStringsFileFromStringSets
 ) where
 
-import Data.List
-import OWAAppInfo
-import OWALocalizedStringSet
-import OWAObjcAbSyn
-import OWAObjcUtil
+import           Data.List
 import qualified Data.Map.Strict as Map
+
+import           OWAAppInfo
+import           OWALocalizedStringSet
+import           OWAObjcAbSyn
+import           OWAObjcUtil
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
