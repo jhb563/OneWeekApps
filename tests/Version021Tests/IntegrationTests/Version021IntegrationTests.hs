@@ -52,25 +52,25 @@ additionalFiles = [view1HeaderExtension,
   view2MExtension]
 
 view1HeaderExtension :: String
-view1HeaderExtension = "/app/MSAFirstView.h"
+view1HeaderExtension = "/ios/IntegrationApp/MSAFirstView.h"
 
 view1MExtension :: String
-view1MExtension =  "/app/MSAFirstView.m"
+view1MExtension =  "/ios/IntegrationApp/MSAFirstView.m"
 
 view2HeaderExtension :: String
-view2HeaderExtension = "/app/MSASecondView.h"
+view2HeaderExtension = "/ios/IntegrationApp/MSASecondView.h"
 
 view2MExtension :: String
-view2MExtension = "/app/MSASecondView.m"
+view2MExtension = "/ios/IntegrationApp/MSASecondView.m"
 
 view1HeaderTestExtension :: String
-view1HeaderTestExtension = "/app/MSAFirstView.h.test"
+view1HeaderTestExtension = "/ios/IntegrationApp/MSAFirstView.h.test"
 
 view1MTestExtension :: String
-view1MTestExtension =  "/app/MSAFirstView.m.test"
+view1MTestExtension =  "/ios/IntegrationApp/MSAFirstView.m.test"
 
 view2HeaderTestExtension :: String
-view2HeaderTestExtension = "/app/MSASecondView.h.test"
+view2HeaderTestExtension = "/ios/IntegrationApp/MSASecondView.h.test"
 
 view2MTestExtension :: String
-view2MTestExtension = "/app/MSASecondView.m.test"
+view2MTestExtension = "/ios/IntegrationApp/MSASecondView.m.test"
