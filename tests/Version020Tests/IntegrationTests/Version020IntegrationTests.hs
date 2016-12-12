@@ -64,37 +64,37 @@ additionalFiles = [view1HeaderExtension,
   view3MExtension]
 
 view1HeaderExtension :: String
-view1HeaderExtension = "/app/VIAFirstView.h"
+view1HeaderExtension = "/ios/IntegrationApp/VIAFirstView.h"
 
 view1MExtension :: String
-view1MExtension =  "/app/VIAFirstView.m"
+view1MExtension =  "/ios/IntegrationApp/VIAFirstView.m"
 
 view2HeaderExtension :: String
-view2HeaderExtension = "/app/VIASecondView.h"
+view2HeaderExtension = "/ios/IntegrationApp/VIASecondView.h"
 
 view2MExtension :: String
-view2MExtension = "/app/VIASecondView.m"
+view2MExtension = "/ios/IntegrationApp/VIASecondView.m"
 
 view3HeaderExtension :: String
-view3HeaderExtension = "/app/VIAThirdView.h"
+view3HeaderExtension = "/ios/IntegrationApp/VIAThirdView.h"
 
 view3MExtension :: String
-view3MExtension = "/app/VIAThirdView.m"
+view3MExtension = "/ios/IntegrationApp/VIAThirdView.m"
 
 view1HeaderTestExtension :: String
-view1HeaderTestExtension = "/app/VIAFirstView.h.test"
+view1HeaderTestExtension = "/ios/IntegrationApp/VIAFirstView.h.test"
 
 view1MTestExtension :: String
-view1MTestExtension =  "/app/VIAFirstView.m.test"
+view1MTestExtension =  "/ios/IntegrationApp/VIAFirstView.m.test"
 
 view2HeaderTestExtension :: String
-view2HeaderTestExtension = "/app/VIASecondView.h.test"
+view2HeaderTestExtension = "/ios/IntegrationApp/VIASecondView.h.test"
 
 view2MTestExtension :: String
-view2MTestExtension = "/app/VIASecondView.m.test"
+view2MTestExtension = "/ios/IntegrationApp/VIASecondView.m.test"
 
 view3HeaderTestExtension :: String
-view3HeaderTestExtension = "/app/VIAThirdView.h.test"
+view3HeaderTestExtension = "/ios/IntegrationApp/VIAThirdView.h.test"
 
 view3MTestExtension :: String
-view3MTestExtension = "/app/VIAThirdView.m.test"
+view3MTestExtension = "/ios/IntegrationApp/VIAThirdView.m.test"
