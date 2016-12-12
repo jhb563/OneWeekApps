@@ -451,7 +451,7 @@ produceStringsFile appDirectory appInfo = whenCodeTypePresent CodeTypeStrings $ 
       printIfVerbose ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
       let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
       printIfVerbose "Printing strings file..."
-      let fullStringsPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ stringsFileExtension
+      let fullStringsPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ stringsFileExtension
       liftIO $ printStructureToFile stringsFileStructure fullStringsPath
       printIfVerbose "Printed strings to :" 
       printIfVerbose fullStringsPath
@@ -494,15 +494,15 @@ produceColorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeColors $ d
           let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
           let colorMFileStructure = objcImplementationFromColors appInfo colors
           printIfVerbose "Printing colors files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ colorHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ colorImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ colorHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ colorImplementationFileExtension prefix
           liftIO $ printStructureToFile colorHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile colorMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
         else do
           let colorFileStructure = swiftExtensionFromColors appInfo colors
           printIfVerbose "Printing colors files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ colorSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ colorSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile colorFileStructure fullPath
           return fullPath
       printIfVerbose "Printed colors to files:"
@@ -551,15 +551,15 @@ produceFontsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeFonts $ do
           let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
           let fontMFileStructure = objcImplementationFromFonts appInfo fonts
           printIfVerbose "Printing fonts files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ fontHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ fontImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ fontHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ fontImplementationFileExtension prefix
           liftIO $ printStructureToFile fontHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile fontMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
         else do
           let fontFileStructure = swiftExtensionFromFonts appInfo fonts
           printIfVerbose "Printing fonts files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ fontSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ fontSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile fontFileStructure fullPath
           return fullPath
       printIfVerbose "Printed fonts to files:"
@@ -608,15 +608,15 @@ produceAlertsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeAlerts $ d
           let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
           let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
           printIfVerbose "Printing alerts files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ alertHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ alertImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ alertHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ alertImplementationFileExtension prefix
           liftIO $ printStructureToFile alertHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile alertMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
         else do
           let alertFileStructure = swiftExtensionFromAlerts appInfo alerts
           printIfVerbose "Printing alerts files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ alertSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ alertSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile alertFileStructure fullPath
           return fullPath
       printIfVerbose "Printed alerts to files:"
@@ -665,15 +665,15 @@ produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ d
           let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
           let errorMFileStructure = objcImplementationFromErrors appInfo errors
           printIfVerbose "Printing errors files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ errorHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ errorImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorImplementationFileExtension prefix
           liftIO $ printStructureToFile errorHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile errorMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
         else do
           let errorFileStructure = swiftExtensionFromErrors appInfo errors
           printIfVerbose "Printing errors files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ errorSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile errorFileStructure fullPath
           return fullPath
       printIfVerbose "Printed errors to files:"
@@ -733,7 +733,7 @@ printViewFiles appDirectory appInfo view = do
     headerStructure = objcHeaderFromView appInfo view
     mStructure = objcImplementationFromView appInfo view
     vTy = viewType view
-    headerPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ '/':vTy ++ ".h"
-    mPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ '/':vTy ++ ".m"
+    headerPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".h"
+    mPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".m"
     swiftStructure = swiftFileFromView appInfo view
-    swiftPath = appDirectory ++ "/../ios/" ++ (appName appInfo) ++ '/':vTy ++ ".swift"
+    swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".swift"
