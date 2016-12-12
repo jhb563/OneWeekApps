@@ -11,6 +11,7 @@ module OWAAlertSwift (
 ) where
 
 import Data.List
+
 import OWAAppInfo
 import OWAAlert
 import OWASwiftAbSyn
