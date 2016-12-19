@@ -15,7 +15,7 @@ module IntegrationTestUtil (
   checkStringsFiles
 ) where
 
-import OWALib
+import OWAMain
 import System.IO
 import TestUtil
 import Test.Hspec

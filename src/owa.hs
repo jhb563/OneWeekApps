@@ -12,7 +12,7 @@ module Main where
 import System.Environment
 import System.Directory
 import System.IO
-import OWALib
+import OWAMain
 
 -- | 'main' runs the main progream
 main :: IO ()

@@ -1,26 +1,25 @@
 {-|
-Module      : OWALib
+Module      : OWAMain
 Description : Main Library Entry point for OneWeekApps
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWALib (
+module OWAMain (
   runOWA
 ) where
 
 import Control.Monad
-import Control.Monad.Reader
+import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Except (runExceptT, ExceptT, ExceptT(..))
-import Control.Monad.Trans.Maybe (runMaybeT, MaybeT(..))
-import Data.Char (toUpper, isAlpha)
+import Control.Monad.Reader (runReaderT, ask)
+import Control.Monad.Trans.Class (lift)
 import Data.Either
 import Data.List (find)
 import Data.List.Split (splitOn)
 import Control.Exception (handle)
-import Data.Maybe (isJust, fromJust, catMaybes, mapMaybe)
-import Data.Time.Calendar (toGregorian)
+import Data.Maybe (isJust, catMaybes, mapMaybe)
 import Data.Time.Clock
 import OWAAlert
 import OWAAlertObjc
@@ -36,17 +35,22 @@ import OWAError
 import OWAErrorObjc
 import OWAErrorSwift
 import OWAErrorParser
+import OWAExecTypes
+import OWAFileNames
 import OWAFileSearch
 import OWAFont
 import OWAFontObjc
 import OWAFontSwift
 import OWAFontParser
+import OWALazy
 import OWALocalizedStringSet
+import OWANew
 import OWAObjcPrint
 import OWASwiftPrint
 import OWAParseError
 import OWAStringsParser
 import OWAStringsObjc
+import OWATerminal
 import OWAView
 import OWAViewObjc
 import OWAViewSwift
@@ -55,46 +59,20 @@ import OWAXCode
 import System.Directory
 import System.IO 
 
-type OWAReaderT = ReaderT OWAReaderInfo IO
-
-data OWAReaderInfo = OWAReaderInfo {
-  outputMode       :: OutputMode,
-  lastObjcGenTime  :: Maybe UTCTime,
-  lastSwiftGenTime :: Maybe UTCTime,
-  codeTypes        :: [OWACodeType],
-  languageType     :: OWALanguageType,
-  inputHandle      :: Handle,
-  outputHandle     :: Handle
-}
-
-data OWACodeType = 
-  CodeTypeColors |
-  CodeTypeFonts |
-  CodeTypeAlerts |
-  CodeTypeErrors |
-  CodeTypeViews |
-  CodeTypeStrings
-  deriving (Show, Eq)
-
-data OWALanguageType =
-  LanguageTypeObjc |
-  LanguageTypeSwift
-  deriving (Show, Eq)
-
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.
 runOWA :: Handle -> Handle -> FilePath -> [String] -> IO ()
 runOWA iHandle oHandle filePath args = if null args
   then hPutStrLn oHandle "owa: No command entered!"
   else case head args of
-    "new" -> runNewCommand filePath initialReaderInfo
+    "new" -> runReaderT (runNewCommand filePath) initialRunnerContext
     "gen" -> genFiles
     "generate" -> genFiles
     unrecognizedCmd -> hPutStrLn oHandle $ "owa: unrecognized command \"" ++ unrecognizedCmd ++ "\"!"
     where
       types = codeTypesFromArgs args 
       lang = languageTypeFromArgs args
-      initialReaderInfo = OWAReaderInfo 
+      initialRunnerContext = OWARunnerContext 
         (outputModeFromArgs $ tail args) 
         Nothing 
         Nothing 
@@ -104,7 +82,7 @@ runOWA iHandle oHandle filePath args = if null args
         oHandle
       genFiles = do
                    (lastObjcTime, lastSwiftTime) <- lastCodeGenerationTime filePath
-                   let newReaderInfo = initialReaderInfo 
+                   let newReaderInfo = initialRunnerContext 
                                         { lastObjcGenTime = lastObjcTime
                                         , lastSwiftGenTime = lastSwiftTime }
                    runReaderT (runOWAReader filePath) newReaderInfo
@@ -135,268 +113,6 @@ findAppDirectoryAndRun filePath action = do
     Just appDirectory -> do
       printIfNotSilent "Found app directory"
       action appDirectory
-
----------------------------------------------------------------------------
-------------------------MAKING NEW PROJECT---------------------------------
----------------------------------------------------------------------------
-
--- Have methods for each input element which loop back to themselves
--- On invalid input but through an error when no more input (Either)
--- Create the App directory (if it doesn't exist)
--- When all elements have been read, print out the app file
-runNewCommand :: FilePath -> OWAReaderInfo -> IO ()
-runNewCommand filePath readerInfo = do
-    runReaderT (printIfNotSilent "Creating new OWA project!") readerInfo
-    maybeAppInfo <- runReaderT appInfoReaderAction readerInfo
-    case maybeAppInfo of
-      Nothing -> return ()
-      Just appInfo -> do
-        createAppInfo appInfo
-        printBaseXCodeFiles filePath appInfo
-        runReaderT 
-          (printIfNotSilent ("Your new app \"" ++ appName appInfo ++ "\" has been created!")) 
-          readerInfo
-  where
-    appInfoReaderAction = runMaybeT $ do
-      appName_ <- readAppName
-      appPrefix_ <- readAppPrefix
-      author_ <- readAuthor
-      companyName_ <- readCompany
-      dateCreated_ <- dateCreatedStringFromTime <$> liftIO getCurrentTime
-      return OWAAppInfo {
-        appName = appName_,
-        appPrefix = appPrefix_,
-        authorName = author_,
-        dateCreatedString = dateCreated_,
-        companyName = companyName_
-      }
-    createAppInfo appInfo = do
-      appDirectory <- createAppDirectory filePath
-      writeAppInfoToDirectory appDirectory appInfo
-
-createAppDirectory :: FilePath -> IO FilePath
-createAppDirectory filePath = do
-  createDirectoryIfMissing False appFilePath
-  return appFilePath
-  where
-    appFilePath = filePath ++ "/app"
-
-writeAppInfoToDirectory :: FilePath -> OWAAppInfo -> IO ()
-writeAppInfoToDirectory appDirectory appInfo = do
-  handle <- openFile appInfoFile WriteMode
-  hPutStrLn handle ("AppName: " ++ appName appInfo)
-  hPutStrLn handle ("Prefix: " ++ appPrefix appInfo)
-  hPutStrLn handle ("Author: " ++ authorName appInfo)
-  hPutStrLn handle ("Created: " ++ dateCreatedString appInfo)
-  when (isJust (companyName appInfo)) $ 
-    hPutStrLn handle ("Company: " ++ fromJust (companyName appInfo))
-  hClose handle
-  where
-    appInfoFile = appDirectory ++ appInfoFileExtension
-
-type OWAMaybeT a = MaybeT OWAReaderT a
-
-readAppName :: OWAMaybeT String
-readAppName = do
-  lift $ printIfNotSilent "What is the name of your app: "
-  action
-  where
-    action = do
-      name <- owaReadLine
-      if null name
-        then do
-          lift $ printIfNotSilent "Your app must have a (non-empty) name! Please enter one: "
-          action
-        else return name
-
-readAppPrefix :: OWAMaybeT String
-readAppPrefix = do
-  lift $ printIfNotSilent "What is the prefix of your app (3 letters): "
-  action
-  where
-    validatePrefix :: String -> Bool
-    validatePrefix prefix = length prefix == 3 && all isAlpha prefix
-    action = do
-      prefix <- owaReadLine
-      if not (validatePrefix prefix)
-        then do
-          lift $ printIfNotSilent "The prefix must be 3 letters! Please enter again: " 
-          action
-        else return $ map toUpper prefix
-
-readAuthor :: OWAMaybeT String
-readAuthor = do
-  lift $ printIfNotSilent "What is the author's name: "
-  owaReadLine
-
-readCompany :: OWAMaybeT (Maybe String)
-readCompany = do
-  lift $ printIfNotSilent "What is your company name (optional): "
-  company <- owaReadLine
-  if null company
-    then return Nothing
-    else return (Just company)
-
-dateCreatedStringFromTime :: UTCTime -> String
-dateCreatedStringFromTime time = finalString
-  where
-    day = utctDay time
-    (year, month, date) = toGregorian day
-    finalString = show month ++ "/" ++ show date ++ "/" ++ show year
-
----------------------------------------------------------------------------
-------------------------LAZY CODE GENERATION HANDLERS----------------------
----------------------------------------------------------------------------
-
-lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime, Maybe UTCTime)
-lastCodeGenerationTime filePath = do
-  appDirectory <- findAppDirectory filePath
-  case appDirectory of
-    Nothing -> return (Nothing, Nothing)
-    Just appDirectory -> do
-      let lastGenFilePath = appDirectory ++ lastGenFileExtension
-      lastGenExists <- doesFileExist lastGenFilePath
-      if lastGenExists
-        then do
-          lastGenLines <- lines <$> readFile lastGenFilePath
-          -- We use seq here to force evaluation of the whole list, as otherwise, for some strange reason
-          -- it seems to keep the file open and cause permission issues later. 
-          let parsedLines = seq (length lastGenLines) (mapMaybe parseLastGenLine lastGenLines)
-          let lastObjc = snd <$> find (\(typ, _) -> typ == LanguageTypeObjc) parsedLines
-          let lastSwift = snd <$> find (\(typ, _) -> typ == LanguageTypeSwift) parsedLines
-          return (lastObjc, lastSwift)
-        else return (Nothing, Nothing)
-
-parseLastGenLine :: String -> Maybe (OWALanguageType, UTCTime)
-parseLastGenLine lastGenLine = case components of
-  [typeString, timeString] -> case (typeString, read timeString :: UTCTime) of
-    ("Objc", time) -> Just (LanguageTypeObjc, time)
-    ("Swift", time) -> Just (LanguageTypeSwift, time) 
-    _ -> Nothing
-  _ -> Nothing
-  where
-    components = splitOn ": " lastGenLine
-
-modifyLastGenTime :: FilePath -> OWAReaderT ()
-modifyLastGenTime filePath = do
-  lang <- languageType <$> ask
-  objcTime <- lastObjcGenTime <$> ask
-  swiftTime <- lastSwiftGenTime <$> ask
-  currentTime <- liftIO getCurrentTime
-  let lastGenFilePath = filePath ++ lastGenFileExtension
-  liftIO $ case lang of
-    LanguageTypeObjc -> do
-      let objcString = Just $ "Objc: " ++ show currentTime
-      let swiftString = case swiftTime of
-                          Nothing -> Nothing
-                          Just t -> Just $ "Swift: " ++ show t
-      let finalString = unlines (catMaybes [objcString, swiftString])
-      writeFile lastGenFilePath finalString
-    LanguageTypeSwift -> do
-      let swiftString = Just $ "Swift: " ++ show currentTime
-      let objcString = case objcTime of
-                          Nothing -> Nothing
-                          Just t -> Just $ "Objc: " ++ show t
-      let finalString = unlines (catMaybes [objcString, swiftString])
-      writeFile lastGenFilePath finalString
-  
-lastGenFileExtension :: FilePath
-lastGenFileExtension = "/.owa_last_gen"
-
-appInfoFileExtension :: FilePath
-appInfoFileExtension = "/app.info"
-
-shouldRegenerateFromFiles :: [FilePath] -> OWAReaderT Bool
-shouldRegenerateFromFiles sourceFiles = do
-  info <- ask
-  let langType = languageType info 
-  let genTime = if langType == LanguageTypeObjc
-                  then lastObjcGenTime info
-                  else lastSwiftGenTime info
-  sourceTimes <- liftIO $ mapM getModificationTime sourceFiles
-  case genTime of
-    Nothing -> return True
-    Just time -> return $ any (time <) sourceTimes
-
----------------------------------------------------------------------------
-------------------------PROGRAM STATUS PRINTING----------------------------
----------------------------------------------------------------------------
-
-data OutputMode = Silent | Normal | Verbose deriving (Show, Eq)
-
-outputModeFromArgs :: [String] -> OutputMode
-outputModeFromArgs args 
-  | silentMode = Silent
-  | verboseMode = Verbose
-  | otherwise = Normal 
-    where silentMode = elem "-silent" args || elem "-s" args
-          verboseMode = elem "-verbose" args || elem "-v" args
-
-printIfNotSilent :: String -> OWAReaderT ()
-printIfNotSilent str = do
-  (mode, handle) <- grabModeAndHandle
-  Control.Monad.when (mode /= Silent) $ liftIO $ hPutStrLn handle str
-
-printIfVerbose :: String -> OWAReaderT ()
-printIfVerbose str = do
-  (mode, handle) <- grabModeAndHandle
-  Control.Monad.when (mode == Verbose) $ liftIO $ hPutStrLn handle str
-
-grabModeAndHandle :: OWAReaderT (OutputMode, Handle)
-grabModeAndHandle = do
-  info <- ask
-  return (outputMode info, outputHandle info)
-
-
-printErrors :: [OWAParseError] -> OWAReaderT ()
-printErrors [] = return ()
-printErrors errors = mapM_ (printIfNotSilent . show) errors
-
-owaReadLine :: OWAMaybeT String
-owaReadLine = do
-  iHandle <- inputHandle <$> ask
-  endOfFile <- liftIO $ hIsEOF iHandle
-  if endOfFile
-    then fail "Hi"
-    else liftIO $ hGetLine iHandle
-
----------------------------------------------------------------------------
-------------------------EVALUATING CODE AND LANGUAGE TYPES-----------------
----------------------------------------------------------------------------
-
-allCodeTypes :: [OWACodeType]
-allCodeTypes = 
-  [ CodeTypeColors
-  , CodeTypeFonts
-  , CodeTypeAlerts
-  , CodeTypeErrors
-  , CodeTypeViews
-  , CodeTypeStrings ]
-
-codeTypesFromArgs :: [String] -> [OWACodeType]
-codeTypesFromArgs args = if null typesInArgs
-  then allCodeTypes
-  else typesInArgs
-  where
-    evaluateAndAdd arg accum = case arg of
-      "--colors" -> CodeTypeColors : accum
-      "--fonts" -> CodeTypeFonts : accum
-      "--alerts" -> CodeTypeAlerts : accum
-      "--errors" -> CodeTypeErrors : accum
-      "--views" -> CodeTypeViews : accum
-      "--strings" -> CodeTypeStrings : accum
-      _ -> accum
-    typesInArgs = foldr evaluateAndAdd [] args
-
-whenCodeTypePresent :: OWACodeType -> OWAReaderT () -> OWAReaderT ()
-whenCodeTypePresent codeType action = do
-  types <- codeTypes <$> ask
-  when (codeType `elem` types) action
-
-languageTypeFromArgs :: [String] -> OWALanguageType
-languageTypeFromArgs args = if "--swift" `elem` args
-  then LanguageTypeSwift
-  else LanguageTypeObjc
 
 ---------------------------------------------------------------------------
 ------------------------LOADING APP INFO-----------------------------------

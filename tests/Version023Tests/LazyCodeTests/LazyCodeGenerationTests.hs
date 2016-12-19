@@ -12,7 +12,7 @@ module LazyCodeGenerationTests (
 ) where
 
 import Data.Time.Clock
-import OWALib
+import OWAMain
 import System.Directory
 import System.IO (stdin, stdout)
 import TestUtil

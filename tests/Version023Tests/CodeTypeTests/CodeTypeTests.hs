@@ -7,7 +7,7 @@ module CodeTypeTests (
 ) where
 
 import Control.Monad (forM)
-import OWALib (runOWA)
+import OWAMain (runOWA)
 import System.Directory (doesFileExist, createDirectoryIfMissing)
 import System.IO (stdin, stdout)
 import Test.Hspec

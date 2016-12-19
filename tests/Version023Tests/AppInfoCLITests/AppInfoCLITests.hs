@@ -6,7 +6,7 @@ import Control.Monad (when)
 import Data.List.Split (splitOn)
 import Data.Time.Calendar
 import Data.Time.Clock
-import OWALib
+import OWAMain
 import System.Directory (doesFileExist)
 import System.IO
 import Test.Hspec
