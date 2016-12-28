@@ -1,11 +1,12 @@
 module Main where
 
+import System.Directory
+
 import ContainerViewTests
 import CustomViewTests
 import ImageButtonTests
 import Version021IntegrationTests
 import ViewErrorTests
-import System.Directory
 
 main :: IO ()
 main = do

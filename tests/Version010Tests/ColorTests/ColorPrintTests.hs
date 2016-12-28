@@ -16,12 +16,13 @@ module ColorPrintTests (
   runColorPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAColorObjc
 import OWAObjcAbSyn
 import TestColors
 import TestUtil
-import Test.Hspec
 
 runColorPrintTests :: FilePath -> IO ()
 runColorPrintTests currentDirectory = do

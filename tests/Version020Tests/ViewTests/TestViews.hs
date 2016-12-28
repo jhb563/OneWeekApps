@@ -1,7 +1,7 @@
 module TestViews where
 
-import OWAView
 import OWAElements
+import OWAView
 
 nameTest1 :: OWAView
 nameTest1 = OWAView {

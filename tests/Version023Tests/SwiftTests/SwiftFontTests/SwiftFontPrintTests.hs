@@ -15,12 +15,13 @@ module SwiftFontPrintTests (
   runSwiftFontPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAFontSwift
 import OWASwiftAbSyn
 import SwiftTestFonts
 import TestUtil
-import Test.Hspec
 
 runSwiftFontPrintTests :: FilePath -> IO ()
 runSwiftFontPrintTests currentDirectory = do

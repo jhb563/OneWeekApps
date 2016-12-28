@@ -20,6 +20,7 @@ import OWAErrorSwift
 import OWASwiftAbSyn
 import SwiftTestErrors
 import TestUtil
+
 import Test.Hspec
 
 runSwiftErrorPrintTests :: FilePath -> IO ()

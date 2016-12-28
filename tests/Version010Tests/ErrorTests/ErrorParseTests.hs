@@ -7,11 +7,12 @@ module ErrorParseTests (
   runErrorParseTests
 ) where
 
+import Test.Hspec
+
 import OWAError
 import OWAErrorParser
 import TestErrors
 import TestUtil
-import Test.Hspec
 
 runErrorParseTests :: FilePath -> IO ()
 runErrorParseTests startFilePath = hspec $ do

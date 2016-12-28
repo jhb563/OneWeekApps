@@ -11,6 +11,7 @@ module OWAFontSwift (
 ) where
 
 import Data.List
+
 import OWAAppInfo
 import OWAFont
 import OWASwiftAbSyn

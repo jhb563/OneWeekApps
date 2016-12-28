@@ -6,10 +6,11 @@ import Control.Monad (when)
 import Data.List.Split (splitOn)
 import Data.Time.Calendar
 import Data.Time.Clock
-import OWAMain
 import System.Directory (doesFileExist)
 import System.IO
 import Test.Hspec
+
+import OWAMain
 import TestUtil
 
 runAppInfoCLITests :: FilePath -> IO ()

@@ -14,13 +14,14 @@ module ImageButtonTests (
   runImageButtonTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAObjcAbSyn
 import OWAViewObjc
 import OWAViewParser
 import TestButtonObjects
 import TestUtil
-import Test.Hspec
 
 runImageButtonTests :: FilePath -> IO ()
 runImageButtonTests currentDirectory = do

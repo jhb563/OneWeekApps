@@ -2,13 +2,14 @@ module ItemFailureTests (
   runItemFailureTests
 ) where
 
+import Test.Hspec
+
 import OWAAlertParser
 import OWAColorParser
 import OWAErrorParser
 import OWAFontParser
 import TestParseErrors
 import TestUtil
-import Test.Hspec
 
 runItemFailureTests :: FilePath -> IO ()
 runItemFailureTests currentDirectory = hspec $ do

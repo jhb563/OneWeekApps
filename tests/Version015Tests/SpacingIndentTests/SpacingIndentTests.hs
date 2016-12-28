@@ -7,13 +7,14 @@ module SpacingIndentTests (
   runSpacingIndentTests
 ) where
 
+import Test.Hspec
+
 import OWAAlertParser
 import OWAColorParser
 import OWAErrorParser
 import OWAFontParser
 import TestSpacingIndentErrors
 import TestUtil
-import Test.Hspec
 
 runSpacingIndentTests :: FilePath -> IO ()
 runSpacingIndentTests currentDirectory = hspec $ do

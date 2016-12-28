@@ -9,9 +9,10 @@ module Version020IntegrationTests (
   runV020IntegrationTests
 ) where
 
+import Test.Hspec
+
 import IntegrationTestUtil
 import TestUtil
-import Test.Hspec
 
 runV020IntegrationTests :: FilePath -> IO ()
 runV020IntegrationTests currentDirectory = do

@@ -15,12 +15,13 @@ module SwiftColorPrintTests (
   runSwiftColorPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAColorSwift
 import OWASwiftAbSyn
 import SwiftTestColors
 import TestUtil
-import Test.Hspec
 
 runSwiftColorPrintTests :: FilePath -> IO ()
 runSwiftColorPrintTests currentDirectory = do

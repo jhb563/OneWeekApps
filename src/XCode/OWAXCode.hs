@@ -14,14 +14,15 @@ module OWAXCode (
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
-import Data.Text.Template
-import OtherTemplates
-import OWAAppInfo
-import OWASwiftAbSyn
-import OWASwiftPrint
-import OWASwiftUtil
-import ProjectFileTemplate
-import System.Directory
+import           Data.Text.Template
+import           System.Directory
+
+import           OtherTemplates
+import           OWAAppInfo
+import           OWASwiftAbSyn
+import           OWASwiftPrint
+import           OWASwiftUtil
+import           ProjectFileTemplate
 
 ---------------------------------------------------------------------------
 ------------------------ENTRY METHODS--------------------------------------

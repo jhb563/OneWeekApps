@@ -11,11 +11,12 @@ module OWAViewSwift (
 ) where
 
 import Data.Maybe
+
 import OWAAppInfo
 import OWAElements
-import OWAView
 import OWASwiftAbSyn
 import OWASwiftUtil
+import OWAView
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

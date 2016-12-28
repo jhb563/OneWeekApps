@@ -16,12 +16,13 @@ module AlertPrintTests (
   runAlertPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAAlertObjc
 import OWAObjcAbSyn
 import TestAlerts
 import TestUtil
-import Test.Hspec
 
 runAlertPrintTests :: FilePath -> IO ()
 runAlertPrintTests currentDirectory = do

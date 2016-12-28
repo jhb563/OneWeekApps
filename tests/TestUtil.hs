@@ -15,17 +15,18 @@ module TestUtil (
 
 import Control.Monad (when)
 import Data.List
-import OWAObjcAbSyn
-import OWAObjcPrint
-import OWAParseError
-import OWASwiftAbSyn
-import OWASwiftPrint
 import System.Directory
 import System.IO
 import System.Process
 import Test.Hspec
 import Text.Parsec.Error
 import Text.Parsec.Pos
+
+import OWAObjcAbSyn
+import OWAObjcPrint
+import OWAParseError
+import OWASwiftAbSyn
+import OWASwiftPrint
 
 --------------------------------------------------------------------------------
 ------------------------------EXPECTATION COMBINATORS---------------------------

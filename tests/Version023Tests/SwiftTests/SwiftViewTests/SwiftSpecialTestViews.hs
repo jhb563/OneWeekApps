@@ -1,7 +1,7 @@
 module SwiftSpecialTestViews where
 
-import OWAView
 import OWAElements
+import OWAView
 
 -- Custom Views
 

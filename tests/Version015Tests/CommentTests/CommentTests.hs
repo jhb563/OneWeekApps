@@ -5,12 +5,13 @@ module CommentTests (
   runCommentTests
 ) where
 
+import Test.Hspec
+
 import OWAAlertParser
 import OWAColorParser
 import OWAErrorParser
 import OWAFontParser
 import TestUtil
-import Test.Hspec
 
 runCommentTests :: FilePath -> IO ()
 runCommentTests currentDirectory = hspec $ do

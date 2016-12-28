@@ -15,13 +15,14 @@ module SwiftViewPrintTests (
   runSwiftViewPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWASwiftAbSyn
 import OWAViewSwift
 import SwiftSpecialTestViews
 import SwiftTestViews
 import TestUtil
-import Test.Hspec
 
 runSwiftViewPrintTests :: FilePath -> IO ()
 runSwiftViewPrintTests currentDirectory = do

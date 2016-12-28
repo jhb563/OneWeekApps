@@ -7,10 +7,11 @@ module CodeTypeTests (
 ) where
 
 import Control.Monad (forM)
-import OWAMain (runOWA)
 import System.Directory (doesFileExist, createDirectoryIfMissing)
 import System.IO (stdin, stdout)
 import Test.Hspec
+
+import OWAMain (runOWA)
 import TestUtil
 
 data FileTest = FileExists FilePath | FileDoesNotExist FilePath 

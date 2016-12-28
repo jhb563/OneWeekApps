@@ -1,5 +1,7 @@
 module Main where
 
+import System.Directory
+
 import AlertParseTests
 import AlertPrintTests
 import AppDirectoryTests
@@ -10,7 +12,6 @@ import ErrorPrintTests
 import FileSearchTests
 import FontParseTests
 import FontPrintTests
-import System.Directory
 import Version010IntegrationTests
 
 main :: IO ()

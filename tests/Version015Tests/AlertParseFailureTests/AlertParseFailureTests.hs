@@ -6,10 +6,11 @@ module AlertParseFailureTests (
   runAlertParseFailureTests
 ) where
 
+import Test.Hspec
+
 import OWAAlertParser
 import TestAlertErrors
 import TestUtil
-import Test.Hspec
 
 runAlertParseFailureTests :: FilePath -> IO ()
 runAlertParseFailureTests currentDirectory = hspec $ do

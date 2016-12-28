@@ -16,12 +16,13 @@ module ViewPrintTests (
   runViewPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAObjcAbSyn
 import OWAViewObjc
 import TestUtil
 import TestViews
-import Test.Hspec
 
 runViewPrintTests :: FilePath -> IO ()
 runViewPrintTests currentDirectory = do

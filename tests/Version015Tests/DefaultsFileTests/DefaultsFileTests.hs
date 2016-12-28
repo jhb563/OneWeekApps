@@ -11,13 +11,14 @@ module DefaultsFileTests (
   runDefaultsFileTests
 ) where
 
+import Test.Hspec
+import System.Directory
+
 import OWAAppInfoParser
 import OWAFileSearch
-import System.Directory
 import TestAppInfo
 import TestDefaultErrors
 import TestUtil
-import Test.Hspec
 
 runDefaultsFileTests :: FilePath -> IO ()
 runDefaultsFileTests currentDirectory = hspec $

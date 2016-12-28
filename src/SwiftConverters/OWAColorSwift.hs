@@ -11,6 +11,7 @@ module OWAColorSwift (
 ) where
 
 import Data.List
+
 import OWAAppInfo
 import OWAColor
 import OWASwiftAbSyn

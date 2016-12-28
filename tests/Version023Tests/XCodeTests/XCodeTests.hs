@@ -8,9 +8,10 @@ module XCodeTests (
   runXCodeTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAXCode
-import Test.Hspec
 import TestUtil
 
 runXCodeTests :: FilePath -> IO ()

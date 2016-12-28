@@ -11,12 +11,13 @@ module OWAErrorObjc (
   objcImplementationFromErrors
 ) where
 
-import Data.List
-import OWAAppInfo
-import OWAError
-import OWAObjcAbSyn
-import OWAObjcUtil
+import           Data.List
 import qualified Data.Map.Strict as Map
+
+import           OWAAppInfo
+import           OWAError
+import           OWAObjcAbSyn
+import           OWAObjcUtil
 
 type DomainMap = Map.Map String [OWAError]
 

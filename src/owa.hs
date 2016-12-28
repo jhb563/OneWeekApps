@@ -9,9 +9,10 @@ Stability   : Stable
 
 module Main where
 
-import System.Environment
 import System.Directory
+import System.Environment
 import System.IO
+
 import OWAMain
 
 -- | 'main' runs the main progream

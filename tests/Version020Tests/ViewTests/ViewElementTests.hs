@@ -7,10 +7,11 @@ module ViewElementTests (
   runViewElementTests
 ) where
 
+import Test.Hspec
+
 import OWAViewParser
 import TestUtil
 import TestViews
-import Test.Hspec
 
 runViewElementTests :: FilePath -> IO ()
 runViewElementTests currentDirectory = hspec $ do

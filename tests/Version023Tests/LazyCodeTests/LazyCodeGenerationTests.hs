@@ -12,10 +12,11 @@ module LazyCodeGenerationTests (
 ) where
 
 import Data.Time.Clock
-import OWAMain
 import System.Directory
 import System.IO (stdin, stdout)
 import TestUtil
+
+import OWAMain
 import Test.Hspec
 
 runLazyCodeGenerationTests :: FilePath -> IO ()
@@ -226,12 +227,6 @@ appDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/app"
 
 outputDirectoryExtension :: FilePath
 outputDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/ios/ViewIntegrationApp"
-
-allFiles :: [FilePath]
-allFiles = lastGenFile : producedFiles
-
-allFilesSwift :: [FilePath]
-allFilesSwift = lastGenFile : producedFilesSwift
 
 producedFiles :: [FilePath]
 producedFiles = [producedColorHeader, producedColorM,

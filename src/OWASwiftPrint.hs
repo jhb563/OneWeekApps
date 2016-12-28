@@ -11,10 +11,11 @@ module OWASwiftPrint (
 ) where
 
 import Data.List
-import OWAPrintUtil
-import OWASwiftAbSyn
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
+
+import OWAPrintUtil
+import OWASwiftAbSyn
 
 -------------------------------------------------------------------------------
 ---------------------------ENTRY METHOD----------------------------------------

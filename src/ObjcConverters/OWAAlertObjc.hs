@@ -12,6 +12,7 @@ module OWAAlertObjc (
 ) where
 
 import Data.List
+
 import OWAAppInfo
 import OWAAlert
 import OWAObjcAbSyn

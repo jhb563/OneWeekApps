@@ -1,5 +1,7 @@
 module Main where
 
+import System.Directory
+
 import AlertParseFailureTests
 import ColorParseFailureTests
 import CommentTests
@@ -12,7 +14,6 @@ import StringsSearchTests
 import StringsParseTests
 import StringsPrintTests
 import TabTests
-import System.Directory
 import Version015IntegrationTests
 
 main :: IO ()

@@ -16,9 +16,9 @@ module OWAFileSearch (
   findViewsFiles
 ) where
 
-import System.Directory
-import Data.List.Split
 import Control.Monad
+import Data.List.Split
+import System.Directory
 
 --------------------------------------------------------------------------------------------------------------------
 -----------------------------------Finding App Directory -----------------------------------------------------------

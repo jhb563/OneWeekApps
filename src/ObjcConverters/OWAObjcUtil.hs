@@ -19,6 +19,7 @@ module OWAObjcUtil (
 ) where
 
 import Data.List.Split
+
 import OWAAppInfo
 import OWAObjcAbSyn
 

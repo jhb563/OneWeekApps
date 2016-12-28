@@ -10,17 +10,18 @@ module OWAErrorParser (
   parseErrorsFromFile
 ) where
 
-import Control.Monad.State.Lazy
-import Data.Either
-import Data.List
-import Data.Maybe
-import OWAError
-import OWAParseError
-import OWAParseUtil
+import           Control.Monad.State.Lazy
+import           Data.Either
+import           Data.List
 import qualified Data.Map.Strict as Map
-import Text.Parsec
-import Text.Parsec.Error
-import Text.ParserCombinators.Parsec
+import           Data.Maybe
+import           Text.Parsec
+import           Text.Parsec.Error
+import           Text.ParserCombinators.Parsec
+
+import           OWAError
+import           OWAParseError
+import           OWAParseUtil
 
 type ErrorAttr = String
 data ErrorVal = NormalValue String |

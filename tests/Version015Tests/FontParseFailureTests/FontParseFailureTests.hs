@@ -6,10 +6,11 @@ module FontParseFailureTests (
   runFontParseFailureTests
 ) where
 
+import Test.Hspec
+
 import OWAFontParser
 import TestFontErrors
 import TestUtil
-import Test.Hspec
 
 runFontParseFailureTests :: FilePath -> IO ()
 runFontParseFailureTests currentDirectory = hspec $ do

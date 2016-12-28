@@ -10,16 +10,17 @@ module OWAFontParser (
   parseFontsFromFile
 ) where
 
-import Data.Either
-import Data.List
-import Data.Maybe
-import OWAFont
-import OWAParseError
-import OWAParseUtil
+import           Data.Either
+import           Data.List
 import qualified Data.Map.Strict as Map
-import Text.Parsec
-import Text.Parsec.Error
-import Text.ParserCombinators.Parsec
+import           Data.Maybe
+import           Text.Parsec
+import           Text.Parsec.Error
+import           Text.ParserCombinators.Parsec
+
+import           OWAFont
+import           OWAParseError
+import           OWAParseUtil
 
 type FontAttr = String
 data FontVal = FamilyVal String |

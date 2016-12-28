@@ -15,12 +15,13 @@ module SwiftAlertPrintTests (
   runSwiftAlertPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAAlertSwift
 import OWASwiftAbSyn
 import SwiftTestAlerts
 import TestUtil
-import Test.Hspec
 
 runSwiftAlertPrintTests :: FilePath -> IO ()
 runSwiftAlertPrintTests currentDirectory = do

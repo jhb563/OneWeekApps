@@ -11,13 +11,14 @@ module OWAViewObjc (
   objcImplementationFromView
 ) where
 
-import Data.Maybe
-import OWAAppInfo
-import OWAElements
-import OWAObjcAbSyn
-import OWAObjcUtil
-import OWAView
+import           Data.Maybe
 import qualified Data.Set as Set
+
+import           OWAAppInfo
+import           OWAElements
+import           OWAObjcAbSyn
+import           OWAObjcUtil
+import           OWAView
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
