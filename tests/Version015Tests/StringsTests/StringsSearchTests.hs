@@ -8,10 +8,11 @@ module StringsSearchTests (
   runStringsSearchTests
 ) where
 
+import Test.Hspec
+
 import OWAFileSearch
 import System.Directory
 import TestUtil
-import Test.Hspec
 
 runStringsSearchTests :: FilePath -> IO ()
 runStringsSearchTests currentDirectory = hspec $

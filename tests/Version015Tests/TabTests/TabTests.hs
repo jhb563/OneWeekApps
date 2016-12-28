@@ -5,12 +5,13 @@ module TabTests (
   runTabTests
 ) where
 
+import Test.Hspec
+
 import OWAAlertParser
 import OWAColorParser
 import OWAErrorParser
 import OWAFontParser
 import TestUtil
-import Test.Hspec
 
 runTabTests :: FilePath -> IO ()
 runTabTests currentDirectory = hspec $ do

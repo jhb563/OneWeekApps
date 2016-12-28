@@ -6,10 +6,11 @@ module ColorParseFailureTests (
   runColorParseFailureTests
 ) where
 
+import Test.Hspec
+
 import OWAColorParser
 import TestColorErrors
 import TestUtil
-import Test.Hspec
 
 runColorParseFailureTests :: FilePath -> IO ()
 runColorParseFailureTests currentDirectory = hspec $ do

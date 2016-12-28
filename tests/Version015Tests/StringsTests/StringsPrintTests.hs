@@ -15,12 +15,13 @@ module StringsPrintTests (
   runStringsPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAObjcAbSyn
 import OWAStringsObjc
 import TestStringSets
 import TestUtil
-import Test.Hspec
 
 runStringsPrintTests :: FilePath -> IO ()
 runStringsPrintTests currentDirectory = do

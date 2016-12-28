@@ -1,7 +1,8 @@
 module TestDefaultErrors where
 
-import OWAParseError
 import Text.Parsec.Pos
+
+import OWAParseError
 
 appError1 :: SourcePos
 appError1 = newPos "defaultFailTest1.info" 1 1

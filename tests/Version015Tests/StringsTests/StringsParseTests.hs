@@ -7,11 +7,12 @@ module StringsParseTests (
   runStringsParseTests
 ) where
 
+import Test.Hspec
+
 import OWAStringsParser
 import TestStringErrors
 import TestStringSets
 import TestUtil
-import Test.Hspec
 
 runStringsParseTests :: FilePath -> IO ()
 runStringsParseTests currentDirectory = hspec $ do
