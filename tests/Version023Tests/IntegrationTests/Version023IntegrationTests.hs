@@ -12,10 +12,11 @@ module Version023IntegrationTests (
   runV023IntegrationTests
 ) where
 
-import IntegrationTestUtil
 import System.Directory (createDirectoryIfMissing)
-import TestUtil
 import Test.Hspec
+
+import IntegrationTestUtil
+import TestUtil
 
 runV023IntegrationTests :: FilePath -> IO ()
 runV023IntegrationTests currentDirectory = do

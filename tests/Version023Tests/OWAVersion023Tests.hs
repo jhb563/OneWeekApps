@@ -1,5 +1,7 @@
 module Main where
 
+import System.Directory
+
 import AppInfoCLITests
 import CodeTypeTests
 import LazyCodeGenerationTests
@@ -8,7 +10,6 @@ import SwiftColorPrintTests
 import SwiftErrorPrintTests
 import SwiftFontPrintTests
 import SwiftViewPrintTests
-import System.Directory
 import Version023IntegrationTests
 import XCodeTests
 

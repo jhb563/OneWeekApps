@@ -1,7 +1,7 @@
 module SwiftTestViews where
 
-import OWAView
 import OWAElements
+import OWAView
 
 -- Test Views
 

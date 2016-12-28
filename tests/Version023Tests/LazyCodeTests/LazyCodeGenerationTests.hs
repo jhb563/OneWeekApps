@@ -12,10 +12,11 @@ module LazyCodeGenerationTests (
 ) where
 
 import Data.Time.Clock
-import OWAMain
 import System.Directory
 import System.IO (stdin, stdout)
 import TestUtil
+
+import OWAMain
 import Test.Hspec
 
 runLazyCodeGenerationTests :: FilePath -> IO ()
