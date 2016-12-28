@@ -6,7 +6,7 @@ import Control.Monad (when)
 import Data.List.Split (splitOn)
 import Data.Time.Calendar
 import Data.Time.Clock
-import OWALib
+import OWAMain
 import System.Directory (doesFileExist)
 import System.IO
 import Test.Hspec
@@ -35,22 +35,26 @@ runAppInfoTest ::
   Spec
 runAppInfoTest testDirectory testName description = do
   let (fullInput, fullTestOutput, fullResult, fullAppInfoTest, fullAppInfoResult) = fullTestFiles testDirectory testName
+  let fullGeneratedPaths = map (testDirectory ++) allGeneratedXCodeFiles
   beforeAll_ (genFileForCurrentDate fullAppInfoTest >> openHandlesForFiles fullInput fullResult >>= runOWAWithHandles testDirectory)
-    . afterAll_ (removeFiles [fullResult, fullAppInfoResult, fullAppInfoTest]) $
+    . afterAll_ (removeFiles ([fullResult, fullAppInfoResult, fullAppInfoTest] ++ fullGeneratedPaths)) $
       describe description $
         it "Output should match" $ \_ -> do
           fullResult `filesShouldMatch` fullTestOutput
-          maybeAppInfoTest fullAppInfoTest fullAppInfoResult
+          maybeNewSuccessTest fullAppInfoTest fullAppInfoResult fullGeneratedPaths
           
-maybeAppInfoTest :: FilePath -> FilePath -> Expectation
-maybeAppInfoTest testFile resultFile = do
+maybeNewSuccessTest :: FilePath -> FilePath -> [FilePath] -> Expectation
+maybeNewSuccessTest testFile resultFile fullGeneratedPaths = do
   testExists <- doesFileExist testFile
-  resultExists <- doesFileExist resultFile
-  if not testExists && resultExists
-    then expectationFailure "Should not have generated app.info!"
-    else if not resultExists && testExists
-      then expectationFailure "Should have generated app.info!"
-      else when (resultExists && testExists) (resultFile `filesShouldMatch` testFile)
+  newAppInfoExists <- doesFileExist resultFile
+  generatedFilesExist <- mapM doesFileExist fullGeneratedPaths
+  let someResultsExist = (any id) $ newAppInfoExists : generatedFilesExist
+  let allResultsExist = (all id) $ newAppInfoExists : generatedFilesExist
+  if not testExists && someResultsExist
+    then expectationFailure "Should not have generated app.info or XCode files!"
+    else if not allResultsExist && testExists
+      then expectationFailure "Should have generated app.info and XCode files!"
+      else when (allResultsExist && testExists) (resultFile `filesShouldMatch` testFile)
 
 fullTestFiles :: FilePath -> String -> (FilePath, FilePath, FilePath, FilePath, FilePath)
 fullTestFiles testDirectory testName =
@@ -96,3 +100,27 @@ testDirectoryExtension = "/tests/Version023Tests/AppInfoCLITests/"
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = testDirectoryExtension ++ "app/"
+
+allGeneratedXCodeFiles :: [FilePath]
+allGeneratedXCodeFiles =
+  [ generatedVCExtension
+  , generatedAppDelegateExtension
+  , generatedPlistExtension
+  , generatedPbxProjExtension
+  , generatedWorkspaceExtension ]
+
+generatedVCExtension :: FilePath
+generatedVCExtension = "ios/One Week Apps/ViewController.swift"
+
+generatedAppDelegateExtension :: FilePath
+generatedAppDelegateExtension = "ios/One Week Apps/AppDelegate.swift" 
+
+generatedPlistExtension :: FilePath
+generatedPlistExtension = "ios/One Week Apps/Info.plist" 
+
+generatedPbxProjExtension :: FilePath
+generatedPbxProjExtension = "ios/One Week Apps.xcodeproj/project.pbxproject"
+
+generatedWorkspaceExtension :: FilePath
+generatedWorkspaceExtension = "ios/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"
+
