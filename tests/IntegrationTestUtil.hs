@@ -15,10 +15,11 @@ module IntegrationTestUtil (
   checkStringsFiles
 ) where
 
-import OWALib
 import System.IO
-import TestUtil
 import Test.Hspec
+
+import OWALib
+import TestUtil
 
 runIntegrationTests :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()
 runIntegrationTests testDirectory specs additionalFiles = hspec $

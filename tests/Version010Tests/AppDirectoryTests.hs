@@ -7,9 +7,10 @@ module AppDirectoryTests (
   runAppDirectoryTests
 ) where
 
-import OWAFileSearch
 import System.Directory
 import Test.Hspec
+
+import OWAFileSearch
 import TestUtil
 
 runAppDirectoryTests :: FilePath -> IO ()

@@ -7,11 +7,12 @@ module FontParseTests (
   runFontParseTests
 ) where
 
+import Test.Hspec
+
 import OWAFont
 import OWAFontParser
 import TestFonts
 import TestUtil
-import Test.Hspec
 
 runFontParseTests :: FilePath -> IO ()
 runFontParseTests startFilePath = hspec $ do

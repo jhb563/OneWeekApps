@@ -12,9 +12,10 @@ module FileSearchTests (
     runFileSearchTests
 ) where
 
-import OWAFileSearch
 import System.Directory
 import Test.Hspec
+
+import OWAFileSearch
 import TestUtil
 
 runFileSearchTests :: FilePath -> IO ()

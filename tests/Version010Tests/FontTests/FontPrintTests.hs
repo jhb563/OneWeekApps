@@ -16,12 +16,13 @@ module FontPrintTests (
   runFontPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAFontObjc
 import OWAObjcAbSyn
 import TestFonts
 import TestUtil
-import Test.Hspec
 
 runFontPrintTests :: FilePath -> IO ()
 runFontPrintTests currentDirectory = do

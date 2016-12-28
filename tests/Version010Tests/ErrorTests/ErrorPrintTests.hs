@@ -16,12 +16,13 @@ module ErrorPrintTests (
   runErrorPrintTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAErrorObjc
 import OWAObjcAbSyn
 import TestErrors
 import TestUtil
-import Test.Hspec
 
 runErrorPrintTests :: FilePath -> IO ()
 runErrorPrintTests currentDirectory = do
