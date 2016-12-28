@@ -228,12 +228,6 @@ appDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/app"
 outputDirectoryExtension :: FilePath
 outputDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/ios/ViewIntegrationApp"
 
-allFiles :: [FilePath]
-allFiles = lastGenFile : producedFiles
-
-allFilesSwift :: [FilePath]
-allFilesSwift = lastGenFile : producedFilesSwift
-
 producedFiles :: [FilePath]
 producedFiles = [producedColorHeader, producedColorM,
   producedFontHeader, producedFontM,
