@@ -14,13 +14,14 @@ module CustomViewTests (
   runCustomViewTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAObjcAbSyn
 import OWAViewObjc
 import OWAViewParser
-import TestUtil
 import TestCustomViews
-import Test.Hspec
+import TestUtil
 
 runCustomViewTests :: FilePath -> IO ()
 runCustomViewTests currentDirectory = do

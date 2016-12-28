@@ -1,7 +1,8 @@
 module TestButtonObjects where
 
-import OWAElements
 import Text.Parsec.Pos
+
+import OWAElements
 import OWAView
 
 testImageButton :: OWAButton

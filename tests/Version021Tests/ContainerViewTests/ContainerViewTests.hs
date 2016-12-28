@@ -14,13 +14,14 @@ module ContainerViewTests (
   runContainerViewTests
 ) where
 
+import Test.Hspec
+
 import OWAAppInfo
 import OWAObjcAbSyn
 import OWAViewObjc
 import OWAViewParser
 import TestUtil
 import TestContainerViews
-import Test.Hspec
 
 runContainerViewTests :: FilePath -> IO ()
 runContainerViewTests currentDirectory = do

@@ -1,7 +1,7 @@
 module TestCustomViews where
 
-import OWAView
 import OWAElements
+import OWAView
 
 basicCustomTest :: OWAView
 basicCustomTest = OWAView {

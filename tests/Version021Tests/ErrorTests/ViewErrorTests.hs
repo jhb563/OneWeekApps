@@ -7,10 +7,11 @@ module ViewErrorTests (
   runViewErrorTests
 ) where
 
+import Test.Hspec
+
 import OWAViewParser
 import TestErrors
 import TestUtil
-import Test.Hspec
 
 runViewErrorTests :: FilePath -> IO ()
 runViewErrorTests currentDirectory = hspec $ do
