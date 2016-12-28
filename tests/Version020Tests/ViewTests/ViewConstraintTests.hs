@@ -7,10 +7,11 @@ module ViewConstraintTests (
   runViewConstraintTests
 ) where
 
+import Test.Hspec
+
 import OWAViewParser
 import TestUtil
 import TestViews
-import Test.Hspec
 
 runViewConstraintTests :: FilePath -> IO ()
 runViewConstraintTests currentDirectory = hspec $ do

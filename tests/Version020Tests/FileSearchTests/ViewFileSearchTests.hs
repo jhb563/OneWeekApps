@@ -7,10 +7,11 @@ module ViewFileSearchTests (
   runViewFileSearchTests
 ) where
 
-import OWAFileSearch
-import System.Directory
-import TestUtil
 import Test.Hspec
+import System.Directory
+
+import OWAFileSearch
+import TestUtil
 
 runViewFileSearchTests :: FilePath -> IO ()
 runViewFileSearchTests currentDirectory = hspec $

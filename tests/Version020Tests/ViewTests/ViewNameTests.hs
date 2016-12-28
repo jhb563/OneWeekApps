@@ -6,10 +6,11 @@ module ViewNameTests (
   runViewNameTests
 ) where
 
+import Test.Hspec
+
 import OWAViewParser
 import TestUtil
 import TestViews
-import Test.Hspec
 
 runViewNameTests :: FilePath -> IO ()
 runViewNameTests currentDirectory = hspec $ do
