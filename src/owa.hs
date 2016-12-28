@@ -13,7 +13,7 @@ import System.Directory
 import System.Environment
 import System.IO
 
-import OWALib
+import OWAMain
 
 -- | 'main' runs the main progream
 main :: IO ()

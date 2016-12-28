@@ -32,6 +32,9 @@ import           ProjectFileTemplate
 -- are written in Swift, by default.
 printBaseXCodeFiles :: FilePath -> OWAAppInfo -> IO ()
 printBaseXCodeFiles currentDirectory appInfo = do
+  mapM_ 
+    (createDirectoryIfMissing True) 
+    (directoriesToCreate currentDirectory (appName appInfo))
   printVC currentDirectory appInfo
   printAppDelegate currentDirectory appInfo
   printInfo currentDirectory name
@@ -209,4 +212,9 @@ baseProjectFilePath :: FilePath -> String -> FilePath
 baseProjectFilePath dir name = dir ++ "/ios/" ++ name ++ "/"
 
 pbxProjDirPath :: FilePath -> String -> FilePath
-pbxProjDirPath dir name = dir ++ "ios/" ++ name ++ ".xcodeproj/"
+pbxProjDirPath dir name = dir ++ "/ios/" ++ name ++ ".xcodeproj/"
+
+directoriesToCreate :: FilePath -> String -> [FilePath]
+directoriesToCreate dir appName =
+  [ dir ++ "/ios/" ++ appName
+  , dir ++ "/ios/" ++ appName ++ ".xcodeproj/.xcworkspace" ]

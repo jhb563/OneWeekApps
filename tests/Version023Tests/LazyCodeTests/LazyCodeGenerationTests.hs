@@ -12,7 +12,7 @@ module LazyCodeGenerationTests (
 ) where
 
 import Data.Time.Clock
-import OWALib
+import OWAMain
 import System.Directory
 import System.IO (stdin, stdout)
 import TestUtil
@@ -21,36 +21,38 @@ import Test.Hspec
 runLazyCodeGenerationTests :: FilePath -> IO ()
 runLazyCodeGenerationTests currentDirectory = do
   let testDirectory = currentDirectory ++ appDirectoryExtension
+  let outputDirectory = currentDirectory ++ outputDirectoryExtension
+  let dirTuple = (testDirectory, outputDirectory)
   hspec $ do
-    testCorrectFilesChangeObjc testDirectory noChangePair "If no files changed, no regeneration"
-    testCorrectFilesChangeObjc testDirectory appInfoPair "If app info changes, all files regenerate"
-    testCorrectFilesChangeObjc testDirectory colorsPair "Colors regenerated properly"
-    testCorrectFilesChangeObjc testDirectory fontsPair "Fonts regenerated properly"
-    testCorrectFilesChangeObjc testDirectory alertsPair "Alerts regenerated properly"
-    testCorrectFilesChangeObjc testDirectory errorsPair "Errors regenerated properly"
-    testCorrectFilesChangeObjc testDirectory view1Pair "View 1 regenerated properly"
-    testCorrectFilesChangeObjc testDirectory view2Pair "View 2 regenerated properly"
-    testCorrectFilesChangeObjc testDirectory view3Pair "View 3 regenerated properly"
-    testCorrectFilesChangeObjc testDirectory stringsPair "Strings regenerated properly"
-    testCorrectFilesChangeObjc testDirectory colorFontsPair "Colors and fonts regenerated together"
-    testCorrectFilesChangeObjc testDirectory alertStringsViewPair 
+    testCorrectFilesChangeObjc dirTuple noChangePair "If no files changed, no regeneration"
+    testCorrectFilesChangeObjc dirTuple appInfoPair "If app info changes, all files regenerate"
+    testCorrectFilesChangeObjc dirTuple colorsPair "Colors regenerated properly"
+    testCorrectFilesChangeObjc dirTuple fontsPair "Fonts regenerated properly"
+    testCorrectFilesChangeObjc dirTuple alertsPair "Alerts regenerated properly"
+    testCorrectFilesChangeObjc dirTuple errorsPair "Errors regenerated properly"
+    testCorrectFilesChangeObjc dirTuple view1Pair "View 1 regenerated properly"
+    testCorrectFilesChangeObjc dirTuple view2Pair "View 2 regenerated properly"
+    testCorrectFilesChangeObjc dirTuple view3Pair "View 3 regenerated properly"
+    testCorrectFilesChangeObjc dirTuple stringsPair "Strings regenerated properly"
+    testCorrectFilesChangeObjc dirTuple colorFontsPair "Colors and fonts regenerated together"
+    testCorrectFilesChangeObjc dirTuple alertStringsViewPair 
       "Alerts, strings, and a view regenerated together"
-    testCorrectFilesChangeSwift testDirectory noChangePairSwift "(swift) If no files changed, no regeneration"
-    testCorrectFilesChangeSwift testDirectory appInfoPairSwift "(swift) If app info changes, all files regenerate"
-    testCorrectFilesChangeSwift testDirectory colorsPairSwift "(swift) Colors regenerated properly"
-    testCorrectFilesChangeSwift testDirectory fontsPairSwift "(swift) Fonts regenerated properly"
-    testCorrectFilesChangeSwift testDirectory alertsPairSwift "(swift) Alerts regenerated properly"
-    testCorrectFilesChangeSwift testDirectory errorsPairSwift "(swift) Errors regenerated properly"
-    testCorrectFilesChangeSwift testDirectory view1PairSwift "(swift) View 1 regenerated properly"
-    testCorrectFilesChangeSwift testDirectory view2PairSwift "(swift) View 2 regenerated properly"
-    testCorrectFilesChangeSwift testDirectory view3PairSwift "(swift) View 3 regenerated properly"
-    testCorrectFilesChangeSwift testDirectory stringsPairSwift "(swift) Strings regenerated properly"
-    testCorrectFilesChangeSwift testDirectory colorFontsPairSwift "(swift) Colors and fonts regenerated together"
-    testCorrectFilesChangeSwift testDirectory alertStringsViewPairSwift 
+    testCorrectFilesChangeSwift dirTuple noChangePairSwift "(swift) If no files changed, no regeneration"
+    testCorrectFilesChangeSwift dirTuple appInfoPairSwift "(swift) If app info changes, all files regenerate"
+    testCorrectFilesChangeSwift dirTuple colorsPairSwift "(swift) Colors regenerated properly"
+    testCorrectFilesChangeSwift dirTuple fontsPairSwift "(swift) Fonts regenerated properly"
+    testCorrectFilesChangeSwift dirTuple alertsPairSwift "(swift) Alerts regenerated properly"
+    testCorrectFilesChangeSwift dirTuple errorsPairSwift "(swift) Errors regenerated properly"
+    testCorrectFilesChangeSwift dirTuple view1PairSwift "(swift) View 1 regenerated properly"
+    testCorrectFilesChangeSwift dirTuple view2PairSwift "(swift) View 2 regenerated properly"
+    testCorrectFilesChangeSwift dirTuple view3PairSwift "(swift) View 3 regenerated properly"
+    testCorrectFilesChangeSwift dirTuple stringsPairSwift "(swift) Strings regenerated properly"
+    testCorrectFilesChangeSwift dirTuple colorFontsPairSwift "(swift) Colors and fonts regenerated together"
+    testCorrectFilesChangeSwift dirTuple alertStringsViewPairSwift 
       "(swift) Alerts, strings, and a view regenerated together"
-    testCorrectFilesObjcBeforeSwift testDirectory objcBeforeSwiftPair 
+    testCorrectFilesObjcBeforeSwift dirTuple objcBeforeSwiftPair 
       "Swift files should be generated even after Objc"
-    testCorrectFilesSwiftBeforeObjc testDirectory swiftBeforeObjcPair
+    testCorrectFilesSwiftBeforeObjc dirTuple swiftBeforeObjcPair
       "Objc files should be generated even after Swift"
 
 noChangePair :: ([FilePath], [FilePath])
@@ -139,30 +141,31 @@ swiftBeforeObjcPair = ([], producedFiles)
 objcBeforeSwiftPair :: ([FilePath], [FilePath])
 objcBeforeSwiftPair = ([], producedFilesSwift)
 
-beforeTestHook :: FilePath -> [FilePath] -> IO ()
-beforeTestHook = beforeHookWithArgs ["generate"] ["generate"] allFiles
+beforeTestHook :: (FilePath, FilePath) -> [FilePath] -> IO ()
+beforeTestHook = beforeHookWithArgs ["generate"] ["generate"] producedFiles
 
-swiftBeforeTestHook :: FilePath -> [FilePath] -> IO ()
-swiftBeforeTestHook = beforeHookWithArgs ["generate", "--swift"] ["generate", "--swift"] allFilesSwift
+swiftBeforeTestHook :: (FilePath, FilePath) -> [FilePath] -> IO ()
+swiftBeforeTestHook = beforeHookWithArgs ["generate", "--swift"] ["generate", "--swift"] producedFilesSwift
 
-beforeHookWithArgs :: [String] -> [String] -> [FilePath] -> FilePath -> [FilePath] -> IO ()
-beforeHookWithArgs args1 args2 outputFiles testDirectory inputFiles = do
-  runOWA stdin stdout testDirectory args1
-  setModificationTimesBack testDirectory outputFiles timePrefix
-  modifyInputFiles (map (testDirectory ++) inputFiles)
-  runOWA stdin stdout testDirectory args2
+beforeHookWithArgs :: [String] -> [String] -> [FilePath] -> (FilePath, FilePath) -> [FilePath] -> IO ()
+beforeHookWithArgs args1 args2 outputFiles (appDirectory, outputDirectory) inputFiles = do
+  runOWA stdin stdout appDirectory args1
+  setModificationTimesBack (appDirectory, outputDirectory) outputFiles timePrefix
+  modifyInputFiles (map (appDirectory ++) inputFiles)
+  runOWA stdin stdout appDirectory args2
   where
     timePrefix = if "--swift" `elem` args1 then "Swift: " else "Objc: "
 
 -- Take each produced file and set its modification time 5 seconds in the past, so that we
 -- can see the immediate results of another run of runOWA without waiting a full second.
 -- (This is necessary because many File Systems only store file files to a full second resolution.
-setModificationTimesBack :: FilePath -> [FilePath] -> String -> IO ()
-setModificationTimesBack testDirectory files timePrefix = do
+setModificationTimesBack :: (FilePath, FilePath) -> [FilePath] -> String -> IO ()
+setModificationTimesBack (appDirectory, outputDirectory) files timePrefix = do
   earlierTime <- addUTCTime (-5) <$> getCurrentTime  
-  mapM_ ((`setModificationTime` earlierTime) . (testDirectory ++)) (allInputFiles ++ files)
+  mapM_ ((`setModificationTime` earlierTime) . (appDirectory ++)) allInputFiles
+  mapM_ ((`setModificationTime` earlierTime) . (outputDirectory ++)) files
   let timeString = timePrefix ++ show earlierTime ++ "\n"
-  writeFile (testDirectory ++ lastGenFile) timeString
+  writeFile (appDirectory ++ lastGenFile) timeString
 
 modifyInputFiles ::  [FilePath] -> IO ()
 modifyInputFiles files = do
@@ -171,30 +174,31 @@ modifyInputFiles files = do
     
 -- Takes the Input Files which we're going to modify, then the files which
 -- we expect to have been modified.
-testCorrectFilesChangeObjc :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
+testCorrectFilesChangeObjc :: (FilePath, FilePath) -> ([FilePath], [FilePath]) -> String -> Spec
 testCorrectFilesChangeObjc = testCorrectFilesChange beforeTestHook producedFiles
 
-testCorrectFilesChangeSwift :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
+testCorrectFilesChangeSwift :: (FilePath, FilePath) -> ([FilePath], [FilePath]) -> String -> Spec
 testCorrectFilesChangeSwift = testCorrectFilesChange swiftBeforeTestHook producedFilesSwift
 
-testCorrectFilesObjcBeforeSwift :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
+testCorrectFilesObjcBeforeSwift :: (FilePath, FilePath) -> ([FilePath], [FilePath]) -> String -> Spec
 testCorrectFilesObjcBeforeSwift = testCorrectFilesChange hook (producedFiles ++ producedFilesSwift)
   where
     hook = beforeHookWithArgs ["generate"] ["generate", "--swift"] producedFiles
 
-testCorrectFilesSwiftBeforeObjc :: FilePath -> ([FilePath], [FilePath]) -> String -> Spec
+testCorrectFilesSwiftBeforeObjc :: (FilePath, FilePath) -> ([FilePath], [FilePath]) -> String -> Spec
 testCorrectFilesSwiftBeforeObjc = testCorrectFilesChange hook (producedFiles ++ producedFilesSwift)
   where
     hook = beforeHookWithArgs ["generate", "--swift"] ["generate"] producedFilesSwift
 
-testCorrectFilesChange :: (FilePath -> [FilePath] -> IO ()) -> [FilePath] ->
-  FilePath -> ([FilePath], [FilePath]) -> String -> Spec
-testCorrectFilesChange hook prodFiles testDirectory (inputFiles, outputFiles) description = beforeAll_ (hook testDirectory inputFiles)
-  . afterAll_ (removeResultsFiles testDirectory (lastGenFile : prodFiles)) $
+testCorrectFilesChange :: ((FilePath, FilePath) -> [FilePath] -> IO ()) -> [FilePath] ->
+  (FilePath, FilePath) -> ([FilePath], [FilePath]) -> String -> Spec
+testCorrectFilesChange hook prodFiles (appDirectory, outputDirectory) (inputFiles, outputFiles) description = beforeAll_ (hook (appDirectory, outputDirectory) inputFiles)
+  . afterAll_ (removeResultsFiles outputDirectory prodFiles) $
+    afterAll_ (removeResultsFiles appDirectory [lastGenFile]) $
     describe description $ do
-      let expectedRegeneratedFiles = map (testDirectory ++) outputFiles
+      let expectedRegeneratedFiles = map (outputDirectory ++) outputFiles
       let staleOutputFiles = filter (`notElem` outputFiles) prodFiles
-      let expectedUnregeneratedFiles = map (testDirectory ++) staleOutputFiles
+      let expectedUnregeneratedFiles = map (outputDirectory ++) staleOutputFiles
       it "Certain files should be regenerated" $
         mapM_ shouldBeRegenerated expectedRegeneratedFiles
       it "Certain files should NOT be regenerated" $
@@ -219,6 +223,9 @@ expectRegenerated regenTest file = do
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/app"
+
+outputDirectoryExtension :: FilePath
+outputDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/ios/ViewIntegrationApp"
 
 allFiles :: [FilePath]
 allFiles = lastGenFile : producedFiles

@@ -18,19 +18,19 @@ module IntegrationTestUtil (
 import System.IO
 import Test.Hspec
 
-import OWALib
+import OWAMain
 import TestUtil
 
 runIntegrationTests :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()
 runIntegrationTests testDirectory specs additionalFiles = hspec $
-  beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
+  beforeAll_ (removeDiffFiles $ testDirectory ++ projectExtension) $
   beforeAll_ (runOWA stdin stdout testDirectory ["generate"])
   . afterAll_ (removeProducedFiles testDirectory additionalFiles) $
     mapM_ (\specFun -> specFun testDirectory) specs
 
 runIntegrationTestsSwift :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()
 runIntegrationTestsSwift testDirectory specs additionalFiles = hspec $
-  beforeAll_ (removeDiffFiles $ testDirectory ++ appExtension) $
+  beforeAll_ (removeDiffFiles $ testDirectory ++ projectExtension) $
   beforeAll_ (runOWA stdin stdout testDirectory ["generate", "--swift"])
   . afterAll_ (removeProducedFilesSwift testDirectory additionalFiles) $
     mapM_ (\specFun -> specFun testDirectory) specs
@@ -133,86 +133,86 @@ removeProducedFiles testDirectory additionalFiles = removeFiles $ map (testDirec
 removeProducedFilesSwift :: FilePath -> [String] -> IO ()
 removeProducedFilesSwift testDirectory additionalFiles = removeFiles $ map (testDirectory ++) (swiftProducedFiles ++ additionalFiles)
 
-appExtension :: String
-appExtension = "/app"
+projectExtension :: String
+projectExtension = "/ios/IntegrationApp"
 
 colorHeaderFileExtension :: String
-colorHeaderFileExtension = "/app/UIColor+IGAColors.h"
+colorHeaderFileExtension = "/ios/IntegrationApp/UIColor+IGAColors.h"
 
 colorImplementationFileExtension :: String
-colorImplementationFileExtension = "/app/UIColor+IGAColors.m"
+colorImplementationFileExtension = "/ios/IntegrationApp/UIColor+IGAColors.m"
 
 colorHeaderTestExtension :: String
-colorHeaderTestExtension = "/app/UIColor+IGAColors.h.test"
+colorHeaderTestExtension = "/ios/IntegrationApp/UIColor+IGAColors.h.test"
 
 colorImplementationTestExtension :: String
-colorImplementationTestExtension = "/app/UIColor+IGAColors.m.test"
+colorImplementationTestExtension = "/ios/IntegrationApp/UIColor+IGAColors.m.test"
 
 colorSwiftResult :: String
-colorSwiftResult = "/app/UIColor+MSAColors.swift"
+colorSwiftResult = "/ios/IntegrationApp/UIColor+MSAColors.swift"
 
 colorSwiftTest :: String
-colorSwiftTest = "/app/UIColor+MSAColors.swift.test"
+colorSwiftTest = "/ios/IntegrationApp/UIColor+MSAColors.swift.test"
 
 fontHeaderFileExtension :: String
-fontHeaderFileExtension = "/app/UIFont+IGAFonts.h"
+fontHeaderFileExtension = "/ios/IntegrationApp/UIFont+IGAFonts.h"
 
 fontImplementationFileExtension :: String
-fontImplementationFileExtension = "/app/UIFont+IGAFonts.m"
+fontImplementationFileExtension = "/ios/IntegrationApp/UIFont+IGAFonts.m"
 
 fontHeaderTestExtension :: String
-fontHeaderTestExtension = "/app/UIFont+IGAFonts.h.test"
+fontHeaderTestExtension = "/ios/IntegrationApp/UIFont+IGAFonts.h.test"
 
 fontImplementationTestExtension :: String
-fontImplementationTestExtension = "/app/UIFont+IGAFonts.m.test"
+fontImplementationTestExtension = "/ios/IntegrationApp/UIFont+IGAFonts.m.test"
 
 fontSwiftResult :: String
-fontSwiftResult = "/app/UIFont+MSAFonts.swift"
+fontSwiftResult = "/ios/IntegrationApp/UIFont+MSAFonts.swift"
 
 fontSwiftTest :: String
-fontSwiftTest = "/app/UIFont+MSAFonts.swift.test"
+fontSwiftTest = "/ios/IntegrationApp/UIFont+MSAFonts.swift.test"
 
 alertHeaderFileExtension :: String
-alertHeaderFileExtension = "/app/UIAlertController+IGAAlerts.h"
+alertHeaderFileExtension = "/ios/IntegrationApp/UIAlertController+IGAAlerts.h"
 
 alertImplementationFileExtension :: String
-alertImplementationFileExtension = "/app/UIAlertController+IGAAlerts.m"
+alertImplementationFileExtension = "/ios/IntegrationApp/UIAlertController+IGAAlerts.m"
 
 alertHeaderTestExtension :: String
-alertHeaderTestExtension = "/app/UIAlertController+IGAAlerts.h.test"
+alertHeaderTestExtension = "/ios/IntegrationApp/UIAlertController+IGAAlerts.h.test"
 
 alertImplementationTestExtension :: String
-alertImplementationTestExtension = "/app/UIAlertController+IGAAlerts.m.test"
+alertImplementationTestExtension = "/ios/IntegrationApp/UIAlertController+IGAAlerts.m.test"
 
 alertSwiftResult :: String
-alertSwiftResult = "/app/UIAlertController+MSAAlerts.swift"
+alertSwiftResult = "/ios/IntegrationApp/UIAlertController+MSAAlerts.swift"
 
 alertSwiftTest :: String
-alertSwiftTest = "/app/UIAlertController+MSAAlerts.swift.test"
+alertSwiftTest = "/ios/IntegrationApp/UIAlertController+MSAAlerts.swift.test"
 
 errorHeaderFileExtension :: String
-errorHeaderFileExtension = "/app/NSError+IGAErrors.h"
+errorHeaderFileExtension = "/ios/IntegrationApp/NSError+IGAErrors.h"
 
 errorImplementationFileExtension :: String
-errorImplementationFileExtension = "/app/NSError+IGAErrors.m"
+errorImplementationFileExtension = "/ios/IntegrationApp/NSError+IGAErrors.m"
 
 errorHeaderTestExtension :: String
-errorHeaderTestExtension = "/app/NSError+IGAErrors.h.test"
+errorHeaderTestExtension = "/ios/IntegrationApp/NSError+IGAErrors.h.test"
 
 errorImplementationTestExtension :: String
-errorImplementationTestExtension = "/app/NSError+IGAErrors.m.test"
+errorImplementationTestExtension = "/ios/IntegrationApp/NSError+IGAErrors.m.test"
 
 errorSwiftResult :: String
-errorSwiftResult = "/app/NSError+MSAErrors.swift"
+errorSwiftResult = "/ios/IntegrationApp/NSError+MSAErrors.swift"
 
 errorSwiftTest :: String
-errorSwiftTest = "/app/NSError+MSAErrors.swift.test"
+errorSwiftTest = "/ios/IntegrationApp/NSError+MSAErrors.swift.test"
 
 localizedStringFileExtension :: String
-localizedStringFileExtension = "/app/Localizable.strings"
+localizedStringFileExtension = "/ios/IntegrationApp/Localizable.strings"
 
 localizedStringsTestExtension :: String
-localizedStringsTestExtension = "/app/Localizable.strings.test"
+localizedStringsTestExtension = "/ios/IntegrationApp/Localizable.strings.test"
 
 lastGenFileExtension :: String
 lastGenFileExtension = "/app/.owa_last_gen"

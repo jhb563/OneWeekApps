@@ -24,7 +24,7 @@ library
                        time,
                        transformers,
                        template
-  exposed-modules:     OWALib,
+  exposed-modules:     OWAMain,
                        OWAFileSearch,
                        OWAColor,
                        OWAColorParser,
@@ -44,6 +44,7 @@ library
                        OWAErrorSwift,
                        OWAAppInfo,
                        OWAAppInfoParser,
+                       OWALazy,
                        OWALocalizedStringSet,
                        OWAStringsParser,
                        OWAStringsObjc,
@@ -58,10 +59,14 @@ library
                        OWASwiftAbSyn,
                        OWASwiftPrint,
                        OWAXCode
-  other-modules:       OWAParseUtil,
+  other-modules:       OWAExecTypes, 
+                       OWAFileNames,
+                       OWANew,
+                       OWAParseUtil,
                        OWAObjcUtil,
                        OWASwiftUtil,
                        OWAPrintUtil,
+                       OWATerminal,
                        OtherTemplates,
                        ProjectFileTemplate
   hs-source-dirs:      src,
@@ -88,11 +93,6 @@ executable owa
                        template,
                        OneWeekApps
   hs-source-dirs:      src
-  other-modules:       OWAFileSearch
-                     , OWALib
-                     , OWAObjcPrint
-                     , OWAPrintUtil
-                     , OWASwiftPrint
   default-language:    Haskell2010
 
 test-suite Version010Tests

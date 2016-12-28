@@ -13,12 +13,15 @@ module Version023IntegrationTests (
 ) where
 
 import IntegrationTestUtil
+import System.Directory (createDirectoryIfMissing)
 import TestUtil
 import Test.Hspec
 
 runV023IntegrationTests :: FilePath -> IO ()
 runV023IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/tests/Version023Tests/IntegrationTests"
+  let outputDirectory = currentDirectory ++ "/tests/Version023Tests/IntegrationTests/ios/IntegrationApp/"
+  createDirectoryIfMissing True outputDirectory 
   runIntegrationTestsSwift testDirectory 
     [checkColorsFilesSwift,
     checkFontsFilesSwift,
@@ -40,7 +43,7 @@ additionalFiles :: [FilePath]
 additionalFiles = [view1Result]
 
 view1Result :: String
-view1Result = "/app/VIAConstraintTest2.swift"
+view1Result = "/ios/IntegrationApp/VIAConstraintTest2.swift"
 
 view1Test :: String
-view1Test = "/app/VIAConstraintTest2.swift.test"
+view1Test = "/ios/IntegrationApp/VIAConstraintTest2.swift.test"
