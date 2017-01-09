@@ -1,7 +1,7 @@
 module TestContainerViews where
 
-import OWAElements
-import OWAView
+import Model.OWAElements
+import Model.OWAView
 
 -- Views
 

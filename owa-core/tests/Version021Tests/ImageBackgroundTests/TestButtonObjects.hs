@@ -2,8 +2,8 @@ module TestButtonObjects where
 
 import Text.Parsec.Pos
 
-import OWAElements
-import OWAView
+import Model.OWAElements
+import Model.OWAView
 
 testImageButton :: OWAButton
 testImageButton = OWAButton {

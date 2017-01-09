@@ -14,8 +14,8 @@ module OWAErrorObjc (
 import           Data.List
 import qualified Data.Map.Strict as Map
 
-import           OWAAppInfo
-import           OWAError
+import           Model.OWAAppInfo
+import           Model.OWAError
 import           OWAObjcAbSyn
 import           OWAObjcUtil
 

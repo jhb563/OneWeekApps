@@ -2,7 +2,7 @@ module TestStringSets where
 
 import qualified Data.Map.Strict as Map
 
-import           OWALocalizedStringSet
+import           Model.OWALocalizedStringSet
 
 basicStrings :: OWALocalizedStringSet
 basicStrings = OWALocalizedStringSet {

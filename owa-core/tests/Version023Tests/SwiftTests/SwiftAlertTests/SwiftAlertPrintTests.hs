@@ -17,7 +17,7 @@ module SwiftAlertPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAAlertSwift
 import OWASwiftAbSyn
 import SwiftTestAlerts

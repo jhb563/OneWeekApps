@@ -17,7 +17,7 @@ module SwiftFontPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAFontSwift
 import OWASwiftAbSyn
 import SwiftTestFonts

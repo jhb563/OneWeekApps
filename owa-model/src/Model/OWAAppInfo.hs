@@ -7,7 +7,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAAppInfo (
+module Model.OWAAppInfo (
   OWAAppInfo(..)
 ) where
 

@@ -18,7 +18,7 @@ module ColorPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAColorObjc
 import OWAObjcAbSyn
 import TestColors

@@ -18,8 +18,8 @@ import           Text.Parsec
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWAAlert
-import           OWAParseError
+import           Model.OWAAlert
+import           Model.OWAParseError
 import           OWAParseUtil
 
 type AlertAttr = String

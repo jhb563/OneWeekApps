@@ -18,10 +18,10 @@ import           Text.Parsec
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWAElements
-import           OWAParseError
+import           Model.OWAElements
+import           Model.OWAParseError
 import           OWAParseUtil
-import           OWAView
+import           Model.OWAView
 
 type ViewAttr = String
 data ViewVal = TypeVal String |

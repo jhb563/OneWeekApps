@@ -13,8 +13,8 @@ module OWAFontObjc (
 
 import Data.List
 
-import OWAAppInfo
-import OWAFont
+import Model.OWAAppInfo
+import Model.OWAFont
 import OWAObjcAbSyn
 import OWAObjcUtil
 

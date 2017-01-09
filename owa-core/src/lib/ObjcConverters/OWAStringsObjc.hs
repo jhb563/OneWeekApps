@@ -13,8 +13,8 @@ module OWAStringsObjc (
 import           Data.List
 import qualified Data.Map.Strict as Map
 
-import           OWAAppInfo
-import           OWALocalizedStringSet
+import           Model.OWAAppInfo
+import           Model.OWALocalizedStringSet
 import           OWAObjcAbSyn
 import           OWAObjcUtil
 

@@ -16,7 +16,7 @@ import Control.Monad.Reader (ask)
 import System.IO (hIsEOF, hGetLine, hPutStrLn, Handle)
 
 import OWAExecTypes
-import OWAParseError
+import Model.OWAParseError
 
 -- | Interprets the arguments to the program, determines what printing mode we're in.
 outputModeFromArgs :: [String] -> OutputMode

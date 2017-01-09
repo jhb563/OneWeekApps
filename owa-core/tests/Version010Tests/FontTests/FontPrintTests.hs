@@ -18,7 +18,7 @@ module FontPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAFontObjc
 import OWAObjcAbSyn
 import TestFonts

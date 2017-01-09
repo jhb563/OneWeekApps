@@ -9,7 +9,7 @@ module AlertParseTests (
 
 import Test.Hspec
 
-import OWAAlert
+import Model.OWAAlert
 import OWAAlertParser
 import TestAlerts
 import TestUtil

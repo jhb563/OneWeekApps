@@ -17,8 +17,8 @@ import           Text.Parsec
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWALocalizedStringSet
-import           OWAParseError
+import           Model.OWALocalizedStringSet
+import           Model.OWAParseError
 import           OWAParseUtil
 
 type LocalizedStringMap = Map.Map String String

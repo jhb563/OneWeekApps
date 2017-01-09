@@ -19,8 +19,8 @@ import           Text.Parsec
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWAError
-import           OWAParseError
+import           Model.OWAError
+import           Model.OWAParseError
 import           OWAParseUtil
 
 type ErrorAttr = String

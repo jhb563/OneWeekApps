@@ -5,7 +5,7 @@ Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
-module OWAFont where
+module Model.OWAFont where
 
 -- | Enumerated type for possible style attributes to add to a font. By
 -- no means is this exhaustive, and may be modified to include more attributes

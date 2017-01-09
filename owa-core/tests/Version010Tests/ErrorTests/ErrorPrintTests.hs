@@ -18,7 +18,7 @@ module ErrorPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAErrorObjc
 import OWAObjcAbSyn
 import TestErrors

@@ -12,8 +12,8 @@ module OWAFontSwift (
 
 import Data.List
 
-import OWAAppInfo
-import OWAFont
+import Model.OWAAppInfo
+import Model.OWAFont
 import OWASwiftAbSyn
 import OWASwiftUtil
 

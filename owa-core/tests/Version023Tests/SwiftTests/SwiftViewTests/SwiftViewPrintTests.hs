@@ -17,7 +17,7 @@ module SwiftViewPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWASwiftAbSyn
 import OWAViewSwift
 import SwiftSpecialTestViews

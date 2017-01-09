@@ -23,37 +23,29 @@ library
                        text,
                        time,
                        transformers,
-                       template
+                       template,
+                       owa-model
   exposed-modules:     OWAMain,
                        OWAFileSearch,
-                       OWAColor,
                        OWAColorParser,
                        OWAColorObjc,
                        OWAColorSwift,
-                       OWAFont,
                        OWAFontParser,
                        OWAFontObjc,
                        OWAFontSwift,
-                       OWAAlert,
                        OWAAlertParser,
                        OWAAlertObjc,
                        OWAAlertSwift,
-                       OWAError,
                        OWAErrorParser,
                        OWAErrorObjc,
                        OWAErrorSwift,
-                       OWAAppInfo,
                        OWAAppInfoParser,
                        OWALazy,
-                       OWALocalizedStringSet,
                        OWAStringsParser,
                        OWAStringsObjc,
-                       OWAParseError,
-                       OWAView,
                        OWAViewParser,
                        OWAViewObjc,
                        OWAViewSwift,
-                       OWAElements,
                        OWAObjcAbSyn,
                        OWAObjcPrint,
                        OWASwiftAbSyn,
@@ -70,10 +62,10 @@ library
                        OtherTemplates,
                        ProjectFileTemplate
   hs-source-dirs:      src/lib,
+                       src/lib/dataTypes,
                        src/lib/Parsers,
                        src/lib/ObjcConverters,
                        src/lib/SwiftConverters,
-                       src/lib/dataTypes,
                        src/lib/XCode,
                        src/lib/XCode/XCodeTemplates
   default-language: Haskell2010
@@ -91,7 +83,8 @@ executable owa
                        time,
                        transformers,
                        template,
-                       owa-core
+                       owa-core,
+                       owa-model
   hs-source-dirs:      src/lib
   other-modules:       OWAExecTypes
                      , OWAFileNames
@@ -122,7 +115,8 @@ test-suite Version010Tests
                  directory >= 1.2.5,
                  process,
                  parsec,
-                 owa-core
+                 owa-core,
+                 owa-model
   other-modules: AlertParseTests
                , AlertPrintTests
                , AppDirectoryTests
@@ -166,7 +160,8 @@ test-suite Version015Tests
                  process,
                  parsec,
                  containers,
-                 owa-core
+                 owa-core,
+                 owa-model
   other-modules: AlertParseFailureTests
                , ColorParseFailureTests
                , CommentTests
@@ -211,7 +206,8 @@ test-suite Version020Tests
                  process,
                  parsec,
                  containers,
-                 owa-core
+                 owa-core,
+                 owa-model
   other-modules: IntegrationTestUtil
                , TestErrors
                , TestUtil
@@ -244,7 +240,8 @@ test-suite Version021Tests
                  process,
                  parsec,
                  containers,
-                 owa-core
+                 owa-core,
+                 owa-model
   other-modules: ContainerViewTests
                , CustomViewTests
                , ImageButtonTests
@@ -285,7 +282,8 @@ test-suite Version023Tests
                  mtl,
                  unix,
                  split,
-                 owa-core
+                 owa-core,
+                 owa-model
   other-modules: LazyCodeGenerationTests
                , SwiftAlertPrintTests
                , SwiftColorPrintTests

@@ -2,7 +2,7 @@ module TestErrors where
 
 import Text.Parsec.Pos
 
-import OWAParseError
+import Model.OWAParseError
 
 testLabelErrors :: [OWAParseError]
 testLabelErrors = [ObjectError {

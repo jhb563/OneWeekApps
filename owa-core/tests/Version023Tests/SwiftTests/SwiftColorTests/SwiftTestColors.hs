@@ -1,6 +1,6 @@
 module SwiftTestColors where
 
-import OWAColor
+import Model.OWAColor
 
 swiftTestColors :: [OWAColor]
 swiftTestColors = map colorFromTuple [("color1", 178.0, 224.0, 67.0, 1.0),

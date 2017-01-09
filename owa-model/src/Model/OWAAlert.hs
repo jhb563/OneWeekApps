@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAAlert where
+module Model.OWAAlert where
 
 -- | Typedef demonstrating which fields should be keys instead
 -- of the actual strings desired.

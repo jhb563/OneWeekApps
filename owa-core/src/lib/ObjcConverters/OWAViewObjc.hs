@@ -14,11 +14,11 @@ module OWAViewObjc (
 import           Data.Maybe
 import qualified Data.Set as Set
 
-import           OWAAppInfo
-import           OWAElements
+import           Model.OWAAppInfo
+import           Model.OWAElements
 import           OWAObjcAbSyn
 import           OWAObjcUtil
-import           OWAView
+import           Model.OWAView
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

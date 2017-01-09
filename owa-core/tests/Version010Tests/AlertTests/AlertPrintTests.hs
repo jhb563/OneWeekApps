@@ -18,7 +18,7 @@ module AlertPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAAlertObjc
 import OWAObjcAbSyn
 import TestAlerts

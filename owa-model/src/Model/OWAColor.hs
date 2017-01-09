@@ -7,7 +7,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAColor (
+module Model.OWAColor (
   OWAColor(..),
   colorFromTuple
 ) where

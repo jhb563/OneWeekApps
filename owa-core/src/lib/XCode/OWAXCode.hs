@@ -18,7 +18,7 @@ import           Data.Text.Template
 import           System.Directory
 
 import           OtherTemplates
-import           OWAAppInfo
+import           Model.OWAAppInfo
 import           OWASwiftAbSyn
 import           OWASwiftPrint
 import           OWASwiftUtil

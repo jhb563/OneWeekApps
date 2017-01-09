@@ -15,7 +15,7 @@ module SwiftErrorPrintTests (
   runSwiftErrorPrintTests
 ) where
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAErrorSwift
 import OWASwiftAbSyn
 import SwiftTestErrors

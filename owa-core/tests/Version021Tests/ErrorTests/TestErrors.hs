@@ -2,7 +2,7 @@ module TestErrors where
 
 import Text.Parsec.Pos
 
-import OWAParseError
+import Model.OWAParseError
 
 customError1 :: SourcePos
 customError1 = newPos "customViewError1.view" 4 5

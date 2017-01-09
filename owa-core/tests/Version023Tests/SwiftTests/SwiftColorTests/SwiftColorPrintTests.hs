@@ -17,7 +17,7 @@ module SwiftColorPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAColorSwift
 import OWASwiftAbSyn
 import SwiftTestColors

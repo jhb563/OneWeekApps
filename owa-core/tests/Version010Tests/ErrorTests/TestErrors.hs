@@ -1,6 +1,6 @@
 module TestErrors where
 
-import OWAError
+import Model.OWAError
 
 allTestErrors :: [OWAError]
 allTestErrors = [myError1,

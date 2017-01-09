@@ -7,7 +7,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWALocalizedStringSet (
+module Model.OWALocalizedStringSet (
   OWALocalizedStringSet(..)
 ) where
 

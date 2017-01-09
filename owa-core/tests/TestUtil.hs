@@ -22,9 +22,9 @@ import Test.Hspec
 import Text.Parsec.Error
 import Text.Parsec.Pos
 
+import Model.OWAParseError
 import OWAObjcAbSyn
 import OWAObjcPrint
-import OWAParseError
 import OWASwiftAbSyn
 import OWASwiftPrint
 

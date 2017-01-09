@@ -1,6 +1,6 @@
 module TestAppInfo where
 
-import OWAAppInfo
+import Model.OWAAppInfo
 
 appInfo1 :: OWAAppInfo
 appInfo1 = OWAAppInfo {

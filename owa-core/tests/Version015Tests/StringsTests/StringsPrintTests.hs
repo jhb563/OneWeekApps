@@ -17,7 +17,7 @@ module StringsPrintTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAObjcAbSyn
 import OWAStringsObjc
 import TestStringSets

@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAParseError (
+module Model.OWAParseError (
   OWAParseError(..)
 ) where
 

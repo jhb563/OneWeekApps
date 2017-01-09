@@ -2,7 +2,7 @@ module TestDefaultErrors where
 
 import Text.Parsec.Pos
 
-import OWAParseError
+import Model.OWAParseError
 
 appError1 :: SourcePos
 appError1 = newPos "defaultFailTest1.info" 1 1

@@ -31,7 +31,7 @@ import           Text.Parsec
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWAParseError
+import           Model.OWAParseError
 
 -------------------------------------------------------------------------------
 -------------------PARSER STATE------------------------------------------------

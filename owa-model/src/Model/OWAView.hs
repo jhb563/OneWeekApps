@@ -7,9 +7,9 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAView where 
+module Model.OWAView where 
 
-import OWAElements
+import Model.OWAElements
 
 -- | OWALayoutAttribute models the different aspects of a view or elements
 -- that we can fix with constraints.

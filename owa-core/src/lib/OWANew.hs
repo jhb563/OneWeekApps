@@ -11,7 +11,7 @@ import Data.Time.Clock (utctDay, UTCTime, getCurrentTime)
 import System.Directory (createDirectoryIfMissing)
 import System.IO (hClose, hPutStrLn, openFile, IOMode(..))
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAExecTypes
 import OWAFileNames
 import OWATerminal

@@ -15,7 +15,7 @@ module OWASwiftUtil (
 
 import Data.List.Split
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWASwiftAbSyn
 
 -------------------------------------------------------------------------------

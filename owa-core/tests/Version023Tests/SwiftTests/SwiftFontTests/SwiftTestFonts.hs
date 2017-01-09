@@ -1,6 +1,6 @@
 module SwiftTestFonts where
 
-import OWAFont
+import Model.OWAFont
 
 swiftTestFonts :: [OWAFont]
 swiftTestFonts = [myFont,

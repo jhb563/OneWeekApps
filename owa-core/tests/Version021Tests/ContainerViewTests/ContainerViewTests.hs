@@ -16,7 +16,7 @@ module ContainerViewTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAObjcAbSyn
 import OWAViewObjc
 import OWAViewParser

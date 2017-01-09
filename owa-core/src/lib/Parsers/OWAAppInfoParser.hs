@@ -17,8 +17,8 @@ import qualified Data.Map.Strict as Map
 import           Text.Parsec
 import           Text.ParserCombinators.Parsec
 
-import           OWAAppInfo
-import           OWAParseError
+import           Model.OWAAppInfo
+import           Model.OWAParseError
 import           OWAParseUtil
 
 type AppInfoAttr = String

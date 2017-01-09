@@ -18,8 +18,8 @@ import           Text.Parsec
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWAFont
-import           OWAParseError
+import           Model.OWAFont
+import           Model.OWAParseError
 import           OWAParseUtil
 
 type FontAttr = String

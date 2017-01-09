@@ -20,7 +20,7 @@ module OWAObjcUtil (
 
 import Data.List.Split
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAObjcAbSyn
 
 -------------------------------------------------------------------------------

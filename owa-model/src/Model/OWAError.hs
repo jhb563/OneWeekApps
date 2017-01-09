@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAError where
+module Model.OWAError where
 
 -- | Typedef for a localized key
 type LocalizedKey = String

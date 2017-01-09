@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAElements where
+module Model.OWAElements where
 
 -- | OWALabel represents a label subview. Labels must be given a name
 -- and text to enter. They can optionally be given the names of text color,

@@ -20,8 +20,8 @@ import           Text.Parsec.Char
 import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
-import           OWAColor
-import           OWAParseError
+import           Model.OWAColor
+import           Model.OWAParseError
 import           OWAParseUtil
 
 type ColorAttr = String

@@ -1,6 +1,6 @@
 module TestParseErrors where
 
-import OWAParseError
+import Model.OWAParseError
 
 allAlertErrors :: [OWAParseError]
 allAlertErrors = [failureAlertError,

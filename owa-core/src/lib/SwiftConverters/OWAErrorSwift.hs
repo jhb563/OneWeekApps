@@ -12,8 +12,8 @@ module OWAErrorSwift (
 
 import Data.List
 
-import OWAAppInfo
-import OWAError
+import Model.OWAAppInfo
+import Model.OWAError
 import OWASwiftAbSyn
 import OWASwiftUtil
 

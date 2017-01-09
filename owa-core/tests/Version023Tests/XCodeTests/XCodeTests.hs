@@ -10,7 +10,7 @@ module XCodeTests (
 
 import Test.Hspec
 
-import OWAAppInfo
+import Model.OWAAppInfo
 import OWAXCode
 import TestUtil
 

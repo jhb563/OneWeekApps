@@ -1,6 +1,6 @@
 module TestAlerts where
 
-import OWAAlert
+import Model.OWAAlert
 
 allTestAlerts :: [OWAAlert]
 allTestAlerts = [myFirstAlert,
