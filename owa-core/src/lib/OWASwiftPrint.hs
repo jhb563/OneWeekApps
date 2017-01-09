@@ -14,8 +14,8 @@ import Data.List
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
-import OWAPrintUtil
 import OWASwiftAbSyn
+import Utils.OWAPrintUtil
 
 -------------------------------------------------------------------------------
 ---------------------------ENTRY METHOD----------------------------------------

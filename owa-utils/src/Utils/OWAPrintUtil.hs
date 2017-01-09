@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAPrintUtil (
+module Utils.OWAPrintUtil (
   indentBlock,
   spaceOut,
   vcatWithSpace,

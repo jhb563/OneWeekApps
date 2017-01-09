@@ -1,0 +1,15 @@
+name:
+  owa-utils
+
+version:
+  0.1.0.0
+
+ghc-options: -Wall
+
+dependencies:
+  - base
+  - wl-pprint
+
+library:
+  source-dirs:
+    src/

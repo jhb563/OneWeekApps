@@ -15,7 +15,7 @@ import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
 import OWAObjcAbSyn
-import OWAPrintUtil
+import Utils.OWAPrintUtil
 
 -- | 'printStructureToFile' takes a file structure, and a file path, and
 -- prints the file structure into the specified file using a PrettyPrint doc.

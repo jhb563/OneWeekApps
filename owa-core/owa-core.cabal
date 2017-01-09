@@ -24,7 +24,8 @@ library
                        time,
                        transformers,
                        template,
-                       owa-model
+                       owa-model,
+                       owa-utils
   exposed-modules:     OWAMain,
                        OWAFileSearch,
                        OWAColorParser,
@@ -57,7 +58,6 @@ library
                        OWAParseUtil,
                        OWAObjcUtil,
                        OWASwiftUtil,
-                       OWAPrintUtil,
                        OWATerminal,
                        OtherTemplates,
                        ProjectFileTemplate
@@ -84,7 +84,8 @@ executable owa
                        transformers,
                        template,
                        owa-core,
-                       owa-model
+                       owa-model,
+                       owa-utils
   hs-source-dirs:      src/lib
   other-modules:       OWAExecTypes
                      , OWAFileNames
@@ -93,7 +94,6 @@ executable owa
                      , OWAMain
                      , OWANew
                      , OWAObjcPrint
-                     , OWAPrintUtil
                      , OWASwiftPrint
                      , OWATerminal
   default-language:    Haskell2010
