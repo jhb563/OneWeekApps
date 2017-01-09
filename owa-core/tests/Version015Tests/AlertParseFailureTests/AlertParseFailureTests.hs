@@ -8,7 +8,7 @@ module AlertParseFailureTests (
 
 import Test.Hspec
 
-import OWAAlertParser
+import Parse.OWAAlertParser
 import TestAlertErrors
 import TestUtil
 

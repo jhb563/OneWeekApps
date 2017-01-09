@@ -10,7 +10,7 @@ module ErrorParseTests (
 import Test.Hspec
 
 import Model.OWAError
-import OWAErrorParser
+import Parse.OWAErrorParser
 import TestErrors
 import TestUtil
 

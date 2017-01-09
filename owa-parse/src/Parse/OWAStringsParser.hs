@@ -1,12 +1,12 @@
 {-|
-Module      : OWAStringsParser
+Module      : Parse.OWAStringsParser
 Description : Module for parsing strings from a .strings file into a string map
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAStringsParser (
+module Parse.OWAStringsParser (
   parseStringsFromFile,
 ) where
 
@@ -19,7 +19,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWALocalizedStringSet
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 
 type LocalizedStringMap = Map.Map String String
 

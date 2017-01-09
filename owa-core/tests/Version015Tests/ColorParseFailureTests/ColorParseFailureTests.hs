@@ -8,7 +8,7 @@ module ColorParseFailureTests (
 
 import Test.Hspec
 
-import OWAColorParser
+import Parse.OWAColorParser
 import TestColorErrors
 import TestUtil
 

@@ -1,12 +1,12 @@
 {-|
-Module      : OWAFontParser
+Module      : Parse.OWAFontParser
 Description : Module for parsing fonts from a .fonts file into OWAFont models
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAFontParser (
+module Parse.OWAFontParser (
   parseFontsFromFile
 ) where
 
@@ -20,7 +20,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAFont
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 
 type FontAttr = String
 data FontVal = FamilyVal String |

@@ -1,12 +1,12 @@
 {-|
-Module      : OWAViewParser
+Module      : Parse.OWAViewParser
 Description : Module for parsing a view from a .view file into a OWAView model
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAViewParser (
+module Parse.OWAViewParser (
   parseViewFromFile
 ) where
 
@@ -20,7 +20,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAElements
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 import           Model.OWAView
 
 type ViewAttr = String

@@ -1,12 +1,12 @@
 {-|
-Module      : OWAAppInfoParser
+Module      : Parse.OWAAppInfoParser
 Description : Module for parsing app info from a app.info file
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAAppInfoParser (
+module Parse.OWAAppInfoParser (
   parseAppInfoFromFile
 ) where
 
@@ -19,7 +19,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAAppInfo
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 
 type AppInfoAttr = String
 type AppInfoVal = String

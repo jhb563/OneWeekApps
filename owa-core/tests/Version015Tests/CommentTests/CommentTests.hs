@@ -7,10 +7,10 @@ module CommentTests (
 
 import Test.Hspec
 
-import OWAAlertParser
-import OWAColorParser
-import OWAErrorParser
-import OWAFontParser
+import Parse.OWAAlertParser
+import Parse.OWAColorParser
+import Parse.OWAErrorParser
+import Parse.OWAFontParser
 import TestUtil
 
 runCommentTests :: FilePath -> IO ()

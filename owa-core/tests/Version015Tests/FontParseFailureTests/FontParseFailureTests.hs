@@ -8,7 +8,7 @@ module FontParseFailureTests (
 
 import Test.Hspec
 
-import OWAFontParser
+import Parse.OWAFontParser
 import TestFontErrors
 import TestUtil
 

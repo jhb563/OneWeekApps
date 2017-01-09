@@ -9,7 +9,7 @@ module StringsParseTests (
 
 import Test.Hspec
 
-import OWAStringsParser
+import Parse.OWAStringsParser
 import TestStringErrors
 import TestStringSets
 import TestUtil

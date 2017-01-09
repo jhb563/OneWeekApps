@@ -25,26 +25,20 @@ library
                        transformers,
                        template,
                        owa-model,
-                       owa-utils
+                       owa-utils,
+                       owa-parse
   exposed-modules:     OWAMain,
                        OWAFileSearch,
-                       OWAColorParser,
                        OWAColorObjc,
                        OWAColorSwift,
-                       OWAFontParser,
                        OWAFontObjc,
                        OWAFontSwift,
-                       OWAAlertParser,
                        OWAAlertObjc,
                        OWAAlertSwift,
-                       OWAErrorParser,
                        OWAErrorObjc,
                        OWAErrorSwift,
-                       OWAAppInfoParser,
                        OWALazy,
-                       OWAStringsParser,
                        OWAStringsObjc,
-                       OWAViewParser,
                        OWAViewObjc,
                        OWAViewSwift,
                        OWAObjcAbSyn,
@@ -55,7 +49,6 @@ library
   other-modules:       OWAExecTypes, 
                        OWAFileNames,
                        OWANew,
-                       OWAParseUtil,
                        OWAObjcUtil,
                        OWASwiftUtil,
                        OWATerminal,
@@ -63,7 +56,6 @@ library
                        ProjectFileTemplate
   hs-source-dirs:      src/lib,
                        src/lib/dataTypes,
-                       src/lib/Parsers,
                        src/lib/ObjcConverters,
                        src/lib/SwiftConverters,
                        src/lib/XCode,
@@ -85,7 +77,8 @@ executable owa
                        template,
                        owa-core,
                        owa-model,
-                       owa-utils
+                       owa-utils,
+                       owa-parse
   hs-source-dirs:      src/lib
   other-modules:       OWAExecTypes
                      , OWAFileNames
@@ -116,7 +109,8 @@ test-suite Version010Tests
                  process,
                  parsec,
                  owa-core,
-                 owa-model
+                 owa-model,
+                 owa-parse
   other-modules: AlertParseTests
                , AlertPrintTests
                , AppDirectoryTests
@@ -161,7 +155,8 @@ test-suite Version015Tests
                  parsec,
                  containers,
                  owa-core,
-                 owa-model
+                 owa-model,
+                 owa-parse
   other-modules: AlertParseFailureTests
                , ColorParseFailureTests
                , CommentTests
@@ -207,7 +202,9 @@ test-suite Version020Tests
                  parsec,
                  containers,
                  owa-core,
-                 owa-model
+                 owa-model,
+                 owa-core,
+                 owa-parse
   other-modules: IntegrationTestUtil
                , TestErrors
                , TestUtil
@@ -241,7 +238,8 @@ test-suite Version021Tests
                  parsec,
                  containers,
                  owa-core,
-                 owa-model
+                 owa-model,
+                 owa-parse
   other-modules: ContainerViewTests
                , CustomViewTests
                , ImageButtonTests

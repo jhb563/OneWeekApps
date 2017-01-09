@@ -1,12 +1,12 @@
 {-|
-Module      : OWAErrorParser
+Module      : Parse.OWAErrorParser
 Description : Module for parsing errors from a .errors file into OWAError models
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAErrorParser (
+module Parse.OWAErrorParser (
   parseErrorsFromFile
 ) where
 
@@ -21,7 +21,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAError
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 
 type ErrorAttr = String
 data ErrorVal = NormalValue String |

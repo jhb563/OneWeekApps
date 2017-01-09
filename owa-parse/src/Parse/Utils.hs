@@ -1,12 +1,12 @@
 {-|
-Module      : OWAParseUtil
+Module      : Parse.Utils
 Description : Module for common parsers and parse functions. 
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAParseUtil (
+module Parse.Utils (
   ParserState(..),
   GenericParserState(..),
   loneStringKeywordParser,

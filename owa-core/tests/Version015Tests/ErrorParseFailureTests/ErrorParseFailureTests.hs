@@ -8,7 +8,7 @@ module ErrorParseFailureTests (
 
 import Test.Hspec
 
-import OWAErrorParser
+import Parse.OWAErrorParser
 import TestErrorErrors
 import TestUtil
 

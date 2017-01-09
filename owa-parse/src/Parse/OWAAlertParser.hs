@@ -1,12 +1,12 @@
 {-|
-Module      : OWAAlertParser
+Module      : Parse.OWAAlertParser
 Description : Module for parsing alerts from a .alerts file into OWAAlert models
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAAlertParser (
+module Parse.OWAAlertParser (
   parseAlertsFromFile
 ) where
 
@@ -20,7 +20,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAAlert
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 
 type AlertAttr = String
 type AlertVal = LocalizedKey 

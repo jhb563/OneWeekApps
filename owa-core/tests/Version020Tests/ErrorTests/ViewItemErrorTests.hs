@@ -9,7 +9,7 @@ module ViewItemErrorTests (
 
 import Test.Hspec
 
-import OWAViewParser
+import Parse.OWAViewParser
 import TestErrors
 import TestUtil
 

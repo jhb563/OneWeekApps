@@ -14,8 +14,8 @@ module DefaultsFileTests (
 import Test.Hspec
 import System.Directory
 
-import OWAAppInfoParser
 import OWAFileSearch
+import Parse.OWAAppInfoParser
 import TestAppInfo
 import TestDefaultErrors
 import TestUtil

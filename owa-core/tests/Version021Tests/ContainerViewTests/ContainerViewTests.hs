@@ -19,7 +19,7 @@ import Test.Hspec
 import Model.OWAAppInfo
 import OWAObjcAbSyn
 import OWAViewObjc
-import OWAViewParser
+import Parse.OWAViewParser
 import TestUtil
 import TestContainerViews
 

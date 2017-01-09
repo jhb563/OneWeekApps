@@ -1,12 +1,12 @@
 {-|
-Module      : OWAColorParser
+Module      : Parse.OWAColorParser
 Description : Module for parsing values from a .colors file into OWAColor models
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAColorParser (
+module Parse.OWAColorParser (
   parseColorsFromFile,
 ) where
 
@@ -22,7 +22,7 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAColor
 import           Model.OWAParseError
-import           OWAParseUtil
+import           Parse.Utils
 
 type ColorAttr = String
 type ColorVal = Float

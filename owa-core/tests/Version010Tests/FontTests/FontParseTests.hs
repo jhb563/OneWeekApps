@@ -9,8 +9,8 @@ module FontParseTests (
 
 import Test.Hspec
 
-import OWAFontParser
 import Model.OWAFont
+import Parse.OWAFontParser
 import TestFonts
 import TestUtil
 

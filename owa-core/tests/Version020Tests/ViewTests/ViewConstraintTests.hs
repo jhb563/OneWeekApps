@@ -9,7 +9,7 @@ module ViewConstraintTests (
 
 import Test.Hspec
 
-import OWAViewParser
+import Parse.OWAViewParser
 import TestUtil
 import TestViews
 
