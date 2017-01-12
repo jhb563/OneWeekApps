@@ -1,4 +1,4 @@
-module OWANew (runNewCommand) where
+module Core.New (runNewCommand) where
 
 import Control.Monad (when)
 import Control.Monad.IO.Class (liftIO)
@@ -12,10 +12,10 @@ import System.Directory (createDirectoryIfMissing)
 import System.IO (hClose, hPutStrLn, openFile, IOMode(..))
 
 import Model.OWAAppInfo
-import OWAExecTypes
-import OWAFileNames
-import OWATerminal
-import OWAXCode (printBaseXCodeFiles)
+import Core.FileNames
+import Core.Terminal
+import Core.Types
+import Core.XCode (printBaseXCodeFiles)
 
 -- | Reads information froms the user about creating a project,
 -- and causes the XCode files to be generated for that new project, as well

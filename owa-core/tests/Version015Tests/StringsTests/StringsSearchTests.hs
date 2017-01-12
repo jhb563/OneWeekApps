@@ -1,6 +1,6 @@
 -- This module will test the method:
 -- findStringsFiles :: FilePath -> IO [FilePath]
--- exposed by OWAFileSearch. We will pass a directory
+-- exposed by Core.FileSearch. We will pass a directory
 -- to this method and receive a list of all .strings files
 -- which are found beneath it.
 
@@ -10,7 +10,7 @@ module StringsSearchTests (
 
 import Test.Hspec
 
-import OWAFileSearch
+import Core.FileSearch
 import System.Directory
 import TestUtil
 

@@ -1,6 +1,6 @@
 -- This module will test the function:
 -- findViewsFiles :: FilePath -> IO [FilePath]
--- from OWAFileSearch, which takes a directory and returns
+-- from Core.FileSearch, which takes a directory and returns
 -- a list of paths to .view files.
 
 module ViewFileSearchTests (
@@ -10,7 +10,7 @@ module ViewFileSearchTests (
 import Test.Hspec
 import System.Directory
 
-import OWAFileSearch
+import Core.FileSearch
 import TestUtil
 
 runViewFileSearchTests :: FilePath -> IO ()

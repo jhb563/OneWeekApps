@@ -1,4 +1,4 @@
-module OWAFileNames where
+module Core.FileNames where
 
 -- | File where we store the last generation times for our different languages.
 lastGenFileExtension :: FilePath

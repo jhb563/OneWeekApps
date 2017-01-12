@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-|
-Module      : OtherTemplates
+Module      : Core.XCode.Templates.Other
 Description : Contains template strings for the Info.plist file and contents. 
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OtherTemplates where
+module Core.XCode.Templates.Other where
 
 import Data.Text
 

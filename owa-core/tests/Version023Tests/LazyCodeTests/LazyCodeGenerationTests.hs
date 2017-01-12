@@ -16,7 +16,7 @@ import System.Directory
 import System.IO (stdin, stdout)
 import TestUtil
 
-import OWAMain
+import Core.Main
 import Test.Hspec
 
 runLazyCodeGenerationTests :: FilePath -> IO ()

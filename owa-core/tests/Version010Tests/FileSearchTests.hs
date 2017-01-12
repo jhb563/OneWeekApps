@@ -1,4 +1,4 @@
--- OWAFileSearch will expose the following methods:
+-- Core.FileSearch will expose the following methods:
 -- findColorsFiles :: FilePath -> IO [FilePath]
 -- findFontsFiles :: FilePath -> IO [FilePath]
 -- findAlertsFiles :: FilePath -> IO [FilePath]
@@ -15,7 +15,7 @@ module FileSearchTests (
 import System.Directory
 import Test.Hspec
 
-import OWAFileSearch
+import Core.FileSearch
 import TestUtil
 
 runFileSearchTests :: FilePath -> IO ()

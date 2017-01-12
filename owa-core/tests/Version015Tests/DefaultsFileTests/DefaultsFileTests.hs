@@ -1,6 +1,6 @@
 -- This module will test the function:
 -- findAppInfoFile :: FilePath -> IO (Maybe FilePath)
--- from OWAFileSearch, which takes a directory and returns the path to
+-- from Core.FileSearch, which takes a directory and returns the path to
 -- the app.info file, as well as the function:
 -- parseAppInfoFromFile :: FilePath -> IO Either [OWAParseError] OWAAppInfo
 -- in the module OWAAppInfoParser which will take the possible 
@@ -14,7 +14,7 @@ module DefaultsFileTests (
 import Test.Hspec
 import System.Directory
 
-import OWAFileSearch
+import Core.FileSearch
 import Parse.OWAAppInfoParser
 import TestAppInfo
 import TestDefaultErrors

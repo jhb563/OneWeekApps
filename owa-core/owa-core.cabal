@@ -29,48 +29,26 @@ library
                        owa-parse,
                        owa-objc,
                        owa-swift
-  exposed-modules:     OWAMain,
-                       OWAFileSearch,
-                       OWALazy,
-                       OWAXCode
-  other-modules:       OWAExecTypes, 
-                       OWAFileNames,
-                       OWANew,
-                       OWATerminal,
-                       OtherTemplates,
-                       ProjectFileTemplate
-  hs-source-dirs:      src/lib,
-                       src/lib/XCode,
-                       src/lib/XCode/XCodeTemplates
+  exposed-modules:     Core.Main,
+                       Core.FileSearch,
+                       Core.Lazy,
+                       Core.XCode
+  other-modules:       Core.Types, 
+                       Core.FileNames,
+                       Core.New,
+                       Core.Terminal,
+                       Core.XCode.Templates.Other
+                       Core.XCode.Templates.ProjectFile
+  hs-source-dirs:      src/lib
   default-language: Haskell2010
 
 executable owa
-  main-is:             owa.hs
+  main-is:             RunOWA.hs
   -- other-extensions:    
   build-depends:       base,
                        directory >= 1.2.5,
-                       split,
-                       parsec,
-                       containers,
-                       wl-pprint >= 1.2,
-                       mtl,
-                       time,
-                       transformers,
-                       template,
-                       owa-core,
-                       owa-model,
-                       owa-utils,
-                       owa-parse,
-                       owa-objc,
-                       owa-swift
-  hs-source-dirs:      src/lib
-  other-modules:       OWAExecTypes
-                     , OWAFileNames
-                     , OWAFileSearch
-                     , OWALazy
-                     , OWAMain
-                     , OWANew
-                     , OWATerminal
+                       owa-core
+  hs-source-dirs:      src/exe
   default-language:    Haskell2010
 
 test-suite Version010Tests

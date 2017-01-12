@@ -1,4 +1,4 @@
-module OWAExecTypes where
+module Core.Types where
 
 import Control.Monad.Reader (ReaderT)
 import Control.Monad.Trans.Maybe (MaybeT(..))

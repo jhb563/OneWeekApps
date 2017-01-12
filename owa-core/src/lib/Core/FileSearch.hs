@@ -1,11 +1,11 @@
 {-|
-Module      : OWAFileSearch
+Module      : Core.FileSearch
 Description : Module for searching file tree for relevant files to OneWeekApps
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
-module OWAFileSearch (
+module Core.FileSearch (
   findAppDirectory,
   findAppInfoFile,
   findColorsFiles,

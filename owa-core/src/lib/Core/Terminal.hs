@@ -1,4 +1,4 @@
-module OWATerminal 
+module Core.Terminal 
   ( outputModeFromArgs
   , printIfNotSilent
   , printIfVerbose
@@ -15,7 +15,7 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Reader (ask)
 import System.IO (hIsEOF, hGetLine, hPutStrLn, Handle)
 
-import OWAExecTypes
+import Core.Types
 import Model.OWAParseError
 
 -- | Interprets the arguments to the program, determines what printing mode we're in.

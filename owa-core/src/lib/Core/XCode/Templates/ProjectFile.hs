@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-|
-Module      : ProjectFileTemplate
+Module      : Core.XCode.Templates.ProjectFile
 Description : Contains template strings for the .pbxproj file.
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module ProjectFileTemplate where
+module Core.XCode.Templates.ProjectFile where
 
 import Data.Text
 

@@ -1,12 +1,12 @@
 {-|
-Module      : OWAMain
+Module      : Core.Main
 Description : Main Library Entry point for OneWeekApps
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAMain (
+module Core.Main (
   runOWA
 ) where
 
@@ -25,6 +25,13 @@ import Data.Time.Clock
 import System.Directory
 import System.IO 
 
+import Core.FileNames
+import Core.FileSearch
+import Core.Lazy
+import Core.New
+import Core.Terminal
+import Core.Types
+import Core.XCode
 import Model.OWAAlert
 import Model.OWAAppInfo
 import Model.OWAColor
@@ -40,13 +47,6 @@ import Objc.FontConverter
 import Objc.Print
 import Objc.StringsConverter
 import Objc.ViewConverter
-import OWAExecTypes
-import OWAFileNames
-import OWAFileSearch
-import OWALazy
-import OWANew
-import OWATerminal
-import OWAXCode
 import Parse.OWAAlertParser
 import Parse.OWAAppInfoParser
 import Parse.OWAColorParser

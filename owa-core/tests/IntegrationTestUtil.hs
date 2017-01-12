@@ -18,7 +18,7 @@ module IntegrationTestUtil (
 import System.IO
 import Test.Hspec
 
-import OWAMain
+import Core.Main
 import TestUtil
 
 runIntegrationTests :: FilePath -> [FilePath -> Spec] -> [String] -> IO ()

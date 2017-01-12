@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-|
-Module      : OWAXCode
+Module      : Core.XCode
 Description : Generates code and files related to XCode
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAXCode (
+module Core.XCode (
   printBaseXCodeFiles  
 ) where
 
@@ -17,9 +17,9 @@ import qualified Data.Text.Lazy as TL
 import           Data.Text.Template
 import           System.Directory
 
-import           OtherTemplates
+import           Core.XCode.Templates.Other
+import           Core.XCode.Templates.ProjectFile
 import           Model.OWAAppInfo
-import           ProjectFileTemplate
 import           Swift.AbSyn
 import           Swift.Print
 import           Swift.Utils

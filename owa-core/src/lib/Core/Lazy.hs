@@ -1,4 +1,4 @@
-module OWALazy 
+module Core.Lazy 
   ( lastCodeGenerationTime
   , modifyLastGenTime
   , shouldRegenerateFromFiles )
@@ -12,9 +12,9 @@ import Data.List.Split (splitOn)
 import Data.Time.Clock (UTCTime, getCurrentTime)
 import System.Directory (getModificationTime, doesFileExist)
 
-import OWAExecTypes
-import OWAFileNames
-import OWAFileSearch (findAppDirectory)
+import Core.FileNames
+import Core.FileSearch (findAppDirectory)
+import Core.Types
 
 -- | Determines the last time we generated Objective C and Swift from the last gen file.
 lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime, Maybe UTCTime)

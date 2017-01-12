@@ -1,4 +1,4 @@
--- OWAFileSearch will expose the method:
+-- Core.FileSearch will expose the method:
 -- findAppDirectory :: FilePath -> IO (Maybe FilePath)
 -- We pass in a starting directory, and it will do a BFS
 -- for the first directory called 'app'
@@ -10,7 +10,7 @@ module AppDirectoryTests (
 import System.Directory
 import Test.Hspec
 
-import OWAFileSearch
+import Core.FileSearch
 import TestUtil
 
 runAppDirectoryTests :: FilePath -> IO ()

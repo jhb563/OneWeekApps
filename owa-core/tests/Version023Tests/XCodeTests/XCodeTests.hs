@@ -1,4 +1,4 @@
--- OWAXCode will expose the method:
+-- Core.XCode will expose the method:
 -- printBaseXCodeFiles :: FilePath -> OWAAppInfo -> IO ()
 -- which takes a directory and app info and will print
 -- the requisite files for the basic XCode project to the
@@ -11,7 +11,7 @@ module XCodeTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAXCode
+import Core.XCode
 import TestUtil
 
 runXCodeTests :: FilePath -> IO ()

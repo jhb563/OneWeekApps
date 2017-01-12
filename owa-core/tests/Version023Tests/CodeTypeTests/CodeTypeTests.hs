@@ -11,7 +11,7 @@ import System.Directory (doesFileExist, createDirectoryIfMissing)
 import System.IO (stdin, stdout)
 import Test.Hspec
 
-import OWAMain (runOWA)
+import Core.Main (runOWA)
 import TestUtil
 
 data FileTest = FileExists FilePath | FileDoesNotExist FilePath 

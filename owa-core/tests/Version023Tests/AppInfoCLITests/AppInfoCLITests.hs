@@ -10,7 +10,7 @@ import System.Directory (doesFileExist)
 import System.IO
 import Test.Hspec
 
-import OWAMain
+import Core.Main
 import TestUtil
 
 runAppInfoCLITests :: FilePath -> IO ()
