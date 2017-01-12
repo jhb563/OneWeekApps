@@ -1,9 +1,9 @@
--- OWAStringsObjc exposes the method:
+-- Objc.StringsConverter exposes the method:
 -- objcStringsFileFromStringSets :: OWAAppInfo -> [OWALocalizedStringSet] -> ObjcFile
 -- which takes an appInfo object and a list of string sets and returns
 -- a file structure of objective C statements.
 --
--- OWAObjcPrint exposes the method:
+-- Objc.Print exposes the method:
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file.
@@ -18,8 +18,8 @@ module StringsPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAObjcAbSyn
-import OWAStringsObjc
+import Objc.AbSyn
+import Objc.StringsConverter
 import TestStringSets
 import TestUtil
 

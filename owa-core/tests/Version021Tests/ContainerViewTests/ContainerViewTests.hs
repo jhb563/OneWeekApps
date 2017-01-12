@@ -6,9 +6,9 @@
 -- It will also test the methods:
 -- objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
 -- objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
--- from OWAViewObjc follwed by:
+-- from Objc.ViewConverter follwed by:
 -- printStructureToFile :: ObjcFile -> Doc
--- in OWAObjcPrint, again testing the container views case
+-- in Objc.Print, again testing the container views case
 
 module ContainerViewTests (
   runContainerViewTests
@@ -17,8 +17,8 @@ module ContainerViewTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAObjcAbSyn
-import OWAViewObjc
+import Objc.AbSyn
+import Objc.ViewConverter
 import Parse.OWAViewParser
 import TestUtil
 import TestContainerViews

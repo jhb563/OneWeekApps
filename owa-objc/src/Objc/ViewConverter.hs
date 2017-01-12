@@ -1,12 +1,12 @@
 {-|
-Module      : OWAViewObjc
+Module      : Objc.ViewConverter
 Description : Module for Converting OWAViews to Objective C objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAViewObjc (
+module Objc.ViewConverter (
   objcHeaderFromView,
   objcImplementationFromView
 ) where
@@ -16,9 +16,9 @@ import qualified Data.Set as Set
 
 import           Model.OWAAppInfo
 import           Model.OWAElements
-import           OWAObjcAbSyn
-import           OWAObjcUtil
 import           Model.OWAView
+import           Objc.AbSyn
+import           Objc.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

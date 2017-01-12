@@ -1,12 +1,12 @@
 {-|
-Module      : OWAObjcUtil
-Description : Utility module for common functions converting items to Objc Syntax
+Module      : Objc.Utils
+Description : Utility module Objc.for common functions converting items to Objc Syntax
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAObjcUtil (
+module Objc.Utils (
   topCommentSection,
   categoryCommentSection,
   foundationImportsSection,
@@ -21,7 +21,7 @@ module OWAObjcUtil (
 import Data.List.Split
 
 import Model.OWAAppInfo
-import OWAObjcAbSyn
+import Objc.AbSyn
 
 -------------------------------------------------------------------------------
 -------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------

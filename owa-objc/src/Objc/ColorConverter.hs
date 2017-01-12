@@ -1,12 +1,12 @@
 {-|
-Module      : OWAColorObjc
+Module      : Objc.ColorConverter
 Description : Module for Converting OWAColors to Objective C objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAColorObjc (
+module Objc.ColorConverter (
   objcHeaderFromColors,
   objcImplementationFromColors
 ) where
@@ -15,8 +15,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAColor
-import OWAObjcAbSyn
-import OWAObjcUtil
+import Objc.AbSyn
+import Objc.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

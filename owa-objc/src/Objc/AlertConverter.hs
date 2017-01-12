@@ -1,12 +1,12 @@
 {-|
-Module      : OWAAlertObjc
+Module      : Objc.AlertConverter
 Description : Module for Converting OWAAlerts to Objective C objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAAlertObjc (
+module Objc.AlertConverter (
   objcHeaderFromAlerts,
   objcImplementationFromAlerts
 ) where
@@ -15,8 +15,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAAlert
-import OWAObjcAbSyn
-import OWAObjcUtil
+import Objc.AbSyn
+import Objc.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

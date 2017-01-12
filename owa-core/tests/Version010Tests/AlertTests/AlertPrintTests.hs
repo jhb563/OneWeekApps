@@ -1,10 +1,10 @@
--- OWAAlertObjc will expose the methods
+-- Objc.AlertConverter will expose the methods
 -- objcHeaderFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
 -- objcImplementationFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
 -- which each take an appInfo object and a list of alerts and return a
 -- file structure of objective C statements
 --
--- OWAObjcPrint will expose the methods
+-- Objc.Print will expose the methods
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file
@@ -19,8 +19,8 @@ module AlertPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAAlertObjc
-import OWAObjcAbSyn
+import Objc.AlertConverter
+import Objc.AbSyn
 import TestAlerts
 import TestUtil
 

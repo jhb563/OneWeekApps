@@ -1,12 +1,12 @@
 {-|
-Module      : OWAObjcAbSyn
+Module      : Objc.AbSyn
 Description : Module for Objective C abstract syntax
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAObjcAbSyn where
+module Objc.AbSyn where
 
 -- | 'Identifier' is a typedef for String, signaling that we are using
 -- a variable name in Objective C

@@ -1,12 +1,12 @@
 {-|
-Module      : OWAStringsObjc
+Module      : Objc.StringsConverter
 Description : Module for Converting OWALocalizedStringSets to Objective C objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAStringsObjc (
+module Objc.StringsConverter (
   objcStringsFileFromStringSets
 ) where
 
@@ -15,8 +15,8 @@ import qualified Data.Map.Strict as Map
 
 import           Model.OWAAppInfo
 import           Model.OWALocalizedStringSet
-import           OWAObjcAbSyn
-import           OWAObjcUtil
+import           Objc.AbSyn
+import           Objc.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

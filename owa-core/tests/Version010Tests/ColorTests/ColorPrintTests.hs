@@ -1,10 +1,10 @@
--- OWAColorObjc will expose the methods
+-- Objc.ColorConverter will expose the methods
 -- objcHeaderFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
 -- objcImplementationFromAlerts :: OWAAppInfo -> [OWAColor] -> ObjcFile
 -- which each take an appInfo object and a list of colors and return a
 -- file structure of objective C statements
 --
--- OWAObjcPrint will expose the method
+-- Objc.Print will expose the method
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file
@@ -19,8 +19,8 @@ module ColorPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAColorObjc
-import OWAObjcAbSyn
+import Objc.ColorConverter
+import Objc.AbSyn
 import TestColors
 import TestUtil
 

@@ -1,10 +1,10 @@
--- OWAFontObjc will expose the methods
+-- Objc.FontConverter will expose the methods
 -- objcHeaderFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
 -- objcImplementationFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
 -- which each take an appInfo object and a list of fonts and return a
 -- file structure of objective C statements
 --
--- OWAObjcPrint will expose the method
+-- Objc.Print will expose the method
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file
@@ -19,8 +19,8 @@ module FontPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAFontObjc
-import OWAObjcAbSyn
+import Objc.FontConverter
+import Objc.AbSyn
 import TestFonts
 import TestUtil
 

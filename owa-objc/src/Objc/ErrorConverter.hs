@@ -1,12 +1,12 @@
 {-|
-Module      : OWAErrorObjc
+Module      : Objc.ErrorConverter
 Description : Module for Converting OWAErrors to Objective C objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAErrorObjc (
+module Objc.ErrorConverter (
   objcHeaderFromErrors,
   objcImplementationFromErrors
 ) where
@@ -16,8 +16,8 @@ import qualified Data.Map.Strict as Map
 
 import           Model.OWAAppInfo
 import           Model.OWAError
-import           OWAObjcAbSyn
-import           OWAObjcUtil
+import           Objc.AbSyn
+import           Objc.Utils
 
 type DomainMap = Map.Map String [OWAError]
 

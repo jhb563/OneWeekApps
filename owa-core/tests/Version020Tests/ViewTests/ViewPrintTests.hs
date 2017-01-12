@@ -1,10 +1,10 @@
--- OWAViewObjc will expose the methods:
+-- Objc.ViewConverter will expose the methods:
 -- objcHeaderFromView :: OWAAppInfo -> OWAView -> ObjcFile
 -- objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 -- which each take an appInfo object and a view and return a
 -- file structure of objective C statements
 --
--- OWAObjcPrint will expose the method:
+-- Objc.Print will expose the method:
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure ot the give file
@@ -19,8 +19,8 @@ module ViewPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAObjcAbSyn
-import OWAViewObjc
+import Objc.AbSyn
+import Objc.ViewConverter
 import TestUtil
 import TestViews
 

@@ -23,8 +23,8 @@ import Text.Parsec.Error
 import Text.Parsec.Pos
 
 import Model.OWAParseError
-import OWAObjcAbSyn
-import OWAObjcPrint
+import Objc.AbSyn
+import Objc.Print
 import OWASwiftAbSyn
 import OWASwiftPrint
 

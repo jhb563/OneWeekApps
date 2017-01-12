@@ -1,12 +1,12 @@
 {-|
-Module      : OWAObjcPrint
+Module      : Objc.Print
 Description : Module for printing Objc file structures to files
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAObjcPrint (
+module Objc.Print (
   printStructureToFile
 ) where
 
@@ -14,7 +14,7 @@ import Data.List
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
-import OWAObjcAbSyn
+import Objc.AbSyn
 import Utils.OWAPrintUtil
 
 -- | 'printStructureToFile' takes a file structure, and a file path, and

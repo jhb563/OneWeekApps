@@ -1,10 +1,10 @@
--- OWAErrorObjc will expose the methods
+-- Objc.ErrorConverter will expose the methods
 -- objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
 -- objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
 -- which each take an appInfo object and a list of errors and return a
 -- file structure of objective C statements
 --
--- OWAObjcPrint will expose the methods
+-- Objc.Print will expose the methods
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file
@@ -19,8 +19,8 @@ module ErrorPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAErrorObjc
-import OWAObjcAbSyn
+import Objc.ErrorConverter
+import Objc.AbSyn
 import TestErrors
 import TestUtil
 

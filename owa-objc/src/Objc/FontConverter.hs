@@ -1,12 +1,12 @@
 {-|
-Module      : OWAFontObjc
+Module      : Objc.FontConverter
 Description : Module for Converting OWAFonts to Objective C objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAFontObjc (
+module Objc.FontConverter (
   objcHeaderFromFonts,
   objcImplementationFromFonts
 ) where
@@ -15,8 +15,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAFont
-import OWAObjcAbSyn
-import OWAObjcUtil
+import Objc.AbSyn
+import Objc.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
