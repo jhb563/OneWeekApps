@@ -1,12 +1,12 @@
 {-|
-Module      : OWAErrorSwift
+Module      : Swift.ErrorConverter
 Description : Module for Converting OWAErrors to Swift objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAErrorSwift (
+module Swift.ErrorConverter (
   swiftExtensionFromErrors
 ) where
 
@@ -14,8 +14,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAError
-import OWASwiftAbSyn
-import OWASwiftUtil
+import Swift.AbSyn
+import Swift.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

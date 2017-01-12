@@ -1,0 +1,30 @@
+-- This file has been generated from package.yaml by hpack version 0.14.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           owa-swift
+version:        0.1.0.0
+build-type:     Simple
+cabal-version:  >= 1.10
+
+library
+  hs-source-dirs:
+      src/
+  ghc-options: -Wall
+  build-depends:
+      base
+    , containers
+    , owa-model
+    , owa-utils
+    , split
+    , wl-pprint
+  exposed-modules:
+      Swift.AbSyn
+      Swift.AlertConverter
+      Swift.ColorConverter
+      Swift.ErrorConverter
+      Swift.FontConverter
+      Swift.Print
+      Swift.Utils
+      Swift.ViewConverter
+  default-language: Haskell2010

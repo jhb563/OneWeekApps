@@ -1,12 +1,12 @@
 {-|
-Module      : OWASwiftPrint
+Module      : Swift.Print
 Description : Module for printing Swift file structures to files
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWASwiftPrint (
+module Swift.Print (
   printSwiftStructureToFile
 ) where
 
@@ -14,7 +14,7 @@ import Data.List
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
-import OWASwiftAbSyn
+import Swift.AbSyn
 import Utils.OWAPrintUtil
 
 -------------------------------------------------------------------------------

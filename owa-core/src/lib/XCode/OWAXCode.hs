@@ -19,10 +19,10 @@ import           System.Directory
 
 import           OtherTemplates
 import           Model.OWAAppInfo
-import           OWASwiftAbSyn
-import           OWASwiftPrint
-import           OWASwiftUtil
 import           ProjectFileTemplate
+import           Swift.AbSyn
+import           Swift.Print
+import           Swift.Utils
 
 ---------------------------------------------------------------------------
 ------------------------ENTRY METHODS--------------------------------------

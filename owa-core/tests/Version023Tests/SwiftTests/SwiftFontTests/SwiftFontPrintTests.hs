@@ -1,9 +1,9 @@
--- OWAFontSwift will expose the method:
+-- Swift.FontConverter will expose the method:
 -- swiftExtensionFromFonts :: OWAAppInfo -> [OWAFont] -> SwiftFile
 -- which take an appInfo object and a list of fonts and return a
 -- file structure of Swift statements
 --
--- OWASwiftPrint will expose the method
+-- Swift.Print will expose the method
 -- printStructureToFile :: SwiftFile -> FilePath -> IO ()
 -- which takes a Swift file structure and a filepath and
 -- prints the file structure to the given file
@@ -18,8 +18,8 @@ module SwiftFontPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAFontSwift
-import OWASwiftAbSyn
+import Swift.AbSyn
+import Swift.FontConverter
 import SwiftTestFonts
 import TestUtil
 

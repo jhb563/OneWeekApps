@@ -1,9 +1,9 @@
--- OWAViewSwift will expose the method:
+-- Swift.ViewConverter will expose the method:
 -- swiftFileFromView :: OWAAppInfo -> OWAView -> SwiftFile
 -- which take an appInfo object and a view and return a
 -- file structure of Swift statements
 --
--- OWASwiftPrint will expose the method
+-- Swift.Print will expose the method
 -- printStructureToFile :: SwiftFile -> FilePath -> IO ()
 -- which takes a Swift file structure and a filepath and
 -- prints the file structure to the given file
@@ -18,8 +18,8 @@ module SwiftViewPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWASwiftAbSyn
-import OWAViewSwift
+import Swift.AbSyn
+import Swift.ViewConverter
 import SwiftSpecialTestViews
 import SwiftTestViews
 import TestUtil

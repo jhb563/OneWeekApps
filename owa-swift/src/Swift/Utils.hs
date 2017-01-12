@@ -1,12 +1,12 @@
 {-|
-Module      : OWASwiftUtil
-Description : Utility module for common functions converting items to Swift Syntax
+Module      : Swift.Utils
+Description : Utility module Swift.for common functions converting items to Swift Syntax
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWASwiftUtil (
+module Swift.Utils (
   extensionCommentSection,
   uiKitImportSection,
   foundationImportSection,
@@ -16,7 +16,7 @@ module OWASwiftUtil (
 import Data.List.Split
 
 import Model.OWAAppInfo
-import OWASwiftAbSyn
+import Swift.AbSyn
 
 -------------------------------------------------------------------------------
 -------------------BLOCK COMMENT FOR TOP OF FILE-------------------------------

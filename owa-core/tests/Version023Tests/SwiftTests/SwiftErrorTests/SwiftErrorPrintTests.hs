@@ -1,9 +1,9 @@
--- OWAErrorSwift will expose the method:
+-- Swift.ErrorConverter will expose the method:
 -- swiftExtensionFromErrors :: OWAAppInfo -> [OWAError] -> SwiftFile
 -- which take an appInfo object and a list of errors and return a
 -- file structure of Swift statements
 --
--- OWASwiftPrint will expose the method
+-- Swift.Print will expose the method
 -- printStructureToFile :: SwiftFile -> FilePath -> IO ()
 -- which takes a Swift file structure and a filepath and
 -- prints the file structure to the given file
@@ -16,8 +16,8 @@ module SwiftErrorPrintTests (
 ) where
 
 import Model.OWAAppInfo
-import OWAErrorSwift
-import OWASwiftAbSyn
+import Swift.AbSyn
+import Swift.ErrorConverter
 import SwiftTestErrors
 import TestUtil
 

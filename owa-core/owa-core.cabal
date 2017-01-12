@@ -27,28 +27,19 @@ library
                        owa-model,
                        owa-utils,
                        owa-parse,
-                       owa-objc
+                       owa-objc,
+                       owa-swift
   exposed-modules:     OWAMain,
                        OWAFileSearch,
-                       OWAColorSwift,
-                       OWAFontSwift,
-                       OWAAlertSwift,
-                       OWAErrorSwift,
                        OWALazy,
-                       OWAViewSwift,
-                       OWASwiftAbSyn,
-                       OWASwiftPrint,
                        OWAXCode
   other-modules:       OWAExecTypes, 
                        OWAFileNames,
                        OWANew,
-                       OWASwiftUtil,
                        OWATerminal,
                        OtherTemplates,
                        ProjectFileTemplate
   hs-source-dirs:      src/lib,
-                       src/lib/dataTypes,
-                       src/lib/SwiftConverters,
                        src/lib/XCode,
                        src/lib/XCode/XCodeTemplates
   default-language: Haskell2010
@@ -70,7 +61,8 @@ executable owa
                        owa-model,
                        owa-utils,
                        owa-parse,
-                       owa-objc
+                       owa-objc,
+                       owa-swift
   hs-source-dirs:      src/lib
   other-modules:       OWAExecTypes
                      , OWAFileNames
@@ -78,7 +70,6 @@ executable owa
                      , OWALazy
                      , OWAMain
                      , OWANew
-                     , OWASwiftPrint
                      , OWATerminal
   default-language:    Haskell2010
 
@@ -102,7 +93,8 @@ test-suite Version010Tests
                  owa-core,
                  owa-model,
                  owa-parse,
-                 owa-objc
+                 owa-objc,
+                 owa-swift
   other-modules: AlertParseTests
                , AlertPrintTests
                , AppDirectoryTests
@@ -149,7 +141,8 @@ test-suite Version015Tests
                  owa-core,
                  owa-model,
                  owa-parse,
-                 owa-objc
+                 owa-objc,
+                 owa-swift
   other-modules: AlertParseFailureTests
                , ColorParseFailureTests
                , CommentTests
@@ -198,7 +191,8 @@ test-suite Version020Tests
                  owa-model,
                  owa-core,
                  owa-parse,
-                 owa-objc
+                 owa-objc,
+                 owa-swift
   other-modules: IntegrationTestUtil
                , TestErrors
                , TestUtil
@@ -234,7 +228,8 @@ test-suite Version021Tests
                  owa-core,
                  owa-model,
                  owa-parse,
-                 owa-objc
+                 owa-objc,
+                 owa-swift
   other-modules: ContainerViewTests
                , CustomViewTests
                , ImageButtonTests
@@ -277,7 +272,8 @@ test-suite Version023Tests
                  split,
                  owa-core,
                  owa-model,
-                 owa-objc
+                 owa-objc,
+                 owa-swift
   other-modules: LazyCodeGenerationTests
                , SwiftAlertPrintTests
                , SwiftColorPrintTests

@@ -1,12 +1,12 @@
 {-|
-Module      : OWAFontSwift
+Module      : Swift.FontConverter
 Description : Module for Converting OWAFonts to Swift objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAFontSwift (
+module Swift.FontConverter (
   swiftExtensionFromFonts
 ) where
 
@@ -14,8 +14,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAFont
-import OWASwiftAbSyn
-import OWASwiftUtil
+import Swift.AbSyn
+import Swift.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

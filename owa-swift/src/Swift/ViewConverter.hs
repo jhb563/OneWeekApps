@@ -1,12 +1,12 @@
 {-|
-Module      : OWAViewSwift
+Module      : Swift.ViewConverter
 Description : Module for Converting OWAViews to Swift objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAViewSwift (
+module Swift.ViewConverter (
   swiftFileFromView
 ) where
 
@@ -14,9 +14,9 @@ import Data.Maybe
 
 import Model.OWAAppInfo
 import Model.OWAElements
-import OWASwiftAbSyn
-import OWASwiftUtil
 import Model.OWAView
+import Swift.AbSyn
+import Swift.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

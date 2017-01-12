@@ -1,12 +1,12 @@
 {-|
-Module      : OWAColorSwift
+Module      : Swift.ColorConverter
 Description : Module for Converting OWAColors to Swift objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAColorSwift (
+module Swift.ColorConverter (
   swiftExtensionFromColors
 ) where
 
@@ -14,8 +14,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAColor
-import OWASwiftAbSyn
-import OWASwiftUtil
+import Swift.AbSyn
+import Swift.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------

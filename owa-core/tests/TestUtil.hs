@@ -25,8 +25,8 @@ import Text.Parsec.Pos
 import Model.OWAParseError
 import Objc.AbSyn
 import Objc.Print
-import OWASwiftAbSyn
-import OWASwiftPrint
+import Swift.AbSyn
+import Swift.Print
 
 --------------------------------------------------------------------------------
 ------------------------------EXPECTATION COMBINATORS---------------------------

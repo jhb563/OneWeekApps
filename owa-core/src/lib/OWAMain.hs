@@ -40,18 +40,12 @@ import Objc.FontConverter
 import Objc.Print
 import Objc.StringsConverter
 import Objc.ViewConverter
-import OWAAlertSwift
-import OWAColorSwift
-import OWAErrorSwift
 import OWAExecTypes
 import OWAFileNames
 import OWAFileSearch
-import OWAFontSwift
 import OWALazy
 import OWANew
-import OWASwiftPrint
 import OWATerminal
-import OWAViewSwift
 import OWAXCode
 import Parse.OWAAlertParser
 import Parse.OWAAppInfoParser
@@ -60,6 +54,12 @@ import Parse.OWAErrorParser
 import Parse.OWAFontParser
 import Parse.OWAStringsParser
 import Parse.OWAViewParser
+import Swift.AlertConverter
+import Swift.ColorConverter
+import Swift.ErrorConverter
+import Swift.FontConverter
+import Swift.Print
+import Swift.ViewConverter
 
 -- | 'runOWA' is the main running method for the OWA program. It takes a filepath
 -- for a directory to search from, and generates all files.

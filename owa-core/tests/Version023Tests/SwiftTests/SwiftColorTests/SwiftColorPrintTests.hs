@@ -1,9 +1,9 @@
--- OWAColorSwift will expose the method:
+-- Swift.ColorConverter will expose the method:
 -- swiftExtensionFromColors :: OWAAppInfo -> [OWAColor] -> SwiftFile
 -- which take an appInfo object and a list of colors and return a
 -- file structure of Swift statements
 --
--- OWASwiftPrint will expose the method
+-- Swift.Print will expose the method
 -- printStructureToFile :: SwiftFile -> FilePath -> IO ()
 -- which takes a Swift file structure and a filepath and
 -- prints the file structure to the given file
@@ -18,8 +18,8 @@ module SwiftColorPrintTests (
 import Test.Hspec
 
 import Model.OWAAppInfo
-import OWAColorSwift
-import OWASwiftAbSyn
+import Swift.AbSyn
+import Swift.ColorConverter
 import SwiftTestColors
 import TestUtil
 

@@ -1,12 +1,12 @@
 {-|
-Module      : OWASwiftAbSyn
+Module      : Swift.AbSyn
 Description : Module for Swift abstract syntax
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWASwiftAbSyn where
+module Swift.AbSyn where
 
 -- | 'Identifier' is a typedef for String, signaling that we are using
 -- a variable name in Swift

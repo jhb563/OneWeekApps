@@ -1,12 +1,12 @@
 {-|
-Module      : OWAAlertSwift
+Module      : Swift.AlertConverter
 Description : Module for Converting OWAAlerts to Swift objects
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module OWAAlertSwift (
+module Swift.AlertConverter (
   swiftExtensionFromAlerts
 ) where
 
@@ -14,8 +14,8 @@ import Data.List
 
 import Model.OWAAppInfo
 import Model.OWAAlert
-import OWASwiftAbSyn
-import OWASwiftUtil
+import Swift.AbSyn
+import Swift.Utils
 
 --------------------------------------------------------------------------------
 --------------------------ENTRY METHODS-----------------------------------------
