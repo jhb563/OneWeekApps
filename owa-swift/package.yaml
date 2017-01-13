@@ -1,0 +1,19 @@
+name:
+  owa-swift
+
+version:
+  0.1.0.0
+
+ghc-options: -Wall
+
+dependencies:
+  - base
+  - containers
+  - owa-model
+  - owa-utils
+  - split
+  - wl-pprint
+
+library:
+  source-dirs:
+    src/

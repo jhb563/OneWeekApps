@@ -1,0 +1,16 @@
+name:
+  owa-model
+
+version:
+  0.1.0.0
+
+ghc-options: -Wall
+
+dependencies:
+  - base
+  - containers
+  - parsec
+
+library:
+  source-dirs:
+    src/

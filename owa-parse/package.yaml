@@ -1,0 +1,20 @@
+name:
+  owa-parse
+
+version:
+  0.1.0.0
+
+dependencies:
+  - base
+  - containers
+  - mtl
+  - owa-model
+  - parsec
+  - split
+  - text
+
+library:
+  source-dirs:
+    src/
+  other-modules:
+    Parse.Utils
