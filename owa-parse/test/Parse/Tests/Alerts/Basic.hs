@@ -1,22 +1,22 @@
--- OWAAlertParse will expose the method:
+-- Parse.AlertParser will expose the method:
 -- parseAlertsFromFile :: FilePath -> IO [OWAAlert]
 -- which will read a file a return a list of alert
 -- objects for the alerts described in the files
 
-module AlertParseTests (
+module Parse.Tests.Alerts.Basic (
   runAlertParseTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAlert
-import Parse.OWAAlertParser
-import TestAlerts
-import TestUtil
+import Parse.OWAAlertParser (parseAlertsFromFile)
+import Parse.Tests.Alerts.Objects
+import Parse.Tests.Utils (shouldReturnRights)
 
 runAlertParseTests :: FilePath -> IO ()
 runAlertParseTests startFilePath = hspec $ do
-  let parseFilesPath = startFilePath ++ "/tests/Version010Tests/AlertTests/AlertParseFiles"
+  let parseFilesPath = startFilePath ++ "/test/Parse/Tests/Alerts/ParseFiles/"
   oneButtonAlertTests parseFilesPath
   multiButtonAlertTests parseFilesPath
   missingTitleOrMessageAlertTests parseFilesPath

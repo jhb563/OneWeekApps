@@ -2,10 +2,8 @@ module Main where
 
 import System.Directory
 
-import AlertParseTests
 import AlertPrintTests
 import AppDirectoryTests
-import ColorParseTests
 import ColorPrintTests
 import ErrorParseTests
 import ErrorPrintTests
@@ -19,11 +17,9 @@ main = do
   currentFilePath <- getCurrentDirectory
   runAppDirectoryTests currentFilePath
   runFileSearchTests currentFilePath
-  runColorParseTests currentFilePath
   runColorPrintTests currentFilePath
   runFontParseTests currentFilePath
   runFontPrintTests currentFilePath
-  runAlertParseTests currentFilePath
   runAlertPrintTests currentFilePath
   runErrorParseTests currentFilePath
   runErrorPrintTests currentFilePath

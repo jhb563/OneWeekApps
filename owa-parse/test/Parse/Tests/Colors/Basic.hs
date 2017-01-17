@@ -1,21 +1,21 @@
--- OWAColorParser will expose the method:
+-- Parse.ColorParser will expose the method:
 -- parseColorsFromFile :: FilePath -> IO [OWAColor]
 -- which will read a file and return a list of color
 -- objects for the colors described in the file
 
-module ColorParseTests (
+module Parse.Tests.Colors.Basic (
   runColorParseTests
 ) where
 
 import Test.Hspec
 
-import Parse.OWAColorParser
-import TestColors
-import TestUtil
+import Parse.OWAColorParser (parseColorsFromFile)
+import Parse.Tests.Colors.Objects
+import Parse.Tests.Utils (shouldReturnRights)
 
 runColorParseTests :: FilePath -> IO ()
 runColorParseTests startFilePath = hspec $ do
-  let testDirectory = startFilePath ++ "/tests/Version010Tests/ColorTests/ColorParseFiles"
+  let testDirectory = startFilePath ++ "/test/Parse/Tests/Colors/ParseFiles"
   rgbTests testDirectory
   rgbaTests testDirectory
   rgbHexTests testDirectory
@@ -85,13 +85,3 @@ hexAlphaTestsExtension = "/hexAlphaTests.colors"
 
 mixFormatExtension :: String
 mixFormatExtension = "/mixFormatTests.colors"
-
--- TODO (0.1.2):
--- Failure Cases
--- Keywords:
--- Color, Red, Green, Blue, Alpha, Hex
--- Naming a color by a Keyword or other invalid name (duplicates)
--- Putting words instead numbers (line numbers)
--- Invalid combination of keywords
--- Failure to tab
--- Out of bounds (negative and postive) (give a warning)
