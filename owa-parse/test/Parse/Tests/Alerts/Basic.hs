@@ -10,7 +10,7 @@ module Parse.Tests.Alerts.Basic (
 import Test.Hspec
 
 import Model.OWAAlert
-import Parse.OWAAlertParser (parseAlertsFromFile)
+import Parse.AlertParser (parseAlertsFromFile)
 import Parse.Tests.Alerts.Objects
 import Parse.Tests.Utils (shouldReturnRights)
 

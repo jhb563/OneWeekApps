@@ -19,7 +19,7 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Objc.AbSyn
 import Objc.ViewConverter
-import Parse.OWAViewParser
+import Parse.ViewParser
 import TestButtonObjects
 import TestUtil
 

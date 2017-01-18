@@ -1,12 +1,12 @@
 {-|
-Module      : Parse.OWAAppInfoParser
+Module      : Parse.AppInfoParser
 Description : Module for parsing app info from a app.info file
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module Parse.OWAAppInfoParser (
+module Parse.AppInfoParser (
   parseAppInfoFromFile
 ) where
 

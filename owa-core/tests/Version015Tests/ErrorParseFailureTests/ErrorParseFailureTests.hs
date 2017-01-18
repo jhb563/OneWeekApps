@@ -1,5 +1,5 @@
 -- This will test parseErrorsFromFile, out of the module
--- OWAErrorParser, under conditions which should create
+-- ErrorParser, under conditions which should create
 -- a parse failure.
 
 module ErrorParseFailureTests (
@@ -8,7 +8,7 @@ module ErrorParseFailureTests (
 
 import Test.Hspec
 
-import Parse.OWAErrorParser
+import Parse.ErrorParser
 import TestErrorErrors
 import TestUtil
 

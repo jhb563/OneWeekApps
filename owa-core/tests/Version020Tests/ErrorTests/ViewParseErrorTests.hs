@@ -9,7 +9,7 @@ module ViewParseErrorTests (
 
 import Test.Hspec
 
-import Parse.OWAViewParser
+import Parse.ViewParser
 import TestErrors
 import TestUtil
 

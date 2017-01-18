@@ -1,6 +1,6 @@
 -- This module will test the function:
 -- parseStringsFromFile :: FilePath -> IO Either [OWAParseError] (Map String String)
--- from OWAStringsParser, which takes a file and returns a
+-- from StringsParser, which takes a file and returns a
 -- map of localized strings in that file.
 
 module StringsParseTests (
@@ -9,7 +9,7 @@ module StringsParseTests (
 
 import Test.Hspec
 
-import Parse.OWAStringsParser
+import Parse.StringsParser
 import TestStringErrors
 import TestStringSets
 import TestUtil

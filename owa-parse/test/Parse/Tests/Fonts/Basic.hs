@@ -3,20 +3,20 @@
 -- which will read a file and return a list of font
 -- objects for the fonts described in the file
 
-module FontParseTests (
+module Parse.Tests.Fonts.Basic (
   runFontParseTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAFont
-import Parse.OWAFontParser
-import TestFonts
-import TestUtil
+import Parse.FontParser
+import Parse.Tests.Fonts.Objects
+import Parse.Tests.Utils (shouldReturnRights)
 
 runFontParseTests :: FilePath -> IO ()
 runFontParseTests startFilePath = hspec $ do
-  let parseFilesPath = startFilePath ++ "/tests/Version010Tests/FontTests/FontParseFiles" 
+  let parseFilesPath = startFilePath ++ "/test/Parse/Tests/Fonts/ParseFiles" 
   regularFontTests parseFilesPath
   spacedFontTests parseFilesPath
   multiStyleFontTests parseFilesPath

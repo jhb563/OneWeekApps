@@ -1,22 +1,22 @@
--- OWAErrorParser will expose the method:
+-- ErrorParser will expose the method:
 -- parseErrorsFromFile :: FilePath -> IO [OWAError]
 -- which will read a file and return a list of font
 -- objects for the fonts described in the file
 
-module ErrorParseTests (
+module Parse.Tests.Errors.Basic (
   runErrorParseTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAError
-import Parse.OWAErrorParser
-import TestErrors
-import TestUtil
+import Parse.ErrorParser
+import Parse.Tests.Errors.Objects
+import Parse.Tests.Utils (shouldReturnRights)
 
 runErrorParseTests :: FilePath -> IO ()
 runErrorParseTests startFilePath = hspec $ do
-  let parseFilesPath = startFilePath ++ "/tests/Version010Tests/ErrorTests/ErrorParseFiles" 
+  let parseFilesPath = startFilePath ++ "/test/Parse/Tests/Errors/ParseFiles" 
   noDefaultDomainTests parseFilesPath
   singleDomainTests parseFilesPath
   singleDomainPrefixTests parseFilesPath

@@ -3,7 +3,7 @@
 -- from Core.FileSearch, which takes a directory and returns the path to
 -- the app.info file, as well as the function:
 -- parseAppInfoFromFile :: FilePath -> IO Either [OWAParseError] OWAAppInfo
--- in the module OWAAppInfoParser which will take the possible 
+-- in the module AppInfoParser which will take the possible 
 -- filepath of the app info and returns a structure with the app info, 
 -- with default values filled in if there is no filepath.
 
@@ -15,7 +15,7 @@ import Test.Hspec
 import System.Directory
 
 import Core.FileSearch
-import Parse.OWAAppInfoParser
+import Parse.AppInfoParser
 import TestAppInfo
 import TestDefaultErrors
 import TestUtil

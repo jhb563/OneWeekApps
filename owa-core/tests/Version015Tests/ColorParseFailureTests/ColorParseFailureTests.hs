@@ -1,5 +1,5 @@
 -- This will test parseColorsFromFile, out of the module
--- OWAColorParser, under conditions which should create
+-- ColorParser, under conditions which should create
 -- a parse failure.
 
 module ColorParseFailureTests (
@@ -8,7 +8,7 @@ module ColorParseFailureTests (
 
 import Test.Hspec
 
-import Parse.OWAColorParser
+import Parse.ColorParser
 import TestColorErrors
 import TestUtil
 

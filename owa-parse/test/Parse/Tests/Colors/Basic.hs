@@ -9,7 +9,7 @@ module Parse.Tests.Colors.Basic (
 
 import Test.Hspec
 
-import Parse.OWAColorParser (parseColorsFromFile)
+import Parse.ColorParser (parseColorsFromFile)
 import Parse.Tests.Colors.Objects
 import Parse.Tests.Utils (shouldReturnRights)
 

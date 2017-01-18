@@ -19,13 +19,13 @@ library
     , split
     , text
   exposed-modules:
-      Parse.OWAAlertParser
-      Parse.OWAAppInfoParser
-      Parse.OWAColorParser
-      Parse.OWAErrorParser
-      Parse.OWAFontParser
-      Parse.OWAStringsParser
-      Parse.OWAViewParser
+      Parse.AlertParser
+      Parse.AppInfoParser
+      Parse.ColorParser
+      Parse.ErrorParser
+      Parse.FontParser
+      Parse.StringsParser
+      Parse.ViewParser
   other-modules:
       Parse.Utils
   default-language: Haskell2010
@@ -46,5 +46,9 @@ test-suite parse-tests
       Parse.Tests.Alerts.Objects
       Parse.Tests.Colors.Basic
       Parse.Tests.Colors.Objects
+      Parse.Tests.Errors.Basic
+      Parse.Tests.Errors.Objects
+      Parse.Tests.Fonts.Basic
+      Parse.Tests.Fonts.Objects
       Parse.Tests.Utils
   default-language: Haskell2010

@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module Parse.OWAColorParser (
+module Parse.ColorParser (
   parseColorsFromFile,
 ) where
 

@@ -1,12 +1,12 @@
 {-|
-Module      : Parse.OWAStringsParser
+Module      : Parse.StringsParser
 Description : Module for parsing strings from a .strings file into a string map
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module Parse.OWAStringsParser (
+module Parse.StringsParser (
   parseStringsFromFile,
 ) where
 

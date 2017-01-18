@@ -1,5 +1,5 @@
 -- This will test parseFontsFromFile, out of the module
--- OWAFontParser, under conditions which should create
+-- FontParser, under conditions which should create
 -- a parse failure.
 
 module FontParseFailureTests (
@@ -8,7 +8,7 @@ module FontParseFailureTests (
 
 import Test.Hspec
 
-import Parse.OWAFontParser
+import Parse.FontParser
 import TestFontErrors
 import TestUtil
 

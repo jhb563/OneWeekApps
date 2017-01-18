@@ -1,5 +1,5 @@
 -- This will test parseAlertsFromFile, out of the module
--- OWAAlertParser, under conditions which should create
+-- AlertParser, under conditions which should create
 -- a parse failure.
 
 module AlertParseFailureTests (
@@ -8,7 +8,7 @@ module AlertParseFailureTests (
 
 import Test.Hspec
 
-import Parse.OWAAlertParser
+import Parse.AlertParser
 import TestAlertErrors
 import TestUtil
 
