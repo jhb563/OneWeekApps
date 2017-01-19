@@ -1,7 +1,7 @@
 -- Here we are testing the same parsing methods tested in Version 0.1.0 parsing tests,
 -- only now the files being parsed have comments in them.
 
-module CommentTests (
+module Parse.Tests.Comments.Basic (
   runCommentTests
 ) where
 
@@ -11,11 +11,11 @@ import Parse.AlertParser
 import Parse.ColorParser
 import Parse.ErrorParser
 import Parse.FontParser
-import TestUtil
+import Parse.Tests.Utils (shouldReturnWithoutErrors)
 
 runCommentTests :: FilePath -> IO ()
 runCommentTests currentDirectory = hspec $ do
-  let testDirectory = currentDirectory ++ "/tests/Version015Tests/CommentTests/CommentParseFiles"
+  let testDirectory = currentDirectory ++ "/test/Parse/Tests/Comments/ParseFiles"
   alertCommentTests testDirectory
   colorCommentTests testDirectory
   errorCommentTests testDirectory

@@ -1,4 +1,4 @@
-module TestSpacingIndentErrors where
+module Parse.Tests.Spacing.Objects where
 
 import Text.Parsec.Pos
 

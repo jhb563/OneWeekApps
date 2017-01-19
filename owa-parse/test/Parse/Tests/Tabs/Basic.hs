@@ -1,7 +1,7 @@
 -- We test the same parse methods as version 0.1.0, only now
 -- the files being parsed use variable ways of parsing.
 
-module TabTests (
+module Parse.Tests.Tabs.Basic (
   runTabTests
 ) where
 
@@ -11,11 +11,11 @@ import Parse.AlertParser
 import Parse.ColorParser
 import Parse.ErrorParser
 import Parse.FontParser
-import TestUtil
+import Parse.Tests.Utils (shouldReturnWithoutErrors)
 
 runTabTests :: FilePath -> IO ()
 runTabTests currentDirectory = hspec $ do
-  let testDirectory = currentDirectory ++ "/tests/Version015Tests/TabTests/TabParseFiles"
+  let testDirectory = currentDirectory ++ "/test/Parse/Tests/Tabs/ParseFiles"
   spaceTabTests testDirectory
   tabTabTests testDirectory
   cominbationTabTests testDirectory

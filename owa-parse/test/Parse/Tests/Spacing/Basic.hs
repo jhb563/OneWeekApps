@@ -3,7 +3,7 @@
 -- names and values (which should succeed), and error cases with improper
 -- indentation, such as no indentation or changing indentation.
 
-module SpacingIndentTests (
+module Parse.Tests.Spacing.Basic (
   runSpacingIndentTests
 ) where
 
@@ -13,8 +13,8 @@ import Parse.AlertParser
 import Parse.ColorParser
 import Parse.ErrorParser
 import Parse.FontParser
-import TestSpacingIndentErrors
-import TestUtil
+import Parse.Tests.Spacing.Objects
+import Parse.Tests.Utils (shouldReturnWithoutErrors, shouldMatchError)
 
 runSpacingIndentTests :: FilePath -> IO ()
 runSpacingIndentTests currentDirectory = hspec $ do
@@ -98,7 +98,7 @@ changingIndentTests testDirectory = do
         parseErrorsFromFile testFile4 `shouldMatchError` changingIndentErrors
   
 testDirectoryExtension :: String
-testDirectoryExtension = "/tests/Version015Tests/SpacingIndentTests/ParseFiles"
+testDirectoryExtension = "/test/Parse/Tests/Spacing/ParseFiles"
 
 spacedColorsExtension :: String
 spacedColorsExtension = "/spacedColors.colors"

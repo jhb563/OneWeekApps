@@ -13,9 +13,9 @@ library
   build-depends:
       base
     , owa-model
+    , parsec
     , containers
     , mtl
-    , parsec
     , split
     , text
   exposed-modules:
@@ -38,6 +38,7 @@ test-suite parse-tests
   build-depends:
       base
     , owa-model
+    , parsec
     , directory
     , hspec
     , owa-parse
@@ -46,9 +47,13 @@ test-suite parse-tests
       Parse.Tests.Alerts.Objects
       Parse.Tests.Colors.Basic
       Parse.Tests.Colors.Objects
+      Parse.Tests.Comments.Basic
       Parse.Tests.Errors.Basic
       Parse.Tests.Errors.Objects
       Parse.Tests.Fonts.Basic
       Parse.Tests.Fonts.Objects
+      Parse.Tests.Spacing.Basic
+      Parse.Tests.Spacing.Objects
+      Parse.Tests.Tabs.Basic
       Parse.Tests.Utils
   default-language: Haskell2010

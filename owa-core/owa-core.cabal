@@ -95,14 +95,11 @@ test-suite Version015Tests
   main-is: OWAVersion015Tests.hs
   hs-source-dirs:   tests,
                     tests/Version015Tests,
-                    tests/Version015Tests/CommentTests,
-                    tests/Version015Tests/TabTests,
                     tests/Version015Tests/ItemFailureTests,
                     tests/Version015Tests/ColorParseFailureTests,
                     tests/Version015Tests/FontParseFailureTests,
                     tests/Version015Tests/AlertParseFailureTests,
                     tests/Version015Tests/ErrorParseFailureTests,
-                    tests/Version015Tests/SpacingIndentTests,
                     tests/Version015Tests/DefaultsFileTests,
                     tests/Version015Tests/StringsTests,
                     tests/Version015Tests/IntegrationTests
@@ -119,17 +116,14 @@ test-suite Version015Tests
                  owa-swift
   other-modules: AlertParseFailureTests
                , ColorParseFailureTests
-               , CommentTests
                , DefaultsFileTests
                , ErrorParseFailureTests
                , FontParseFailureTests
                , IntegrationTestUtil
                , ItemFailureTests
-               , SpacingIndentTests
                , StringsParseTests
                , StringsPrintTests
                , StringsSearchTests
-               , TabTests
                , TestAlertErrors
                , TestAppInfo
                , TestColorErrors
@@ -137,7 +131,6 @@ test-suite Version015Tests
                , TestErrorErrors
                , TestFontErrors
                , TestParseErrors
-               , TestSpacingIndentErrors
                , TestStringErrors
                , TestStringSets
                , TestUtil
