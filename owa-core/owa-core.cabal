@@ -100,7 +100,6 @@ test-suite Version015Tests
                     tests/Version015Tests/FontParseFailureTests,
                     tests/Version015Tests/AlertParseFailureTests,
                     tests/Version015Tests/ErrorParseFailureTests,
-                    tests/Version015Tests/DefaultsFileTests,
                     tests/Version015Tests/StringsTests,
                     tests/Version015Tests/IntegrationTests
   build-depends: base,
@@ -116,23 +115,18 @@ test-suite Version015Tests
                  owa-swift
   other-modules: AlertParseFailureTests
                , ColorParseFailureTests
-               , DefaultsFileTests
                , ErrorParseFailureTests
                , FontParseFailureTests
                , IntegrationTestUtil
                , ItemFailureTests
-               , StringsParseTests
                , StringsPrintTests
                , StringsSearchTests
                , TestAlertErrors
-               , TestAppInfo
                , TestColorErrors
-               , TestDefaultErrors
                , TestErrorErrors
                , TestFontErrors
-               , TestParseErrors
-               , TestStringErrors
                , TestStringSets
+               , TestParseErrors
                , TestUtil
                , Version015IntegrationTests
   default-language: Haskell2010

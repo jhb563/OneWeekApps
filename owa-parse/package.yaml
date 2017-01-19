@@ -26,6 +26,7 @@ tests:
     source-dirs:
       - test/
     dependencies:
+      - containers
       - directory
       - hspec
       - owa-parse

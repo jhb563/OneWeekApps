@@ -3,16 +3,16 @@
 -- from StringsParser, which takes a file and returns a
 -- map of localized strings in that file.
 
-module StringsParseTests (
+module Parse.Tests.Strings.Basic (
   runStringsParseTests
 ) where
 
 import Test.Hspec
 
 import Parse.StringsParser
-import TestStringErrors
-import TestStringSets
-import TestUtil
+import Parse.Tests.Strings.Errors
+import Parse.Tests.Strings.Objects
+import Parse.Tests.Utils (shouldMatchError, shouldReturnRights)
 
 runStringsParseTests :: FilePath -> IO ()
 runStringsParseTests currentDirectory = hspec $ do
@@ -62,7 +62,7 @@ failingStringsTests parseDirectory = do
         parseStringsFromFile testFile3 `shouldMatchError` quotesFailError
 
 parseDirectoryExtension :: FilePath 
-parseDirectoryExtension = "/tests/Version015Tests/StringsTests/StringsParseFiles"
+parseDirectoryExtension = "/test/Parse/Tests/Strings/ParseFiles"
 
 passExtension1 :: String
 passExtension1 = "/basicStringsTest.strings"

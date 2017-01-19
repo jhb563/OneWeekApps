@@ -1,4 +1,4 @@
-module TestAppInfo where
+module Parse.Tests.AppInfo.Objects where
 
 import Model.OWAAppInfo
 
