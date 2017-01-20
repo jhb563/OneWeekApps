@@ -98,7 +98,6 @@ test-suite Version015Tests
                     tests/Version015Tests/ItemFailureTests,
                     tests/Version015Tests/ColorParseFailureTests,
                     tests/Version015Tests/FontParseFailureTests,
-                    tests/Version015Tests/AlertParseFailureTests,
                     tests/Version015Tests/ErrorParseFailureTests,
                     tests/Version015Tests/StringsTests,
                     tests/Version015Tests/IntegrationTests
@@ -113,15 +112,13 @@ test-suite Version015Tests
                  owa-parse,
                  owa-objc,
                  owa-swift
-  other-modules: AlertParseFailureTests
-               , ColorParseFailureTests
+  other-modules: ColorParseFailureTests
                , ErrorParseFailureTests
                , FontParseFailureTests
                , IntegrationTestUtil
                , ItemFailureTests
                , StringsPrintTests
                , StringsSearchTests
-               , TestAlertErrors
                , TestColorErrors
                , TestErrorErrors
                , TestFontErrors

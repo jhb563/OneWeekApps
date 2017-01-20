@@ -45,6 +45,8 @@ test-suite parse-tests
     , owa-parse
   other-modules:
       Parse.Tests.Alerts.Basic
+      Parse.Tests.Alerts.Errors
+      Parse.Tests.Alerts.Failure
       Parse.Tests.Alerts.Objects
       Parse.Tests.AppInfo.Basic
       Parse.Tests.AppInfo.Errors

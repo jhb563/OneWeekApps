@@ -2,7 +2,6 @@ module Main where
 
 import System.Directory
 
-import AlertParseFailureTests
 import ColorParseFailureTests
 import ErrorParseFailureTests
 import FontParseFailureTests
@@ -17,7 +16,6 @@ main = do
   runItemFailureTests currentDirectory
   runColorParseFailureTests currentDirectory
   runFontParseFailureTests currentDirectory
-  runAlertParseFailureTests currentDirectory
   runErrorParseFailureTests currentDirectory
   runStringsSearchTests currentDirectory
   runStringsPrintTests currentDirectory

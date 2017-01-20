@@ -3,6 +3,7 @@ module Main where
 import System.Directory (getCurrentDirectory)
 
 import Parse.Tests.Alerts.Basic (runAlertParseTests)
+import Parse.Tests.Alerts.Failure (runAlertParseFailureTests)
 import Parse.Tests.AppInfo.Basic (runAppInfoParseTests)
 import Parse.Tests.Colors.Basic (runColorParseTests)
 import Parse.Tests.Comments.Basic (runCommentTests)
@@ -16,6 +17,7 @@ main :: IO ()
 main = do
   currentDirectory <- getCurrentDirectory 
   runAlertParseTests currentDirectory
+  runAlertParseFailureTests currentDirectory
   runAppInfoParseTests currentDirectory
   runColorParseTests currentDirectory
   runCommentTests currentDirectory

@@ -2,15 +2,15 @@
 -- AlertParser, under conditions which should create
 -- a parse failure.
 
-module AlertParseFailureTests (
+module Parse.Tests.Alerts.Failure (
   runAlertParseFailureTests
 ) where
 
 import Test.Hspec
 
 import Parse.AlertParser
-import TestAlertErrors
-import TestUtil
+import Parse.Tests.Alerts.Errors
+import Parse.Tests.Utils (shouldMatchError)
 
 runAlertParseFailureTests :: FilePath -> IO ()
 runAlertParseFailureTests currentDirectory = hspec $ do
@@ -105,7 +105,7 @@ newLineTest testDirectory = do
       parseAlertsFromFile testFile1 `shouldMatchError` newLineEndFailure
 
 testDirectoryExtension :: FilePath
-testDirectoryExtension = "/tests/Version015Tests/AlertParseFailureTests/ParseFiles"
+testDirectoryExtension = "/test/Parse/Tests/Alerts/ParseFiles"
 
 alertKeyword1Extension :: FilePath
 alertKeyword1Extension = "/alertKeywordFailure1.alerts"
