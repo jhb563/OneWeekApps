@@ -1,4 +1,4 @@
-module TestColorErrors where
+module Parse.Tests.Colors.Errors where
 
 import Text.Parsec.Pos
 

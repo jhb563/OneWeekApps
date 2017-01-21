@@ -2,15 +2,15 @@
 -- ColorParser, under conditions which should create
 -- a parse failure.
 
-module ColorParseFailureTests (
+module Parse.Tests.Colors.Failure (
   runColorParseFailureTests
 ) where
 
 import Test.Hspec
 
 import Parse.ColorParser
-import TestColorErrors
-import TestUtil
+import Parse.Tests.Colors.Errors
+import Parse.Tests.Utils (shouldMatchError)
 
 runColorParseFailureTests :: FilePath -> IO ()
 runColorParseFailureTests currentDirectory = hspec $ do
@@ -110,7 +110,7 @@ newLineTest testDirectory = do
       parseColorsFromFile testFile1 `shouldMatchError` newLineFailureInfo
 
 testDirectoryExtension :: FilePath
-testDirectoryExtension = "/tests/Version015Tests/ColorParseFailureTests/ParseFiles"
+testDirectoryExtension = "/test/Parse/Tests/Colors/ParseFiles/"
 
 colorKeyword1Extension :: FilePath
 colorKeyword1Extension = "/colorKeyword1Failure.colors"

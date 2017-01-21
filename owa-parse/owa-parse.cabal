@@ -52,9 +52,13 @@ test-suite parse-tests
       Parse.Tests.AppInfo.Errors
       Parse.Tests.AppInfo.Objects
       Parse.Tests.Colors.Basic
+      Parse.Tests.Colors.Errors
+      Parse.Tests.Colors.Failure
       Parse.Tests.Colors.Objects
       Parse.Tests.Comments.Basic
       Parse.Tests.Errors.Basic
+      Parse.Tests.Errors.Errors
+      Parse.Tests.Errors.Failure
       Parse.Tests.Errors.Objects
       Parse.Tests.Fonts.Basic
       Parse.Tests.Fonts.Objects

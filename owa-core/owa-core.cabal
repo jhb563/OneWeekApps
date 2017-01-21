@@ -96,9 +96,7 @@ test-suite Version015Tests
   hs-source-dirs:   tests,
                     tests/Version015Tests,
                     tests/Version015Tests/ItemFailureTests,
-                    tests/Version015Tests/ColorParseFailureTests,
                     tests/Version015Tests/FontParseFailureTests,
-                    tests/Version015Tests/ErrorParseFailureTests,
                     tests/Version015Tests/StringsTests,
                     tests/Version015Tests/IntegrationTests
   build-depends: base,
@@ -112,15 +110,11 @@ test-suite Version015Tests
                  owa-parse,
                  owa-objc,
                  owa-swift
-  other-modules: ColorParseFailureTests
-               , ErrorParseFailureTests
-               , FontParseFailureTests
+  other-modules: FontParseFailureTests
                , IntegrationTestUtil
                , ItemFailureTests
                , StringsPrintTests
                , StringsSearchTests
-               , TestColorErrors
-               , TestErrorErrors
                , TestFontErrors
                , TestStringSets
                , TestParseErrors

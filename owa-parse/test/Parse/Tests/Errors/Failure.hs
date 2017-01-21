@@ -2,15 +2,15 @@
 -- ErrorParser, under conditions which should create
 -- a parse failure.
 
-module ErrorParseFailureTests (
+module Parse.Tests.Errors.Failure (
   runErrorParseFailureTests
 ) where
 
 import Test.Hspec
 
 import Parse.ErrorParser
-import TestErrorErrors
-import TestUtil
+import Parse.Tests.Errors.Errors
+import Parse.Tests.Utils (shouldMatchError)
 
 runErrorParseFailureTests :: FilePath -> IO ()
 runErrorParseFailureTests currentDirectory = hspec $ do
@@ -114,7 +114,7 @@ newLineTest testDirectory = do
       parseErrorsFromFile testFile1 `shouldMatchError` newLineEndFailure
 
 testDirectoryExtension :: FilePath
-testDirectoryExtension = "/tests/Version015Tests/ErrorParseFailureTests/ParseFiles"
+testDirectoryExtension = "/test/Parse/Tests/Errors/ParseFiles/"
 
 errorKeyword1Extension :: FilePath
 errorKeyword1Extension = "/errorKeywordFailure1.errors"

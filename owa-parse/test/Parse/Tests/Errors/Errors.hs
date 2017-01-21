@@ -1,4 +1,4 @@
-module TestErrorErrors where
+module Parse.Tests.Errors.Errors where
 
 import Text.Parsec.Pos
 
