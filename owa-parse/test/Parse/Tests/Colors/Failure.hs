@@ -10,7 +10,7 @@ import Test.Hspec
 
 import Parse.ColorParser
 import Parse.Tests.Colors.Errors
-import Parse.Tests.Utils (shouldMatchError)
+import Parse.Tests.Utils (shouldMatchError, shouldReturnLefts)
 
 runColorParseFailureTests :: FilePath -> IO ()
 runColorParseFailureTests currentDirectory = hspec $ do
@@ -21,6 +21,7 @@ runColorParseFailureTests currentDirectory = hspec $ do
   floatAttributeTest testDirectory
   hexAttributeTest testDirectory
   newLineTest testDirectory
+  itemFailureTests testDirectory
 
 colorKeywordTest :: FilePath -> Spec
 colorKeywordTest testDirectory = do
@@ -109,6 +110,13 @@ newLineTest testDirectory = do
     it "Should return a parse error highlighting the lack of a new line character" $
       parseColorsFromFile testFile1 `shouldMatchError` newLineFailureInfo
 
+itemFailureTests :: FilePath -> Spec
+itemFailureTests testDirectory = do
+  let testFile = testDirectory ++ itemFailureExtension
+  describe "Item Failures on Colors" $
+    it "Should match our list of color failures" $
+      parseColorsFromFile testFile `shouldReturnLefts` allItemErrors
+
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/test/Parse/Tests/Colors/ParseFiles/"
 
@@ -153,3 +161,6 @@ hex4Extension = "/hex4Failure.colors"
 
 newLineEndExtension :: FilePath
 newLineEndExtension = "/newLineEndFailure.colors"
+
+itemFailureExtension :: String
+itemFailureExtension = "/itemFailures.colors"

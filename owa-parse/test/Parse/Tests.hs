@@ -11,6 +11,7 @@ import Parse.Tests.Comments.Basic (runCommentTests)
 import Parse.Tests.Errors.Basic (runErrorParseTests)
 import Parse.Tests.Errors.Failure (runErrorParseFailureTests)
 import Parse.Tests.Fonts.Basic (runFontParseTests)
+import Parse.Tests.Fonts.Failure (runFontParseFailureTests)
 import Parse.Tests.Spacing.Basic (runSpacingIndentTests)
 import Parse.Tests.Strings.Basic (runStringsParseTests)
 import Parse.Tests.Tabs.Basic (runTabTests)
@@ -27,6 +28,7 @@ main = do
   runErrorParseTests currentDirectory
   runErrorParseFailureTests currentDirectory
   runFontParseTests currentDirectory
+  runFontParseFailureTests currentDirectory
   runSpacingIndentTests currentDirectory
   runStringsParseTests currentDirectory
   runTabTests currentDirectory

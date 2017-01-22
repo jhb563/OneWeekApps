@@ -1,5 +1,6 @@
 module Parse.Tests.Errors.Errors where
 
+import Model.OWAParseError
 import Text.Parsec.Pos
 
 errorKeywordFailure1 :: SourcePos
@@ -43,3 +44,46 @@ badPrefixValueFailure = newPos "badPrefixValueFailure.errors" 2 14
 
 newLineEndFailure :: SourcePos
 newLineEndFailure = newPos "newLineEndFailure.errors" 4 25
+
+allItemErrors :: [OWAParseError]
+allItemErrors = 
+  [ noDomainError
+  , justDescriptionError
+  , comboError
+  , noCodeError
+  , noDescriptionError ]
+
+noDomainError :: OWAParseError
+noDomainError = ObjectError {
+  fileName = "itemFailures.errors",
+  itemName = "noDomain",
+  missingRequiredAttributes = ["Domain"]
+}
+
+justDescriptionError :: OWAParseError
+justDescriptionError = ObjectError {
+  fileName = "itemFailures.errors",
+  itemName = "justDescription",
+  missingRequiredAttributes = ["Code", "Domain"]
+}
+
+comboError :: OWAParseError
+comboError = ObjectError {
+  fileName = "itemFailures.errors",
+  itemName = "combo",
+  missingRequiredAttributes = ["Code", "Description"]
+}
+
+noCodeError :: OWAParseError
+noCodeError = ObjectError {
+  fileName = "itemFailures.errors",
+  itemName = "noCode",
+  missingRequiredAttributes = ["Code"]
+}
+
+noDescriptionError :: OWAParseError
+noDescriptionError = ObjectError {
+  fileName = "itemFailures.errors",
+  itemName = "noDescription",
+  missingRequiredAttributes = ["Description"]
+}

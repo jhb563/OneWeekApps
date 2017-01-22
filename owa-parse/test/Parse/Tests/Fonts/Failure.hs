@@ -2,15 +2,15 @@
 -- FontParser, under conditions which should create
 -- a parse failure.
 
-module FontParseFailureTests (
+module Parse.Tests.Fonts.Failure (
   runFontParseFailureTests
 ) where
 
 import Test.Hspec
 
 import Parse.FontParser
-import TestFontErrors
-import TestUtil
+import Parse.Tests.Fonts.Errors
+import Parse.Tests.Utils (shouldMatchError, shouldReturnLefts)
 
 runFontParseFailureTests :: FilePath -> IO ()
 runFontParseFailureTests currentDirectory = hspec $ do
@@ -22,6 +22,7 @@ runFontParseFailureTests currentDirectory = hspec $ do
   badFontSizeTest testDirectory
   badFontStylesTest testDirectory
   newLineTest testDirectory
+  itemFailureTests testDirectory
 
 fontKeywordTest :: FilePath -> Spec
 fontKeywordTest testDirectory = do
@@ -102,8 +103,16 @@ newLineTest testDirectory = do
     it "Should return a parse error highlighting the lack of a new line character" $
       parseFontsFromFile testFile1 `shouldMatchError` newLineEndFailure
 
+itemFailureTests :: FilePath -> Spec
+itemFailureTests testDirectory = do
+  let testFile = testDirectory ++ itemFailureExtension
+  describe "Item Failures on Fonts" $
+    it "Should match our list of font failures" $
+      parseFontsFromFile testFile `shouldReturnLefts` allItemErrors
+
+
 testDirectoryExtension :: FilePath
-testDirectoryExtension = "/tests/Version015Tests/FontParseFailureTests/ParseFiles"
+testDirectoryExtension = "/test/Parse/Tests/Fonts/ParseFiles"
 
 fontKeyword1Extension :: FilePath
 fontKeyword1Extension = "/fontKeywordFailure1.fonts"
@@ -140,3 +149,6 @@ badFontStyles2Extension = "/badFontStylesFailure2.fonts"
 
 newLineEndExtension :: FilePath
 newLineEndExtension = "/newLineEndFailure.fonts"
+
+itemFailureExtension :: String
+itemFailureExtension = "/itemFailures.fonts"

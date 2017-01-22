@@ -10,7 +10,7 @@ import Test.Hspec
 
 import Parse.ErrorParser
 import Parse.Tests.Errors.Errors
-import Parse.Tests.Utils (shouldMatchError)
+import Parse.Tests.Utils (shouldMatchError, shouldReturnLefts)
 
 runErrorParseFailureTests :: FilePath -> IO ()
 runErrorParseFailureTests currentDirectory = hspec $ do
@@ -23,6 +23,7 @@ runErrorParseFailureTests currentDirectory = hspec $ do
   badDomainValueTest testDirectory
   badPrefixValueTest testDirectory
   newLineTest testDirectory
+  itemFailureTests testDirectory
 
 errorKeywordTest :: FilePath -> Spec
 errorKeywordTest testDirectory = do
@@ -113,6 +114,14 @@ newLineTest testDirectory = do
     it "Should return a parse error highlighting the lack of a new line character" $
       parseErrorsFromFile testFile1 `shouldMatchError` newLineEndFailure
 
+itemFailureTests :: FilePath -> Spec
+itemFailureTests testDirectory = do
+  let testFile = testDirectory ++ itemFailureExtension
+  describe "Item Failures on Errors" $
+    it "Should match our list of error failures" $
+      parseErrorsFromFile testFile `shouldReturnLefts` allItemErrors
+
+
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/test/Parse/Tests/Errors/ParseFiles/"
 
@@ -157,3 +166,6 @@ badPrefixValueExtension = "/badPrefixValueFailure.errors"
 
 newLineEndExtension :: FilePath
 newLineEndExtension = "/newLineEndFailure.errors"
+
+itemFailureExtension :: String
+itemFailureExtension = "/itemFailures.errors"

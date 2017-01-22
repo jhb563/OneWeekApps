@@ -10,7 +10,7 @@ import Test.Hspec
 
 import Parse.AlertParser
 import Parse.Tests.Alerts.Errors
-import Parse.Tests.Utils (shouldMatchError)
+import Parse.Tests.Utils (shouldMatchError, shouldReturnLefts)
 
 runAlertParseFailureTests :: FilePath -> IO ()
 runAlertParseFailureTests currentDirectory = hspec $ do
@@ -21,6 +21,7 @@ runAlertParseFailureTests currentDirectory = hspec $ do
   badLocalizedKeyTest testDirectory
   badButtonKeyTest testDirectory
   newLineTest testDirectory
+  itemFailureTests testDirectory
 
 alertKeywordTest :: FilePath -> Spec
 alertKeywordTest testDirectory = do
@@ -104,6 +105,13 @@ newLineTest testDirectory = do
     it "Should return a parse error highlighting the lack of a new line character" $
       parseAlertsFromFile testFile1 `shouldMatchError` newLineEndFailure
 
+itemFailureTests :: FilePath -> Spec
+itemFailureTests testDirectory = do
+  let testFile = testDirectory ++ itemErrorExtension
+  describe "Item Failures on Alerts" $
+    it "Should match our list of alert failures" $
+      parseAlertsFromFile testFile `shouldReturnLefts` allItemErrors
+
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/test/Parse/Tests/Alerts/ParseFiles"
 
@@ -145,3 +153,6 @@ badButtonKey4Extension = "/badButtonKeyFailure4.alerts"
 
 newLineEndExtension :: FilePath
 newLineEndExtension = "/newLineEndFailure.alerts"
+
+itemErrorExtension :: String
+itemErrorExtension = "/itemFailures.alerts"

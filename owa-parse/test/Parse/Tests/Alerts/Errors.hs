@@ -1,5 +1,6 @@
 module Parse.Tests.Alerts.Errors where
 
+import Model.OWAParseError
 import Text.Parsec.Pos
 
 alertKeywordFailure1 :: SourcePos
@@ -40,3 +41,30 @@ badButtonKeyFailure4 = newPos "badButtonKeyFailure4.alerts" 2 18
 
 newLineEndFailure :: SourcePos
 newLineEndFailure = newPos "newLineEndFailure.alerts" 5 16
+
+allItemErrors :: [OWAParseError]
+allItemErrors = 
+  [ failureAlertError
+  , underSpecYesNoError
+  , noYesError ]
+
+failureAlertError :: OWAParseError
+failureAlertError = ObjectError {
+  fileName = "itemFailures.alerts",
+  itemName = "failureAlert",
+  missingRequiredAttributes = ["Any Button Format"]
+}
+
+underSpecYesNoError :: OWAParseError
+underSpecYesNoError = ObjectError {
+  fileName = "itemFailures.alerts",
+  itemName = "underSpecYesNo",
+  missingRequiredAttributes = ["NoButton"]
+}
+
+noYesError :: OWAParseError
+noYesError = ObjectError {
+  fileName = "itemFailures.alerts",
+  itemName = "noYes",
+  missingRequiredAttributes = ["YesButton"]
+}

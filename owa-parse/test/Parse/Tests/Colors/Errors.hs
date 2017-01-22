@@ -1,5 +1,6 @@
 module Parse.Tests.Colors.Errors where
 
+import Model.OWAParseError
 import Text.Parsec.Pos
 
 colorKeyword1FailureInfo :: SourcePos
@@ -43,3 +44,46 @@ hex4FailureInfo = newPos "hex4Failure.colors" 5 17
 
 newLineFailureInfo :: SourcePos
 newLineFailureInfo = newPos "newLineEndFailure.colors" 2 15
+
+allItemErrors :: [OWAParseError]
+allItemErrors = 
+  [ failColor1Error
+  , failColor2Error
+  , failColor3Error
+  , missingCombo1Error
+  , missingCombo2Error ]
+
+failColor1Error :: OWAParseError
+failColor1Error = ObjectError {
+  fileName = "itemFailures.colors",
+  itemName = "failColor1",
+  missingRequiredAttributes = ["Green"]
+}
+
+failColor2Error :: OWAParseError
+failColor2Error = ObjectError {
+  fileName = "itemFailures.colors",
+  itemName = "failColor2",
+  missingRequiredAttributes = ["Red"]
+}
+
+failColor3Error :: OWAParseError
+failColor3Error = ObjectError {
+  fileName = "itemFailures.colors",
+  itemName = "failColor3",
+  missingRequiredAttributes = ["Blue"]
+}
+
+missingCombo1Error :: OWAParseError
+missingCombo1Error = ObjectError {
+  fileName = "itemFailures.colors",
+  itemName = "missingCombo1",
+  missingRequiredAttributes = ["Blue", "Green"]
+}
+
+missingCombo2Error :: OWAParseError
+missingCombo2Error = ObjectError {
+  fileName = "itemFailures.colors",
+  itemName = "missingCombo2",
+  missingRequiredAttributes = ["Green", "Red"]
+}

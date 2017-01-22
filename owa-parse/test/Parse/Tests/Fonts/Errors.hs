@@ -1,5 +1,6 @@
-module TestFontErrors where
+module Parse.Tests.Fonts.Errors where
 
+import Model.OWAParseError
 import Text.Parsec.Pos
 
 fontKeywordFailure1 :: SourcePos
@@ -37,3 +38,29 @@ badFontStylesFailure2 = newPos "badFontStylesFailure2.fonts" 2 16
 
 newLineEndFailure :: SourcePos
 newLineEndFailure = newPos "newLineEndFailure.fonts" 3 12
+
+allItemErrors :: [OWAParseError]
+allItemErrors = [missingFamilyError,
+  missingSizeError,
+  missingComboError]
+
+missingFamilyError :: OWAParseError
+missingFamilyError = ObjectError {
+  fileName = "itemFailures.fonts",
+  itemName = "missingFamily",
+  missingRequiredAttributes = ["FontFamily"]
+}
+
+missingSizeError :: OWAParseError
+missingSizeError = ObjectError {
+  fileName = "itemFailures.fonts",
+  itemName = "missingSize",
+  missingRequiredAttributes = ["Size"]
+}
+
+missingComboError :: OWAParseError
+missingComboError = ObjectError {
+  fileName = "itemFailures.fonts",
+  itemName = "missingCombo",
+  missingRequiredAttributes = ["FontFamily", "Size"]
+}
