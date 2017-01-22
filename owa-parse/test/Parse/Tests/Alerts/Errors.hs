@@ -1,7 +1,8 @@
 module Parse.Tests.Alerts.Errors where
 
-import Model.OWAParseError
 import Text.Parsec.Pos
+
+import Model.OWAParseError
 
 alertKeywordFailure1 :: SourcePos
 alertKeywordFailure1 = newPos "alertKeywordFailure1.alerts" 1 1

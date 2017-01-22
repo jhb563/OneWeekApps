@@ -125,7 +125,6 @@ test-suite Version020Tests
                   tests/Version020Tests,
                   tests/Version020Tests/FileSearchTests,
                   tests/Version020Tests/ViewTests,
-                  tests/Version020Tests/ErrorTests,
                   tests/Version020Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -140,13 +139,10 @@ test-suite Version020Tests
                  owa-objc,
                  owa-swift
   other-modules: IntegrationTestUtil
-               , TestErrors
                , TestUtil
                , TestViews
                , Version020IntegrationTests
                , ViewFileSearchTests
-               , ViewItemErrorTests
-               , ViewParseErrorTests
                , ViewPrintTests
   default-language: Haskell2010
 

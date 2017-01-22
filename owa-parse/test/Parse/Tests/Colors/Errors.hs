@@ -1,7 +1,8 @@
 module Parse.Tests.Colors.Errors where
 
-import Model.OWAParseError
 import Text.Parsec.Pos
+
+import Model.OWAParseError
 
 colorKeyword1FailureInfo :: SourcePos
 colorKeyword1FailureInfo = newPos "colorKeyword1Failure.colors" 1 1

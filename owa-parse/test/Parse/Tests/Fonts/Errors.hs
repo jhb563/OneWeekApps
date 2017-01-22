@@ -1,7 +1,8 @@
 module Parse.Tests.Fonts.Errors where
 
-import Model.OWAParseError
 import Text.Parsec.Pos
+
+import Model.OWAParseError
 
 fontKeywordFailure1 :: SourcePos
 fontKeywordFailure1 = newPos "fontKeywordFailure1.fonts" 1 1
