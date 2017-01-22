@@ -3,15 +3,15 @@
 -- which parses a view from a .view file when given a filepath, looking
 -- specifically at elements within the view are parsed.
 
-module ViewElementTests (
+module Parse.Tests.Views.Elements (
   runViewElementTests
 ) where
 
 import Test.Hspec
 
+import Parse.Tests.Utils (shouldReturnRights)
+import Parse.Tests.Views.Objects
 import Parse.ViewParser
-import TestUtil
-import TestViews
 
 runViewElementTests :: FilePath -> IO ()
 runViewElementTests currentDirectory = hspec $ do
@@ -42,7 +42,7 @@ viewElementTest3 parseDirectory = do
       parseViewFromFile testFile `shouldReturnRights` elementTest3
 
 parseDirectoryExtension :: String
-parseDirectoryExtension = "/tests/Version020Tests/ViewTests/ViewParseFiles"
+parseDirectoryExtension = "/test/Parse/Tests/Views/ParseFiles"
 
 testExtension1 :: String
 testExtension1 = "/VIAElementTest1.view"

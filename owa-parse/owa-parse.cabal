@@ -71,4 +71,8 @@ test-suite parse-tests
       Parse.Tests.Strings.Objects
       Parse.Tests.Tabs.Basic
       Parse.Tests.Utils
+      Parse.Tests.Views.Constraints
+      Parse.Tests.Views.Elements
+      Parse.Tests.Views.Names
+      Parse.Tests.Views.Objects
   default-language: Haskell2010

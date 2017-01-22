@@ -3,15 +3,15 @@
 -- which parses a view from a .view file when given a filepath, looking
 -- specifically at constraints with the parsed views
 
-module ViewConstraintTests (
+module Parse.Tests.Views.Constraints (
   runViewConstraintTests
 ) where
 
 import Test.Hspec
 
+import Parse.Tests.Utils (shouldReturnRights)
+import Parse.Tests.Views.Objects
 import Parse.ViewParser
-import TestUtil
-import TestViews
 
 runViewConstraintTests :: FilePath -> IO ()
 runViewConstraintTests currentDirectory = hspec $ do
@@ -67,7 +67,7 @@ centerTest parseDirectory = do
         parseViewFromFile testFile `shouldReturnRights` centerTestView
       
 parseDirectoryExtension :: String
-parseDirectoryExtension = "/tests/Version020Tests/ViewTests/ViewParseFiles"
+parseDirectoryExtension = "/test/Parse/Tests/Views/ParseFiles"
 
 noLayoutExtension :: String
 noLayoutExtension = "/VIAConstraintTest1.view"

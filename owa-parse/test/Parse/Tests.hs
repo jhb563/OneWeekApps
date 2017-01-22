@@ -15,6 +15,9 @@ import Parse.Tests.Fonts.Failure (runFontParseFailureTests)
 import Parse.Tests.Spacing.Basic (runSpacingIndentTests)
 import Parse.Tests.Strings.Basic (runStringsParseTests)
 import Parse.Tests.Tabs.Basic (runTabTests)
+import Parse.Tests.Views.Constraints (runViewConstraintTests)
+import Parse.Tests.Views.Elements (runViewElementTests)
+import Parse.Tests.Views.Names (runViewNameTests)
 
 main :: IO ()
 main = do
@@ -32,3 +35,6 @@ main = do
   runSpacingIndentTests currentDirectory
   runStringsParseTests currentDirectory
   runTabTests currentDirectory
+  runViewNameTests currentDirectory
+  runViewElementTests currentDirectory
+  runViewConstraintTests currentDirectory 

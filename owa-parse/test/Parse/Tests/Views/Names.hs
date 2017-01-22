@@ -2,15 +2,15 @@
 -- parseViewFromFile :: FilePath -> IO Either [OWAParseError] OWAView
 -- which parses a view from a .view file when given a filepath.
 
-module ViewNameTests (
+module Parse.Tests.Views.Names (
   runViewNameTests
 ) where
 
 import Test.Hspec
 
+import Parse.Tests.Utils (shouldReturnRights)
+import Parse.Tests.Views.Objects
 import Parse.ViewParser
-import TestUtil
-import TestViews
 
 runViewNameTests :: FilePath -> IO ()
 runViewNameTests currentDirectory = hspec $ do
@@ -57,7 +57,7 @@ commentedTest parseDirectory = do
       parseViewFromFile testFile `shouldReturnRights` nameTest5
 
 parseDirectoryExtension :: String
-parseDirectoryExtension = "/tests/Version020Tests/ViewTests/ViewParseFiles"
+parseDirectoryExtension = "/test/Parse/Tests/Views/ParseFiles"
 
 simpleNameExtension :: String
 simpleNameExtension = "/VIANameTestView.view"
