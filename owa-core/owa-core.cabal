@@ -60,7 +60,6 @@ test-suite Version010Tests
                     tests/Version010Tests,
                     tests/Version010Tests/ColorTests,
                     tests/Version010Tests/FontTests,
-                    tests/Version010Tests/AlertTests,
                     tests/Version010Tests/ErrorTests,
                     tests/Version010Tests/IntegrationTests
   build-depends: base,
@@ -73,14 +72,12 @@ test-suite Version010Tests
                  owa-parse,
                  owa-objc,
                  owa-swift
-  other-modules: AlertPrintTests
-               , AppDirectoryTests
+  other-modules: AppDirectoryTests
                , ColorPrintTests
                , ErrorPrintTests
                , FileSearchTests
                , FontPrintTests
                , IntegrationTestUtil
-               , TestAlerts
                , TestColors
                , TestErrors
                , TestFonts

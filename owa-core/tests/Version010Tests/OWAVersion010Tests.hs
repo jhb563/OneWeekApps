@@ -2,7 +2,6 @@ module Main where
 
 import System.Directory
 
-import AlertPrintTests
 import AppDirectoryTests
 import ColorPrintTests
 import ErrorPrintTests
@@ -17,6 +16,5 @@ main = do
   runFileSearchTests currentFilePath
   runColorPrintTests currentFilePath
   runFontPrintTests currentFilePath
-  runAlertPrintTests currentFilePath
   runErrorPrintTests currentFilePath
   runV010IntegrationTests currentFilePath

@@ -12,21 +12,22 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module AlertPrintTests (
+module Objc.Tests.Alerts.Basic (
   runAlertPrintTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAppInfo
-import Objc.AlertConverter
 import Objc.AbSyn
-import TestAlerts
-import TestUtil
+import Objc.AlertConverter
+import Objc.Tests.Alerts.Objects
+import Objc.Tests.Utils 
+  (filesShouldMatch, removeDiffFiles, removeResultsFiles, createResultsFiles)
 
 runAlertPrintTests :: FilePath -> IO ()
 runAlertPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version010Tests/AlertTests/AlertOutputFiles/"
+  let testDirectory = currentDirectory ++ "/test/Objc/Tests/Alerts/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
@@ -98,4 +99,3 @@ headerTestFile = "UIAlertController+MyAppAlerts.h.test"
 
 implementationTestFile :: String
 implementationTestFile = "UIAlertController+MyAppAlerts.m.test"
-

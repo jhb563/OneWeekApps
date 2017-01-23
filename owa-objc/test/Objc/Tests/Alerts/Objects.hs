@@ -1,4 +1,4 @@
-module TestAlerts where
+module Objc.Tests.Alerts.Objects where
 
 import Model.OWAAlert
 
