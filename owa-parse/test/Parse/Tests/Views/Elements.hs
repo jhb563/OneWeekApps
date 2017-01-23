@@ -19,6 +19,7 @@ runViewElementTests currentDirectory = hspec $ do
   viewElementTest1 parseDirectory
   viewElementTest2 parseDirectory
   viewElementTest3 parseDirectory
+  imageButtonTest parseDirectory
 
 viewElementTest1 :: String -> Spec
 viewElementTest1 parseDirectory = do
@@ -41,6 +42,14 @@ viewElementTest3 parseDirectory = do
     it "Should return a matching view" $
       parseViewFromFile testFile `shouldReturnRights` elementTest3
 
+imageButtonTest :: String -> Spec
+imageButtonTest parseDirectory = do
+  let testFile1 = parseDirectory ++ imageButtonExtension
+  describe "Parse view files where buttons use image source tag" $ do
+    context "When the property is used correctly" $
+      it "Should parse the view correctly with an image for the button" $ 
+        parseViewFromFile testFile1 `shouldReturnRights` imageSuccessView
+
 parseDirectoryExtension :: String
 parseDirectoryExtension = "/test/Parse/Tests/Views/ParseFiles"
 
@@ -52,3 +61,7 @@ testExtension2 = "/VIAElementTest2.view"
 
 testExtension3 :: String
 testExtension3 = "/VIAElementTest3.view"
+
+imageButtonExtension :: String
+imageButtonExtension = "/imageButtonView.view"
+

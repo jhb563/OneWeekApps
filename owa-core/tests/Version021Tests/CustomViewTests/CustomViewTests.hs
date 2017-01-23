@@ -19,7 +19,6 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Objc.AbSyn
 import Objc.ViewConverter
-import Parse.ViewParser
 import TestCustomViews
 import TestUtil
 
@@ -30,27 +29,8 @@ runCustomViewTests currentDirectory = do
   hspec $
     beforeAll_ (removeDiffFiles outputDirectory) $
     beforeAll_ (createResultsFiles outputDirectory resultsFiles testFileStructures)
-    . afterAll_ (removeResultsFiles outputDirectory resultsFiles) $ do
-      viewParseTests parseDirectory
+    . afterAll_ (removeResultsFiles outputDirectory resultsFiles) $
       viewPrintTests outputDirectory
-
-viewParseTests :: FilePath -> Spec
-viewParseTests parseDirectory = do
-  let testFile1 = parseDirectory ++ basicParseExtension
-  let testFile2 = parseDirectory ++ twoSameParseExtension
-  let testFile3 = parseDirectory ++ twoDifferentParseExtension
-  describe "Parse Views with CustomView elements" $ do
-    context "When there is a single CustomView" $
-      it "Should match the test view" $
-        parseViewFromFile testFile1 `shouldReturnRights` basicCustomTest
-    
-    context "When there are two of the same type of CustomView" $
-      it "Should match the test view" $
-        parseViewFromFile testFile2 `shouldReturnRights` twoSameCustomTest
-
-    context "When there are two different types of CustomViews" $
-      it "Should match the test view" $
-        parseViewFromFile testFile3 `shouldReturnRights` twoDifferentCustomTest
 
 viewPrintTests :: FilePath -> Spec
 viewPrintTests outputDirectory = describe "Print File Structure for views with custom views" $ do
@@ -102,15 +82,6 @@ resultsFiles = [basicHeaderResultFile,
 
 parseDirectoryExtension :: String
 parseDirectoryExtension = "/tests/Version021Tests/CustomViewTests/ParseFiles"
-
-basicParseExtension :: String
-basicParseExtension = "/basicCustomTest.view"
-
-twoSameParseExtension :: String
-twoSameParseExtension = "/twoSameCustomTest.view"
-
-twoDifferentParseExtension :: String
-twoDifferentParseExtension = "/twoDifferentCustomTest.view"
 
 outputDirectoryExtension :: String
 outputDirectoryExtension = "/tests/Version021Tests/CustomViewTests/OutputFiles"

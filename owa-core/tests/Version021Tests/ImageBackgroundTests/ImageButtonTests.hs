@@ -19,38 +19,17 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Objc.AbSyn
 import Objc.ViewConverter
-import Parse.ViewParser
 import TestButtonObjects
 import TestUtil
 
 runImageButtonTests :: FilePath -> IO ()
 runImageButtonTests currentDirectory = do
-  let parseDirectory = currentDirectory ++ parseDirectoryExtension
   let outputDirectory = currentDirectory ++ outputDirectoryExtension
   hspec $
     beforeAll_ (removeDiffFiles outputDirectory) $
     beforeAll_ (createResultsFiles outputDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles outputDirectory resultsFiles) $ do
-      imageButtonParseTests parseDirectory
       imageButtonPrintTests outputDirectory
-
-imageButtonParseTests :: FilePath -> Spec
-imageButtonParseTests parseDirectory = do
-  let testFile1 = parseDirectory ++ imageButtonExtension1
-  let testFile2 = parseDirectory ++ imageButtonExtension2
-  let testFile3 = parseDirectory ++ imageButtonExtension3
-  describe "Parse view files where buttons use image source tag" $ do
-    context "When the property is used correctly" $
-      it "Should parse the view correctly with an image for the button" $ 
-        parseViewFromFile testFile1 `shouldReturnRights` testSuccessView
-
-    context "When the image file name is improperly not in quotations" $ 
-      it "Should return a parse error highlighting the improper name" $
-        parseViewFromFile testFile2 `shouldMatchError` missingQuotesError
-
-    context "When the wrong tag is used instead of ImageSrc" $
-      it "Should return a parse error highlighting the improper tag" $
-        parseViewFromFile testFile3 `shouldMatchError` wrongTagNameError
 
 imageButtonPrintTests :: FilePath -> Spec
 imageButtonPrintTests outputDirectory = describe "Print File Structure for view with an image button" $ do
@@ -59,18 +38,6 @@ imageButtonPrintTests outputDirectory = describe "Print File Structure for view 
 
   it "The printed implementation should match" $
     (outputDirectory ++ imageButtonMResultFile) `filesShouldMatch` (outputDirectory ++ imageButtonMTestFile)
-
-parseDirectoryExtension :: String
-parseDirectoryExtension = "/tests/Version021Tests/ImageBackgroundTests/ParseFiles"
-
-imageButtonExtension1 :: String
-imageButtonExtension1 = "/imageButtonView.view"
-
-imageButtonExtension2 :: String
-imageButtonExtension2 = "/imageButtonError1.view"
-
-imageButtonExtension3 :: String
-imageButtonExtension3 = "/imageButtonError2.view"
 
 outputDirectoryExtension :: String
 outputDirectoryExtension = "/tests/Version021Tests/ImageBackgroundTests/OutputFiles"

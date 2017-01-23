@@ -72,6 +72,10 @@ test-suite parse-tests
       Parse.Tests.Tabs.Basic
       Parse.Tests.Utils
       Parse.Tests.Views.Constraints
+      Parse.Tests.Views.ContainerObjects
+      Parse.Tests.Views.Containers
+      Parse.Tests.Views.Custom
+      Parse.Tests.Views.CustomObjects
       Parse.Tests.Views.Elements
       Parse.Tests.Views.Errors
       Parse.Tests.Views.Failure

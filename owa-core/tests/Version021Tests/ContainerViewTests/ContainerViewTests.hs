@@ -19,63 +19,18 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Objc.AbSyn
 import Objc.ViewConverter
-import Parse.ViewParser
 import TestUtil
 import TestContainerViews
 
 runContainerViewTests :: FilePath -> IO ()
 runContainerViewTests currentDirectory = do
-  let parseDirectory = currentDirectory ++ parseDirectoryExtension
   let outputDirectory = currentDirectory ++ outputDirectoryExtension
   hspec $
     beforeAll_ (removeDiffFiles outputDirectory) $
     beforeAll_ (createResultsFiles outputDirectory resultsFiles testFileStructures)
     . afterAll_ (removeResultsFiles outputDirectory resultsFiles) $ do
-      containerViewParseTests parseDirectory
       containerViewPrintTests outputDirectory
-      scrollViewParseTests parseDirectory
       scrollViewPrintTests outputDirectory
-
-containerViewParseTests :: FilePath -> Spec
-containerViewParseTests parseDirectory = do
-  let testFile1 = parseDirectory ++ basicParseExtension
-  let testFile2 = parseDirectory ++ nestedParseExtension
-  let testFile3 = parseDirectory ++ twoContainersParseExtension
-  describe "Parse Views with ContainerView elements" $ do
-    context "When there is a single ContainerView" $
-      it "Should match the test view" $
-        parseViewFromFile testFile1 `shouldReturnRights` basicContainerTest
-    
-    context "When there are two of the same type of ContainerView" $
-      it "Should match the test view" $
-        parseViewFromFile testFile2 `shouldReturnRights` nestedContainerTest
-
-    context "When there are two different types of ContainerViews" $
-      it "Should match the test view" $
-        parseViewFromFile testFile3 `shouldReturnRights` twoContainersTest
-
-scrollViewParseTests :: FilePath -> Spec
-scrollViewParseTests parseDirectory = do
-  let testFile1 = parseDirectory ++ scrollViewDefaultTestExtension
-  let testFile2 = parseDirectory ++ scrollViewVerticalTestExtension
-  let testFile3 = parseDirectory ++ scrollViewHorizontalTestExtension
-  let testFile4 = parseDirectory ++ scrollViewBothTestExtension
-  describe "Parse Views with ScrollView elements" $ do
-    context "When the scroll view has no direction specified" $
-      it "Should match the vertical test view" $
-        parseViewFromFile testFile1 `shouldReturnRights` scrollViewDefaultTestView
-    
-    context "When the scoll view has a vertical direction" $
-      it "Should match the vertical test view" $
-        parseViewFromFile testFile2 `shouldReturnRights` scrollViewVerticalTestView
-
-    context "When the scroll view has a horizontal direction" $
-      it "Should match the horizontal test view" $
-        parseViewFromFile testFile3 `shouldReturnRights` scrollViewHorizontalTestView
-
-    context "When the scroll view has both directions" $
-      it "Should match the both-direction test view" $
-        parseViewFromFile testFile4 `shouldReturnRights` scrollViewBothTestView
 
 containerViewPrintTests :: FilePath -> Spec
 containerViewPrintTests outputDirectory = describe "Print File Structure for views with container views" $ do
@@ -159,30 +114,6 @@ resultsFiles = [basicHeaderResultFile,
   horizontalScrollMResultFile,
   bothScrollHeaderResultFile,
   bothScrollMResultFile]
-
-parseDirectoryExtension :: String
-parseDirectoryExtension = "/tests/Version021Tests/ContainerViewTests/ParseFiles"
-
-basicParseExtension :: String
-basicParseExtension = "/basicContainerTest.view"
-
-nestedParseExtension :: String
-nestedParseExtension = "/nestedContainerTest.view"
-
-twoContainersParseExtension :: String
-twoContainersParseExtension = "/twoContainersTest.view"
-
-scrollViewDefaultTestExtension :: String
-scrollViewDefaultTestExtension = "/scrollViewDefaultTest.view"
-
-scrollViewVerticalTestExtension :: String
-scrollViewVerticalTestExtension = "/scrollViewVerticalTest.view"
-
-scrollViewHorizontalTestExtension :: String
-scrollViewHorizontalTestExtension = "/scrollViewHorizontalTest.view"
-
-scrollViewBothTestExtension :: String
-scrollViewBothTestExtension = "/scrollViewBothTest.view"
 
 outputDirectoryExtension :: String
 outputDirectoryExtension = "/tests/Version021Tests/ContainerViewTests/OutputFiles"

@@ -16,6 +16,8 @@ import Parse.Tests.Spacing.Basic (runSpacingIndentTests)
 import Parse.Tests.Strings.Basic (runStringsParseTests)
 import Parse.Tests.Tabs.Basic (runTabTests)
 import Parse.Tests.Views.Constraints (runViewConstraintTests)
+import Parse.Tests.Views.Containers (runContainerViewParseTests)
+import Parse.Tests.Views.Custom (runCustomViewParseTests)
 import Parse.Tests.Views.Elements (runViewElementTests)
 import Parse.Tests.Views.Failure (runViewFailureTests)
 import Parse.Tests.Views.Names (runViewNameTests)
@@ -40,3 +42,5 @@ main = do
   runViewElementTests currentDirectory
   runViewConstraintTests currentDirectory 
   runViewFailureTests currentDirectory
+  runContainerViewParseTests currentDirectory
+  runCustomViewParseTests currentDirectory
