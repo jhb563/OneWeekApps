@@ -1,4 +1,4 @@
-module TestErrors where
+module Objc.Tests.Errors.Objects where
 
 import Model.OWAError
 

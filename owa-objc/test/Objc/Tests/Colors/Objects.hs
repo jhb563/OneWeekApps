@@ -1,4 +1,4 @@
-module TestColors where
+module Objc.Tests.Colors.Objects where
 
 import Model.OWAColor
 

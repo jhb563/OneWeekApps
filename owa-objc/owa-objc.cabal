@@ -51,5 +51,11 @@ test-suite objc-tests
   other-modules:
       Objc.Tests.Alerts.Basic
       Objc.Tests.Alerts.Objects
+      Objc.Tests.Colors.Basic
+      Objc.Tests.Colors.Objects
+      Objc.Tests.Errors.Basic
+      Objc.Tests.Errors.Objects
+      Objc.Tests.Fonts.Basic
+      Objc.Tests.Fonts.Objects
       Objc.Tests.Utils
   default-language: Haskell2010

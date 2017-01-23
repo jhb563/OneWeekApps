@@ -58,9 +58,6 @@ test-suite Version010Tests
   main-is: OWAVersion010Tests.hs
   hs-source-dirs:   tests,
                     tests/Version010Tests,
-                    tests/Version010Tests/ColorTests,
-                    tests/Version010Tests/FontTests,
-                    tests/Version010Tests/ErrorTests,
                     tests/Version010Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -68,19 +65,12 @@ test-suite Version010Tests
                  process,
                  parsec,
                  owa-core,
-                 owa-model,
-                 owa-parse,
                  owa-objc,
+                 owa-model,
                  owa-swift
   other-modules: AppDirectoryTests
-               , ColorPrintTests
-               , ErrorPrintTests
                , FileSearchTests
-               , FontPrintTests
                , IntegrationTestUtil
-               , TestColors
-               , TestErrors
-               , TestFonts
                , TestUtil
                , Version010IntegrationTests
   default-language: Haskell2010

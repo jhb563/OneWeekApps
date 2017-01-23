@@ -1,4 +1,4 @@
-module TestFonts where
+module Objc.Tests.Fonts.Objects where
 
 import Model.OWAFont
 

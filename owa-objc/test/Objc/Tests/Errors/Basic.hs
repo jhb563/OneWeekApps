@@ -1,10 +1,10 @@
--- Objc.ColorConverter will expose the methods
--- objcHeaderFromColors :: OWAAppInfo -> [OWAColor] -> ObjcFile
--- objcImplementationFromAlerts :: OWAAppInfo -> [OWAColor] -> ObjcFile
--- which each take an appInfo object and a list of colors and return a
+-- Objc.ErrorConverter will expose the methods
+-- objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+-- objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
+-- which each take an appInfo object and a list of errors and return a
 -- file structure of objective C statements
 --
--- Objc.Print will expose the method
+-- Objc.Print will expose the methods
 -- printStructureToFile :: ObjcFile -> FilePath -> IO ()
 -- which takes an objective C file structure and a filepath
 -- and prints the file structure to the given file
@@ -12,21 +12,21 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module ColorPrintTests (
-  runColorPrintTests
+module Objc.Tests.Errors.Basic (
+  runErrorPrintTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAppInfo
-import Objc.ColorConverter
 import Objc.AbSyn
-import TestColors
-import TestUtil
+import Objc.ErrorConverter
+import Objc.Tests.Errors.Objects
+import Objc.Tests.Utils
 
-runColorPrintTests :: FilePath -> IO ()
-runColorPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version010Tests/ColorTests/ColorOutputFiles/"
+runErrorPrintTests :: FilePath -> IO ()
+runErrorPrintTests currentDirectory = do
+  let testDirectory = currentDirectory ++ "/test/Objc/Tests/Errors/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
@@ -45,7 +45,7 @@ emptyCategoryTests testDirectory = describe "Print File Structure for Empty Cate
       (testDirectory ++ emptyImplementationTestFile) 
 
 fullCategoryTests :: FilePath -> Spec
-fullCategoryTests testDirectory = describe "Print File Structure for Normal Color Category" $ do
+fullCategoryTests testDirectory = describe "Print File Structure for Normal Error Category" $ do
   it "The printed header file should match" $
     (testDirectory ++ headerResultFile) `filesShouldMatch`
       (testDirectory ++ headerTestFile) 
@@ -64,10 +64,10 @@ sampleAppInfo = OWAAppInfo {
 }
 
 testFileStructures :: [ObjcFile]
-testFileStructures = [objcHeaderFromColors sampleAppInfo [],
-  objcImplementationFromColors sampleAppInfo [],
-  objcHeaderFromColors sampleAppInfo testColorsToPrint,
-  objcImplementationFromColors sampleAppInfo testColorsToPrint]
+testFileStructures = [objcHeaderFromErrors sampleAppInfo [],
+  objcImplementationFromErrors sampleAppInfo [],
+  objcHeaderFromErrors sampleAppInfo allTestErrors,
+  objcImplementationFromErrors sampleAppInfo allTestErrors]
 
 resultsFiles :: [String]
 resultsFiles = [emptyHeaderResultFile,
@@ -76,25 +76,25 @@ resultsFiles = [emptyHeaderResultFile,
   implementationResultFile]
 
 emptyHeaderResultFile :: String
-emptyHeaderResultFile = "UIColor+EmptyCategory.h"
+emptyHeaderResultFile = "NSError+EmptyCategory.h"
 
 emptyImplementationResultFile :: String
-emptyImplementationResultFile = "UIColor+EmptyCategory.m"
+emptyImplementationResultFile = "NSError+EmptyCategory.m"
 
 headerResultFile :: String
-headerResultFile = "UIColor+MyAppColors.h"
+headerResultFile = "NSError+MyAppErrors.h"
 
 implementationResultFile :: String
-implementationResultFile = "UIColor+MyAppColors.m"
+implementationResultFile = "NSError+MyAppErrors.m"
 
 emptyHeaderTestFile :: String
-emptyHeaderTestFile = "UIColor+EmptyCategory.h.test"
+emptyHeaderTestFile = "NSError+EmptyCategory.h.test"
 
 emptyImplementationTestFile :: String
-emptyImplementationTestFile = "UIColor+EmptyCategory.m.test"
+emptyImplementationTestFile = "NSError+EmptyCategory.m.test"
 
 headerTestFile :: String
-headerTestFile = "UIColor+MyAppColors.h.test"
+headerTestFile = "NSError+MyAppErrors.h.test"
 
 implementationTestFile :: String
-implementationTestFile = "UIColor+MyAppColors.m.test"
+implementationTestFile = "NSError+MyAppErrors.m.test"

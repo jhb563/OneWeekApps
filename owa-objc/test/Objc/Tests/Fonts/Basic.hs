@@ -12,21 +12,21 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module FontPrintTests (
+module Objc.Tests.Fonts.Basic (
   runFontPrintTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAppInfo
-import Objc.FontConverter
 import Objc.AbSyn
-import TestFonts
-import TestUtil
+import Objc.FontConverter
+import Objc.Tests.Fonts.Objects
+import Objc.Tests.Utils
 
 runFontPrintTests :: FilePath -> IO ()
 runFontPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version010Tests/FontTests/FontOutputFiles/"
+  let testDirectory = currentDirectory ++ "/test/Objc/Tests/Fonts/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
