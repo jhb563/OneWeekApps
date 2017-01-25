@@ -6,6 +6,8 @@ import Objc.Tests.Alerts.Basic (runAlertPrintTests)
 import Objc.Tests.Colors.Basic (runColorPrintTests)
 import Objc.Tests.Errors.Basic (runErrorPrintTests)
 import Objc.Tests.Fonts.Basic (runFontPrintTests)
+import Objc.Tests.Strings.Basic (runStringsPrintTests)
+import Objc.Tests.Views.Basic (runViewPrintTests)
 
 main :: IO ()
 main = do
@@ -14,3 +16,4 @@ main = do
   runColorPrintTests currentDirectory
   runErrorPrintTests currentDirectory
   runFontPrintTests currentDirectory
+  runViewPrintTests currentDirectory

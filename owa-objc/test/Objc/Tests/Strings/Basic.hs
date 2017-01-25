@@ -11,7 +11,7 @@
 -- These tests will first create the file structures and then print them,
 -- testing the printed files. 
 
-module StringsPrintTests (
+module Objc.Tests.Strings.Basic (
   runStringsPrintTests
 ) where
 
@@ -20,12 +20,12 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Objc.AbSyn
 import Objc.StringsConverter
-import TestStringSets
-import TestUtil
+import Objc.Tests.Strings.Objects
+import Objc.Tests.Utils
 
 runStringsPrintTests :: FilePath -> IO ()
 runStringsPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version015Tests/StringsTests/StringsOutputFiles/"
+  let testDirectory = currentDirectory ++ "/test/Objc/Tests/Strings/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)

@@ -57,5 +57,9 @@ test-suite objc-tests
       Objc.Tests.Errors.Objects
       Objc.Tests.Fonts.Basic
       Objc.Tests.Fonts.Objects
+      Objc.Tests.Strings.Basic
+      Objc.Tests.Strings.Objects
       Objc.Tests.Utils
+      Objc.Tests.Views.Basic
+      Objc.Tests.Views.Objects
   default-language: Haskell2010

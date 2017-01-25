@@ -96,9 +96,7 @@ test-suite Version015Tests
                  owa-objc,
                  owa-swift
   other-modules: IntegrationTestUtil
-               , StringsPrintTests
                , StringsSearchTests
-               , TestStringSets
                , TestUtil
                , Version015IntegrationTests
   default-language: Haskell2010
@@ -111,7 +109,6 @@ test-suite Version020Tests
   hs-source-dirs: tests,
                   tests/Version020Tests,
                   tests/Version020Tests/FileSearchTests,
-                  tests/Version020Tests/ViewTests,
                   tests/Version020Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -127,10 +124,8 @@ test-suite Version020Tests
                  owa-swift
   other-modules: IntegrationTestUtil
                , TestUtil
-               , TestViews
                , Version020IntegrationTests
                , ViewFileSearchTests
-               , ViewPrintTests
   default-language: Haskell2010
 
 test-suite Version021Tests
@@ -142,7 +137,6 @@ test-suite Version021Tests
                   tests/Version021Tests,
                   tests/Version021Tests/CustomViewTests,
                   tests/Version021Tests/ContainerViewTests,
-                  tests/Version021Tests/ImageBackgroundTests,
                   tests/Version021Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -157,9 +151,7 @@ test-suite Version021Tests
                  owa-swift
   other-modules: ContainerViewTests
                , CustomViewTests
-               , ImageButtonTests
                , IntegrationTestUtil
-               , TestButtonObjects
                , TestContainerViews
                , TestCustomViews
                , TestUtil

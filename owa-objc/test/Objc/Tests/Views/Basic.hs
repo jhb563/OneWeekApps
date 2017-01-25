@@ -12,7 +12,7 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module ViewPrintTests (
+module Objc.Tests.Views.Basic (
   runViewPrintTests
 ) where
 
@@ -20,13 +20,13 @@ import Test.Hspec
 
 import Model.OWAAppInfo
 import Objc.AbSyn
+import Objc.Tests.Utils
+import Objc.Tests.Views.Objects
 import Objc.ViewConverter
-import TestUtil
-import TestViews
 
 runViewPrintTests :: FilePath -> IO ()
 runViewPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version020Tests/ViewTests/ViewOutputFiles/"
+  let testDirectory = currentDirectory ++ "/test/Objc/Tests/Views/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createResultsFiles testDirectory resultsFiles testFileStructures)
@@ -34,6 +34,7 @@ runViewPrintTests currentDirectory = do
       nameTests testDirectory
       elementTests testDirectory
       constraintTests testDirectory
+      imageButtonPrintTests testDirectory
 
 nameTests :: FilePath -> Spec
 nameTests testDirectory = describe "Print File Structure for views with no elements or constraints" $ do
@@ -105,6 +106,14 @@ constraintTests testDirectory = describe "Print File Structure for views with el
       it "The printed implementation should match" $
         (testDirectory ++ centerMResultFile) `filesShouldMatch` (testDirectory ++ centerMTestFile)
 
+imageButtonPrintTests :: FilePath -> Spec
+imageButtonPrintTests outputDirectory = describe "Print File Structure for view with an image button" $ do
+  it "The printed header should match" $
+    (outputDirectory ++ imageButtonHeaderResultFile) `filesShouldMatch` (outputDirectory ++ imageButtonHeaderTestFile)
+
+  it "The printed implementation should match" $
+    (outputDirectory ++ imageButtonMResultFile) `filesShouldMatch` (outputDirectory ++ imageButtonMTestFile)
+
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {
   appName = "MySampleApp",
@@ -134,7 +143,9 @@ testFileStructures = [objcHeaderFromView sampleAppInfo nameTest1,
   objcHeaderFromView sampleAppInfo placementTestView,
   objcImplementationFromView sampleAppInfo placementTestView,
   objcHeaderFromView sampleAppInfo centerTestView,
-  objcImplementationFromView sampleAppInfo centerTestView]
+  objcImplementationFromView sampleAppInfo centerTestView,
+  objcHeaderFromView sampleAppInfo imageSuccessView,
+  objcImplementationFromView sampleAppInfo imageSuccessView]
 
 resultsFiles :: [String]
 resultsFiles = [name1HeaderResultFile,
@@ -156,7 +167,9 @@ resultsFiles = [name1HeaderResultFile,
   placementHeaderResultFile,
   placementMResultFile,
   centerHeaderResultFile,
-  centerMResultFile]
+  centerMResultFile,
+  imageButtonHeaderResultFile,
+  imageButtonMResultFile]
 
 name1HeaderResultFile :: String
 name1HeaderResultFile = "VIANameTestView.h"
@@ -277,3 +290,15 @@ centerHeaderTestFile = "VIAConstraintTest6.h.test"
 
 centerMTestFile :: String
 centerMTestFile = "VIAConstraintTest6.m.test"
+
+imageButtonHeaderTestFile :: String
+imageButtonHeaderTestFile = "/OWAImageButtonView.h.test"
+
+imageButtonMTestFile :: String
+imageButtonMTestFile = "/OWAImageButtonView.m.test"
+
+imageButtonHeaderResultFile :: String
+imageButtonHeaderResultFile = "/OWAImageButtonView.h"
+
+imageButtonMResultFile :: String
+imageButtonMResultFile = "/OWAImageButtonView.m"

@@ -1,4 +1,4 @@
-module TestStringSets where
+module Objc.Tests.Strings.Objects where
 
 import qualified Data.Map.Strict as Map
 

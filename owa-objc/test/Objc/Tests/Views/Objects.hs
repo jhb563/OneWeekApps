@@ -1,4 +1,4 @@
-module TestViews where
+module Objc.Tests.Views.Objects where
 
 import Model.OWAElements
 import Model.OWAView
@@ -512,3 +512,63 @@ centerConstraintFromTuple (v1, v2, attr, val) = OWAConstraint {
   multiplier = 1.0,
   constant = val
 }
+
+testImageButton :: OWAButton
+testImageButton = OWAButton {
+  buttonName = "button1",
+  buttonText = Nothing,
+  buttonTextColorName = Nothing,
+  buttonFontName = Nothing,
+  buttonBackgroundColorName = Nothing,
+  buttonBackgroundImageSourceName = Just "file1.png"
+}
+
+imageHeightConstraint :: OWAConstraint
+imageHeightConstraint = OWAConstraint {
+  firstElementName = "button1",
+  firstAttribute = Height,
+  secondElementName = Nothing,
+  secondAttribute = Nothing,
+  multiplier = 1.0,
+  constant = 50
+}
+
+imageWidthConstraint :: OWAConstraint
+imageWidthConstraint = OWAConstraint {
+  firstElementName = "button1",
+  firstAttribute = Width,
+  secondElementName = Nothing,
+  secondAttribute = Nothing,
+  multiplier = 1.0,
+  constant = 100
+}
+
+imageTopConstraint :: OWAConstraint
+imageTopConstraint = OWAConstraint {
+  firstElementName = "button1",
+  firstAttribute = Top,
+  secondElementName = Just "Super",
+  secondAttribute = Just Top,
+  multiplier = 1.0,
+  constant = 0
+}
+
+imageLeftConstraint :: OWAConstraint
+imageLeftConstraint = OWAConstraint {
+  firstElementName = "button1",
+  firstAttribute = LeftSide,
+  secondElementName = Just "Super",
+  secondAttribute = Just LeftSide,
+  multiplier = 1.0,
+  constant = 0
+}
+
+imageSuccessView :: OWAView
+imageSuccessView = OWAView {
+  viewName = "myView",
+  viewType = "OWAImageButtonView",
+  subviews = [ButtonElement testImageButton],
+  constraints = [imageHeightConstraint, imageWidthConstraint,
+                imageTopConstraint, imageLeftConstraint]
+} 
+
