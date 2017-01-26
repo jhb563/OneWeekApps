@@ -1,4 +1,4 @@
-module TestCustomViews where
+module Objc.Tests.Views.CustomObjects where
 
 import Model.OWAElements
 import Model.OWAView

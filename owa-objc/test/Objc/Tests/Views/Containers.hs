@@ -10,20 +10,20 @@
 -- printStructureToFile :: ObjcFile -> Doc
 -- in Objc.Print, again testing the container views case
 
-module ContainerViewTests (
-  runContainerViewTests
+module Objc.Tests.Views.Containers (
+  runContainerViewPrintTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAppInfo
 import Objc.AbSyn
+import Objc.Tests.Utils
+import Objc.Tests.Views.ContainerObjects
 import Objc.ViewConverter
-import TestUtil
-import TestContainerViews
 
-runContainerViewTests :: FilePath -> IO ()
-runContainerViewTests currentDirectory = do
+runContainerViewPrintTests :: FilePath -> IO ()
+runContainerViewPrintTests currentDirectory = do
   let outputDirectory = currentDirectory ++ outputDirectoryExtension
   hspec $
     beforeAll_ (removeDiffFiles outputDirectory) $
@@ -116,7 +116,7 @@ resultsFiles = [basicHeaderResultFile,
   bothScrollMResultFile]
 
 outputDirectoryExtension :: String
-outputDirectoryExtension = "/tests/Version021Tests/ContainerViewTests/OutputFiles"
+outputDirectoryExtension = "/test/Objc/Tests/Views/OutputFiles"
 
 basicHeaderResultFile :: String
 basicHeaderResultFile = "/IGAContainerView1.h"

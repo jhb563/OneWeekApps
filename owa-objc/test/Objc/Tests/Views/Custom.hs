@@ -10,21 +10,20 @@
 -- printStructureToFile :: ObjcFile -> Doc
 -- in Objc.Print, again testing the custom views case
 
-module CustomViewTests (
-  runCustomViewTests
+module Objc.Tests.Views.Custom (
+  runCustomViewPrintTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAppInfo
 import Objc.AbSyn
+import Objc.Tests.Utils
+import Objc.Tests.Views.CustomObjects
 import Objc.ViewConverter
-import TestCustomViews
-import TestUtil
 
-runCustomViewTests :: FilePath -> IO ()
-runCustomViewTests currentDirectory = do
-  let parseDirectory = currentDirectory ++ parseDirectoryExtension
+runCustomViewPrintTests :: FilePath -> IO ()
+runCustomViewPrintTests currentDirectory = do
   let outputDirectory = currentDirectory ++ outputDirectoryExtension
   hspec $
     beforeAll_ (removeDiffFiles outputDirectory) $
@@ -80,11 +79,8 @@ resultsFiles = [basicHeaderResultFile,
   twoDifferentHeaderResultFile,
   twoDifferentMResultFile]
 
-parseDirectoryExtension :: String
-parseDirectoryExtension = "/tests/Version021Tests/CustomViewTests/ParseFiles"
-
 outputDirectoryExtension :: String
-outputDirectoryExtension = "/tests/Version021Tests/CustomViewTests/OutputFiles"
+outputDirectoryExtension = "/test/Objc/Tests/Views/OutputFiles"
 
 basicHeaderResultFile :: String
 basicHeaderResultFile = "/IGACustomTest1.h"

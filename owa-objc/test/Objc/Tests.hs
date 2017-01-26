@@ -8,6 +8,8 @@ import Objc.Tests.Errors.Basic (runErrorPrintTests)
 import Objc.Tests.Fonts.Basic (runFontPrintTests)
 import Objc.Tests.Strings.Basic (runStringsPrintTests)
 import Objc.Tests.Views.Basic (runViewPrintTests)
+import Objc.Tests.Views.Containers (runContainerViewPrintTests)
+import Objc.Tests.Views.Custom (runCustomViewPrintTests)
 
 main :: IO ()
 main = do
@@ -17,3 +19,5 @@ main = do
   runErrorPrintTests currentDirectory
   runFontPrintTests currentDirectory
   runViewPrintTests currentDirectory
+  runContainerViewPrintTests currentDirectory
+  runCustomViewPrintTests currentDirectory

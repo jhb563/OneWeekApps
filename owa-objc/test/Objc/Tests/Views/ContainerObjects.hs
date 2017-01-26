@@ -1,4 +1,4 @@
-module TestContainerViews where
+module Objc.Tests.Views.ContainerObjects where
 
 import Model.OWAElements
 import Model.OWAView

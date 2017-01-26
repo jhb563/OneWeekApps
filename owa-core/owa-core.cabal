@@ -135,8 +135,6 @@ test-suite Version021Tests
   main-is: OWAVersion021Tests.hs
   hs-source-dirs: tests,
                   tests/Version021Tests,
-                  tests/Version021Tests/CustomViewTests,
-                  tests/Version021Tests/ContainerViewTests,
                   tests/Version021Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -149,11 +147,7 @@ test-suite Version021Tests
                  owa-parse,
                  owa-objc,
                  owa-swift
-  other-modules: ContainerViewTests
-               , CustomViewTests
-               , IntegrationTestUtil
-               , TestContainerViews
-               , TestCustomViews
+  other-modules: IntegrationTestUtil
                , TestUtil
                , Version021IntegrationTests
   default-language: Haskell2010
