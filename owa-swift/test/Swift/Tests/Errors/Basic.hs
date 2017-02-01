@@ -1,6 +1,6 @@
--- Swift.FontConverter will expose the method:
--- swiftExtensionFromFonts :: OWAAppInfo -> [OWAFont] -> SwiftFile
--- which take an appInfo object and a list of fonts and return a
+-- Swift.ErrorConverter will expose the method:
+-- swiftExtensionFromErrors :: OWAAppInfo -> [OWAError] -> SwiftFile
+-- which take an appInfo object and a list of errors and return a
 -- file structure of Swift statements
 --
 -- Swift.Print will expose the method
@@ -11,21 +11,21 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module SwiftFontPrintTests (
-  runSwiftFontPrintTests
+module Swift.Tests.Errors.Basic (
+  runSwiftErrorPrintTests
 ) where
-
-import Test.Hspec
 
 import Model.OWAAppInfo
 import Swift.AbSyn
-import Swift.FontConverter
-import SwiftTestFonts
-import TestUtil
+import Swift.ErrorConverter
+import Swift.Tests.Errors.Objects
+import Swift.Tests.Utils
 
-runSwiftFontPrintTests :: FilePath -> IO ()
-runSwiftFontPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version023Tests/SwiftTests/SwiftFontTests/FontOutputFiles/"
+import Test.Hspec
+
+runSwiftErrorPrintTests :: FilePath -> IO ()
+runSwiftErrorPrintTests currentDirectory = do
+  let testDirectory = currentDirectory ++ "/test/Swift/Tests/Errors/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createSwiftResultsFiles testDirectory resultsFiles testFileStructures)
@@ -55,21 +55,21 @@ sampleAppInfo = OWAAppInfo {
 }
 
 testFileStructures :: [SwiftFile]
-testFileStructures = [swiftExtensionFromFonts sampleAppInfo [],
-  swiftExtensionFromFonts sampleAppInfo swiftTestFonts]
+testFileStructures = [swiftExtensionFromErrors sampleAppInfo [],
+  swiftExtensionFromErrors sampleAppInfo swiftTestErrors]
 
 resultsFiles :: [String]
 resultsFiles = [emptyResultFile,
   fullResultFile]
 
 emptyResultFile :: String
-emptyResultFile = "UIFont+EmptyCategory.swift"
+emptyResultFile = "NSError+EmptyCategory.swift"
 
 fullResultFile :: String
-fullResultFile = "UIFont+MSAFonts.swift"
+fullResultFile = "NSError+MSAErrors.swift"
 
 emptyTestFile :: String
-emptyTestFile = "UIFont+EmptyCategory.swift.test"
+emptyTestFile = "NSError+EmptyCategory.swift.test"
 
 fullTestFile :: String
-fullTestFile = "UIFont+MSAFonts.swift.test"
+fullTestFile = "NSError+MSAErrors.swift.test"

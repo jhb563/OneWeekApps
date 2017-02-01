@@ -1,4 +1,4 @@
-module SwiftSpecialTestViews where
+module Swift.Tests.Views.SpecialObjects where
 
 import Model.OWAElements
 import Model.OWAView

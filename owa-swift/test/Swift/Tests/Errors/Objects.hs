@@ -1,4 +1,4 @@
-module SwiftTestErrors where
+module Swift.Tests.Errors.Objects where
 
 import Model.OWAError
 

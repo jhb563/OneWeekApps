@@ -49,5 +49,14 @@ test-suite swift-tests
   other-modules:
       Swift.Tests.Alerts.Basic
       Swift.Tests.Alerts.Objects
+      Swift.Tests.Colors.Basic
+      Swift.Tests.Colors.Objects
+      Swift.Tests.Errors.Basic
+      Swift.Tests.Errors.Objects
+      Swift.Tests.Fonts.Basic
+      Swift.Tests.Fonts.Objects
       Swift.Tests.Utils
+      Swift.Tests.Views.Basic
+      Swift.Tests.Views.Objects
+      Swift.Tests.Views.SpecialObjects
   default-language: Haskell2010

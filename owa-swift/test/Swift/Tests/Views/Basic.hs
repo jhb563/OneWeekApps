@@ -11,7 +11,7 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module SwiftViewPrintTests (
+module Swift.Tests.Views.Basic (
   runSwiftViewPrintTests
 ) where
 
@@ -19,10 +19,10 @@ import Test.Hspec
 
 import Model.OWAAppInfo
 import Swift.AbSyn
+import Swift.Tests.Utils
+import Swift.Tests.Views.Objects
+import Swift.Tests.Views.SpecialObjects
 import Swift.ViewConverter
-import SwiftSpecialTestViews
-import SwiftTestViews
-import TestUtil
 
 runSwiftViewPrintTests :: FilePath -> IO ()
 runSwiftViewPrintTests currentDirectory = do
@@ -114,7 +114,7 @@ scrollViewTests testDirectory = describe "Print File Structure for Swift views w
       (testDirectory ++ scroll3TestFile)
 
 dirExtension :: FilePath
-dirExtension = "/tests/Version023Tests/SwiftTests/SwiftViewTests/ViewOutputFiles/"
+dirExtension = "/test/Swift/Tests/Views/OutputFiles/"
 
 sampleAppInfo :: OWAAppInfo
 sampleAppInfo = OWAAppInfo {

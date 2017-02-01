@@ -1,4 +1,4 @@
-module SwiftTestFonts where
+module Swift.Tests.Fonts.Objects where
 
 import Model.OWAFont
 

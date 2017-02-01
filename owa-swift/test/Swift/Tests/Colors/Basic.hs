@@ -11,7 +11,7 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module SwiftColorPrintTests (
+module Swift.Tests.Colors.Basic (
   runSwiftColorPrintTests
 ) where
 
@@ -20,12 +20,12 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Swift.AbSyn
 import Swift.ColorConverter
-import SwiftTestColors
-import TestUtil
+import Swift.Tests.Colors.Objects
+import Swift.Tests.Utils
 
 runSwiftColorPrintTests :: FilePath -> IO ()
 runSwiftColorPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version023Tests/SwiftTests/SwiftColorTests/ColorOutputFiles/"
+  let testDirectory = currentDirectory ++ "/test/Swift/Tests/Colors/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createSwiftResultsFiles testDirectory resultsFiles testFileStructures)
