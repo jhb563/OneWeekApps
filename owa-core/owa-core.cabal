@@ -164,7 +164,6 @@ test-suite Version023Tests
                   tests/Version023Tests/AppInfoCLITests,
                   tests/Version023Tests/SwiftTests/SwiftColorTests,
                   tests/Version023Tests/SwiftTests/SwiftFontTests,
-                  tests/Version023Tests/SwiftTests/SwiftAlertTests,
                   tests/Version023Tests/SwiftTests/SwiftErrorTests,
                   tests/Version023Tests/SwiftTests/SwiftViewTests,
                   tests/Version023Tests/IntegrationTests,
@@ -184,12 +183,10 @@ test-suite Version023Tests
                  owa-objc,
                  owa-swift
   other-modules: LazyCodeGenerationTests
-               , SwiftAlertPrintTests
                , SwiftColorPrintTests
                , SwiftErrorPrintTests
                , SwiftFontPrintTests
                , SwiftSpecialTestViews
-               , SwiftTestAlerts
                , SwiftTestColors
                , SwiftTestErrors
                , SwiftTestFonts

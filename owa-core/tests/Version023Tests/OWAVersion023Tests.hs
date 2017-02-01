@@ -5,7 +5,6 @@ import System.Directory
 import AppInfoCLITests
 import CodeTypeTests
 import LazyCodeGenerationTests
-import SwiftAlertPrintTests
 import SwiftColorPrintTests
 import SwiftErrorPrintTests
 import SwiftFontPrintTests
@@ -19,7 +18,6 @@ main = do
   runLazyCodeGenerationTests currentDirectory
   runSwiftColorPrintTests currentDirectory
   runSwiftFontPrintTests currentDirectory
-  runSwiftAlertPrintTests currentDirectory
   runSwiftErrorPrintTests currentDirectory
   runSwiftViewPrintTests currentDirectory
   runCodeTypeTests currentDirectory

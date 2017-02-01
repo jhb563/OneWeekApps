@@ -1,4 +1,4 @@
-module SwiftTestAlerts where
+module Swift.Tests.Alerts.Objects where
 
 import Model.OWAAlert
 

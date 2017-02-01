@@ -11,7 +11,7 @@
 -- These tests will first create the file structures and then
 -- print them, testing the printed files.
 
-module SwiftAlertPrintTests (
+module Swift.Tests.Alerts.Basic (
   runSwiftAlertPrintTests
 ) where
 
@@ -20,12 +20,12 @@ import Test.Hspec
 import Model.OWAAppInfo
 import Swift.AbSyn
 import Swift.AlertConverter
-import SwiftTestAlerts
-import TestUtil
+import Swift.Tests.Alerts.Objects
+import Swift.Tests.Utils
 
 runSwiftAlertPrintTests :: FilePath -> IO ()
 runSwiftAlertPrintTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version023Tests/SwiftTests/SwiftAlertTests/AlertOutputFiles/"
+  let testDirectory = currentDirectory ++ "/test/Swift/Tests/Alerts/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
     beforeAll_ (createSwiftResultsFiles testDirectory resultsFiles testFileStructures)
