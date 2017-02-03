@@ -3,18 +3,18 @@
 -- We pass in a starting directory, and it will do a BFS
 -- for the first directory called 'app'
 
-module AppDirectoryTests (
-  runAppDirectoryTests
+module Core.Tests.FileSearch.AppDirectory (
+  runAppDirectorySearchTests
 ) where
 
 import System.Directory
 import Test.Hspec
 
 import Core.FileSearch
-import TestUtil
+import Core.Tests.Utils
 
-runAppDirectoryTests :: FilePath -> IO ()
-runAppDirectoryTests currentDirectory = hspec $ 
+runAppDirectorySearchTests :: FilePath -> IO ()
+runAppDirectorySearchTests currentDirectory = hspec $ 
   beforeAll_ (setupTestEnv currentDirectory)
   . afterAll_ (teardownTestEnv currentDirectory) $ do
     _ <- findAppDirectorySuccessSpec currentDirectory

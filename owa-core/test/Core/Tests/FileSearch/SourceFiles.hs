@@ -8,7 +8,7 @@
 -- files with the respective extensions:
 -- .colors, .fonts, .alerts, .errors
 
-module FileSearchTests (
+module Core.Tests.FileSearch.SourceFiles (
     runFileSearchTests
 ) where
 
@@ -16,7 +16,7 @@ import System.Directory
 import Test.Hspec
 
 import Core.FileSearch
-import TestUtil
+import Core.Tests.Utils (createFileAndClose, shouldReturnSorted)
 
 runFileSearchTests :: FilePath -> IO ()
 runFileSearchTests currentDirectory = hspec $

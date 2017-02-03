@@ -1,9 +1,15 @@
-{-module AppInfoSearch where
+module Core.Tests.FileSearch.AppInfo
+  ( runAppInfoSearchTests )
+  where
+
+import System.Directory
+import Test.Hspec
 
 import Core.FileSearch
+import Core.Tests.Utils (createFileAndClose)
 
-appInfoSearchTests :: FilePath -> Spec
-appInfoSearchTests currentDirectory = do
+runAppInfoSearchTests :: FilePath -> IO ()
+runAppInfoSearchTests currentDirectory = hspec $ do
   let startPath1 = currentDirectory ++ appInfo1FolderExtension
   let startPath2 = currentDirectory ++ appInfo2FolderExtension
   let startPath3 = currentDirectory ++ appInfo3FolderExtension
@@ -103,4 +109,4 @@ directorySearchFileExtensions = [appInfo1Extension,
 -- -- -- -- | level2
 -- -- -- | orThis
 -- -- -- -- | level3
--- -- -- -- -- | level4 -}
+-- -- -- -- -- | level4
