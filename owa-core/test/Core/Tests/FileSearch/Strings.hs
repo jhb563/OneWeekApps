@@ -4,15 +4,15 @@
 -- to this method and receive a list of all .strings files
 -- which are found beneath it.
 
-module StringsSearchTests (
+module Core.Tests.FileSearch.Strings (
   runStringsSearchTests
 ) where
 
+import System.Directory
 import Test.Hspec
 
 import Core.FileSearch
-import System.Directory
-import TestUtil
+import Core.Tests.Utils
 
 runStringsSearchTests :: FilePath -> IO ()
 runStringsSearchTests currentDirectory = hspec $

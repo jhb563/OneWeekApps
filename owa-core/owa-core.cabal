@@ -68,8 +68,11 @@ test-suite CoreTests
                  owa-model,
                  owa-swift
   other-modules: Core.Tests.FileSearch.AppDirectory
-                 Core.Tests.FileSearch.SourceFiles
                  Core.Tests.FileSearch.AppInfo
+                 Core.Tests.FileSearch.SourceFiles
+                 Core.Tests.FileSearch.Strings
+                 Core.Tests.FileSearch.Views
+                 Core.Tests.Utils
   default-language: Haskell2010
 
 test-suite Version010Tests
@@ -101,7 +104,6 @@ test-suite Version015Tests
   main-is: OWAVersion015Tests.hs
   hs-source-dirs:   tests,
                     tests/Version015Tests,
-                    tests/Version015Tests/StringsTests,
                     tests/Version015Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -115,7 +117,6 @@ test-suite Version015Tests
                  owa-objc,
                  owa-swift
   other-modules: IntegrationTestUtil
-               , StringsSearchTests
                , TestUtil
                , Version015IntegrationTests
   default-language: Haskell2010
@@ -127,7 +128,6 @@ test-suite Version020Tests
   main-is: OWAVersion020Tests.hs
   hs-source-dirs: tests,
                   tests/Version020Tests,
-                  tests/Version020Tests/FileSearchTests,
                   tests/Version020Tests/IntegrationTests
   build-depends: base,
                  hspec     >= 1.8,
@@ -144,7 +144,6 @@ test-suite Version020Tests
   other-modules: IntegrationTestUtil
                , TestUtil
                , Version020IntegrationTests
-               , ViewFileSearchTests
   default-language: Haskell2010
 
 test-suite Version021Tests

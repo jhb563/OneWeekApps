@@ -3,15 +3,15 @@
 -- from Core.FileSearch, which takes a directory and returns
 -- a list of paths to .view files.
 
-module ViewFileSearchTests (
+module Core.Tests.FileSearch.Views (
   runViewFileSearchTests
 ) where
 
-import Test.Hspec
 import System.Directory
+import Test.Hspec
 
 import Core.FileSearch
-import TestUtil
+import Core.Tests.Utils
 
 runViewFileSearchTests :: FilePath -> IO ()
 runViewFileSearchTests currentDirectory = hspec $
