@@ -7,15 +7,15 @@
 -- creation, commenting of files, indentation flexibility,
 -- parse failures, and the app.info files.
 
-module Version015IntegrationTests (
+module Core.Tests.Integration.Version015.Basic (
   runV015IntegrationTests
 ) where
 
-import IntegrationTestUtil
+import Core.Tests.Integration.Utils
 
 runV015IntegrationTests :: FilePath -> IO ()
 runV015IntegrationTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version015Tests/IntegrationTests"
+  let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version015"
   runIntegrationTests testDirectory 
     [checkColorsFiles,
     checkFontsFiles,
