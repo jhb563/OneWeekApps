@@ -10,13 +10,10 @@ module Parse.ErrorParser (
   parseErrorsFromFile
 ) where
 
-import           Control.Monad.State.Lazy
 import           Data.Either
 import           Data.List
 import qualified Data.Map.Strict as Map
-import           Data.Maybe
 import           Text.Parsec
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWAError
@@ -37,13 +34,13 @@ type ErrorAttrMap = Map.Map ErrorAttr ErrorVal
 parseErrorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAError])
 parseErrorsFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrOWAErrors = parseErrorContents sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrOWAErrors = parseErrorContents source contents
   case errorOrOWAErrors of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndOWAErrors -> let (errors, owaErrors) = partitionEithers (concat errorsAndOWAErrors) in
       if not (null errors)
-        then return $ Left (map (attachFileName sourceName) errors)
+        then return $ Left (map (attachFileName source) errors)
         else return $ Right owaErrors
 
 parseErrorContents :: FilePath -> String -> Either ParseError [[Either OWAParseError OWAError]]
@@ -116,7 +113,7 @@ errorParser :: GenParser Char ErrorParserState (Either OWAParseError OWAError)
 errorParser = do
   name <- nameParserWithKeyword errorKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   attrs <- errorAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
@@ -140,13 +137,13 @@ errorAttrParsers = [domainParser,
 
 domainParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 domainParser = do
-  (_, domainName) <- variableNameParserWithKeyword domainKeyword
-  return (domainKeyword, NormalValue domainName)
+  (_, dName) <- variableNameParserWithKeyword domainKeyword
+  return (domainKeyword, NormalValue dName)
 
 codeParser :: GenParser Char ErrorParserState (ErrorAttr, ErrorVal)
 codeParser = do
-  string codeKeyword
-  spaceTabs
+  _ <- string codeKeyword
+  _ <- spaceTabs
   maybeDots <- optionMaybe (string "...")
   firstLetter <- letter
   rest <- many (alphaNum <|> char '_')
@@ -165,7 +162,7 @@ defaultDomainParser :: GenParser Char ErrorParserState ()
 defaultDomainParser = do
   (_, name) <- variableNameParserWithKeyword defaultDomainKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   maybePrefix <-  optionMaybe $ indentParser prefixParser
   spaces
   modifyState $ updateDefaultDomain name maybePrefix
@@ -185,7 +182,7 @@ errorFromNameAndAttrMap name attrMap errorState = do
   let maybePrefix = currentPrefix errorState
   domain <- case Map.lookup domainKeyword attrMap of
     Just (NormalValue domain) -> Just domain
-    Nothing -> if null defaultDomain then Nothing else Just defaultDomain
+    _ -> if null defaultDomain then Nothing else Just defaultDomain
   code <- case Map.lookup codeKeyword attrMap of
     Just (PrefixedValue code) -> case maybePrefix of
       Just prefix -> Just (prefix ++ code)
@@ -203,9 +200,9 @@ errorFromNameAndAttrMap name attrMap errorState = do
   } 
 
 missingAttrs :: ErrorAttrMap -> ErrorParserState -> [String]
-missingAttrs attrMap state = (requiredAttributes \\ Map.keys attrMap) ++ maybeDomain
+missingAttrs attrMap errorState = (requiredAttributes \\ Map.keys attrMap) ++ maybeDomain
   where domainAvailable = Map.member domainKeyword attrMap ||
-                          not (null $ currentDomain state)
+                          not (null $ currentDomain errorState)
         maybeDomain = if domainAvailable then [] else [domainKeyword]
 
 ---------------------------------------------------------------------------

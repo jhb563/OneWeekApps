@@ -13,9 +13,7 @@ module Parse.AlertParser (
 import           Data.Either
 import           Data.List
 import qualified Data.Map.Strict as Map
-import           Data.Maybe
 import           Text.Parsec
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWAAlert
@@ -35,13 +33,13 @@ type AlertAttrMap = Map.Map AlertAttr AlertVal
 parseAlertsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAAlert])
 parseAlertsFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrAlerts = parseAlertContents sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrAlerts = parseAlertContents source contents
   case errorOrAlerts of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndAlerts -> let (errors, alerts) = partitionEithers errorsAndAlerts in
       if not (null errors)
-        then return $ Left (map (attachFileName sourceName) errors)
+        then return $ Left (map (attachFileName source) errors)
         else return $ Right alerts
 
 parseAlertContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAAlert]
@@ -64,7 +62,7 @@ alertParser :: GenParser Char GenericParserState (Either OWAParseError OWAAlert)
 alertParser = do
   name <- nameParserWithKeyword alertKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   attrs <- alertAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
@@ -154,12 +152,10 @@ yesButtonKeyword = "YesButton"
 noButtonKeyword :: AlertAttr
 noButtonKeyword = "NoButton"
 
-buttonFormatKeywordPlaceholder :: AlertAttr
-buttonFormatKeywordPlaceholder = "ButtonFormat"
-
 requiredAttributes :: [AlertAttr]
 requiredAttributes = [titleKeyword, messageKeyword]
 
+attributeKeywords :: [AlertAttr]
 attributeKeywords = [titleKeyword,
   messageKeyword,
   dismissButtonKeyword,

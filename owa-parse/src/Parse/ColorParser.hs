@@ -13,11 +13,7 @@ module Parse.ColorParser (
 import           Data.Either
 import           Data.List
 import qualified Data.Map.Strict as Map
-import           Data.Maybe
-import           System.IO
 import           Text.Parsec
-import           Text.Parsec.Char
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWAColor
@@ -37,13 +33,13 @@ type ColorAttrMap = Map.Map ColorAttr ColorVal
 parseColorsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAColor])
 parseColorsFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrColors = parseColorContents sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrColors = parseColorContents source contents
   case errorOrColors of
     Left parseError -> return (Left [ParsecError parseError])
     Right errorsAndColors -> let (errors, colors) = partitionEithers errorsAndColors in
       if not (null errors)
-        then return $ Left (map (attachFileName sourceName) errors)
+        then return $ Left (map (attachFileName source) errors)
         else return $ Right colors
 
 -- 'parseColorContents' takes a string representing file contents,
@@ -69,7 +65,7 @@ colorParser :: GenParser Char GenericParserState (Either OWAParseError OWAColor)
 colorParser = do
   name <- nameParserWithKeyword colorKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   attrs <- attrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList (concat attrs)
@@ -115,9 +111,9 @@ alphaParser = do
 
 hexParser :: GenParser Char GenericParserState [(ColorAttr, ColorVal)]
 hexParser = do
-  string hexKeyword
-  spaceTabs
-  string "0x"
+  _ <- string hexKeyword
+  _ <- spaceTabs
+  _ <- string "0x"
   hexString <- count 6 hexChar
   maybeExtraChars <- optionMaybe (count 2 hexChar)
   singleTrailingComment
@@ -134,13 +130,13 @@ hexChar = oneOf "0123456789aAbBcCdDeEfF"
 
 colorFromNameAndAttrMap :: String -> ColorAttrMap -> Maybe OWAColor
 colorFromNameAndAttrMap name attrMap = do
-  red <- Map.lookup redKeyword attrMap
-  green <-  Map.lookup greenKeyword attrMap 
-  blue <-  Map.lookup bluekeyword attrMap 
-  alpha <- case Map.lookup alphaKeyword attrMap of
+  redVal <- Map.lookup redKeyword attrMap
+  greenVal <-  Map.lookup greenKeyword attrMap 
+  blueVal <-  Map.lookup bluekeyword attrMap 
+  alphaVal <- case Map.lookup alphaKeyword attrMap of
     Just a -> Just a
     Nothing -> Just 1.0
-  return $ colorFromTuple (name, red, green, blue, alpha)
+  return $ colorFromTuple (name, redVal, greenVal, blueVal, alphaVal)
 
 missingAttrs :: ColorAttrMap -> [ColorAttr]
 missingAttrs attrMap = requiredAttributes \\ Map.keys attrMap
@@ -153,7 +149,7 @@ attrsFromHexString [a1,a2,r1,r2,g1,g2,b1,b2] = [(redKeyword, hexValFromChars r1 
                                              (greenKeyword, hexValFromChars g1 g2),
                                              (bluekeyword, hexValFromChars b1 b2),
                                              (alphaKeyword, hexValFromChars a1 a2 / 255.0)]
-attrsFromHexString invalidHexString = []
+attrsFromHexString _ = []
 
 hexValFromChars :: Char -> Char -> ColorVal
 hexValFromChars c1 c2 = 16.0 * hexValFromChar c1 + hexValFromChar c2
@@ -182,6 +178,7 @@ hexValFromChar c = case c of
   'E' -> 14.0
   'f' -> 15.0
   'F' -> 15.0
+  _ -> error "Invalid Hex Value!" -- This should be impossible.
 
 -------------------------------------------------------------------------------
 -------------------KEYWORD CONSTANTS-------------------------------------------

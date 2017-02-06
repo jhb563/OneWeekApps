@@ -34,11 +34,11 @@ type AppInfoAttrMap = Map.Map AppInfoAttr AppInfoVal
 parseAppInfoFromFile :: FilePath -> IO (Either [OWAParseError] OWAAppInfo)
 parseAppInfoFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrAppInfo = parseAppInfo sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrAppInfo = parseAppInfo source contents
   case errorOrAppInfo of
     Left parseError -> return (Left [ParsecError parseError])
-    Right (Left objectError) -> return $ Left [attachFileName sourceName objectError]
+    Right (Left objectError) -> return $ Left [attachFileName source objectError]
     Right (Right appInfo) -> return $ Right appInfo
 
 parseAppInfo :: String -> String -> Either ParseError (Either OWAParseError OWAAppInfo)
@@ -96,9 +96,9 @@ companyNameParser = colonParserWithKeyword companyNameKeyword arbitraryStringPar
 
 colonParserWithKeyword :: String -> GenParser Char st AppInfoVal -> GenParser Char st (AppInfoAttr, AppInfoVal)
 colonParserWithKeyword keyword valParser = do
-  string keyword
-  char ':'
-  spaceTabs
+  _ <- string keyword
+  _ <- char ':'
+  _ <- spaceTabs
   appVal <- valParser
   return (keyword, appVal)
 
@@ -114,9 +114,9 @@ prefixParser = count 3 upper
 dateParser :: GenParser Char st AppInfoVal
 dateParser = do
   monthString <- optionDigitCountParser 1 1
-  char '/'
+  _ <- char '/'
   dayString <- optionDigitCountParser 1 1
-  char '/'
+  _ <- char '/'
   yearString <- optionDigitCountParser 2 2
   return $ monthString ++ ('/':dayString) ++ ('/':yearString)
 
@@ -134,17 +134,17 @@ optionDigitCountParser numRequired numOptional = do
 
 appInfoFromAttrMap :: AppInfoAttrMap -> Maybe OWAAppInfo
 appInfoFromAttrMap attrMap = do
-  appName <- Map.lookup appNameKeyword attrMap
-  appPrefix <- Map.lookup appPrefixKeyword attrMap
-  dateCreatedString <- Map.lookup dateCreatedKeyword attrMap
-  authorName <- case Map.lookup authorNameKeyword attrMap of
+  name <- Map.lookup appNameKeyword attrMap
+  prefix <- Map.lookup appPrefixKeyword attrMap
+  dateCreated <- Map.lookup dateCreatedKeyword attrMap
+  author <- case Map.lookup authorNameKeyword attrMap of
     Nothing -> Just ""
-    Just name -> Just name 
+    Just n -> Just n
   return OWAAppInfo {
-    appName = appName,
-    appPrefix = appPrefix,
-    authorName = authorName,
-    dateCreatedString = dateCreatedString,
+    appName = name,
+    appPrefix = prefix,
+    authorName = author,
+    dateCreatedString = dateCreated,
     companyName = Map.lookup companyNameKeyword attrMap
   }
 
