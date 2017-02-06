@@ -7,18 +7,18 @@
 -- backgrounds for buttons, custom views, container views,
 -- and scroll views.
 
-module Version021IntegrationTests (
+module Core.Tests.Integration.Version021.Basic (
   runV021IntegrationTests
 ) where
 
 import Test.Hspec
 
-import IntegrationTestUtil
-import TestUtil
+import Core.Tests.Integration.Utils
+import Core.Tests.Utils
 
 runV021IntegrationTests :: FilePath -> IO ()
 runV021IntegrationTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version021Tests/IntegrationTests"
+  let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version021"
   runIntegrationTests testDirectory
     [checkViewsFiles]
     additionalFiles

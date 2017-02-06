@@ -5,18 +5,18 @@
 -- the correct output files. We will test this on the cases
 -- included in Version 0.2.0, namely creation of views files.
 
-module Version020IntegrationTests (
+module Core.Tests.Integration.Version020.Basic (
   runV020IntegrationTests
 ) where
 
 import Test.Hspec
 
-import IntegrationTestUtil
-import TestUtil
+import Core.Tests.Integration.Utils
+import Core.Tests.Utils
 
 runV020IntegrationTests :: FilePath -> IO ()
 runV020IntegrationTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version020Tests/IntegrationTests"
+  let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version020"
   runIntegrationTests testDirectory 
     [checkColorsFiles,
     checkFontsFiles,

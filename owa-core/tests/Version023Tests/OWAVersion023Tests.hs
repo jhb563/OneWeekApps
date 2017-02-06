@@ -5,7 +5,6 @@ import System.Directory
 import AppInfoCLITests
 import CodeTypeTests
 import LazyCodeGenerationTests
-import Version023IntegrationTests
 import XCodeTests
 
 main :: IO ()
@@ -15,4 +14,3 @@ main = do
   runCodeTypeTests currentDirectory
   runAppInfoCLITests currentDirectory
   runXCodeTests currentDirectory
-  runV023IntegrationTests currentDirectory

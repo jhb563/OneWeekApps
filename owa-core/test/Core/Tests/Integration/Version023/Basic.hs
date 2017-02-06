@@ -8,20 +8,20 @@
 -- Selective Code Type generation, or App Info CLI here,
 -- because those tests are already based on runOWA.
 
-module Version023IntegrationTests (
+module Core.Tests.Integration.Version023.Basic (
   runV023IntegrationTests
 ) where
 
 import System.Directory (createDirectoryIfMissing)
 import Test.Hspec
 
-import IntegrationTestUtil
-import TestUtil
+import Core.Tests.Integration.Utils
+import Core.Tests.Utils
 
 runV023IntegrationTests :: FilePath -> IO ()
 runV023IntegrationTests currentDirectory = do
-  let testDirectory = currentDirectory ++ "/tests/Version023Tests/IntegrationTests"
-  let outputDirectory = currentDirectory ++ "/tests/Version023Tests/IntegrationTests/ios/IntegrationApp/"
+  let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version023"
+  let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version023/ios/IntegrationApp/"
   createDirectoryIfMissing True outputDirectory 
   runIntegrationTestsSwift testDirectory 
     [checkColorsFilesSwift,
