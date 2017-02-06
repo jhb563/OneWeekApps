@@ -1,0 +1,59 @@
+name:
+  owa-core
+
+version:
+  0.2.3.0
+
+dependencies:
+  - base
+  - directory
+
+library:
+  source-dirs:
+    src/lib
+  dependencies:
+    - containers
+    - mtl
+    - parsec
+    - split
+    - template
+    - text
+    - time
+    - transformers
+    - wl-pprint
+    - owa-model
+    - owa-utils
+    - owa-parse
+    - owa-objc
+    - owa-swift
+  exposed-modules:
+    - Core.Main
+    - Core.FileSearch
+    - Core.Lazy
+    - Core.XCode
+
+executables:
+  owa:
+    main:
+      RunOWA.hs
+    source-dirs:
+      src/exe
+    dependencies:
+      - owa-core
+
+tests:
+  CoreTests:
+    main:
+      Core/Tests.hs
+    source-dirs:
+      - test/
+    dependencies:
+      - hspec
+      - parsec
+      - process
+      - split
+      - time
+      - owa-core
+      - owa-objc
+      - owa-model
+      - owa-swift

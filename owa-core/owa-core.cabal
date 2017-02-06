@@ -1,88 +1,90 @@
-name:                owa-core
-version:             0.2.3
-synopsis:            Haskell platform for rapidly developing mobile apps
--- description:         
-license:             MIT
-license-file:        LICENSE
-author:              James Bowen
-maintainer:          jhbowen047@gmail.com
--- copyright:           
--- category:            
-build-type:          Simple
-extra-source-files:  README.md
-cabal-version:       >=1.10
+-- This file has been generated from package.yaml by hpack version 0.14.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           owa-core
+version:        0.2.3.0
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
 
 library
-  build-depends:       base,
-                       directory >= 1.2.5,
-                       split,
-                       parsec,
-                       containers,
-                       wl-pprint >= 1.2,
-                       mtl,
-                       text,
-                       time,
-                       transformers,
-                       template,
-                       owa-model,
-                       owa-utils,
-                       owa-parse,
-                       owa-objc,
-                       owa-swift
-  exposed-modules:     Core.Main,
-                       Core.FileSearch,
-                       Core.Lazy,
-                       Core.XCode
-  other-modules:       Core.Types, 
-                       Core.FileNames,
-                       Core.New,
-                       Core.Terminal,
-                       Core.XCode.Templates.Other
-                       Core.XCode.Templates.ProjectFile
-  hs-source-dirs:      src/lib
+  hs-source-dirs:
+      src/lib
+  build-depends:
+      base
+    , directory
+    , containers
+    , mtl
+    , parsec
+    , split
+    , template
+    , text
+    , time
+    , transformers
+    , wl-pprint
+    , owa-model
+    , owa-utils
+    , owa-parse
+    , owa-objc
+    , owa-swift
+  exposed-modules:
+      Core.Main
+      Core.FileSearch
+      Core.Lazy
+      Core.XCode
+  other-modules:
+      Core.FileNames
+      Core.New
+      Core.Terminal
+      Core.Types
+      Core.XCode.Templates.Other
+      Core.XCode.Templates.ProjectFile
+      Paths_owa_core
   default-language: Haskell2010
 
 executable owa
-  main-is:             RunOWA.hs
-  -- other-extensions:    
-  build-depends:       base,
-                       directory >= 1.2.5,
-                       owa-core
-  hs-source-dirs:      src/exe
-  default-language:    Haskell2010
+  main-is: RunOWA.hs
+  hs-source-dirs:
+      src/exe
+  build-depends:
+      base
+    , directory
+    , owa-core
+  default-language: Haskell2010
 
 test-suite CoreTests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
   type: exitcode-stdio-1.0
   main-is: Core/Tests.hs
-  hs-source-dirs:    
+  hs-source-dirs:
       test/
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 process,
-                 split,
-                 time,
-                 parsec,
-                 owa-core,
-                 owa-objc,
-                 owa-model,
-                 owa-swift
-  other-modules: Core.Tests.AppInfoCLI.Basic
-                 Core.Tests.CodeType.Basic
-                 Core.Tests.FileSearch.AppDirectory
-                 Core.Tests.FileSearch.AppInfo
-                 Core.Tests.FileSearch.SourceFiles
-                 Core.Tests.FileSearch.Strings
-                 Core.Tests.FileSearch.Views
-                 Core.Tests.Integration.Utils
-                 Core.Tests.Integration.Version010.Basic
-                 Core.Tests.Integration.Version015.Basic
-                 Core.Tests.Integration.Version020.Basic
-                 Core.Tests.Integration.Version021.Basic
-                 Core.Tests.Integration.Version023.Basic
-                 Core.Tests.LazyGeneration.Basic
-                 Core.Tests.Utils
-                 Core.Tests.XCode.Basic
+  build-depends:
+      base
+    , directory
+    , hspec
+    , parsec
+    , process
+    , split
+    , time
+    , owa-core
+    , owa-objc
+    , owa-model
+    , owa-swift
+  other-modules:
+      Core.Tests.AppInfoCLI.Basic
+      Core.Tests.CodeType.Basic
+      Core.Tests.FileSearch.AppDirectory
+      Core.Tests.FileSearch.AppInfo
+      Core.Tests.FileSearch.SourceFiles
+      Core.Tests.FileSearch.Strings
+      Core.Tests.FileSearch.Views
+      Core.Tests.Integration.Utils
+      Core.Tests.Integration.Version010.Basic
+      Core.Tests.Integration.Version015.Basic
+      Core.Tests.Integration.Version020.Basic
+      Core.Tests.Integration.Version021.Basic
+      Core.Tests.Integration.Version023.Basic
+      Core.Tests.LazyGeneration.Basic
+      Core.Tests.Utils
+      Core.Tests.XCode.Basic
   default-language: Haskell2010

@@ -49,8 +49,8 @@ maybeNewSuccessTest testFile resultFile fullGeneratedPaths = do
   testExists <- doesFileExist testFile
   newAppInfoExists <- doesFileExist resultFile
   generatedFilesExist <- mapM doesFileExist fullGeneratedPaths
-  let someResultsExist = (any id) $ newAppInfoExists : generatedFilesExist
-  let allResultsExist = (all id) $ newAppInfoExists : generatedFilesExist
+  let someResultsExist = or $ newAppInfoExists : generatedFilesExist
+  let allResultsExist = and $ newAppInfoExists : generatedFilesExist
   if not testExists && someResultsExist
     then expectationFailure "Should not have generated app.info or XCode files!"
     else if not allResultsExist && testExists

@@ -22,14 +22,14 @@ import Core.XCode (printBaseXCodeFiles)
 -- as the app.info file.
 runNewCommand :: FilePath -> OWAReaderT ()
 runNewCommand filePath = do
-    (printIfNotSilent "Creating new OWA project!")
+    printIfNotSilent "Creating new OWA project!"
     maybeAppInfo <- appInfoReaderAction 
     case maybeAppInfo of
       Nothing -> return ()
       Just appInfo -> do
         liftIO $ createAppInfo appInfo
         liftIO $ printBaseXCodeFiles filePath appInfo
-        (printIfNotSilent ("Your new app \"" ++ appName appInfo ++ "\" has been created!")) 
+        printIfNotSilent ("Your new app \"" ++ appName appInfo ++ "\" has been created!")
   where
     appInfoReaderAction = runMaybeT $ do
       appName_ <- readAppName

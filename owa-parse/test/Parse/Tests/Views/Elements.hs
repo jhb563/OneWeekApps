@@ -45,7 +45,7 @@ viewElementTest3 parseDirectory = do
 imageButtonTest :: String -> Spec
 imageButtonTest parseDirectory = do
   let testFile1 = parseDirectory ++ imageButtonExtension
-  describe "Parse view files where buttons use image source tag" $ do
+  describe "Parse view files where buttons use image source tag" $
     context "When the property is used correctly" $
       it "Should parse the view correctly with an image for the button" $ 
         parseViewFromFile testFile1 `shouldReturnRights` imageSuccessView

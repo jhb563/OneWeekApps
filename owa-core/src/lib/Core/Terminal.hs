@@ -41,7 +41,7 @@ printIfVerbose str = do
 
 -- | Prints a list of errors if they are present
 printErrors :: [OWAParseError] -> OWAReaderT ()
-printErrors errors = mapM_ (printIfNotSilent . show) errors
+printErrors = mapM_ (printIfNotSilent . show)
 
 -- | Reads a line from the input handle.
 owaReadLine :: OWAMaybeT String

@@ -10,19 +10,10 @@ module Core.Main (
   runOWA
 ) where
 
-import Control.Exception (handle)
 import Control.Monad
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Except (runExceptT, ExceptT, ExceptT(..))
 import Control.Monad.Reader (runReaderT, ask)
-import Control.Monad.Trans.Class (lift)
 import Data.Either
-import Data.List (find)
-import Data.List.Split (splitOn)
-import Control.Exception (handle)
-import Data.Maybe (isJust, catMaybes, mapMaybe)
-import Data.Time.Clock
-import System.Directory
 import System.IO 
 
 import Core.FileNames
@@ -31,14 +22,7 @@ import Core.Lazy
 import Core.New
 import Core.Terminal
 import Core.Types
-import Core.XCode
-import Model.OWAAlert
 import Model.OWAAppInfo
-import Model.OWAColor
-import Model.OWAError
-import Model.OWAFont
-import Model.OWALocalizedStringSet
-import Model.OWAParseError
 import Model.OWAView
 import Objc.AlertConverter
 import Objc.ColorConverter
@@ -94,8 +78,8 @@ runOWAReader filePath = findAppDirectoryAndRun filePath generateFiles
 
 generateFiles :: FilePath -> OWAReaderT ()
 generateFiles appDirectory = do
-  appInfo <- loadAppInfo appDirectory
-  case appInfo of
+  appInfoMaybe <- loadAppInfo appDirectory
+  case appInfoMaybe of
     Nothing -> printIfNotSilent "Couldn't parse app info. Exiting."
     Just appInfo -> do
       produceColorsFiles appDirectory appInfo
@@ -374,14 +358,14 @@ produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ d
           printIfNotSilent "Encountered errors parsing errors..."
           printErrors errors
         else printIfVerbose "No errors parsing errors!"
-      let errors = concat $ rights listOfParseResults
+      let errors' = concat $ rights listOfParseResults
       let prefix = appPrefix appInfo
-      printIfVerbose ("Found " ++ show (length errors) ++ " errors")
+      printIfVerbose ("Found " ++ show (length errors') ++ " errors")
       lang <- languageType <$> ask
       producedFiles <- if lang == LanguageTypeObjc
         then do
-          let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors
-          let errorMFileStructure = objcImplementationFromErrors appInfo errors
+          let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors'
+          let errorMFileStructure = objcImplementationFromErrors appInfo errors'
           printIfVerbose "Printing errors files..."
           let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorHeaderFileExtension prefix
           let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorImplementationFileExtension prefix
@@ -389,7 +373,7 @@ produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ d
           liftIO $ printStructureToFile errorMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
         else do
-          let errorFileStructure = swiftExtensionFromErrors appInfo errors
+          let errorFileStructure = swiftExtensionFromErrors appInfo errors'
           printIfVerbose "Printing errors files..."
           let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile errorFileStructure fullPath
