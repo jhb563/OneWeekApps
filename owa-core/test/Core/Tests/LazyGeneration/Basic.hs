@@ -7,17 +7,17 @@
 -- test values are all created before hand in an IO,
 -- and then run through hspec.
 
-module LazyCodeGenerationTests (
+module Core.Tests.LazyGeneration.Basic (
   runLazyCodeGenerationTests
 ) where
 
 import Data.Time.Clock
 import System.Directory
 import System.IO (stdin, stdout)
-import TestUtil
+import Test.Hspec
 
 import Core.Main
-import Test.Hspec
+import Core.Tests.Utils
 
 runLazyCodeGenerationTests :: FilePath -> IO ()
 runLazyCodeGenerationTests currentDirectory = do
@@ -223,10 +223,10 @@ expectRegenerated regenTest file = do
     else FileWasNotRegenerated file `shouldBe` regenTest
 
 appDirectoryExtension :: FilePath
-appDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/app"
+appDirectoryExtension = "/test/Core/Tests/LazyGeneration/app"
 
 outputDirectoryExtension :: FilePath
-outputDirectoryExtension = "/tests/Version023Tests/LazyCodeTests/ios/ViewIntegrationApp"
+outputDirectoryExtension = "/test/Core/Tests/LazyGeneration/ios/ViewIntegrationApp"
 
 producedFiles :: [FilePath]
 producedFiles = [producedColorHeader, producedColorM,

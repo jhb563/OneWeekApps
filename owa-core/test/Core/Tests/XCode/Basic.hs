@@ -4,15 +4,15 @@
 -- the requisite files for the basic XCode project to the
 -- proper directory. 
 
-module XCodeTests (
+module Core.Tests.XCode.Basic (
   runXCodeTests
 ) where
 
 import Test.Hspec
 
 import Model.OWAAppInfo
+import Core.Tests.Utils
 import Core.XCode
-import TestUtil
 
 runXCodeTests :: FilePath -> IO ()
 runXCodeTests currentDirectory = do
@@ -110,7 +110,7 @@ producedFiles =
   , contents2 ]
 
 testDirectoryExtension :: FilePath
-testDirectoryExtension = "/tests/Version023Tests/XCodeTests/"
+testDirectoryExtension = "/test/Core/Tests/XCode/"
 
 -- All directories which may contain diffs
 diffFileHomes :: [FilePath]

@@ -62,12 +62,16 @@ test-suite CoreTests
                  hspec     >= 1.8,
                  directory >= 1.2.5,
                  process,
+                 split,
+                 time,
                  parsec,
                  owa-core,
                  owa-objc,
                  owa-model,
                  owa-swift
-  other-modules: Core.Tests.FileSearch.AppDirectory
+  other-modules: Core.Tests.AppInfoCLI.Basic
+                 Core.Tests.CodeType.Basic
+                 Core.Tests.FileSearch.AppDirectory
                  Core.Tests.FileSearch.AppInfo
                  Core.Tests.FileSearch.SourceFiles
                  Core.Tests.FileSearch.Strings
@@ -78,37 +82,7 @@ test-suite CoreTests
                  Core.Tests.Integration.Version020.Basic
                  Core.Tests.Integration.Version021.Basic
                  Core.Tests.Integration.Version023.Basic
+                 Core.Tests.LazyGeneration.Basic
                  Core.Tests.Utils
-  default-language: Haskell2010
-
-test-suite Version023Tests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
-  type: exitcode-stdio-1.0
-  main-is: OWAVersion023Tests.hs
-  hs-source-dirs: tests,
-                  tests/Version023Tests,
-                  tests/Version023Tests/LazyCodeTests,
-                  tests/Version023Tests/CodeTypeTests,
-                  tests/Version023Tests/AppInfoCLITests,
-                  tests/Version023Tests/XCodeTests
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 containers,
-                 time,
-                 parsec,
-                 process,
-                 mtl,
-                 unix,
-                 split,
-                 owa-core,
-                 owa-model,
-                 owa-objc,
-                 owa-swift
-  other-modules: LazyCodeGenerationTests
-               , CodeTypeTests
-               , AppInfoCLITests
-               , XCodeTests
-               , TestUtil
+                 Core.Tests.XCode.Basic
   default-language: Haskell2010

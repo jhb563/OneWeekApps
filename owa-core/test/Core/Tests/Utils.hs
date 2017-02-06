@@ -3,7 +3,8 @@ module Core.Tests.Utils
   , shouldReturnSorted 
   , filesShouldMatch 
   , removeDiffFiles
-  , removeFiles )
+  , removeFiles 
+  , removeResultsFiles )
   where
 
 import Control.Monad (when)
@@ -38,6 +39,9 @@ filesShouldMatch actualFile expectedFile = do
       diffContents <- hGetContents stdOutHandler
       writeFile (actualFile ++ diffExtension) diffContents
       actualString `shouldBe` expectedString
+
+removeResultsFiles :: FilePath -> [String] -> IO ()
+removeResultsFiles outputDirectory resultsFiles = removeFiles (map (outputDirectory ++) resultsFiles)
 
 removeFiles :: [FilePath] -> IO ()
 removeFiles = mapM_ (\file -> do

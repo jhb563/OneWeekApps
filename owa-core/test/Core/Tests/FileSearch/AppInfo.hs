@@ -9,27 +9,29 @@ import Core.FileSearch
 import Core.Tests.Utils (createFileAndClose)
 
 runAppInfoSearchTests :: FilePath -> IO ()
-runAppInfoSearchTests currentDirectory = hspec $ do
-  let startPath1 = currentDirectory ++ appInfo1FolderExtension
-  let startPath2 = currentDirectory ++ appInfo2FolderExtension
-  let startPath3 = currentDirectory ++ appInfo3FolderExtension
-  let startPath4 = currentDirectory ++ appInfo4FolderExtension
-  describe "Find App Info File" $ do
-    context "when in the immediate directory being searched" $
-      it "Should return the app info file" $
-        findAppInfoFile startPath1 `shouldReturn` (Just $ currentDirectory ++ appInfo1Extension)
-    
-    context "when one folder below the directory" $
-      it "Should return the app info file" $
-        findAppInfoFile startPath2 `shouldReturn` (Just $ currentDirectory ++ appInfo2Extension)
+runAppInfoSearchTests currentDirectory = hspec $ 
+  beforeAll_ (setupTestEnv currentDirectory)
+  . afterAll_ (teardownTestEnv currentDirectory) $ do
+    let startPath1 = currentDirectory ++ appInfo1FolderExtension
+    let startPath2 = currentDirectory ++ appInfo2FolderExtension
+    let startPath3 = currentDirectory ++ appInfo3FolderExtension
+    let startPath4 = currentDirectory ++ appInfo4FolderExtension
+    describe "Find App Info File" $ do
+      context "when in the immediate directory being searched" $
+        it "Should return the app info file" $
+          findAppInfoFile startPath1 `shouldReturn` (Just $ currentDirectory ++ appInfo1Extension)
+      
+      context "when one folder below the directory" $
+        it "Should return the app info file" $
+          findAppInfoFile startPath2 `shouldReturn` (Just $ currentDirectory ++ appInfo2Extension)
 
-    context "when multiple folders below with a red herring directory" $
-      it "Should return the app info file" $
-        findAppInfoFile startPath3 `shouldReturn` (Just $ currentDirectory ++ appInfo3Extension)
+      context "when multiple folders below with a red herring directory" $
+        it "Should return the app info file" $
+          findAppInfoFile startPath3 `shouldReturn` (Just $ currentDirectory ++ appInfo3Extension)
 
-    context "when there is no file" $
-      it "Should return Nothing" $
-        findAppInfoFile startPath4 `shouldReturn` Nothing
+      context "when there is no file" $
+        it "Should return Nothing" $
+          findAppInfoFile startPath4 `shouldReturn` Nothing
 
 
 setupTestEnv :: FilePath -> IO ()

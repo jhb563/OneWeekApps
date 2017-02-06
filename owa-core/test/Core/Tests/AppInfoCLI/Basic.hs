@@ -1,4 +1,4 @@
-module AppInfoCLITests (
+module Core.Tests.AppInfoCLI.Basic (
   runAppInfoCLITests
 ) where
 
@@ -11,7 +11,7 @@ import System.IO
 import Test.Hspec
 
 import Core.Main
-import TestUtil
+import Core.Tests.Utils
 
 runAppInfoCLITests :: FilePath -> IO ()
 runAppInfoCLITests currentDirectory = do
@@ -97,7 +97,7 @@ dateCreatedStringFromTime time = finalString
     finalString = show month ++ "/" ++ show date ++ "/" ++ show year
 
 testDirectoryExtension :: FilePath
-testDirectoryExtension = "/tests/Version023Tests/AppInfoCLITests/"
+testDirectoryExtension = "/test/Core/Tests/AppInfoCLI/"
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = testDirectoryExtension ++ "app/"

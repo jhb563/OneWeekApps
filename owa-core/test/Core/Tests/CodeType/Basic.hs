@@ -2,7 +2,7 @@
 -- of arguments, testing specifically that certain types
 -- of code are either generated or not generated.
 
-module CodeTypeTests (
+module Core.Tests.CodeType.Basic (
   runCodeTypeTests
 ) where
 
@@ -12,7 +12,7 @@ import System.IO (stdin, stdout)
 import Test.Hspec
 
 import Core.Main (runOWA)
-import TestUtil
+import Core.Tests.Utils
 
 data FileTest = FileExists FilePath | FileDoesNotExist FilePath 
   deriving (Show, Eq)
@@ -116,13 +116,13 @@ fileTest file = do
     else return $ FileDoesNotExist file
 
 outputDirectoryExtension :: FilePath
-outputDirectoryExtension = "/tests/Version023Tests/CodeTypeTests/ios/ViewIntegrationApp"
+outputDirectoryExtension = "/test/Core/Tests/CodeType/ios/ViewIntegrationApp"
 
 appDirectoryExtension :: FilePath
-appDirectoryExtension = "/tests/Version023Tests/CodeTypeTests/app"
+appDirectoryExtension = "/test/Core/Tests/CodeType/app"
 
 runDirectoryExtension :: FilePath
-runDirectoryExtension = "/tests/Version023Tests/CodeTypeTests" 
+runDirectoryExtension = "/test/Core/Tests/CodeType" 
 
 allProducedFiles :: [FilePath]
 allProducedFiles = lastGenPath : allPossibleProducedFiles
