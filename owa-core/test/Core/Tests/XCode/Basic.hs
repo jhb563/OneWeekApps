@@ -159,7 +159,7 @@ vc1 :: FilePath
 vc1 = "ios/XCodeTestProject/ViewController.swift"
 
 pbx1 :: FilePath
-pbx1 = "ios/XCodeTestProject.xcodeproj/project.pbxproject"
+pbx1 = "ios/XCodeTestProject.xcodeproj/project.pbxproj"
 
 contents1 :: FilePath
 contents1 = "ios/XCodeTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
@@ -174,7 +174,7 @@ vc2 :: FilePath
 vc2 = "ios/MyTestProject/ViewController.swift"
 
 pbx2 :: FilePath
-pbx2 = "ios/MyTestProject.xcodeproj/project.pbxproject"
+pbx2 = "ios/MyTestProject.xcodeproj/project.pbxproj"
 
 contents2 :: FilePath
 contents2 = "ios/MyTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"

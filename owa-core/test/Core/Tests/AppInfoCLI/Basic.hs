@@ -120,7 +120,7 @@ generatedPlistExtension :: FilePath
 generatedPlistExtension = "ios/One Week Apps/Info.plist" 
 
 generatedPbxProjExtension :: FilePath
-generatedPbxProjExtension = "ios/One Week Apps.xcodeproj/project.pbxproject"
+generatedPbxProjExtension = "ios/One Week Apps.xcodeproj/project.pbxproj"
 
 generatedWorkspaceExtension :: FilePath
 generatedWorkspaceExtension = "ios/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"
