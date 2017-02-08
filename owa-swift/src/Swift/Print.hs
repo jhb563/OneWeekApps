@@ -10,7 +10,6 @@ module Swift.Print (
   printSwiftStructureToFile
 ) where
 
-import Data.List
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
@@ -54,7 +53,7 @@ commentDoc str = if null str
   else text "//" <+> text str
 
 importDoc :: Import -> Doc
-importDoc (ModuleImport name) = text "import" <+> text name
+importDoc (ModuleImport name') = text "import" <+> text name'
 
 extensionDoc :: String -> [FileSection] -> Doc
 extensionDoc extensionName sections = indentBlock 
@@ -79,9 +78,9 @@ statementListSection (Just title) statements = markDoc title PPrint.<$> empty PP
   spaceOut (map statementDoc statements)
 
 enumSection :: String -> SwiftType -> [String] -> Doc
-enumSection name typ cases = indentBlock headerDoc body
+enumSection name' typ cases = indentBlock headerDoc body
   where
-    headerDoc = text "enum" <+> text name <> colon <+> typeDoc typ
+    headerDoc = text "enum" <+> text name' <> colon <+> typeDoc typ
     body = vcat $ map (\ident -> text "case" <+> text ident) cases
 
 methodDoc :: SwiftMethod -> Doc
@@ -105,9 +104,9 @@ typeDoc :: SwiftType -> Doc
 typeDoc (SimpleType typ) = text typ
 typeDoc (OptionalType typ) = typeDoc typ <> text "?"
 typeDoc (ExplicitType typ) = text typ <> text "!"
-typeDoc (FunctionType argTypes returnType) = parens 
+typeDoc (FunctionType argTypes returnType') = parens 
   (hcat $ punctuate (text ", ") (map typeDoc argTypes)) <+>
-  text "->" <+> typeDoc returnType
+  text "->" <+> typeDoc returnType'
 typeDoc (DictionaryType keyType valueType) = brackets $
   typeDoc keyType <> colon <+> typeDoc valueType
 
@@ -127,16 +126,16 @@ paramDoc pDef = case label of
 statementDoc :: SwiftStatement -> Doc
 statementDoc (ReturnStatement expr) = text "return" <+> expressionDoc expr
 statementDoc (ExpressionStatement expr) = expressionDoc expr
-statementDoc (LetDecl name expr) = text "let" <+> text name <+>
+statementDoc (LetDecl name' expr) = text "let" <+> text name' <+>
   text "=" <+> expressionDoc expr
-statementDoc (VarDecl declQualfiers name varType maybeExpr) = case maybeExpr of
+statementDoc (VarDecl declQualfiers name' varType maybeExpr) = case maybeExpr of
   Nothing -> declDoc
   Just expr -> declDoc <+> text "=" <+> expressionDoc expr
   where
     declDoc = hsep 
       (map text (declQualfiers ++ ["var"])) <+>
-      text name <> colon <+> typeDoc varType
-statementDoc (TypeAliasDecl name typ) = text "typealias" <+> text name <+> text "=" <+>
+      text name' <> colon <+> typeDoc varType
+statementDoc (TypeAliasDecl name' typ) = text "typealias" <+> text name' <+> text "=" <+>
   typeDoc typ
 statementDoc (AssignStatement expr1 expr2) = expressionDoc expr1 <+> text "=" <+>
   expressionDoc expr2
@@ -175,12 +174,12 @@ expressionDoc (ClosureExpr closure) = nest 2
     headDoc = if null ps 
       then text "{"
       else text "{" <> parens (hcat $ punctuate (text ", ") (map paramDoc ps)) <+> text "in"
-expressionDoc (CalledClosure closure params) = expressionDoc (ClosureExpr closure) <>
-  parens (hcat $ punctuate (text ", ") (map expressionDoc params))
+expressionDoc (CalledClosure closure params') = expressionDoc (ClosureExpr closure) <>
+  parens (hcat $ punctuate (text ", ") (map expressionDoc params'))
 expressionDoc (Var ident) = text ident
 expressionDoc (FloatLit flt) = text $ truncatedFloatString flt
 expressionDoc (StringLit str) = dquotes $ text str
-expressionDoc (BoolLit bool) = text $ if bool then "true" else "false"
+expressionDoc (BoolLit b) = text $ if b then "true" else "false"
 expressionDoc (ArrayLit exprs) = brackets $ hcat $ punctuate (text ", ")
   (map expressionDoc exprs)
 expressionDoc (DictionaryLit exprPairs) = brackets $ hcat $ punctuate (text ", ")

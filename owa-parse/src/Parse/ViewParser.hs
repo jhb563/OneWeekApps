@@ -15,7 +15,6 @@ import qualified Data.List.Split as Split
 import qualified Data.Map.Strict as Map
 import           Data.Maybe
 import           Text.Parsec
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWAElements
@@ -43,19 +42,19 @@ type ViewAttrMap = Map.Map ViewAttr ViewVal
 parseViewFromFile :: FilePath -> IO (Either [OWAParseError] OWAView)
 parseViewFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrView = parseViewContents sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrView = parseViewContents source contents
   case errorOrView of
     Left parseError -> return (Left [ParsecError parseError])
     Right itemErrsOrView -> case itemErrsOrView of
-      Left itemErrs -> return $ Left (map (attachFileName sourceName) itemErrs)
+      Left itemErrs -> return $ Left (map (attachFileName source) itemErrs)
       Right view -> return $ Right view 
 
 parseViewContents :: String -> String -> Either ParseError (Either [OWAParseError] OWAView)
-parseViewContents sourceName = Text.Parsec.runParser
+parseViewContents source = Text.Parsec.runParser
   (do
     commentOrSpacesParser
-    result <- viewParser (head (Split.splitOn "." sourceName))
+    result <- viewParser (head (Split.splitOn "." source))
     commentOrSpacesParser
     eof
     return result)
@@ -64,7 +63,7 @@ parseViewContents sourceName = Text.Parsec.runParser
     viewIndentationLevel = [],
     viewShouldUpdateIndent = False
   }
-  sourceName
+  source
 
 -------------------------------------------------------------------------------
 ----------------------VIEW STATE-----------------------------------------------
@@ -110,18 +109,18 @@ popSuperViewName currentState = currentState {
 -------------------------------------------------------------------------------
 
 viewParser :: String -> GenParser Char ViewParserState (Either [OWAParseError] OWAView)
-viewParser fileName = do
+viewParser fName = do
   name <- nameParserWithKeyword viewKeyword
   modifyState $ pushSuperViewName defaultSuperViewKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   attrs <- attributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let attrMap = Map.fromList attrs
   modifyState popSuperViewName
   modifyState reduceIndentationLevel
   case Map.lookup elementErrorsKeyword attrMap of
-    Nothing -> return $ Right (viewFromNameFileAndAttrMap name fileName attrMap)
     Just (ElementsErrs es) -> return $ Left es
+    _ -> return $ Right (viewFromNameFileAndAttrMap name fName attrMap)
 
 attributeParser :: GenParser Char ViewParserState (ViewAttr, ViewVal)
 attributeParser = indentParser $ choice allAttrParsers
@@ -138,7 +137,7 @@ elementsParser :: GenParser Char ViewParserState (ViewAttr, ViewVal)
 elementsParser = do
   loneStringKeywordParser elementsKeyword 
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   results <- elementParser `sepEndBy` many (Text.Parsec.try indentedComment)
   let (errors, elemTuples) = partitionEithers results
   let (elements, constraintLists) = unzip elemTuples
@@ -159,14 +158,14 @@ labelElementParser :: GenParser Char ViewParserState (Either OWAParseError (OWAV
 labelElementParser = do
   name <- nameParserWithKeyword labelKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   labelAttrsAndConstraints <- labelAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints labelAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints labelAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let maybeLabel = labelFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
   case maybeLabel of
-    Just label -> return $ Right (LabelElement label, modifiedConstraints)
+    Just label' -> return $ Right (LabelElement label', modifiedConstraints)
     Nothing -> return $ Left ObjectError {
       fileName = "",
       itemName = name,
@@ -188,10 +187,10 @@ buttonElementParser :: GenParser Char ViewParserState (Either OWAParseError (OWA
 buttonElementParser = do
   name <- nameParserWithKeyword buttonKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   buttonAttrsAndConstraints <- buttonAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints buttonAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints buttonAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let maybeButton = buttonFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
   case maybeButton of
@@ -218,10 +217,10 @@ textFieldElementParser :: GenParser Char ViewParserState (Either OWAParseError (
 textFieldElementParser = do
   name <- nameParserWithKeyword textFieldKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   textfieldAttrsAndConstraints <- textfieldAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints textfieldAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints textfieldAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let textfield = textFieldFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
   return $ Right (TextFieldElement textfield, modifiedConstraints)
@@ -243,12 +242,12 @@ imageViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWAView
 imageViewParser = do
   name <- nameParserWithKeyword imageViewKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   imageViewAttrsAndConstraints <- imageViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints imageViewAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints imageViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let maybeImageView = imageViewFromNameAndAttrs name attrMap
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
   case maybeImageView of
     Just imageView -> return $ Right (ImageElement imageView, modifiedConstraints)
@@ -270,12 +269,12 @@ customViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWAVie
 customViewParser = do
   name <- Text.Parsec.try $ nameParserWithKeyword customViewKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   customViewAttrsAndConstraints <- customViewAttributeParser `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints customViewAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints customViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let maybeCustomViewRecord = customViewFromNameAndAttrs name attrMap
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
   case maybeCustomViewRecord of
     Just customViewRecord -> return $ Right (CustomViewElement customViewRecord, modifiedConstraints)
@@ -296,46 +295,47 @@ containerViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWA
 containerViewParser = do
   name <- nameParserWithKeyword containerViewKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   containerViewAttrsAndConstraints <- containerViewAttributeParser name `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints containerViewAttrsAndConstraints
-  let (subElements, subConstraints, errors) = extractSubviewsAndErrors containerViewAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints containerViewAttrsAndConstraints
+  let (subElements, subConstraints, _) = extractSubviewsAndErrors containerViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let allConstraints = modifiedConstraints ++ subConstraints
   let containerView = containerViewFromNameSubviewsAndAttrs name subElements attrMap
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
   return $ Right (ContainerViewElement containerView, allConstraints)
 
 containerViewAttributeParser :: String -> GenParser Char ViewParserState (ElementAttr, ElementVal)
-containerViewAttributeParser containerName = indentParser $ choice (allContainerViewAttributeParsers containerName)
+containerViewAttributeParser containerName' = indentParser $ choice (allContainerViewAttributeParsers containerName')
 
 allContainerViewAttributeParsers :: String -> [GenParser Char ViewParserState (ElementAttr, ElementVal)]
-allContainerViewAttributeParsers containerName = [backgroundColorParser, 
-  containerViewElementsParser containerName, 
+allContainerViewAttributeParsers containerName' = [backgroundColorParser, 
+  containerViewElementsParser containerName', 
   constraintsParser]
 
 containerViewElementsParser :: String -> GenParser Char ViewParserState (ElementAttr, ElementVal)
-containerViewElementsParser containerName = do
-  modifyState $ pushSuperViewName containerName
-  (viewAttr, viewVal) <- elementsParser
+containerViewElementsParser containerName' = do
+  modifyState $ pushSuperViewName containerName'
+  (_, viewVal) <- elementsParser
   modifyState popSuperViewName
   case viewVal of
-    ElementsVal (elements, constraints) -> return (elementsKeyword, SubviewsVal (elements, constraints))
+    ElementsVal (elements, constraints') -> return (elementsKeyword, SubviewsVal (elements, constraints'))
     ElementsErrs errs -> return (elementErrorsKeyword, ErrorsVal errs)
+    _ -> error "Invalid elements type" -- Should be impossible
 
 scrollViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 scrollViewParser = do
   name <- nameParserWithKeyword scrollViewKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   scrollViewAttrsAndConstraints <- scrollViewAttributeParser name `sepEndBy` many (Text.Parsec.try indentedComment)
-  let (attrMap, constraints) = splitAttrsAndConstraints scrollViewAttrsAndConstraints
-  let (subElements, subConstraints, errors) = extractSubviewsAndErrors scrollViewAttrsAndConstraints
-  let modifiedConstraints = modifyConstraintsWithViewName name constraints
+  let (attrMap, constraints') = splitAttrsAndConstraints scrollViewAttrsAndConstraints
+  let (subElements, subConstraints, _) = extractSubviewsAndErrors scrollViewAttrsAndConstraints
+  let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let scrollView = scrollViewFromNameSubviewsAndAttrs name subElements attrMap
   let addedConstraintsOrFailure = addedScrollViewConstraints name (scrollDirection scrollView) modifiedConstraints
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
   case addedConstraintsOrFailure of
     Left missingStrs -> return $ Left ObjectError {
@@ -349,15 +349,15 @@ scrollViewParser = do
 
 
 scrollViewAttributeParser :: String -> GenParser Char ViewParserState (ElementAttr, ElementVal)
-scrollViewAttributeParser scrollViewName = indentParser $ choice (allScrollViewAttributeParsers scrollViewName)
+scrollViewAttributeParser scrollViewName' = indentParser $ choice (allScrollViewAttributeParsers scrollViewName')
 
 allScrollViewAttributeParsers :: String -> [GenParser Char ViewParserState (ElementAttr, ElementVal)]
-allScrollViewAttributeParsers scrollViewName = scrollDirectionParser : allContainerViewAttributeParsers (scrollViewName ++ "ContainerView")
+allScrollViewAttributeParsers scrollViewName' = scrollDirectionParser : allContainerViewAttributeParsers (scrollViewName' ++ "ContainerView")
 
 scrollDirectionParser :: GenParser Char ViewParserState (ElementAttr, ElementVal)
 scrollDirectionParser = do
-  string scrollDirectionKeyword
-  spaceTabs
+  _ <- string scrollDirectionKeyword
+  _ <- spaceTabs
   dirString <- choice $ map string [verticalKeyword, horizontalKeyword, bothKeyword]
   singleTrailingComment
   return (scrollDirectionKeyword, StringVal dirString)
@@ -411,13 +411,13 @@ constraintsParser :: GenParser Char ViewParserState (ElementAttr, ElementVal)
 constraintsParser = do
   loneStringKeywordParser layoutKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
-  constraints <- singleConstraintParser `sepEndBy` many (Text.Parsec.try indentedComment)
+  _ <- many $ Text.Parsec.try indentedComment
+  constraints' <- singleConstraintParser `sepEndBy` many (Text.Parsec.try indentedComment)
   currentState <- getState
   if viewShouldUpdateIndent currentState
     then modifyState setShouldNotUpdateLevel
     else modifyState reduceIndentationLevel
-  return (constraintsKeyword, ConstraintsVal constraints)
+  return (constraintsKeyword, ConstraintsVal constraints')
 
 singleConstraintParser :: GenParser Char ViewParserState OWAConstraint
 singleConstraintParser = indentParser $ choice allConstraintParsers
@@ -438,8 +438,8 @@ allConstraintParsers = [heightConstraintParser,
 
 heightConstraintParser :: GenParser Char ViewParserState OWAConstraint
 heightConstraintParser = do
-  string heightKeyword
-  spaceTabs
+  _ <- string heightKeyword
+  _ <- spaceTabs
   (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser 
   return OWAConstraint {
     firstElementName = "",
@@ -454,8 +454,8 @@ heightConstraintParser = do
 
 widthConstraintParser :: GenParser Char ViewParserState OWAConstraint
 widthConstraintParser = do
-  string widthKeyword
-  spaceTabs
+  _ <- string widthKeyword
+  _ <- spaceTabs
   (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser 
   return OWAConstraint {
     firstElementName = "",
@@ -494,19 +494,19 @@ toLeftConstraintParser = placementConstraintParser toLeftKeyword RightSide
 
 placementConstraintParser :: String -> OWALayoutAttribute -> GenParser Char ViewParserState OWAConstraint
 placementConstraintParser keyword attribute = do
-  Text.Parsec.try $ string keyword
-  spaceTabs
-  viewName <- nameParser
+  _ <- Text.Parsec.try $ string keyword
+  _ <- spaceTabs
+  vName <- nameParser
   possibleDimen <- optionMaybe (do
-    spaceTabs
+    _ <- spaceTabs
     parseFloat)
   singleTrailingComment
-  let constant = fromMaybe 0.0 possibleDimen
-  let actualConstant = possibleReverse * constant
+  let constant' = fromMaybe 0.0 possibleDimen
+  let actualConstant = possibleReverse * constant'
   return OWAConstraint {
     firstElementName = "",
     firstAttribute = attribute,
-    secondElementName = Just viewName,
+    secondElementName = Just vName,
     secondAttribute = reverseAttribute,
     multiplier = 1.0,
     constant = actualConstant
@@ -533,8 +533,8 @@ centerYConstraintParser = matchingConstraintParser centerYKeyword CenterY
 -- have the same attribute.
 matchingConstraintParser :: String -> OWALayoutAttribute -> GenParser Char ViewParserState OWAConstraint
 matchingConstraintParser keyword attribute = do
-  Text.Parsec.try $ string keyword
-  many (oneOf " \t")
+  _ <- Text.Parsec.try $ string keyword
+  _ <- many (oneOf " \t")
   (possibleViewName, possibleDimen) <- viewNameAndDimenOptionParser
   currentState <- getState
   let currentSuper = head $ superViewStack currentState 
@@ -574,29 +574,29 @@ splitAttrsAndConstraints :: [(ElementAttr, ElementVal)] -> (Map.Map String Strin
 splitAttrsAndConstraints = splitAttrsAndConstraintsTail Map.empty []
 
 splitAttrsAndConstraintsTail :: Map.Map String String -> [OWAConstraint] -> [(ElementAttr, ElementVal)] -> (Map.Map String String, [OWAConstraint])
-splitAttrsAndConstraintsTail attrMap constraints [] = (attrMap, constraints)
-splitAttrsAndConstraintsTail attrMap constraints ((elemAttr, elemVal):rest) = case elemVal of
-  StringVal val -> splitAttrsAndConstraintsTail (Map.insert elemAttr val attrMap) constraints rest
-  ConstraintsVal newConstraints -> splitAttrsAndConstraintsTail attrMap (constraints ++ newConstraints) rest
-  _ -> splitAttrsAndConstraintsTail attrMap constraints rest
+splitAttrsAndConstraintsTail attrMap constraints' [] = (attrMap, constraints')
+splitAttrsAndConstraintsTail attrMap constraints' ((elemAttr, elemVal):rest) = case elemVal of
+  StringVal val -> splitAttrsAndConstraintsTail (Map.insert elemAttr val attrMap) constraints' rest
+  ConstraintsVal newConstraints -> splitAttrsAndConstraintsTail attrMap (constraints' ++ newConstraints) rest
+  _ -> splitAttrsAndConstraintsTail attrMap constraints' rest
 
 extractSubviewsAndErrors :: [(ElementAttr, ElementVal)] -> ([OWAViewElement], [OWAConstraint], [OWAParseError])
 extractSubviewsAndErrors = extractSubviewsAndErrorsTail ([], [], [])
 
 extractSubviewsAndErrorsTail :: ([OWAViewElement], [OWAConstraint], [OWAParseError]) -> [(ElementAttr, ElementVal)] -> ([OWAViewElement], [OWAConstraint], [OWAParseError])
 extractSubviewsAndErrorsTail elemsTuple [] = elemsTuple
-extractSubviewsAndErrorsTail (elems, constraints, errs) ((attr, val):rest) = extractSubviewsAndErrorsTail (elems', constraints', errs') rest
-  where (elems', constraints', errs') = case val of
-                  SubviewsVal (subviews, newConstraints) -> (elems ++ subviews, constraints ++ newConstraints, errs)
-                  ErrorsVal newErrors -> (elems, constraints, errs ++ newErrors)
-                  _ -> (elems, constraints, errs)
+extractSubviewsAndErrorsTail (elems, constraints', errs) ((_, val):rest) = extractSubviewsAndErrorsTail (elems', constraints'', errs') rest
+  where (elems', constraints'', errs') = case val of
+                  SubviewsVal (subviews', newConstraints) -> (elems ++ subviews', constraints' ++ newConstraints, errs)
+                  ErrorsVal newErrors -> (elems, constraints', errs ++ newErrors)
+                  _ -> (elems, constraints', errs)
 
 modifyConstraintsWithViewName :: String -> [OWAConstraint] -> [OWAConstraint]
-modifyConstraintsWithViewName viewName = map
-  (\c -> c {firstElementName = viewName})
+modifyConstraintsWithViewName viewName' = map
+  (\c -> c {firstElementName = viewName'})
 
 addedScrollViewConstraints :: String -> OWAScrollDirection -> [OWAConstraint] -> Either [String] [OWAConstraint]
-addedScrollViewConstraints name direction constraints = case direction of
+addedScrollViewConstraints name direction constraints' = case direction of
   Vertical -> case missingLeftRightStrings of
     [] -> Right $ topBottomEqualConstraints ++ map switchElemName leftRightOutsideConstraints
     missingStrs -> Left missingStrs
@@ -604,14 +604,14 @@ addedScrollViewConstraints name direction constraints = case direction of
     [] -> Right $ map switchElemName topBottomOutsideConstraints ++ leftRightEqualConstraints
     missingStrs -> Left missingStrs 
   Both -> Right $ topBottomEqualConstraints ++ leftRightEqualConstraints
-  where containerName = name ++ scrollViewContainerExtension
+  where containerName' = name ++ scrollViewContainerExtension
         topBottomEqualConstraints = [containerEqualityConstraint name Top, containerEqualityConstraint name Bottom]
         leftRightEqualConstraints = [containerEqualityConstraint name LeftSide, containerEqualityConstraint name RightSide]
-        scrollViewTopConstraint = findMatchingScrollViewConstraint name Top constraints
-        scrollViewBottomConstraint = findMatchingScrollViewConstraint name Bottom constraints
-        scrollViewLeftSideConstraint = findMatchingScrollViewConstraint name LeftSide constraints
-        scrollViewRightSideConstraint = findMatchingScrollViewConstraint name RightSide constraints
-        switchElemName c = c {firstElementName = containerName}
+        scrollViewTopConstraint = findMatchingScrollViewConstraint name Top constraints'
+        scrollViewBottomConstraint = findMatchingScrollViewConstraint name Bottom constraints'
+        scrollViewLeftSideConstraint = findMatchingScrollViewConstraint name LeftSide constraints'
+        scrollViewRightSideConstraint = findMatchingScrollViewConstraint name RightSide constraints'
+        switchElemName c = c {firstElementName = containerName'}
         (missingTopBottomStrings, topBottomOutsideConstraints) = partitionEithers [scrollViewTopConstraint, scrollViewBottomConstraint]
         (missingLeftRightStrings, leftRightOutsideConstraints) = partitionEithers [scrollViewLeftSideConstraint, scrollViewRightSideConstraint]
 
@@ -626,10 +626,10 @@ containerEqualityConstraint name attribute = OWAConstraint {
 }
 
 findMatchingScrollViewConstraint :: String -> OWALayoutAttribute -> [OWAConstraint] -> Either String OWAConstraint
-findMatchingScrollViewConstraint name attr constraints = if not (null results) then Right (head results) else Left (show attr ++ "Constraint")
+findMatchingScrollViewConstraint name attr constraints' = if not (null results) then Right (head results) else Left (show attr ++ "Constraint")
   where results = filter
                     (\c -> firstElementName c == name && firstAttribute c == attr)
-                    constraints
+                    constraints'
 
 labelFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWALabel
 labelFromNameAndAttrs name attrMap = do
@@ -670,10 +670,10 @@ buttonFromNameAndAttrs name attrMap = if isNothing text && isNothing imgSourceNa
 
 imageViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAImageView
 imageViewFromNameAndAttrs name attrMap = do
-  sourceName <- Map.lookup imageSourceKeyword attrMap
+  source <- Map.lookup imageSourceKeyword attrMap
   return OWAImageView {
     imageViewName = name,
-    imageSourceName = sourceName
+    imageSourceName = source
   } 
 
 customViewFromNameAndAttrs :: String -> Map.Map String String -> Maybe OWAViewRecord
@@ -708,18 +708,18 @@ scrollViewFromNameSubviewsAndAttrs name subElements attrMap = OWAScrollView {
                       _ -> Vertical
 
 viewFromNameFileAndAttrMap :: String -> String -> ViewAttrMap -> OWAView
-viewFromNameFileAndAttrMap name fileName attrMap = OWAView {
+viewFromNameFileAndAttrMap name fileName' attrMap = OWAView {
   viewName = name,
   viewType = vType,
   subviews = elems,
-  constraints = constraints
+  constraints = constraints'
 }
   where vType = case Map.lookup typeKeyword attrMap of
-          Nothing -> fileName
           Just (TypeVal t) -> t
-        (elems, constraints) = case Map.lookup elementsKeyword attrMap of
-          Nothing -> ([], [])
-          Just (ElementsVal (viewElems, constraints)) -> (viewElems, constraints)
+          _ -> fileName'
+        (elems, constraints') = case Map.lookup elementsKeyword attrMap of
+          Just (ElementsVal (viewElems, constraints'')) -> (viewElems, constraints'')
+          _ -> ([], [])
 
 -------------------------------------------------------------------------------
 -----------------------------------VIEW KEYWORDS-------------------------------

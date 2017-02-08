@@ -27,11 +27,11 @@ import Objc.Utils
 -- structure for the category's header file in Objective C
 objcHeaderFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
 objcHeaderFromAlerts appInfo alerts = ObjcFile
-  [categoryCommentSection appInfo originalAlertTypeName categoryName True,
+  [categoryCommentSection appInfo originalAlertTypeName categoryName' True,
   uiKitImportsSection,
   alertHandlerTypedefSection, 
   simpleCategoryInterface category]
-    where (categoryName, category) = builderInfo appInfo alerts
+    where (categoryName', category) = builderInfo appInfo alerts
 
 -- | 'objcImplementationFromAlerts' takes the app info,
 -- a name for the new alerts category, as well
@@ -39,15 +39,15 @@ objcHeaderFromAlerts appInfo alerts = ObjcFile
 -- implementation file in Objective C
 objcImplementationFromAlerts :: OWAAppInfo -> [OWAAlert] -> ObjcFile
 objcImplementationFromAlerts appInfo alerts = ObjcFile 
-  [categoryCommentSection appInfo originalAlertTypeName categoryName False,
-  categoryMImportsSection originalAlertTypeName categoryName,
+  [categoryCommentSection appInfo originalAlertTypeName categoryName' False,
+  categoryMImportsSection originalAlertTypeName categoryName',
   simpleCategoryImplementation category]
-    where (categoryName, category) = builderInfo appInfo alerts
+    where (categoryName', category) = builderInfo appInfo alerts
 
 builderInfo :: OWAAppInfo -> [OWAAlert] -> (String, Category)
-builderInfo appInfo alerts = (categoryName,
-  alertCategoryFromAlerts categoryName sortedAlerts)
-  where categoryName = appPrefix appInfo ++ "Alerts"
+builderInfo appInfo alerts = (categoryName',
+  alertCategoryFromAlerts categoryName' sortedAlerts)
+  where categoryName' = appPrefix appInfo ++ "Alerts"
         sortedAlerts = sortBy sortAlertsByName alerts
 
 --------------------------------------------------------------------------------
@@ -59,8 +59,8 @@ alertHandlerTypedefSection = ForwardDeclarationSection
   [TypedefDecl (SimpleType "void") "AlertHandler" []]
 
 alertCategoryFromAlerts :: String -> [OWAAlert] -> Category
-alertCategoryFromAlerts categoryName = categoryFromNamesAndMethodBuilder
-  originalAlertTypeName categoryName methodForAlert
+alertCategoryFromAlerts categoryName' = categoryFromNamesAndMethodBuilder
+  originalAlertTypeName categoryName' methodForAlert
  
 methodForAlert :: OWAAlert -> ObjcMethod
 methodForAlert alert = ObjcMethod {
@@ -93,9 +93,9 @@ paramsForFormat (YesNoButtons _ _) = [ParamDef {
   }]
 
 methodBodyForAlert :: OWAAlert -> [ObjcStatement]
-methodBodyForAlert alert = consStatement:(actionStatements ++ [returnStatement]) 
+methodBodyForAlert alert = consStatement:(actionStatements' ++ [returnStatement]) 
   where consStatement = constructorAssignment alert
-        actionStatements = actionStatementsForFormat $ alertButtonFormat alert
+        actionStatements' = actionStatementsForFormat $ alertButtonFormat alert
         returnStatement = ReturnStatement (Var "alert")
 
 constructorAssignment :: OWAAlert -> ObjcStatement

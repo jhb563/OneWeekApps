@@ -13,9 +13,7 @@ module Parse.FontParser (
 import           Data.Either
 import           Data.List
 import qualified Data.Map.Strict as Map
-import           Data.Maybe
 import           Text.Parsec
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWAFont
@@ -37,13 +35,13 @@ type FontAttrMap = Map.Map FontAttr FontVal
 parseFontsFromFile :: FilePath -> IO (Either [OWAParseError] [OWAFont])
 parseFontsFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrFonts = parseFontContents sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrFonts = parseFontContents source contents
   case errorOrFonts of
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndFonts -> let (errors, fonts) = partitionEithers errorsAndFonts in
       if not (null errors)
-        then return $ Left (map (attachFileName sourceName) errors)
+        then return $ Left (map (attachFileName source) errors)
         else return $ Right fonts
 
 parseFontContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAFont]
@@ -66,7 +64,7 @@ fontParser :: GenParser Char GenericParserState (Either OWAParseError OWAFont)
 fontParser = do
   name <- nameParserWithKeyword fontKeyword
   modifyState setShouldUpdateIndentLevel
-  many $ Text.Parsec.try indentedComment
+  _ <- many $ Text.Parsec.try indentedComment
   attrs <- fontAttrLine `sepEndBy1` many (Text.Parsec.try indentedComment)
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
@@ -87,8 +85,8 @@ fontAttrParsers = map Text.Parsec.try [fontFamilyParser, fontSizeParser, fontSty
 
 fontFamilyParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontFamilyParser = do
-  string fontFamilyKeyword
-  spaceTabs
+  _ <- string fontFamilyKeyword
+  _ <- spaceTabs
   familyName <- many (alphaNum <|> char '-')
   singleTrailingComment
   return (fontFamilyKeyword, FamilyVal familyName)
@@ -100,8 +98,8 @@ fontSizeParser = do
 
 fontStylesParser :: GenParser Char GenericParserState (FontAttr, FontVal)
 fontStylesParser = do
-  string fontStylesKeyword
-  spaceTabs
+  _ <- string fontStylesKeyword
+  _ <- spaceTabs
   attributes <- fontStyleAttributeParser `sepBy1` (char ',' >> spaceTabs)
   singleTrailingComment
   return (fontStylesKeyword, StyleAttrs attributes)
@@ -119,7 +117,7 @@ styleAttributeParsers = map (Text.Parsec.try . string) styleAttributeStrings
 fontFromNameAndAttrMap :: String -> FontAttrMap -> Maybe OWAFont
 fontFromNameAndAttrMap name attrMap = do
   familyName <- case Map.lookup fontFamilyKeyword attrMap of
-    Just (FamilyVal name) -> Just name
+    Just (FamilyVal fVal) -> Just fVal
     _ -> Nothing
   size <- case Map.lookup fontSizeKeyword attrMap of
     Just (SizeVal size) -> Just size

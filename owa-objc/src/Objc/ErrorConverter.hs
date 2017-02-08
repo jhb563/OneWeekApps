@@ -31,11 +31,10 @@ type DomainMap = Map.Map String [OWAError]
 -- header file in Objective C
 objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
 objcHeaderFromErrors appInfo  errors = ObjcFile
-  [categoryCommentSection appInfo originalErrorTypeName categoryName True,
+  [categoryCommentSection appInfo originalErrorTypeName categoryName' True,
   foundationImportsSection,
-  InterfaceSection originalErrorTypeName Nothing (Just categoryName) [] sections]
-    where category = categoryForErrors categoryName errors
-          categoryName = appPrefix appInfo ++ "Errors"
+  InterfaceSection originalErrorTypeName Nothing (Just categoryName') [] sections]
+    where categoryName' = appPrefix appInfo ++ "Errors"
           sections = methodHeaderSectionsForErrors errors
 
 -- | 'objcImplementationFromErrors' takes the app info,
@@ -46,15 +45,15 @@ objcImplementationFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
 objcImplementationFromErrors appInfo errors = if not (null errors)
   then ObjcFile [commentSection, includeSection, enumSect, implSection]
   else ObjcFile [commentSection, includeSection, implSection]
-  where categoryName = appPrefix appInfo ++ "Errors" 
-        commentSection = categoryCommentSection appInfo originalErrorTypeName categoryName False
-        includeSection = categoryMImportsSection originalErrorTypeName categoryName
-        enumSect = enumSection categoryName errors
-        category = categoryForErrors categoryName errors
+  where categoryName' = appPrefix appInfo ++ "Errors" 
+        commentSection = categoryCommentSection appInfo originalErrorTypeName categoryName' False
+        includeSection = categoryMImportsSection originalErrorTypeName categoryName'
+        enumSect = enumSection categoryName' errors
+        category = categoryForErrors categoryName' errors
         sections = methodImplementationSectionsForErrors errors
         implSection = ImplementationSection
                         (originalTypeName category)
-                        (Just categoryName)
+                        (Just categoryName')
                         sections
 
 --------------------------------------------------------------------------------
@@ -62,9 +61,9 @@ objcImplementationFromErrors appInfo errors = if not (null errors)
 --------------------------------------------------------------------------------
 
 categoryForErrors :: String -> [OWAError] -> Category
-categoryForErrors categoryName = categoryFromNamesAndMethodBuilder 
+categoryForErrors categoryName' = categoryFromNamesAndMethodBuilder 
   originalErrorTypeName 
-  categoryName 
+  categoryName' 
   methodFromError 
 
 methodFromError :: OWAError -> ObjcMethod
@@ -93,8 +92,8 @@ localizedDictionaryExpr description = DictionaryLit
 --------------------------------------------------------------------------------
 
 enumSection :: String -> [OWAError] -> FileSection
-enumSection categoryName errors = ForwardDeclarationSection [EnumDecl enumName codes]
-  where enumName = categoryName ++ codesSuffix
+enumSection categoryName' errors = ForwardDeclarationSection [EnumDecl enumName codes]
+  where enumName = categoryName' ++ codesSuffix
         domains = sectionErrorsByDomain errors
         codes = map errorCode $ concatMap domainErrors domains
 
@@ -149,14 +148,14 @@ sectionErrorsByDomain errors = map sortErrorsInDomain domainTuples
 insertErrorsIntoDomainsTail :: [OWAError] -> DomainMap -> DomainMap
 insertErrorsIntoDomainsTail [] domainMap = domainMap
 insertErrorsIntoDomainsTail (err:errs) domainMap = insertErrorsIntoDomainsTail errs newMap
-  where domainName = errorDomain err
-        newMap = case Map.lookup domainName domainMap of
-          Nothing -> Map.insert domainName [err] domainMap
-          Just prevErrs -> Map.insert domainName (err:prevErrs) domainMap
+  where domainName' = errorDomain err
+        newMap = case Map.lookup domainName' domainMap of
+          Nothing -> Map.insert domainName' [err] domainMap
+          Just prevErrs -> Map.insert domainName' (err:prevErrs) domainMap
 
 sortErrorsInDomain :: (String, [OWAError]) -> OWAErrorDomain
-sortErrorsInDomain (domainName, errors) = OWAErrorDomain {
-  domainName = domainName,
+sortErrorsInDomain (domainName', errors) = OWAErrorDomain {
+  domainName = domainName',
   domainErrors = sortBy sortErrorsByName errors
 }
 

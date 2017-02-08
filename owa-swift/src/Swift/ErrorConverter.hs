@@ -43,7 +43,7 @@ swiftExtensionFromErrors appInfo errors = SwiftFile $
 --------------------------------------------------------------------------------
 
 enumSectionForErrors :: String -> [OWAError] -> FileSection
-enumSectionForErrors name errors = EnumSection name (SimpleType "Int") (map errorCode errors)
+enumSectionForErrors name' errors = EnumSection name' (SimpleType "Int") (map errorCode errors)
 
 listSectionForErrors :: String -> [OWAError] -> FileSection
 listSectionForErrors enumName errors = ExtensionSection

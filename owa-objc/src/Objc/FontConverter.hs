@@ -28,10 +28,10 @@ import Objc.Utils
 -- header file in Objective C
 objcHeaderFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
 objcHeaderFromFonts appInfo fonts = ObjcFile 
-  [categoryCommentSection appInfo originalFontTypeName categoryName True,
+  [categoryCommentSection appInfo originalFontTypeName categoryName' True,
   uiKitImportsSection,
   simpleCategoryInterface category] 
-    where (categoryName, category) = builderInfo appInfo fonts
+    where (categoryName', category) = builderInfo appInfo fonts
 
 -- | 'objcImplementationFromFonts' takes the app info,
 -- a name for the new fonts category, as well
@@ -39,23 +39,23 @@ objcHeaderFromFonts appInfo fonts = ObjcFile
 -- implementation file in Objective C
 objcImplementationFromFonts :: OWAAppInfo -> [OWAFont] -> ObjcFile
 objcImplementationFromFonts appInfo fonts = ObjcFile
-  [categoryCommentSection appInfo originalFontTypeName categoryName False,
-  categoryMImportsSection originalFontTypeName categoryName,
+  [categoryCommentSection appInfo originalFontTypeName categoryName' False,
+  categoryMImportsSection originalFontTypeName categoryName',
   simpleCategoryImplementation category]
-    where (categoryName, category) = builderInfo appInfo fonts
+    where (categoryName', category) = builderInfo appInfo fonts
 
 builderInfo :: OWAAppInfo -> [OWAFont] -> (String, Category)
-builderInfo appInfo fonts = (categoryName,
-  fontCategoryFromFonts categoryName (sort fonts))
-    where categoryName = appPrefix appInfo ++ "Fonts"
+builderInfo appInfo fonts = (categoryName',
+  fontCategoryFromFonts categoryName' (sort fonts))
+    where categoryName' = appPrefix appInfo ++ "Fonts"
 
 --------------------------------------------------------------------------------
 --------------------------CATEGORY CONSTRUCTION---------------------------------
 --------------------------------------------------------------------------------
 
 fontCategoryFromFonts :: String -> [OWAFont] -> Category
-fontCategoryFromFonts categoryName = categoryFromNamesAndMethodBuilder
-  originalFontTypeName categoryName methodForFont
+fontCategoryFromFonts categoryName' = categoryFromNamesAndMethodBuilder
+  originalFontTypeName categoryName' methodForFont
 
 methodForFont :: OWAFont -> ObjcMethod
 methodForFont font = ObjcMethod {

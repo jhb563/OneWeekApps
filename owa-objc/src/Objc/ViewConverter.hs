@@ -64,13 +64,13 @@ forwardClassSection view = case classesToImportForView view of
   classes -> Just $ ForwardDeclarationSection $ map ClassDecl classes
 
 importsSection :: OWAView -> String -> FileSection
-importsSection view appPrefix = ImportsSection $
+importsSection view appPrefix' = ImportsSection $
   [FileImport $ viewType view ++ ".h",
   FileImport colorFileName,
   FileImport fontFileName] ++
   map (FileImport . (++ ".h")) classes
-    where colorFileName = "UIColor+" ++ appPrefix ++ "Colors.h"
-          fontFileName = "UIFont+" ++ appPrefix ++ "Fonts.h" 
+    where colorFileName = "UIColor+" ++ appPrefix' ++ "Colors.h"
+          fontFileName = "UIFont+" ++ appPrefix' ++ "Fonts.h" 
           classes = classesToImportForView view
 
 classesToImportForView :: OWAView -> [String]
@@ -158,9 +158,9 @@ setupViewsMethodBase = ObjcMethod {
 }
 
 setupViewsMethod :: [OWAViewElement] -> ObjcMethod
-setupViewsMethod subviews = setupViewsMethodBase {methodBody = setupViewsBody}
-  where superViewSection = setupViewsSectionForNameAndElements "" subviews
-        containers = concatMap searchSubviewsForContainers subviews
+setupViewsMethod subviews' = setupViewsMethodBase {methodBody = setupViewsBody}
+  where superViewSection = setupViewsSectionForNameAndElements "" subviews'
+        containers = concatMap searchSubviewsForContainers subviews'
         otherContainerSections = concatMap setupViewsSectionForElement containers
         setupViewsBody = superViewSection ++ otherContainerSections
 
@@ -178,6 +178,7 @@ setupViewsSectionForElement (ContainerViewElement container) = setupViewsSection
 setupViewsSectionForElement (ScrollViewElement scrollView) = setupViewsSectionForNameAndElements
   (scrollViewName scrollView)
   [ContainerViewElement $ scrollViewContainer scrollView]
+setupViewsSectionForElement _ = []
 
 setupViewsSectionForNameAndElements :: String -> [OWAViewElement] -> [ObjcStatement]
 setupViewsSectionForNameAndElements name elems = [arrayDecl, forBlock]
@@ -210,8 +211,8 @@ setupConstraintsMethodBase = ObjcMethod {
 }
   
 setupConstraintsMethod :: [OWAConstraint] -> ObjcMethod
-setupConstraintsMethod constraints = setupConstraintsMethodBase {methodBody = setupConstraintsBody}
-  where setupConstraintsBody = concatMap constraintStatements constraints
+setupConstraintsMethod constraints' = setupConstraintsMethodBase {methodBody = setupConstraintsBody}
+  where setupConstraintsBody = concatMap constraintStatements constraints'
 
 constraintStatements :: OWAConstraint -> [ObjcStatement]
 constraintStatements constraint = [createConstraint, addConstraint]

@@ -14,7 +14,6 @@ import           Control.Monad.Identity
 import qualified Data.List.Split as Split
 import qualified Data.Map.Strict as Map
 import           Text.Parsec
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWALocalizedStringSet
@@ -33,12 +32,12 @@ type LocalizedStringMap = Map.Map String String
 parseStringsFromFile :: FilePath -> IO (Either [OWAParseError] OWALocalizedStringSet)
 parseStringsFromFile fPath = do
   contents <- readFile fPath
-  let sourceName = sourceNameFromFile fPath
-  let errorOrLocalizedStringMap = parseStringContents sourceName contents
+  let source = sourceNameFromFile fPath
+  let errorOrLocalizedStringMap = parseStringContents source contents
   case errorOrLocalizedStringMap of
     Left parseError -> return $ Left [ParsecError parseError]
     Right stringMap -> return $ Right OWALocalizedStringSet {
-      setName = head (Split.splitOn "." sourceName),
+      setName = head (Split.splitOn "." source),
       setMap = stringMap
     }
 
@@ -57,13 +56,13 @@ parseStringContents = Text.Parsec.runParser
 
 stringParser :: GenParser Char st (String, String)
 stringParser = do
-  oneLineSpaces
+  _ <- oneLineSpaces
   key <- parseLocalizedKey
-  oneLineSpaces
-  char '='
-  oneLineSpaces
+  _ <- oneLineSpaces
+  _ <- char '='
+  _ <- oneLineSpaces
   value <- parseLocalizedKey
-  optionMaybe (char ';')
+  _ <- optionMaybe (char ';')
   return (key, value)
 
 oneLineSpaces :: GenParser Char st String 
