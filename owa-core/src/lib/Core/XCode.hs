@@ -37,11 +37,11 @@ printBaseXCodeFiles currentDirectory appInfo = do
     (directoriesToCreate currentDirectory (appName appInfo))
   printVC currentDirectory appInfo
   printAppDelegate currentDirectory appInfo
-  printInfo currentDirectory name
-  printContents currentDirectory name 
-  printPbxProj currentDirectory name
+  printInfo currentDirectory projName
+  printContents currentDirectory projName 
+  printPbxProj currentDirectory projName
   where
-    name = appName appInfo
+    projName = appName appInfo
 
 ---------------------------------------------------------------------------
 ------------------------FILE PRINTERS--------------------------------------
@@ -58,24 +58,24 @@ printAppDelegate dir info = printSwiftStructureToFile
   (appDelegatePath dir (appName info))
 
 printInfo :: FilePath -> String -> IO ()
-printInfo dir name = do
-  let fullPath = infoPath dir name
+printInfo dir projName = do
+  let fullPath = infoPath dir projName
   writeFile fullPath infoPListTemplate
 
 printPbxProj :: FilePath -> String -> IO ()
-printPbxProj dir name = writeFile fullPath (TL.unpack interpolatedText)
+printPbxProj dir projName = writeFile fullPath (TL.unpack interpolatedText)
   where
-    fullPath = pbxProjPath dir name
+    fullPath = pbxProjPath dir projName
     temp = template pbxProjTemplate
-    context str = if str == "projectname" then T.pack name else str
+    context str = if str == "projectname" then T.pack projName else str
     interpolatedText = render temp context
 
 printContents :: FilePath -> String -> IO ()
-printContents dir name = writeFile fullPath (TL.unpack interpolatedText)
+printContents dir projName = writeFile fullPath (TL.unpack interpolatedText)
   where
-    fullPath = contentsPath dir name
+    fullPath = contentsPath dir projName
     temp = template contentsTemplate
-    context str = if str == "projectname" then T.pack name else str
+    context str = if str == "projectname" then T.pack projName else str
     interpolatedText = render temp context
 
 ---------------------------------------------------------------------------
@@ -194,27 +194,27 @@ launchMethod = SwiftMethod
 ---------------------------------------------------------------------------
 
 vcPath :: FilePath -> String -> FilePath
-vcPath dir name = baseProjectFilePath dir name ++ "ViewController.swift"
+vcPath dir projName = baseProjectFilePath dir projName ++ "ViewController.swift"
 
 appDelegatePath :: FilePath -> String -> FilePath
-appDelegatePath dir name = baseProjectFilePath dir name ++ "AppDelegate.swift"
+appDelegatePath dir projName = baseProjectFilePath dir projName ++ "AppDelegate.swift"
 
 infoPath :: FilePath -> String -> FilePath
-infoPath dir name = baseProjectFilePath dir name ++ "Info.plist"
+infoPath dir projName = baseProjectFilePath dir projName ++ "Info.plist"
 
 pbxProjPath :: FilePath -> String -> FilePath
-pbxProjPath dir name = pbxProjDirPath dir name ++ "project.pbxproject"
+pbxProjPath dir projName = pbxProjDirPath dir projName ++ "project.pbxproject"
 
 contentsPath :: FilePath -> String -> FilePath
-contentsPath dir name = pbxProjDirPath dir name ++ ".xcworkspace/contents.xcworkspacedata"
+contentsPath dir projName = pbxProjDirPath dir projName ++ ".xcworkspace/contents.xcworkspacedata"
 
 baseProjectFilePath :: FilePath -> String -> FilePath
-baseProjectFilePath dir name = dir ++ "/ios/" ++ name ++ "/"
+baseProjectFilePath dir projName = dir ++ "/ios/" ++ projName ++ "/"
 
 pbxProjDirPath :: FilePath -> String -> FilePath
-pbxProjDirPath dir name = dir ++ "/ios/" ++ name ++ ".xcodeproj/"
+pbxProjDirPath dir projName = dir ++ "/ios/" ++ projName ++ ".xcodeproj/"
 
 directoriesToCreate :: FilePath -> String -> [FilePath]
-directoriesToCreate dir appName =
-  [ dir ++ "/ios/" ++ appName
-  , dir ++ "/ios/" ++ appName ++ ".xcodeproj/.xcworkspace" ]
+directoriesToCreate dir projName =
+  [ dir ++ "/ios/" ++ projName
+  , dir ++ "/ios/" ++ projName ++ ".xcodeproj/.xcworkspace" ]

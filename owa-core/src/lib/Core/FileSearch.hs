@@ -129,7 +129,7 @@ viewsExtension = "view"
 -- for searching for the files. It uses BFS on the directory. It includes a queue of unexplored
 -- directories, as well as an accumulator argument for the files found.
 searchDirectoryForExtension :: String -> [FilePath] -> [FilePath] -> IO [FilePath]
-searchDirectoryForExtension extension [] locatedFiles = return locatedFiles
+searchDirectoryForExtension _ [] locatedFiles = return locatedFiles
 searchDirectoryForExtension extension (nextFilePath:queue) locatedFiles = do
   directoryListing <- listDirectory nextFilePath
   let absolutePaths = map (\fp -> nextFilePath ++ ('/':fp)) directoryListing

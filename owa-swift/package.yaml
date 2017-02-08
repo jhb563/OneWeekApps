@@ -17,3 +17,14 @@ dependencies:
 library:
   source-dirs:
     src/
+
+tests:
+  swift-tests:
+    main: Swift/Tests.hs
+    source-dirs:
+      - test/
+    dependencies:
+      - directory
+      - hspec
+      - owa-swift
+      - process

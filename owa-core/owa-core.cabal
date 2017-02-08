@@ -1,273 +1,90 @@
-name:                owa-core
-version:             0.2.3
-synopsis:            Haskell platform for rapidly developing mobile apps
--- description:         
-license:             MIT
-license-file:        LICENSE
-author:              James Bowen
-maintainer:          jhbowen047@gmail.com
--- copyright:           
--- category:            
-build-type:          Simple
-extra-source-files:  README.md
-cabal-version:       >=1.10
+-- This file has been generated from package.yaml by hpack version 0.14.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           owa-core
+version:        0.2.3.0
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
 
 library
-  build-depends:       base,
-                       directory >= 1.2.5,
-                       split,
-                       parsec,
-                       containers,
-                       wl-pprint >= 1.2,
-                       mtl,
-                       text,
-                       time,
-                       transformers,
-                       template,
-                       owa-model,
-                       owa-utils,
-                       owa-parse,
-                       owa-objc,
-                       owa-swift
-  exposed-modules:     Core.Main,
-                       Core.FileSearch,
-                       Core.Lazy,
-                       Core.XCode
-  other-modules:       Core.Types, 
-                       Core.FileNames,
-                       Core.New,
-                       Core.Terminal,
-                       Core.XCode.Templates.Other
-                       Core.XCode.Templates.ProjectFile
-  hs-source-dirs:      src/lib
+  hs-source-dirs:
+      src/lib
+  build-depends:
+      base
+    , directory
+    , containers
+    , mtl
+    , parsec
+    , split
+    , template
+    , text
+    , time
+    , transformers
+    , wl-pprint
+    , owa-model
+    , owa-utils
+    , owa-parse
+    , owa-objc
+    , owa-swift
+  exposed-modules:
+      Core.Main
+      Core.FileSearch
+      Core.Lazy
+      Core.XCode
+  other-modules:
+      Core.FileNames
+      Core.New
+      Core.Terminal
+      Core.Types
+      Core.XCode.Templates.Other
+      Core.XCode.Templates.ProjectFile
+      Paths_owa_core
   default-language: Haskell2010
 
 executable owa
-  main-is:             RunOWA.hs
-  -- other-extensions:    
-  build-depends:       base,
-                       directory >= 1.2.5,
-                       owa-core
-  hs-source-dirs:      src/exe
-  default-language:    Haskell2010
-
-test-suite Version010Tests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
-  type: exitcode-stdio-1.0
-  main-is: OWAVersion010Tests.hs
-  hs-source-dirs:   tests,
-                    tests/Version010Tests,
-                    tests/Version010Tests/ColorTests,
-                    tests/Version010Tests/FontTests,
-                    tests/Version010Tests/AlertTests,
-                    tests/Version010Tests/ErrorTests,
-                    tests/Version010Tests/IntegrationTests
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 process,
-                 parsec,
-                 owa-core,
-                 owa-model,
-                 owa-parse,
-                 owa-objc,
-                 owa-swift
-  other-modules: AlertParseTests
-               , AlertPrintTests
-               , AppDirectoryTests
-               , ColorParseTests
-               , ColorPrintTests
-               , ErrorParseTests
-               , ErrorPrintTests
-               , FileSearchTests
-               , FontParseTests
-               , FontPrintTests
-               , IntegrationTestUtil
-               , TestAlerts
-               , TestColors
-               , TestErrors
-               , TestFonts
-               , TestUtil
-               , Version010IntegrationTests
+  main-is: RunOWA.hs
+  hs-source-dirs:
+      src/exe
+  build-depends:
+      base
+    , directory
+    , owa-core
   default-language: Haskell2010
 
-test-suite Version015Tests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
+test-suite CoreTests
   type: exitcode-stdio-1.0
-  main-is: OWAVersion015Tests.hs
-  hs-source-dirs:   tests,
-                    tests/Version015Tests,
-                    tests/Version015Tests/CommentTests,
-                    tests/Version015Tests/TabTests,
-                    tests/Version015Tests/ItemFailureTests,
-                    tests/Version015Tests/ColorParseFailureTests,
-                    tests/Version015Tests/FontParseFailureTests,
-                    tests/Version015Tests/AlertParseFailureTests,
-                    tests/Version015Tests/ErrorParseFailureTests,
-                    tests/Version015Tests/SpacingIndentTests,
-                    tests/Version015Tests/DefaultsFileTests,
-                    tests/Version015Tests/StringsTests,
-                    tests/Version015Tests/IntegrationTests
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 process,
-                 parsec,
-                 containers,
-                 owa-core,
-                 owa-model,
-                 owa-parse,
-                 owa-objc,
-                 owa-swift
-  other-modules: AlertParseFailureTests
-               , ColorParseFailureTests
-               , CommentTests
-               , DefaultsFileTests
-               , ErrorParseFailureTests
-               , FontParseFailureTests
-               , IntegrationTestUtil
-               , ItemFailureTests
-               , SpacingIndentTests
-               , StringsParseTests
-               , StringsPrintTests
-               , StringsSearchTests
-               , TabTests
-               , TestAlertErrors
-               , TestAppInfo
-               , TestColorErrors
-               , TestDefaultErrors
-               , TestErrorErrors
-               , TestFontErrors
-               , TestParseErrors
-               , TestSpacingIndentErrors
-               , TestStringErrors
-               , TestStringSets
-               , TestUtil
-               , Version015IntegrationTests
-  default-language: Haskell2010
-
-test-suite Version020Tests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
-  type: exitcode-stdio-1.0
-  main-is: OWAVersion020Tests.hs
-  hs-source-dirs: tests,
-                  tests/Version020Tests,
-                  tests/Version020Tests/FileSearchTests,
-                  tests/Version020Tests/ViewTests,
-                  tests/Version020Tests/ErrorTests,
-                  tests/Version020Tests/IntegrationTests
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 process,
-                 parsec,
-                 containers,
-                 owa-core,
-                 owa-model,
-                 owa-core,
-                 owa-parse,
-                 owa-objc,
-                 owa-swift
-  other-modules: IntegrationTestUtil
-               , TestErrors
-               , TestUtil
-               , TestViews
-               , Version020IntegrationTests
-               , ViewConstraintTests
-               , ViewElementTests
-               , ViewFileSearchTests
-               , ViewItemErrorTests
-               , ViewNameTests
-               , ViewParseErrorTests
-               , ViewPrintTests
-  default-language: Haskell2010
-
-test-suite Version021Tests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
-  type: exitcode-stdio-1.0
-  main-is: OWAVersion021Tests.hs
-  hs-source-dirs: tests,
-                  tests/Version021Tests,
-                  tests/Version021Tests/CustomViewTests,
-                  tests/Version021Tests/ContainerViewTests,
-                  tests/Version021Tests/ErrorTests,
-                  tests/Version021Tests/ImageBackgroundTests,
-                  tests/Version021Tests/IntegrationTests
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 process,
-                 parsec,
-                 containers,
-                 owa-core,
-                 owa-model,
-                 owa-parse,
-                 owa-objc,
-                 owa-swift
-  other-modules: ContainerViewTests
-               , CustomViewTests
-               , ImageButtonTests
-               , IntegrationTestUtil
-               , TestButtonObjects
-               , TestContainerViews
-               , TestCustomViews
-               , TestErrors
-               , TestUtil
-               , Version021IntegrationTests
-    ViewErrorTests
-  default-language: Haskell2010
-
-test-suite Version023Tests
-  ghc-options: -Wall
-  default-extensions: OverloadedStrings
-  type: exitcode-stdio-1.0
-  main-is: OWAVersion023Tests.hs
-  hs-source-dirs: tests,
-                  tests/Version023Tests,
-                  tests/Version023Tests/LazyCodeTests,
-                  tests/Version023Tests/CodeTypeTests,
-                  tests/Version023Tests/AppInfoCLITests,
-                  tests/Version023Tests/SwiftTests/SwiftColorTests,
-                  tests/Version023Tests/SwiftTests/SwiftFontTests,
-                  tests/Version023Tests/SwiftTests/SwiftAlertTests,
-                  tests/Version023Tests/SwiftTests/SwiftErrorTests,
-                  tests/Version023Tests/SwiftTests/SwiftViewTests,
-                  tests/Version023Tests/IntegrationTests,
-                  tests/Version023Tests/XCodeTests
-  build-depends: base,
-                 hspec     >= 1.8,
-                 directory >= 1.2.5,
-                 containers,
-                 time,
-                 parsec,
-                 process,
-                 mtl,
-                 unix,
-                 split,
-                 owa-core,
-                 owa-model,
-                 owa-objc,
-                 owa-swift
-  other-modules: LazyCodeGenerationTests
-               , SwiftAlertPrintTests
-               , SwiftColorPrintTests
-               , SwiftErrorPrintTests
-               , SwiftFontPrintTests
-               , SwiftSpecialTestViews
-               , SwiftTestAlerts
-               , SwiftTestColors
-               , SwiftTestErrors
-               , SwiftTestFonts
-               , SwiftTestViews
-               , SwiftViewPrintTests
-               , CodeTypeTests
-               , AppInfoCLITests
-               , XCodeTests
-               , TestUtil
-               , IntegrationTestUtil
-               , Version023IntegrationTests
+  main-is: Core/Tests.hs
+  hs-source-dirs:
+      test/
+  build-depends:
+      base
+    , directory
+    , hspec
+    , parsec
+    , process
+    , split
+    , time
+    , owa-core
+    , owa-objc
+    , owa-model
+    , owa-swift
+  other-modules:
+      Core.Tests.AppInfoCLI.Basic
+      Core.Tests.CodeType.Basic
+      Core.Tests.FileSearch.AppDirectory
+      Core.Tests.FileSearch.AppInfo
+      Core.Tests.FileSearch.SourceFiles
+      Core.Tests.FileSearch.Strings
+      Core.Tests.FileSearch.Views
+      Core.Tests.Integration.Utils
+      Core.Tests.Integration.Version010.Basic
+      Core.Tests.Integration.Version015.Basic
+      Core.Tests.Integration.Version020.Basic
+      Core.Tests.Integration.Version021.Basic
+      Core.Tests.Integration.Version023.Basic
+      Core.Tests.LazyGeneration.Basic
+      Core.Tests.Utils
+      Core.Tests.XCode.Basic
   default-language: Haskell2010

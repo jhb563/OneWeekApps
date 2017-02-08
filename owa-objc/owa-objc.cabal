@@ -30,3 +30,40 @@ library
   other-modules:
       Objc.Utils
   default-language: Haskell2010
+
+test-suite objc-tests
+  type: exitcode-stdio-1.0
+  main-is: Objc/Tests.hs
+  hs-source-dirs:
+      test/
+  ghc-options: -Wall
+  build-depends:
+      base
+    , containers
+    , owa-model
+    , owa-utils
+    , split
+    , wl-pprint
+    , directory
+    , hspec
+    , owa-objc
+    , process
+  other-modules:
+      Objc.Tests.Alerts.Basic
+      Objc.Tests.Alerts.Objects
+      Objc.Tests.Colors.Basic
+      Objc.Tests.Colors.Objects
+      Objc.Tests.Errors.Basic
+      Objc.Tests.Errors.Objects
+      Objc.Tests.Fonts.Basic
+      Objc.Tests.Fonts.Objects
+      Objc.Tests.Strings.Basic
+      Objc.Tests.Strings.Objects
+      Objc.Tests.Utils
+      Objc.Tests.Views.Basic
+      Objc.Tests.Views.ContainerObjects
+      Objc.Tests.Views.Containers
+      Objc.Tests.Views.Custom
+      Objc.Tests.Views.CustomObjects
+      Objc.Tests.Views.Objects
+  default-language: Haskell2010

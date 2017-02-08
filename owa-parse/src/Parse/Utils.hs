@@ -28,7 +28,6 @@ module Parse.Utils (
 
 import qualified Data.Text 
 import           Text.Parsec
-import           Text.Parsec.Error
 import           Text.ParserCombinators.Parsec
 
 import           Model.OWAParseError
@@ -77,7 +76,7 @@ instance ParserState GenericParserState where
 -- followed by a possible comment and newline.
 loneStringKeywordParser :: String -> GenParser Char st ()
 loneStringKeywordParser keyword = do
-  string keyword
+  _ <- string keyword
   singleTrailingComment
 
 -- | Takes a string for a keyword, and returns a parser which parses that
@@ -85,8 +84,8 @@ loneStringKeywordParser keyword = do
 -- lowercase letter.
 nameParserWithKeyword :: String -> GenParser Char st String
 nameParserWithKeyword keyword = do
-  string keyword 
-  spaceTabs
+  _ <- string keyword 
+  _ <- spaceTabs
   name <- nameParser
   singleTrailingComment
   return name
@@ -104,8 +103,8 @@ nameParser = do
 -- numeric characters and underscores. 
 variableNameParserWithKeyword :: String -> GenParser Char st (String, String)
 variableNameParserWithKeyword keyword = do
-  string keyword
-  spaceTabs
+  _ <- string keyword
+  _ <- spaceTabs
   firstLetter <- letter
   restOfName <- many (alphaNum <|> char '_')
   singleTrailingComment
@@ -116,8 +115,8 @@ variableNameParserWithKeyword keyword = do
 -- characters surrounded by quotes, with inner quotes escaped.
 localizedKeyParserWithKeyword :: String -> GenParser Char st (String, String)
 localizedKeyParserWithKeyword keyword = do
-  string keyword
-  spaceTabs
+  _ <- string keyword
+  _ <- spaceTabs
   localizedKey <- parseLocalizedKey
   singleTrailingComment
   return (keyword, localizedKey)
@@ -125,7 +124,7 @@ localizedKeyParserWithKeyword keyword = do
 -- | Parses a localized keyword, which is surrounded by quotes.
 parseLocalizedKey :: GenParser Char st String
 parseLocalizedKey = do
-  char '"'
+  _ <- char '"'
   localizedKeyBySection
 
 localizedKeyBySection :: GenParser Char st String
@@ -133,11 +132,11 @@ localizedKeyBySection = do
   section <- many (noneOf "\"")
   if not (null section) && last section == '\\'
     then do
-      char '"'
+      _ <- char '"'
       rest <- localizedKeyBySection
       return $ section ++ ('"':rest)
     else do
-      char '"'
+      _ <- char '"'
       return section
 
 -------------------------------------------------------------------------------
@@ -148,8 +147,8 @@ localizedKeyBySection = do
 -- keyword, a space, and then a float value.
 floatAttributeParser :: String -> GenParser Char st (String, Float)
 floatAttributeParser keyword = do
-  string keyword
-  spaceTabs
+  _ <- string keyword
+  _ <- spaceTabs
   value <- parsePositiveFloat
   singleTrailingComment
   return (keyword, value)
@@ -176,7 +175,7 @@ parsePositiveFloat = do
 
 decimalAndFollowing :: GenParser Char st Float
 decimalAndFollowing = do
-  char '.'
+  _ <- char '.'
   following <- many digit
   let asFloat = if not (null following)
                   then read ('0':'.':following) :: Float 
@@ -195,9 +194,9 @@ indentParser :: ParserState st => GenParser Char st a -> GenParser Char st a
 indentParser parser = do
   parserState <- getState
   let indentLevel = currentIndentLevel parserState
-  let shouldUpdate = shouldUpdateIndentLevel parserState
-  Text.Parsec.try $ string (concat indentLevel)
-  if shouldUpdate
+  let shouldUpdate' = shouldUpdateIndentLevel parserState
+  _ <- Text.Parsec.try $ string (concat indentLevel)
+  if shouldUpdate'
     then do
       newLevel <- spaceTabs
       modifyState (addIndentationLevel newLevel)
@@ -215,15 +214,15 @@ spaceTabs = many1 (oneOf " \t")
 -- | Skips over a series of spaces and comments
 commentOrSpacesParser :: GenParser Char st ()
 commentOrSpacesParser = do
-  spaces `sepBy` commentParser
+  _ <- spaces `sepBy` commentParser
   return ()
 
 -- | Parses a series of spaces, and then a single comment
 singleTrailingComment :: GenParser Char st ()
 singleTrailingComment = do
-  many (oneOf " \t")
+  _ <- many (oneOf " \t")
   option () commentParser
-  endOfLine
+  _ <- endOfLine
   return ()
 
 -- | Parses an indented comment. 
@@ -232,8 +231,8 @@ indentedComment = indentParser singleTrailingComment
 
 commentParser :: GenParser Char st ()
 commentParser = do
-  string "//"
-  many $ noneOf "\n"
+  _ <- string "//"
+  _ <- many $ noneOf "\n"
   return ()
 
 -------------------------------------------------------------------------------
@@ -249,4 +248,4 @@ sourceNameFromFile fullPath = Data.Text.unpack $
 -- already have the filename attached.
 attachFileName :: String -> OWAParseError -> OWAParseError
 attachFileName _ (ParsecError err) = ParsecError err
-attachFileName sourceName objectError = objectError {fileName = sourceName}
+attachFileName source objectError = objectError {fileName = source}

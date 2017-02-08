@@ -19,8 +19,8 @@ import Core.Types
 -- | Determines the last time we generated Objective C and Swift from the last gen file.
 lastCodeGenerationTime :: FilePath -> IO (Maybe UTCTime, Maybe UTCTime)
 lastCodeGenerationTime filePath = do
-  appDirectory <- findAppDirectory filePath
-  case appDirectory of
+  appDirectoryMaybe <- findAppDirectory filePath
+  case appDirectoryMaybe of
     Nothing -> return (Nothing, Nothing)
     Just appDirectory -> do
       let lastGenFilePath = appDirectory ++ lastGenFileExtension

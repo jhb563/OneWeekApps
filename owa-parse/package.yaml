@@ -6,15 +6,27 @@ version:
 
 dependencies:
   - base
-  - containers
-  - mtl
   - owa-model
   - parsec
-  - split
-  - text
 
 library:
   source-dirs:
     src/
   other-modules:
     Parse.Utils
+  dependencies:
+    - containers
+    - mtl
+    - split
+    - text
+
+tests:
+  parse-tests:
+    main: Parse/Tests.hs
+    source-dirs:
+      - test/
+    dependencies:
+      - containers
+      - directory
+      - hspec
+      - owa-parse

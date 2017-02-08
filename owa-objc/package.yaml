@@ -19,3 +19,14 @@ library:
     src/
   other-modules:
     Objc.Utils
+
+tests:
+  objc-tests:
+    main: Objc/Tests.hs
+    source-dirs:
+      - test/
+    dependencies:
+      - directory
+      - hspec
+      - owa-objc
+      - process

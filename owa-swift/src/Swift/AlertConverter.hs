@@ -85,8 +85,8 @@ paramsForFormat (YesNoButtons _ _) =
     , paramType = SimpleType "AlertHandler" } ]
 
 actionStatementsForFormat :: AlertButtonFormat -> [SwiftStatement]
-actionStatementsForFormat (DismissButton name) = actionStatements name "dismissAction" ""
-actionStatementsForFormat (NeutralButton name) = actionStatements name "neutralAction" "handler"
+actionStatementsForFormat (DismissButton name') = actionStatements name' "dismissAction" ""
+actionStatementsForFormat (NeutralButton name') = actionStatements name' "neutralAction" "handler"
 actionStatementsForFormat (YesNoButtons yesName noName) =
   actionStatements yesName "yesAction" "yesHandler" ++ actionStatements noName "noAction" "noHandler"
 

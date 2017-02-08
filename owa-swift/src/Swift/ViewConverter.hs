@@ -130,11 +130,12 @@ setupViewsSectionForElement (ContainerViewElement container) = setupViewsSection
 setupViewsSectionForElement (ScrollViewElement scrollView) = setupViewsSectionForNameAndElements
   (scrollViewName scrollView)
   [ContainerViewElement $ scrollViewContainer scrollView]
+setupViewsSectionForElement _ = []
 
 setupViewsSectionForNameAndElements :: String -> [OWAViewElement] -> [SwiftStatement]
-setupViewsSectionForNameAndElements name elems = [assignOfArray, forBlock]
+setupViewsSectionForNameAndElements name' elems = [assignOfArray, forBlock]
   where
-    subviewsName = if null name then "subviews" else name ++ "Subviews"
+    subviewsName = if null name' then "subviews" else name' ++ "Subviews"
     assignOfArray = LetDecl
       subviewsName
       (ArrayLit $ map (Var . nameForElement) elems)
@@ -142,7 +143,7 @@ setupViewsSectionForNameAndElements name elems = [assignOfArray, forBlock]
       (PropertyCall (Var "view") "translatesAutoresizingMaskIntoConstraints")
       (BoolLit False)
     addSubviewStatement = ExpressionStatement $ MethodCall
-      (if null name then Nothing else Just (Var name))
+      (if null name' then Nothing else Just (Var name'))
       LibMethod { libMethodName = "addSubview", libParams = [Nothing]}
       [Var "view"]
     forBlock = ForEachBlock (Var "view") (Var subviewsName)

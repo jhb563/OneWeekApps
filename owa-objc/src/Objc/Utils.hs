@@ -53,8 +53,8 @@ topCommentSection filename appInfo = BlockCommentSection
 -- a boolean signal for whether the comment is for a header or .m file.
 -- Constructs the header comment which goes at the top of a category file.
 categoryCommentSection :: OWAAppInfo -> String -> String -> Bool -> FileSection
-categoryCommentSection appInfo originalTypeName categoryName isHeader = topCommentSection
-  (categoryFileName originalTypeName categoryName isHeader) appInfo
+categoryCommentSection appInfo originalTypeName' categoryName' isHeader = topCommentSection
+  (categoryFileName originalTypeName' categoryName' isHeader) appInfo
 
 -------------------------------------------------------------------------------
 -------------------IMPORT SECTIONS---------------------------------------------
@@ -72,11 +72,11 @@ uiKitImportsSection = ImportsSection [ModuleImport "UIKit"]
 -- and returns a imports section importing the header file of that
 -- category.
 categoryMImportsSection :: String -> String -> FileSection
-categoryMImportsSection originalTypeName categoryName = ImportsSection
-  [FileImport $ categoryFileName originalTypeName categoryName True]
+categoryMImportsSection originalTypeName' categoryName' = ImportsSection
+  [FileImport $ categoryFileName originalTypeName' categoryName' True]
 
 categoryFileName :: String -> String -> Bool -> String
-categoryFileName originalTypeName categoryName isHeader = originalTypeName ++ ('+':categoryName) ++ ending
+categoryFileName originalTypeName' categoryName' isHeader = originalTypeName' ++ ('+':categoryName') ++ ending
   where ending = if isHeader then ".h" else ".m"
 
 -------------------------------------------------------------------------------

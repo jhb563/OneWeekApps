@@ -12,20 +12,73 @@ library
       src/
   build-depends:
       base
-    , containers
-    , mtl
     , owa-model
     , parsec
+    , containers
+    , mtl
     , split
     , text
   exposed-modules:
-      Parse.OWAAlertParser
-      Parse.OWAAppInfoParser
-      Parse.OWAColorParser
-      Parse.OWAErrorParser
-      Parse.OWAFontParser
-      Parse.OWAStringsParser
-      Parse.OWAViewParser
+      Parse.AlertParser
+      Parse.AppInfoParser
+      Parse.ColorParser
+      Parse.ErrorParser
+      Parse.FontParser
+      Parse.StringsParser
+      Parse.ViewParser
   other-modules:
       Parse.Utils
+  default-language: Haskell2010
+
+test-suite parse-tests
+  type: exitcode-stdio-1.0
+  main-is: Parse/Tests.hs
+  hs-source-dirs:
+      test/
+  build-depends:
+      base
+    , owa-model
+    , parsec
+    , containers
+    , directory
+    , hspec
+    , owa-parse
+  other-modules:
+      Parse.Tests.Alerts.Basic
+      Parse.Tests.Alerts.Errors
+      Parse.Tests.Alerts.Failure
+      Parse.Tests.Alerts.Objects
+      Parse.Tests.AppInfo.Basic
+      Parse.Tests.AppInfo.Errors
+      Parse.Tests.AppInfo.Objects
+      Parse.Tests.Colors.Basic
+      Parse.Tests.Colors.Errors
+      Parse.Tests.Colors.Failure
+      Parse.Tests.Colors.Objects
+      Parse.Tests.Comments.Basic
+      Parse.Tests.Errors.Basic
+      Parse.Tests.Errors.Errors
+      Parse.Tests.Errors.Failure
+      Parse.Tests.Errors.Objects
+      Parse.Tests.Fonts.Basic
+      Parse.Tests.Fonts.Errors
+      Parse.Tests.Fonts.Failure
+      Parse.Tests.Fonts.Objects
+      Parse.Tests.Spacing.Basic
+      Parse.Tests.Spacing.Objects
+      Parse.Tests.Strings.Basic
+      Parse.Tests.Strings.Errors
+      Parse.Tests.Strings.Objects
+      Parse.Tests.Tabs.Basic
+      Parse.Tests.Utils
+      Parse.Tests.Views.Constraints
+      Parse.Tests.Views.ContainerObjects
+      Parse.Tests.Views.Containers
+      Parse.Tests.Views.Custom
+      Parse.Tests.Views.CustomObjects
+      Parse.Tests.Views.Elements
+      Parse.Tests.Views.Errors
+      Parse.Tests.Views.Failure
+      Parse.Tests.Views.Names
+      Parse.Tests.Views.Objects
   default-language: Haskell2010

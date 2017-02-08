@@ -55,7 +55,7 @@ vcatWithSpace docs = empty PPrint.<$> vcat docs
 truncatedFloatString :: Float -> String
 truncatedFloatString flt = case decimalIndex of
   Nothing -> initialString
-  Just index -> case reverse initialString of
+  Just _ -> case reverse initialString of
     '0':'0':rest -> reverse rest
     '0':rest -> reverse rest
     _ -> initialString

@@ -10,7 +10,6 @@ module Objc.Print (
   printStructureToFile
 ) where
 
-import Data.List
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
@@ -54,8 +53,8 @@ includeDoc (ModuleImport modName) = text "@import" <+> text modName <> semi
 includeDoc (FileImport fileName) = text "#import \"" <> text fileName <> text "\""
 
 forwardDeclDoc :: ForwardDeclaration -> Doc
-forwardDeclDoc (TypedefDecl returnType name paramTypes) = text "typedef" <+>
-  typeDoc returnType <+>
+forwardDeclDoc (TypedefDecl returnType' name paramTypes) = text "typedef" <+>
+  typeDoc returnType' <+>
   parens (text $ '^':name) <>
   parens (hcat $ punctuate (text ", ") (map typeDoc paramTypes)) <>
   semi
@@ -158,9 +157,9 @@ expressionDoc (BinOp expr1 op expr2) = expressionDoc expr1 <+>
   expressionDoc expr2
 expressionDoc (PropertyCall callingExp propName) = expressionDoc callingExp <>
   text "." <> text propName
-expressionDoc (VoidBlock params statements) = indentBlock 
+expressionDoc (VoidBlock params' statements) = indentBlock 
   (text "^" <>
-    parens (hcat $ punctuate (text ", ") (map blockParamDoc params)))
+    parens (hcat $ punctuate (text ", ") (map blockParamDoc params')))
   (vcat $ map statementDoc statements)
 expressionDoc (Var varName) = text varName
 expressionDoc (VarDecl varType varName) = typeDoc varType <+> text varName
@@ -171,22 +170,22 @@ expressionDoc (FloatLit floatVal) = text $ truncatedFloatString floatVal
 expressionDoc (ArrayLit expressions) = text "@[" <>
   hcat (punctuate (text ", ") (map expressionDoc expressions)) <>
   text "]"
-expressionDoc (BoolLit bool) = text (if bool then "YES" else "NO")
+expressionDoc (BoolLit b) = text (if b then "YES" else "NO")
 
 keyValueDoc :: (ObjcExpression, ObjcExpression) -> Doc
 keyValueDoc (key, value) = expressionDoc key <+> colon <+> expressionDoc value
 
 methodCallDoc :: ObjcExpression -> String -> [String] -> [ObjcExpression] -> Doc
-methodCallDoc callingExp nameIntro titles paramExps = brackets $
+methodCallDoc callingExp nameIntro' titles paramExps = brackets $
   expressionDoc callingExp <+>
-  text nameIntro <>
+  text nameIntro' <>
   hsep (zipWith argDoc titles paramExps)
 
 argDoc :: String -> ObjcExpression -> Doc
 argDoc title objcExp = text title <> colon <> expressionDoc objcExp
 
 staticSignifier :: Bool -> Doc
-staticSignifier isStatic = if isStatic then text "+" else text "-"
+staticSignifier isStatic' = if isStatic' then text "+" else text "-"
 
 typeDoc :: ObjcType -> Doc
 typeDoc (PointerType typeName) = text typeName <> text "*"
