@@ -203,7 +203,7 @@ infoPath :: FilePath -> String -> FilePath
 infoPath dir projName = baseProjectFilePath dir projName ++ "Info.plist"
 
 pbxProjPath :: FilePath -> String -> FilePath
-pbxProjPath dir projName = pbxProjDirPath dir projName ++ "project.pbxproject"
+pbxProjPath dir projName = pbxProjDirPath dir projName ++ "project.pbxproj"
 
 contentsPath :: FilePath -> String -> FilePath
 contentsPath dir projName = pbxProjDirPath dir projName ++ ".xcworkspace/contents.xcworkspacedata"
