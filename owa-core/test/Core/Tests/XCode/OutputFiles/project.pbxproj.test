@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-        8E4A208F1DD12224003AABD3 /* XCodeTestProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCodeTestProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+        8E4A208F1DD12224003AABD3 /* XCodeTestProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "XCodeTestProject.app"; sourceTree = BUILT_PRODUCTS_DIR; };
         8E4A20921DD12224003AABD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
         8E4A20941DD12224003AABD3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
         8E4A209E1DD12224003AABD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -43,7 +43,7 @@
                 8E4A20941DD12224003AABD3 /* ViewController.swift */,
                 8E4A209E1DD12224003AABD3 /* Info.plist */,
             );
-            path = XCodeTestProject;
+            path = "XCodeTestProject";
             sourceTree = "<group>";
         };
 /* End PBXGroup section */
@@ -61,8 +61,8 @@
             );
             dependencies = (
             );
-            name = XCodeTestProject;
-            productName = XCodeTestProject;
+            name = "XCodeTestProject";
+            productName = "XCodeTestProject";
             productReference = 8E4A208F1DD12224003AABD3 /* XCodeTestProject.app */;
             productType = "com.apple.product-type.application";
         };
@@ -207,9 +207,9 @@
             isa = XCBuildConfiguration;
             buildSettings = {
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-                INFOPLIST_FILE = XCodeTestProject/Info.plist;
+                INFOPLIST_FILE = "XCodeTestProject/Info.plist";
                 LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.oneweekapps.XCodeTestProject;
+                PRODUCT_BUNDLE_IDENTIFIER = "com.oneweekapps.XCodeTestProject";
                 PRODUCT_NAME = "$(TARGET_NAME)";
             };
             name = Debug;
@@ -218,9 +218,9 @@
             isa = XCBuildConfiguration;
             buildSettings = {
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-                INFOPLIST_FILE = XCodeTestProject/Info.plist;
+                INFOPLIST_FILE = "XCodeTestProject/Info.plist";
                 LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.oneweekapps.XCodeTestProject;
+                PRODUCT_BUNDLE_IDENTIFIER = "com.oneweekapps.XCodeTestProject";
                 PRODUCT_NAME = "$(TARGET_NAME)";
             };
             name = Release;
