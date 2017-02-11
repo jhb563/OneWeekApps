@@ -1,0 +1,21 @@
+////////////////////////////////////////////////////////////////////////////////
+////////// BUG FIXES FOR VERSION 0.2.3 /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+2/7/17
+- Fixed an issue where the "pbxproject" file had the incorrect file suffix. It
+used to be called "project.pbxproject". It is now called "project.pbxproj".
+
+2/10/17
+- Fixed an issue where the XCode file would not open when using a project name
+with spaces. This updating the "pbxproj" templates to a.) use more quotation
+marks around paths and b.) put dashes in the product bundle identifiers. Also
+incorporated the company name (if it is supplied) in the bundle identifier.
+
+2/10/17
+- Fixed an issue where in a few instances, UIFont objects in Swift would need
+to be unwrapped from their optional state.
+
+2/10/17
+- Fixed an issue where an empty placeholder objects caused a compile error. When
+a dictionary is empty, it now uses the constructor: [String : AnyObject]()

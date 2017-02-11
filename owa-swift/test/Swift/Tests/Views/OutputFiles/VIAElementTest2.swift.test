@@ -52,7 +52,7 @@ class VIAElementTest2: UIView {
   
   lazy var firstTextfield: UITextField! = {
     let v = UITextField()
-    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.view1TextFieldColor(), NSFontAttributeName : UIFont.placeholderFont()]
+    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.view1TextFieldColor(), NSFontAttributeName : UIFont.placeholderFont()!]
     let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("ENTER_NAME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
     v.attributedPlaceholder = attributedPlaceholder
     return v
@@ -70,7 +70,7 @@ class VIAElementTest2: UIView {
     let v = UIButton()
     v.setTitle(NSLocalizedString("NEXT", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     v.setTitleColor(UIColor.view2Color(), forState: .Normal)
-    v.titleLabel.font = UIFont.standardFont()
+    v.titleLabel!.font = UIFont.standardFont()
     v.setImage(UIImage(imageLiteral: "file1.png"), forState: .Normal)
     return v
   }()
@@ -79,7 +79,7 @@ class VIAElementTest2: UIView {
     let v = UIButton()
     v.setTitle(NSLocalizedString("PREV", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     v.setTitleColor(UIColor.view2Color(), forState: .Normal)
-    v.titleLabel.font = UIFont.placeholderFont()
+    v.titleLabel!.font = UIFont.placeholderFont()
     v.backgroundColor = UIColor.elementBackgroundColor()
     return v
   }()
@@ -94,7 +94,7 @@ class VIAElementTest2: UIView {
     let v = UITextField()
     v.textColor = UIColor.view2Color()
     v.font = UIFont.standardFont()
-    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.placeholderColor(), NSFontAttributeName : UIFont.placeholderFont()]
+    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.placeholderColor(), NSFontAttributeName : UIFont.placeholderFont()!]
     let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("ENTER_LOCATION", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
     v.attributedPlaceholder = attributedPlaceholder
     return v

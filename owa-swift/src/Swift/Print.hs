@@ -108,7 +108,7 @@ typeDoc (FunctionType argTypes returnType') = parens
   (hcat $ punctuate (text ", ") (map typeDoc argTypes)) <+>
   text "->" <+> typeDoc returnType'
 typeDoc (DictionaryType keyType valueType) = brackets $
-  typeDoc keyType <> colon <+> typeDoc valueType
+  typeDoc keyType <+> colon <+> typeDoc valueType
 
 paramDoc :: ParamDef -> Doc
 paramDoc pDef = case label of
@@ -182,6 +182,9 @@ expressionDoc (StringLit str) = dquotes $ text str
 expressionDoc (BoolLit b) = text $ if b then "true" else "false"
 expressionDoc (ArrayLit exprs) = brackets $ hcat $ punctuate (text ", ")
   (map expressionDoc exprs)
+expressionDoc (DictionaryLit []) = 
+  (typeDoc $ DictionaryType (SimpleType "String") (SimpleType "AnyObject")) <> 
+  text "()"
 expressionDoc (DictionaryLit exprPairs) = brackets $ hcat $ punctuate (text ", ")
   (map exprPairToDoc exprPairs)
   where
