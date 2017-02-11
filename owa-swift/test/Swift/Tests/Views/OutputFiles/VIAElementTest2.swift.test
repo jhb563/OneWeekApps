@@ -70,7 +70,7 @@ class VIAElementTest2: UIView {
     let v = UIButton()
     v.setTitle(NSLocalizedString("NEXT", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     v.setTitleColor(UIColor.view2Color(), forState: .Normal)
-    v.titleLabel.font = UIFont.standardFont()
+    v.titleLabel!.font = UIFont.standardFont()
     v.setImage(UIImage(imageLiteral: "file1.png"), forState: .Normal)
     return v
   }()
@@ -79,7 +79,7 @@ class VIAElementTest2: UIView {
     let v = UIButton()
     v.setTitle(NSLocalizedString("PREV", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), forState: .Normal)
     v.setTitleColor(UIColor.view2Color(), forState: .Normal)
-    v.titleLabel.font = UIFont.placeholderFont()
+    v.titleLabel!.font = UIFont.placeholderFont()
     v.backgroundColor = UIColor.elementBackgroundColor()
     return v
   }()

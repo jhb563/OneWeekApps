@@ -258,7 +258,7 @@ buttonCustomization button = catMaybes [textStatement, textColorAssign, fontAssi
     fontAssign = case buttonFontName button of
       Nothing -> Nothing
       Just font -> Just $ AssignStatement
-        (PropertyCall (PropertyCall (Var "v") "titleLabel") "font")
+        (PropertyCall (PropertyCall (Var "v") "titleLabel!") "font")
         (fontMethodCall font)
     backgroundAssign = case buttonBackgroundColorName button of
       Nothing -> Nothing
