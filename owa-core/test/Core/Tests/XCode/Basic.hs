@@ -90,7 +90,7 @@ appInfo1 = OWAAppInfo
   
 appInfo2 :: OWAAppInfo
 appInfo2 = OWAAppInfo
-  { appName = "MyTestProject"
+  { appName = "My Test Project"
   , appPrefix = "MTP"
   , authorName = "James Bowen"
   , dateCreatedString = "4/30/2016"
@@ -116,11 +116,11 @@ testDirectoryExtension = "/test/Core/Tests/XCode/"
 diffFileHomes :: [FilePath]
 diffFileHomes =
   [ "ios/XCodeTestProject/"
-  , "ios/MyTestProject/"
+  , "ios/My Test Project/"
   , "ios/XCodeTestProject.pbxproj/"
-  , "ios/MyTestProject.pbxproj/"
+  , "ios/My Test Project.pbxproj/"
   , "ios/XCodeTestProject.pbxproj/.xcworkspacedata/"
-  , "ios/MyTestProject.pbxproj/.xcworkspacedata/" ]
+  , "ios/My Test Project.pbxproj/.xcworkspacedata/" ]
 
 infoTest :: FilePath
 infoTest = "/OutputFiles/Info.plist.test"
@@ -165,16 +165,16 @@ contents1 :: FilePath
 contents1 = "ios/XCodeTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
 
 info2 :: FilePath
-info2 = "ios/MyTestProject/Info.plist"
+info2 = "ios/My Test Project/Info.plist"
 
 appDelegate2 :: FilePath
-appDelegate2 = "ios/MyTestProject/AppDelegate.swift"
+appDelegate2 = "ios/My Test Project/AppDelegate.swift"
 
 vc2 :: FilePath
-vc2 = "ios/MyTestProject/ViewController.swift"
+vc2 = "ios/My Test Project/ViewController.swift"
 
 pbx2 :: FilePath
-pbx2 = "ios/MyTestProject.xcodeproj/project.pbxproj"
+pbx2 = "ios/My Test Project.xcodeproj/project.pbxproj"
 
 contents2 :: FilePath
-contents2 = "ios/MyTestProject.xcodeproj/.xcworkspace/contents.xcworkspacedata"
+contents2 = "ios/My Test Project.xcodeproj/.xcworkspace/contents.xcworkspacedata"

@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-        8E4A208F1DD12224003AABD3 /* MyTestProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyTestProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+        8E4A208F1DD12224003AABD3 /* My Test Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Test Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
         8E4A20921DD12224003AABD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
         8E4A20941DD12224003AABD3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
         8E4A209E1DD12224003AABD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -32,26 +32,26 @@
         8E4A20861DD12224003AABD3 = {
             isa = PBXGroup;
             children = (
-                8E4A20911DD12224003AABD3 /* MyTestProject */
+                8E4A20911DD12224003AABD3 /* My Test Project */
             );
             sourceTree = "<group>";
         };
-        8E4A20911DD12224003AABD3 /* MyTestProject */ = {
+        8E4A20911DD12224003AABD3 /* My Test Project */ = {
             isa = PBXGroup;
             children = (
                 8E4A20921DD12224003AABD3 /* AppDelegate.swift */,
                 8E4A20941DD12224003AABD3 /* ViewController.swift */,
                 8E4A209E1DD12224003AABD3 /* Info.plist */,
             );
-            path = MyTestProject;
+            path = "My Test Project";
             sourceTree = "<group>";
         };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-        8E4A208E1DD12224003AABD3 /* MyTestProject */ = {
+        8E4A208E1DD12224003AABD3 /* My Test Project */ = {
             isa = PBXNativeTarget;
-            buildConfigurationList = 8E4A20A11DD12225003AABD3 /* Build configuration list for PBXNativeTarget "MyTestProject" */;
+            buildConfigurationList = 8E4A20A11DD12225003AABD3 /* Build configuration list for PBXNativeTarget "My Test Project" */;
             buildPhases = (
                 8E4A208B1DD12224003AABD3 /* Sources */,
                 8E4A208C1DD12224003AABD3 /* Frameworks */,
@@ -61,9 +61,9 @@
             );
             dependencies = (
             );
-            name = MyTestProject;
-            productName = MyTestProject;
-            productReference = 8E4A208F1DD12224003AABD3 /* MyTestProject.app */;
+            name = "My Test Project";
+            productName = "My Test Project";
+            productReference = 8E4A208F1DD12224003AABD3 /* My Test Project.app */;
             productType = "com.apple.product-type.application";
         };
 /* End PBXNativeTarget section */
@@ -81,7 +81,7 @@
                     };
                 };
             };
-            buildConfigurationList = 8E4A208A1DD12224003AABD3 /* Build configuration list for PBXProject "MyTestProject" */;
+            buildConfigurationList = 8E4A208A1DD12224003AABD3 /* Build configuration list for PBXProject "My Test Project" */;
             compatibilityVersion = "Xcode 3.2";
             developmentRegion = English;
             hasScannedForEncodings = 0;
@@ -94,7 +94,7 @@
             projectDirPath = "";
             projectRoot = "";
             targets = (
-                8E4A208E1DD12224003AABD3 /* MyTestProject */,
+                8E4A208E1DD12224003AABD3 /* My Test Project */,
             );
         };
 /* End PBXProject section */
@@ -207,9 +207,9 @@
             isa = XCBuildConfiguration;
             buildSettings = {
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-                INFOPLIST_FILE = MyTestProject/Info.plist;
+                INFOPLIST_FILE = "My Test Project/Info.plist";
                 LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.oneweekapps.MyTestProject;
+                PRODUCT_BUNDLE_IDENTIFIER = "com.testingapps.My-Test-Project";
                 PRODUCT_NAME = "$(TARGET_NAME)";
             };
             name = Debug;
@@ -218,9 +218,9 @@
             isa = XCBuildConfiguration;
             buildSettings = {
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-                INFOPLIST_FILE = MyTestProject/Info.plist;
+                INFOPLIST_FILE = "My Test Project/Info.plist";
                 LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-                PRODUCT_BUNDLE_IDENTIFIER = com.oneweekapps.MyTestProject;
+                PRODUCT_BUNDLE_IDENTIFIER = "com.testingapps.My-Test-Project";
                 PRODUCT_NAME = "$(TARGET_NAME)";
             };
             name = Release;
@@ -228,7 +228,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-        8E4A208A1DD12224003AABD3 /* Build configuration list for PBXProject "MyTestProject" */ = {
+        8E4A208A1DD12224003AABD3 /* Build configuration list for PBXProject "My Test Project" */ = {
             isa = XCConfigurationList;
             buildConfigurations = (
                 8E4A209F1DD12224003AABD3 /* Debug */,
@@ -237,7 +237,7 @@
             defaultConfigurationIsVisible = 0;
             defaultConfigurationName = Release;
         };
-        8E4A20A11DD12225003AABD3 /* Build configuration list for PBXNativeTarget "MyTestProject" */ = {
+        8E4A20A11DD12225003AABD3 /* Build configuration list for PBXNativeTarget "My Test Project" */ = {
             isa = XCConfigurationList;
             buildConfigurations = (
                 8E4A20A21DD12225003AABD3 /* Debug */,

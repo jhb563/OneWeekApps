@@ -12,6 +12,7 @@ module Core.XCode (
   printBaseXCodeFiles  
 ) where
 
+import           Data.Char (toLower)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 import           Data.Text.Template
@@ -38,10 +39,11 @@ printBaseXCodeFiles currentDirectory appInfo = do
   printVC currentDirectory appInfo
   printAppDelegate currentDirectory appInfo
   printInfo currentDirectory projName
-  printContents currentDirectory projName 
-  printPbxProj currentDirectory projName
+  printContents currentDirectory projName cName
+  printPbxProj currentDirectory projName cName
   where
     projName = appName appInfo
+    cName = companyName appInfo
 
 ---------------------------------------------------------------------------
 ------------------------FILE PRINTERS--------------------------------------
@@ -62,21 +64,36 @@ printInfo dir projName = do
   let fullPath = infoPath dir projName
   writeFile fullPath infoPListTemplate
 
-printPbxProj :: FilePath -> String -> IO ()
-printPbxProj dir projName = writeFile fullPath (TL.unpack interpolatedText)
+printPbxProj :: FilePath -> String -> Maybe String -> IO ()
+printPbxProj dir projName cNameMaybe = writeFile fullPath (TL.unpack interpolatedText)
   where
     fullPath = pbxProjPath dir projName
     temp = template pbxProjTemplate
-    context str = if str == "projectname" then T.pack projName else str
-    interpolatedText = render temp context
+    interpolatedText = render temp (contextFunction projName cNameMaybe)
 
-printContents :: FilePath -> String -> IO ()
-printContents dir projName = writeFile fullPath (TL.unpack interpolatedText)
+printContents :: FilePath -> String -> Maybe String -> IO ()
+printContents dir projName cNameMaybe = writeFile fullPath (TL.unpack interpolatedText)
   where
     fullPath = contentsPath dir projName
     temp = template contentsTemplate
-    context str = if str == "projectname" then T.pack projName else str
-    interpolatedText = render temp context
+    interpolatedText = render temp (contextFunction projName cNameMaybe)
+
+-- Used for filling in variables
+contextFunction :: String -> Maybe String -> T.Text -> T.Text
+contextFunction projName _ "projectname" = T.pack projName 
+contextFunction projName _ "projectbundlename" = replaceSpaces projName ""
+  where
+    -- Use Tail Recursion
+    replaceSpaces :: String -> String -> T.Text
+    replaceSpaces "" accum = T.pack $ reverse accum
+    replaceSpaces (c : cs) accum = if c == ' '
+      then replaceSpaces cs ('-' : accum)
+      else replaceSpaces cs (c : accum)
+contextFunction _ Nothing "companyname" = "oneweekapps"
+contextFunction _ (Just cName) "companyname" = T.pack $ map toLower cNameNoSpaces
+  where
+    cNameNoSpaces = filter (/= ' ') cName
+contextFunction _ _ txt = txt
 
 ---------------------------------------------------------------------------
 ------------------------FILE BUILDERS--------------------------------------

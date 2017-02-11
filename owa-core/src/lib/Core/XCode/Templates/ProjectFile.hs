@@ -29,7 +29,7 @@ pbxProjTemplate = "\
 \/* End PBXBuildFile section */\n\
 \\n\
 \/* Begin PBXFileReference section */\n\
-\        8E4A208F1DD12224003AABD3 /* $projectname.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = $projectname.app; sourceTree = BUILT_PRODUCTS_DIR; };\n\
+\        8E4A208F1DD12224003AABD3 /* $projectname.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = \"$projectname.app\"; sourceTree = BUILT_PRODUCTS_DIR; };\n\
 \        8E4A20921DD12224003AABD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = \"<group>\"; };\n\
 \        8E4A20941DD12224003AABD3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = \"<group>\"; };\n\
 \        8E4A209E1DD12224003AABD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n\
@@ -60,7 +60,7 @@ pbxProjTemplate = "\
 \                8E4A20941DD12224003AABD3 /* ViewController.swift */,\n\
 \                8E4A209E1DD12224003AABD3 /* Info.plist */,\n\
 \            );\n\
-\            path = $projectname;\n\
+\            path = \"$projectname\";\n\
 \            sourceTree = \"<group>\";\n\
 \        };\n\
 \/* End PBXGroup section */\n\
@@ -78,8 +78,8 @@ pbxProjTemplate = "\
 \            );\n\
 \            dependencies = (\n\
 \            );\n\
-\            name = $projectname;\n\
-\            productName = $projectname;\n\
+\            name = \"$projectname\";\n\
+\            productName = \"$projectname\";\n\
 \            productReference = 8E4A208F1DD12224003AABD3 /* $projectname.app */;\n\
 \            productType = \"com.apple.product-type.application\";\n\
 \        };\n\
@@ -224,9 +224,9 @@ pbxProjTemplate = "\
 \            isa = XCBuildConfiguration;\n\
 \            buildSettings = {\n\
 \                ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\
-\                INFOPLIST_FILE = $projectname/Info.plist;\n\
+\                INFOPLIST_FILE = \"$projectname/Info.plist\";\n\
 \                LD_RUNPATH_SEARCH_PATHS = \"$$(inherited) @executable_path/Frameworks\";\n\
-\                PRODUCT_BUNDLE_IDENTIFIER = com.oneweekapps.$projectname;\n\
+\                PRODUCT_BUNDLE_IDENTIFIER = \"com.$companyname.$projectbundlename\";\n\
 \                PRODUCT_NAME = \"$$(TARGET_NAME)\";\n\
 \            };\n\
 \            name = Debug;\n\
@@ -235,9 +235,9 @@ pbxProjTemplate = "\
 \            isa = XCBuildConfiguration;\n\
 \            buildSettings = {\n\
 \                ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;\n\
-\                INFOPLIST_FILE = $projectname/Info.plist;\n\
+\                INFOPLIST_FILE = \"$projectname/Info.plist\";\n\
 \                LD_RUNPATH_SEARCH_PATHS = \"$$(inherited) @executable_path/Frameworks\";\n\
-\                PRODUCT_BUNDLE_IDENTIFIER = com.oneweekapps.$projectname;\n\
+\                PRODUCT_BUNDLE_IDENTIFIER = \"com.$companyname.$projectbundlename\";\n\
 \                PRODUCT_NAME = \"$$(TARGET_NAME)\";\n\
 \            };\n\
 \            name = Release;\n\
