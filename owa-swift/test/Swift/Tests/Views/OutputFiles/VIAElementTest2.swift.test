@@ -52,7 +52,7 @@ class VIAElementTest2: UIView {
   
   lazy var firstTextfield: UITextField! = {
     let v = UITextField()
-    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.view1TextFieldColor(), NSFontAttributeName : UIFont.placeholderFont()]
+    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.view1TextFieldColor(), NSFontAttributeName : UIFont.placeholderFont()!]
     let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("ENTER_NAME", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
     v.attributedPlaceholder = attributedPlaceholder
     return v
@@ -94,7 +94,7 @@ class VIAElementTest2: UIView {
     let v = UITextField()
     v.textColor = UIColor.view2Color()
     v.font = UIFont.standardFont()
-    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.placeholderColor(), NSFontAttributeName : UIFont.placeholderFont()]
+    let placeholderAttributes = [NSForegroundColorAttributeName : UIColor.placeholderColor(), NSFontAttributeName : UIFont.placeholderFont()!]
     let attributedPlaceholder = NSAttributedString(string: NSLocalizedString("ENTER_LOCATION", tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: ""), attributes: placeholderAttributes)
     v.attributedPlaceholder = attributedPlaceholder
     return v

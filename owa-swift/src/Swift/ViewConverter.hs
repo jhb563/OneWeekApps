@@ -303,7 +303,7 @@ placeholderStatements textField = if noPlaceholders then [] else statements
       Just color -> Just (Var "NSForegroundColorAttributeName", colorMethodCall color)
     fontAttrPair = case pFont of
       Nothing -> Nothing
-      Just font -> Just (Var "NSFontAttributeName", fontMethodCall font)
+      Just font -> Just (Var "NSFontAttributeName", ExplicitExpr $ fontMethodCall font)
     dictionary = DictionaryLit $ catMaybes [colorAttrPair, fontAttrPair]
     dictAssign = LetDecl "placeholderAttributes" dictionary
     placeholderInit = LetDecl "attributedPlaceholder" $ MethodCall Nothing
