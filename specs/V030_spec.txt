@@ -1,0 +1,41 @@
+////////////////////////////////////////////////////////////////////////////////
+////////// ONE WEEK APPS VERSION 0.3.0 SPECS ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* The next version of OWA will add the concept of "Models". Just as "Views" are
+created in order to generate Objective C and Swift view files, so we will use 
+"Models" to generate Swift and Objective C files for the model classes.
+
+* In addition, we will break up the current system where objective C and swift
+code are added to the same XCode project directory. Instead of one "ios"
+directory, we will have Objective C code generate a an XCode project in an 
+"objc" directory, and Swift code generate an XCode project in a "swift" 
+directory.
+
+////////////////////////////////////////////////////////////////////////////////
+////////// MODEL OBJECTS ///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* We now want to create a DSL for specifying "Models". These will be generated
+files that create data classes, so that users can specify the types of data that
+will be used in their application.
+
+* We will define the DSL, as well as the expected Swift and Objective C code
+for particular test cases. 
+
+* The planned DSL will roughly follow JSON format. The supported types will be
+integers, floats, strings, custom types (so users can reference their own types)
+as well as compound types such as arrays, dictionaries and optionals.
+
+////////////////////////////////////////////////////////////////////////////////
+////////// XCODE SEPARATION ////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* Currently, running new will always create an XCode project with a Swift App
+Delegate. All generate Objective C and Swift code will go into the directory
+for that project, which lies in an "ios" directory.
+
+* We will change this so that using the different language options will generate
+completely different projects. The Objective C project will use an Objective
+C app delegate and go in a "objc" directory. The Swift project will use a
+Swift app delegate and go in a "swift" directory.
