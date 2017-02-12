@@ -1,19 +1,19 @@
 Model
-  Type MyFistModel
-  Field isGood
-    Type Bool
-  Field firstString1
-    Type String
-    ReadOnly
-  Field my1Value
-    Type Int
-  Field secondString2
-    Type String
-  Field balance
-    Type Float
-    ReadOnly
-  Field flt
-    Type Float
-  Field sEcOnd4ryValue3
-    Type Int
-    ReadWrite
+    Type MyFistModel
+    Field isGood
+      Type Bool
+    Field firstString1
+       Type String
+       ReadOnly
+    Field my1Value
+      Type Int
+    Field secondString2
+          Type String
+    Field balance
+      Type Float
+      ReadOnly
+    Field flt
+      Type Float
+    Field sEcOnd4ryValue3
+      Type Int
+      ReadWrite
