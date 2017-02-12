@@ -1,0 +1,13 @@
+Model
+  Field maybeInt
+    Type Maybe Int
+  Field maybeFloat
+    Type Maybe Float
+  Field maybeString
+    Type Maybe String
+  Field nestedMaybe
+    Type Maybe Maybe String
+  Field maybeCustom
+    Type Maybe FirstModel
+  Field maybeBool
+    Type Maybe Bool

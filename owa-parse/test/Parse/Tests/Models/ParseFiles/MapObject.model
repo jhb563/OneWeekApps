@@ -1,0 +1,7 @@
+Model
+  Field phoneNumbers
+    Type Map String
+  Field scores
+    Type Map String
+  Field customs
+    Type Map ThirdModel

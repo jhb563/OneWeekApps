@@ -1,0 +1,12 @@
+Model
+  Type CustomReferenceModel
+  Field name
+    Type String
+  Field myModel 
+    Type FirstModel
+    ReadOnly
+  Field myModel2
+    Type SecondModel
+    ReadWrite
+  Field myFloat
+    Type Float
