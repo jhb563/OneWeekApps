@@ -1,0 +1,22 @@
+
+
+
+
+Model
+  Field crazyNested
+    Type Map Array Maybe Map FirstModel
+  Field normalField1
+    Type Int
+    ReadOnly
+  Field normalField2
+    Type String
+  Field normalField3
+    Type Float
+  Field addresses
+    Type Map String
+    ReadOnly
+  Field user
+    Type User
+  Field flag
+    Type Maybe Bool
+    ReadOnly
