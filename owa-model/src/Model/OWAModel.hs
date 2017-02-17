@@ -8,18 +8,23 @@ Maintainer  : jhbowen047@gmail.com
 
 module Model.OWAModel where
 
+-- | Model for a "model", representing a data class in the application.
 data OWAModel = OWAModel 
   { modelType  :: String
   , modelFields :: [OWAModelField] }
   deriving (Show, Eq)
 
+-- | Represents a particular field of a model. Needs a type, and a bool
+-- for readonly or readwrite.
 data OWAModelField = OWAModelField
   { fieldName     :: String
   , fieldType     :: OWAModelFieldType
   , fieldReadOnly :: Bool }
   deriving (Show, Eq)
 
-data OWAModelFieldType = 
+-- | Represents the different types our fields can have. Some of these are
+-- compound types.
+data OWAModelFieldType =
   IntField |
   FloatField |
   BoolField |
