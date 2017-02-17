@@ -23,6 +23,7 @@ library
       Model.OWAError
       Model.OWAFont
       Model.OWALocalizedStringSet
+      Model.OWAModel
       Model.OWAParseError
       Model.OWAView
   default-language: Haskell2010

@@ -2,6 +2,6 @@ Model
   Field phoneNumbers
     Type Map String
   Field scores
-    Type Map String
+    Type Map Int
   Field customs
     Type Map ThirdModel

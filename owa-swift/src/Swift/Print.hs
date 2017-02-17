@@ -183,7 +183,7 @@ expressionDoc (BoolLit b) = text $ if b then "true" else "false"
 expressionDoc (ArrayLit exprs) = brackets $ hcat $ punctuate (text ", ")
   (map expressionDoc exprs)
 expressionDoc (DictionaryLit []) = 
-  (typeDoc $ DictionaryType (SimpleType "String") (SimpleType "AnyObject")) <> 
+  typeDoc (DictionaryType (SimpleType "String") (SimpleType "AnyObject")) <>
   text "()"
 expressionDoc (DictionaryLit exprPairs) = brackets $ hcat $ punctuate (text ", ")
   (map exprPairToDoc exprPairs)
