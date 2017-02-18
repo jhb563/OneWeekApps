@@ -45,4 +45,4 @@ main = do
   runViewFailureTests currentDirectory
   runContainerViewParseTests currentDirectory
   runCustomViewParseTests currentDirectory
-  runModelParseTests
+  runModelParseTests currentDirectory

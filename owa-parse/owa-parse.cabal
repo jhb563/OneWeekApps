@@ -24,6 +24,7 @@ library
       Parse.ColorParser
       Parse.ErrorParser
       Parse.FontParser
+      Parse.ModelParser
       Parse.StringsParser
       Parse.ViewParser
   other-modules:
