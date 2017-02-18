@@ -1,14 +1,13 @@
 {-|
-Module      : Parse.OWAColorParser
+Module      : Parse.ColorParser
 Description : Module for parsing values from a .colors file into OWAColor models
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module Parse.ColorParser (
-  parseColorsFromFile,
-) where
+module Parse.ColorParser 
+  ( parseColorsFromFile ) where
 
 import           Data.Either
 import           Data.List

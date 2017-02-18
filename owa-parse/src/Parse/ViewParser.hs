@@ -19,8 +19,8 @@ import           Text.ParserCombinators.Parsec
 
 import           Model.OWAElements
 import           Model.OWAParseError
-import           Parse.Utils
 import           Model.OWAView
+import           Parse.Utils
 
 type ViewAttr = String
 data ViewVal = TypeVal String |
