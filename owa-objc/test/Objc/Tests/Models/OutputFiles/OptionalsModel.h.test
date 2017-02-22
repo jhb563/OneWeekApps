@@ -1,0 +1,24 @@
+//
+// OptionalsModel.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@class FirstModel;
+
+@interface OptionalsModel : NSObject
+
+@property (nonatomic) BOOL* maybeBool;
+@property (nonatomic, strong) FirstModel* maybeCustom;
+@property (nonatomic) double* maybeFloat;
+@property (nonatomic) int* maybeInt;
+@property (nonatomic, strong) NSString* maybeString;
+@property (nonatomic, strong) NSString* nestedMaybe;
+
+- (instancetype)initWithMaybeBool:(BOOL*)maybeBool_ maybeCustom:(FirstModel*)maybeCustom_ maybeFloat:(double*)maybeFloat_ maybeInt:(int*)maybeInt_ maybeString:(NSString*)maybeString_ nestedMaybe:(NSString*)nestedMaybe_;
+
+@end

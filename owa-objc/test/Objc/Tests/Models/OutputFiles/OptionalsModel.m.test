@@ -1,0 +1,28 @@
+//
+// OptionalsModel.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "OptionalsModels.h"
+#import "FirstModel.h"
+
+@implementation OptionalsModel
+
+#pragma mark - Constructor
+
+- (instancetype)initWithMaybeBool:(BOOL*)maybeBool_ maybeCustom:(FirstModel*)maybeCustom_ maybeFloat:(double*)maybeFloat_ maybeInt:(int*)maybeInt_ maybeString:(NSString*)maybeString_ nestedMaybe:(NSString*)nestedMaybe_ {
+  if (self == [super init]) {
+    self.maybeBool = maybeBool_;
+    self.maybeCustom = maybeCustom_;
+    self.maybeFloat = maybeFloat_;
+    self.maybeInt = maybeInt_;
+    self.maybeString = maybeString_;
+    self.nestedMaybe = nestedMaybe_;
+  }
+  return self;
+}
+
+@end

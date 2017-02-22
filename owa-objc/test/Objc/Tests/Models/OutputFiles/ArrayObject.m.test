@@ -1,0 +1,27 @@
+//
+// ArrayObject.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "ArrayObject.h"
+
+@implementation ArrayObject
+
+#pragma mark - Constructor
+
+- (instancetype)initWithArrayMaybes:(NSArray*)arrayMaybes_ customs:(NSArray*)customs_ maybeArray:(NSArray*)maybeArray_ maybeBool(BOOL*)maybeBool_ myIntArray:(NSArray*)myIntArray_ nestedMaybe:(NSString*)nestedMaybe_ {
+  if (self == [super init]) {
+    self.arrayMaybes = arrayMaybes_;
+    self.customs = customs_;
+    self.maybeArray = maybeArray_;
+    self.maybeBool = maybeBool_;
+    self.myIntArray = myIntArray_;
+    self.nestedMaybe = nestedMaybe_;
+  }
+  return self;
+}
+
+@end

@@ -1,0 +1,36 @@
+//
+// MyCompleteModel.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "MyCompleteModel.h"
+#import "User.h"
+
+@interface MyCompleteModel ()
+
+@property (nonatomic, strong) NSDictionary* addresses;
+@property (nonatomic, strong) BOOL* flag;
+@property (nonatomic) int normalField1;
+
+@end
+
+@implementation MyCompleteModel
+
+#pragma mark - Constructor
+
+- (instancetype)initWithAddresses:(NSDictionary*)addresses_ crazyNested:(NSDictionary*)crazyNested_ flag:(BOOL*)flag_ normalField1:(int)normalField1_ normalField2:(NSString*)normalField2_ normalField3:(double)normalField3_ user:(User*)user_ {
+  if (self == [super init]) {
+    self.addresses = addresses_;
+    self.crazyNested = crazyNested_;
+    self.flag = flag_;
+    self.normalField1 = normalField1_;
+    self.normalField2 = normalField2_;
+    self.normalField3 = normalField3_;
+  }
+  return self;
+}
+
+@end
