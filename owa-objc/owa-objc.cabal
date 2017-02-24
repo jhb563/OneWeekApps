@@ -24,6 +24,7 @@ library
       Objc.ColorConverter
       Objc.ErrorConverter
       Objc.FontConverter
+      Objc.ModelConverter
       Objc.Print
       Objc.StringsConverter
       Objc.ViewConverter
@@ -57,6 +58,8 @@ test-suite objc-tests
       Objc.Tests.Errors.Objects
       Objc.Tests.Fonts.Basic
       Objc.Tests.Fonts.Objects
+      Objc.Tests.Models.Basic
+      Objc.Tests.Models.Objects
       Objc.Tests.Strings.Basic
       Objc.Tests.Strings.Objects
       Objc.Tests.Utils
