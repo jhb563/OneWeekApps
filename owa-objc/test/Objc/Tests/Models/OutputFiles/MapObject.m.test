@@ -1,0 +1,24 @@
+//
+// MapObject.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "MapObject.h"
+
+@implementation MapObject
+
+#pragma mark - Constructor
+
+- (instancetype)initWithCustoms:(NSDictionary*)customs_ phoneNumbers:(NSDictionary*)phoneNumbers_ scores:(NSDictionary*)scores_ {
+  if (self == [super init]) {
+    self.customs = customs_;
+    self.phoneNumbers = phoneNumbers_;
+    self.scores = scores_;
+  }
+  return self;
+}
+
+@end

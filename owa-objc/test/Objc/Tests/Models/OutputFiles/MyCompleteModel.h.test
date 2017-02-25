@@ -1,0 +1,25 @@
+//
+// MyCompleteModel.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@class User;
+
+@interface MyCompleteModel : NSObject
+
+@property (nonatomic, strong, readonly) NSDictionary* addresses;
+@property (nonatomic, strong) NSDictionary* crazyNested;
+@property (nonatomic, strong, readonly) BOOL* flag;
+@property (nonatomic, readonly) int normalField1;
+@property (nonatomic, strong) NSString* normalField2;
+@property (nonatomic) double normalField3;
+@proeprty (nonatomic, strong) User* user;
+
+- (instancetype)initWithAddresses:(NSDictionary*)addresses_ crazyNested:(NSDictionary*)crazyNested_ flag:(BOOL*)flag_ normalField1:(int)normalField1_ normalField2:(NSString*)normalField2_ normalField3:(double)normalField3_ user:(User*)user_;
+
+@end

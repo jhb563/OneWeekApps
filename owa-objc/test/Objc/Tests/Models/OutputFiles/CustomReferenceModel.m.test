@@ -1,0 +1,33 @@
+//
+// CustomReferenceModel.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "CustomReferenceModel.h"
+#import "FirstModel.h"
+#import "SecondModel.h"
+
+@interface CustomReferenceModel ()
+
+@property (nonatomic, strong) FirstModel* myModel;
+
+@end
+
+@implementation CustomReferenceModel
+
+#pragma mark - Constructor
+
+- (instancetype)initWithMyFloat:(double)myFloat_ myModel:(FirstModel*)myModel_ myModel2:(SecondModel*)myModel2_ name:(NSString*)name_ {
+  if (self == [super init]) {
+    self.myFloat = myFloat_;
+    self.myModel = myModel_;
+    self.myModel2 = myModel2_;
+    self.name = name_;
+  }
+  return self;
+}
+
+@end

@@ -1,0 +1,19 @@
+//
+// MapObject.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@interface MapObject : NSObject
+
+@property (nonatomic, strong) NSDictionary* customs;
+@property (nonatomic, strong) NSDictionary* phoneNumbers;
+@property (nonatomic, strong) NSDictionary* scores;
+
+- (instancetype)initWithCustoms:(NSDictionary*)customs_ phoneNumbers:(NSDictionary*)phoneNumbers_ scores:(NSDictionary*)scores_;
+
+@end

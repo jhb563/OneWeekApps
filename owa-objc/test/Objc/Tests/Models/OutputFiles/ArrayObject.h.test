@@ -1,0 +1,22 @@
+//
+// ArrayObject.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@interface ArrayObject : NSObject
+
+@property (nonatomic, strong) NSArray* arrayMaybes;
+@property (nonatomic, strong) NSArray* customs;
+@property (nonatomic, strong) NSArray* maybeArray;
+@property (nonatomic) BOOL* maybeBool;
+@property (nonatomic, strong) NSArray* myIntArray;
+@property (nonatomic, strong) NSString* nestedMaybe;
+
+- (instancetype)initWithArrayMaybes:(NSArray*)arrayMaybes_ customs:(NSArray*)customs_ maybeArray:(NSArray*)maybeArray_ maybeBool(BOOL*)maybeBool_ myIntArray:(NSArray*)myIntArray_ nestedMaybe:(NSString*)nestedMaybe_;
+
+@end
