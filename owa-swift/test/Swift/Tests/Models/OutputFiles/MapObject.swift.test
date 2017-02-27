@@ -1,0 +1,27 @@
+//
+// MapObject.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import Foundation
+
+class MapObject {
+  
+  // MARK: Class Fields
+  
+  internal var customs: [String : ThirdModel]
+  internal var phoneNumbers: [String : String]
+  internal var scores: [String : Int]
+  
+  // MARK: Initializer
+  
+  init(customs_: [String : ThirdModel], phoneNumbers_: [String : String], scores_: [String : Int]) {
+    self.customs = customs_
+    self.phoneNumbers = phoneNumbers_
+    self.scores = scores_
+  }
+ 
+}
