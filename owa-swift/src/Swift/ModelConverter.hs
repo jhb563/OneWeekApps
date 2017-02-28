@@ -7,8 +7,7 @@ Maintainer  : jhbowen047@gmail.com
 -}
 
 module Swift.ModelConverter (
-  swiftHeaderFromModel,
-  swiftImplementationFromModel
+  swiftFileFromModel
 ) where
 
 import Model.OWAAppInfo
@@ -19,14 +18,8 @@ import Swift.AbSyn
 --------------------------ENTRY METHODS-----------------------------------------
 --------------------------------------------------------------------------------
 
--- | 'swiftHeaderFromModels' takes the app info,
+-- | 'swiftFileFromModel' takes the app info,
 -- and a model object, and returns the structure for the model's
--- header file in Objective C
-swiftHeaderFromModel :: OWAAppInfo -> OWAModel -> SwiftFile
-swiftHeaderFromModel _ _ = SwiftFile []
-
--- | 'swiftImplementationFromModels' takes the app info,
--- and a model object, and returns the structure for the model's
--- implementation file in Objective C
-swiftImplementationFromModel :: OWAAppInfo -> OWAModel -> SwiftFile
-swiftImplementationFromModel _ _ = SwiftFile []
+-- header file in Swift
+swiftFileFromModel :: OWAAppInfo -> OWAModel -> SwiftFile
+swiftFileFromModel _ _ = SwiftFile []
