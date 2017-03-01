@@ -1,0 +1,33 @@
+//
+// ArrayObject.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import Foundation
+
+class ArrayObject {
+  
+  // MARK: Class Fields
+  
+  internal var arrayMaybes: [String?]
+  internal var arrayCustoms: [SecondModel]
+  internal var maybeArray: [Double]?
+  internal var maybeBool: Bool?
+  internal var myIntArray: [Int]
+  internal var nestedMaybe: String??
+  
+  // MARK: Initializer
+
+  init(arrayMaybes_: [String?], arrayCustoms_: [SecondModel], maybeArray_: [Double]?, maybeBool_: Bool?, myIntArray_: [Int], nestedMaybe_: String??) {
+    self.arrayMaybes = arrayMaybes_
+    self.arrayCustoms = arrayCustoms_
+    self.maybeArray = maybeArray_
+    self.maybeBool = maybeBool_
+    self.myIntArray = myIntArray_
+    self.nestedMaybe = nestedMaybe_
+  }
+
+}

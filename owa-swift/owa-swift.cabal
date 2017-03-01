@@ -24,6 +24,7 @@ library
       Swift.ColorConverter
       Swift.ErrorConverter
       Swift.FontConverter
+      Swift.ModelConverter
       Swift.Print
       Swift.Utils
       Swift.ViewConverter
@@ -55,6 +56,8 @@ test-suite swift-tests
       Swift.Tests.Errors.Objects
       Swift.Tests.Fonts.Basic
       Swift.Tests.Fonts.Objects
+      Swift.Tests.Models.Basic
+      Swift.Tests.Models.Objects
       Swift.Tests.Utils
       Swift.Tests.Views.Basic
       Swift.Tests.Views.Objects

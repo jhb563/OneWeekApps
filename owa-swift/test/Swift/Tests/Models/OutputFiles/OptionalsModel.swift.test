@@ -1,0 +1,33 @@
+//
+// OptionalsModel.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import Foundation
+
+class OptionalsModel {
+  
+  // MARK: Class Fields
+  
+  internal var maybeBool: Bool?
+  internal var maybeCustom: FirstModel?
+  internal var maybeFloat: Double?
+  internal var maybeInt: Int?
+  internal var maybeString: String?
+  internal var nestedMaybe: String??
+  
+  // MARK: Initializer
+
+  init(maybeBool_: Bool?, maybeCustom_: FirstModel?, maybeFloat_: Double?, maybeInt_: Int?, maybeString_: String?, nestedMaybe_: String??) {
+    self.maybeBool = maybeBool_
+    self.maybeCustom = maybeCustom_
+    self.maybeFloat = maybeFloat_
+    self.maybeInt = maybeInt_
+    self.maybeString = maybeString_
+    self.nestedMaybe = nestedMaybe_
+  }
+  
+}
