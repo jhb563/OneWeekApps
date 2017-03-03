@@ -1,0 +1,5 @@
+Model
+  Type ModelType
+  Field stringField
+    Type String
+    Readwrite

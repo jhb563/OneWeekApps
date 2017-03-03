@@ -1,0 +1,6 @@
+Model
+  Field myModel
+    Type String
+    readonly
+  Field nextField
+    Type Float

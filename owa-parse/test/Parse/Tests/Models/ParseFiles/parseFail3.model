@@ -1,0 +1,6 @@
+Model
+  Type MyBadModel
+  Field goodField
+    Type Int
+  field myField
+    Type String

@@ -1,0 +1,4 @@
+Model
+  Field MyCapitalizedField
+    Type String
+
