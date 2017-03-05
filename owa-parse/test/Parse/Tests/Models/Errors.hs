@@ -1,6 +1,6 @@
 module Parse.Tests.Models.Errors where
 
-import Text.Parse.Pos
+import Text.Parsec.Pos
 
 import Model.OWAParseError
 
@@ -21,9 +21,6 @@ lowercaseArrayTagError = newPos "parseFail5.model" 4 10
 
 lowercaseReadonlyTagError :: SourcePos
 lowercaseReadonlyTagError = newPos "parseFail6.model" 4 5
-
-lowercaseClassNameTagError :: SourcePos
-lowercaseClassNameTagError = newPos "parseFail7.model" 3 10
 
 lowercaseClassNameTagError :: SourcePos
 lowercaseClassNameTagError = newPos "parseFail7.model" 3 10

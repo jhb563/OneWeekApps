@@ -67,6 +67,7 @@ test-suite parse-tests
       Parse.Tests.Fonts.Objects
       Parse.Tests.Models.Basic
       Parse.Tests.Models.Errors
+      Parse.Tests.Models.Failure
       Parse.Tests.Models.Objects
       Parse.Tests.Spacing.Basic
       Parse.Tests.Spacing.Objects
