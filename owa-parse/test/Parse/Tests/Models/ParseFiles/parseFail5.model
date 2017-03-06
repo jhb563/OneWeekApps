@@ -1,0 +1,5 @@
+Model
+  Type MyBadModel
+  Field badArray
+    Type array Int
+

@@ -1,0 +1,4 @@
+Model
+  Type ThisModel
+  Field doubleField
+    Type Double

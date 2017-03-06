@@ -1,0 +1,6 @@
+Model
+  Field myField
+    Type lowercaseType
+    Readonly
+  Field myField2
+    Type String

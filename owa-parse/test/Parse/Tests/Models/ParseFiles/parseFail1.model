@@ -1,0 +1,5 @@
+model
+  Type MyType
+  Field firstField
+    Type String
+    Readonly
