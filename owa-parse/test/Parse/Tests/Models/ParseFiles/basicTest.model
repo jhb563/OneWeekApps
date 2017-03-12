@@ -1,5 +1,5 @@
 Model
-    Type MyFistModel
+    Type MyFirstModel
     Field isGood
       Type Bool
     Field firstString1
@@ -14,6 +14,5 @@ Model
       ReadOnly
     Field flt
       Type Float
-    Field sEcOnd4ryValue3
+    Field sEc0nd4ryValue3
       Type Int
-      ReadWrite

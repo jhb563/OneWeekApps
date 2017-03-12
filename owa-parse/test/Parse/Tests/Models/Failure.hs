@@ -3,8 +3,7 @@
 -- a parse failure.
 
 module Parse.Tests.Models.Failure (
-  runModelParseFailureTests,
-  runModelParseFailureTests'
+  runModelParseFailureTests
 ) where
 
 import Test.Hspec
@@ -14,10 +13,7 @@ import Parse.Tests.Models.Errors
 import Parse.Tests.Utils (shouldMatchError, shouldReturnLefts)
 
 runModelParseFailureTests :: FilePath -> IO ()
-runModelParseFailureTests currentDirectory = print "Model Error Tests Stubbed Out!"
-
-runModelParseFailureTests' :: FilePath -> IO ()
-runModelParseFailureTests' currentDirectory = hspec $ do
+runModelParseFailureTests currentDirectory = hspec $ do
   let testDirectory = currentDirectory ++ testDirectoryExtension 
   modelErrorTests testDirectory
 

@@ -8,12 +8,9 @@ import Parse.ModelParser
 import Parse.Tests.Models.Objects
 import Parse.Tests.Utils (shouldReturnRights)
 
-runModelParseTests :: FilePath -> IO ()
-runModelParseTests _ = print "Model Parse Tests Not Activated Yet"
-
 -- Different name until we activate these tests.
-runModelParseTests' :: FilePath -> IO ()
-runModelParseTests' currentDirectory = hspec $ do
+runModelParseTests :: FilePath -> IO ()
+runModelParseTests currentDirectory = hspec $ do
   let parseDirectory = currentDirectory ++ parseDirectoryExtension
   basicTest parseDirectory
   customTest parseDirectory

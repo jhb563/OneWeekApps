@@ -11,7 +11,7 @@ basicModel = OWAModel
     , mkField "flt" FloatField False
     , mkField "isGood" BoolField False
     , mkField "my1Value" IntField False
-    , mkField "sEc0nd4ryValue3" IntField True
+    , mkField "sEc0nd4ryValue3" IntField False
     , mkField "secondString2" StringField False ] }
 
 customModel :: OWAModel
@@ -41,7 +41,6 @@ arraysModel = OWAModel
     [ mkField "arrayMaybes" (ArrayType (OptionalType StringField)) False
     , mkField "customs" (ArrayType (CustomField "SecondModel")) False
     , mkField "maybeArray" (OptionalType (ArrayType FloatField)) False
-    , mkField "maybeBool" (OptionalType BoolField) False 
     , mkField "myIntArray" (ArrayType IntField) False
     , mkField "nestedMaybe" (OptionalType (OptionalType StringField)) False ] }
 

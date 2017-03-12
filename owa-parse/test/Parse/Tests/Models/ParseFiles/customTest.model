@@ -7,10 +7,8 @@ Model
   Field myModel 
     Type FirstModel
     ReadOnly
-
   Field myModel2
     Type SecondModel
-    ReadWrite
   // WHAT IS GOING ON HERE?
   Field myFloat // Trailing Comment
     Type Float
