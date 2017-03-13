@@ -1,0 +1,3 @@
+Model
+  Field failField
+    Type Maybe FirstModel

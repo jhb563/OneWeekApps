@@ -3,8 +3,7 @@
 -- a parse failure.
 
 module Parse.Tests.Models.Failure (
-  runModelParseFailureTests,
-  runModelParseFailureTests'
+  runModelParseFailureTests
 ) where
 
 import Test.Hspec
@@ -14,10 +13,7 @@ import Parse.Tests.Models.Errors
 import Parse.Tests.Utils (shouldMatchError, shouldReturnLefts)
 
 runModelParseFailureTests :: FilePath -> IO ()
-runModelParseFailureTests currentDirectory = print "Model Error Tests Stubbed Out!"
-
-runModelParseFailureTests' :: FilePath -> IO ()
-runModelParseFailureTests' currentDirectory = hspec $ do
+runModelParseFailureTests currentDirectory = hspec $ do
   let testDirectory = currentDirectory ++ testDirectoryExtension 
   modelErrorTests testDirectory
 
@@ -37,6 +33,8 @@ modelErrorTests testDirectory = do
   let testFile12 = testDirectory ++ parseFailure12Extension
   let testFile13 = testDirectory ++ parseFailure13Extension
   let testFile14 = testDirectory ++ parseFailure14Extension
+  let testFile15 = testDirectory ++ parseFailure15Extension
+  let testFile16 = testDirectory ++ parseFailure16Extension
   describe "Parse an improper model file" $ do
     context "when the \"Model\" keyword is lowercased" $
       it "Should return a parse error highlighting the improper keyword" $
@@ -94,6 +92,14 @@ modelErrorTests testDirectory = do
       it "Should return a parse error highlighting the lack of a type" $
         parseModelFromFile testFile14 `shouldReturnLefts` noTypeForFieldError
 
+    context "when an existing type name is used as a custom type" $
+      it "Should return a parse error highlighting the lack of a type" $
+        parseModelFromFile testFile15 `shouldMatchError` invalidCustomFieldError
+
+    context "when a custom type does not use the custom keyword" $
+      it "Should return a parse error highlighting the lack of a type" $
+        parseModelFromFile testFile16 `shouldMatchError` noCustomTagError
+
 testDirectoryExtension :: FilePath
 testDirectoryExtension = "/test/Parse/Tests/Models/ParseFiles/"
 
@@ -139,3 +145,8 @@ parseFailure13Extension = "/parseFail13.model"
 parseFailure14Extension :: FilePath
 parseFailure14Extension = "/parseFail14.model"
 
+parseFailure15Extension :: FilePath
+parseFailure15Extension = "/parseFail15.model"
+
+parseFailure16Extension :: FilePath
+parseFailure16Extension = "/parseFail16.model"

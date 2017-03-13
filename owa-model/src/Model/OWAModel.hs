@@ -22,6 +22,9 @@ data OWAModelField = OWAModelField
   , fieldReadOnly :: Bool }
   deriving (Show, Eq)
 
+instance Ord OWAModelField where
+  f1 `compare` f2 = fieldName f1 `compare` fieldName f2
+
 -- | Represents the different types our fields can have. Some of these are
 -- compound types.
 data OWAModelFieldType =

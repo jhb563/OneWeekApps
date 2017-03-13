@@ -1,0 +1,4 @@
+Model
+  Field failField
+    Type CustomType Int
+

@@ -8,6 +8,6 @@ Model
   Field nestedMaybe
     Type Maybe Maybe String
   Field maybeCustom
-    	Type Maybe FirstModel
+    	Type Maybe CustomType FirstModel
   Field maybeBool
     	Type Maybe Bool

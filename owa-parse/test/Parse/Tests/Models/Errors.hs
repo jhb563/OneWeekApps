@@ -49,3 +49,9 @@ noTypeForFieldError = [ObjectError {
   itemName = "intField",
   missingRequiredAttributes = ["Type"]
 }]
+
+invalidCustomFieldError :: SourcePos
+invalidCustomFieldError = newPos "parseFail15.model" 3 24
+
+noCustomTagError :: SourcePos
+noCustomTagError = newPos "parseFail16.model" 3 16

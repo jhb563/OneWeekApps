@@ -41,32 +41,32 @@ runSwiftModelPrintTests' currentDirectory = do
       completeTest testDirectory
 
 basicTest :: String -> Spec
-basicTest testDirectory = describe "Print File Structure for a basic model" $ do
+basicTest testDirectory = describe "Print File Structure for a basic model" $
   it "The printed swift file should match" $
     (testDirectory ++ basicResultFile) `filesShouldMatch` (testDirectory ++ basicTestFile)
 
 customTest :: String -> Spec
-customTest testDirectory = describe "Print File Structure for a custom model" $ do
+customTest testDirectory = describe "Print File Structure for a custom model" $
   it "The printed swift file should match" $
     (testDirectory ++ customResultFile) `filesShouldMatch` (testDirectory ++ customTestFile)
 
 optionalsTest :: String -> Spec
-optionalsTest testDirectory = describe "Print File Structure for an optionals model" $ do
+optionalsTest testDirectory = describe "Print File Structure for an optionals model" $
   it "The printed swift file should match" $
     (testDirectory ++ optionalsResultFile) `filesShouldMatch` (testDirectory ++ optionalsTestFile)
 
 arraysTest :: String -> Spec
-arraysTest testDirectory = describe "Print File Structure for an arrays model" $ do
+arraysTest testDirectory = describe "Print File Structure for an arrays model" $
   it "The printed swift file should match" $
     (testDirectory ++ arraysResultFile) `filesShouldMatch` (testDirectory ++ arraysTestFile)
 
 mapsTest :: String -> Spec
-mapsTest testDirectory = describe "Print File Structure for a maps model" $ do
+mapsTest testDirectory = describe "Print File Structure for a maps model" $
   it "The printed swift file should match" $
     (testDirectory ++ mapsResultFile) `filesShouldMatch` (testDirectory ++ mapsTestFile)
 
 completeTest :: String -> Spec
-completeTest testDirectory = describe "Print File Structure for a complete model" $ do
+completeTest testDirectory = describe "Print File Structure for a complete model" $
   it "The printed swift file should match" $
     (testDirectory ++ completeResultFile) `filesShouldMatch` (testDirectory ++ completeTestFile)
 
