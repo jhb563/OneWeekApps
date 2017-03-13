@@ -4,7 +4,7 @@
 
 Model
   Field crazyNested
-    Type Map Array Maybe Map FirstModel
+    Type Map Array Maybe Map CustomType FirstModel
   Field normalField1
     Type Int
     ReadOnly
@@ -16,7 +16,7 @@ Model
     Type Map String
     ReadOnly
   Field user
-    Type User
+    Type CustomType User
   Field flag
     Type Maybe Bool
     ReadOnly

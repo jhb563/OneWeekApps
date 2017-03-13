@@ -6,6 +6,6 @@ Model
   Field maybeArray
     Type Maybe Array Float 
   Field customs
-    Type Array SecondModel
+    Type Array CustomType SecondModel
   Field nestedMaybe
     Type Maybe Maybe String

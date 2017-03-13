@@ -1,4 +1,4 @@
-module Parse.Tests.Models.Objects where
+module Objc.Tests.Models.Objects where
 
 import Model.OWAModel
 

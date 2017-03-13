@@ -4,4 +4,4 @@ Model
   Field scores
     Type Map Int
   Field customs
-    Type Map ThirdModel
+    Type Map CustomType ThirdModel

@@ -12,8 +12,7 @@ module Parse.ModelParser
 import           Control.Applicative ((<|>))
 import           Data.List (sort)
 import qualified Data.List.Split as Split
-import qualified Data.Map.Strict as M
-import           Data.Maybe (fromMaybe)
+import           Data.Maybe (fromMaybe, isJust)
 import           Text.Parsec (many, sepEndBy, choice, string, upper, alphaNum, char)
 import qualified Text.Parsec as P
 import           Text.ParserCombinators.Parsec (GenParser)
@@ -32,10 +31,7 @@ data ModelVal =
 type FieldAttr = String
 data FieldVal = 
   ReadOnlyVal |
-  FieldTypeVal OWAModelFieldType |
-  ErrorsVal [OWAParseError]
-
-type ModelAttrMap = M.Map ModelAttr ModelVal
+  FieldTypeVal OWAModelFieldType
 
 -------------------------------------------------------------------------------
 ----------------------ENTRY METHODS--------------------------------------------
@@ -92,16 +88,16 @@ modelTypeParser = do
 
 fieldParser :: GenParser Char GenericParserState (ModelAttr, ModelVal)
 fieldParser = do
-  (_, fieldName) <- U.variableNameParserWithKeyword fieldKeyword
+  fieldName' <- U.nameParserWithKeyword fieldKeyword
   P.modifyState U.setShouldUpdateIndentLevel
   _ <- many $ P.try U.indentedComment
   fieldAttrs <- fieldAttributeParser `sepEndBy` many (P.try U.indentedComment)
-  let maybeField = fieldFromAttrs fieldName fieldAttrs
+  let maybeField = fieldFromAttrs fieldName' fieldAttrs
   let finalFieldVal = case maybeField of
-                        Nothing -> FieldErrs $ [errorForField fieldName]
+                        Nothing -> FieldErrs [errorForField fieldName']
                         Just f -> FieldVal f
   P.modifyState U.reduceIndentationLevel
-  return (fieldName, finalFieldVal)
+  return (fieldName', finalFieldVal)
   where
     -- Currently the only field we can be missing is type
     errorForField name = ObjectError
@@ -122,20 +118,25 @@ fieldTypeParser = do
 
 innerFieldTypeParser :: GenParser Char GenericParserState OWAModelFieldType
 innerFieldTypeParser = choice $ P.try <$>
-  [ (string intTypeKeyword >> return IntField)
-  , (string floatTypeKeyword >> return FloatField)
-  , (string boolTypeKeyword >> return BoolField)
-  , (string stringTypeKeyword >> return StringField)
-  , (string maybeKeyword >> U.spaceTabs >> innerFieldTypeParser >>= return . OptionalType)
-  , (string arrayKeyword >> U.spaceTabs >> innerFieldTypeParser >>= return . ArrayType)
-  , (string mapKeyword >> U.spaceTabs >> innerFieldTypeParser >>= return . MapType)
-  , (customNameParser >>= return . CustomField) ]
+  [ string intTypeKeyword >> return IntField
+  , string floatTypeKeyword >> return FloatField
+  , string boolTypeKeyword >> return BoolField
+  , string stringTypeKeyword >> return StringField
+  , OptionalType <$> (string maybeKeyword >> U.spaceTabs >> innerFieldTypeParser)
+  , ArrayType <$> (string arrayKeyword >> U.spaceTabs >> innerFieldTypeParser)
+  , MapType <$> (string mapKeyword >> U.spaceTabs >> innerFieldTypeParser)
+  , CustomField <$> customNameParser ]
 
 customNameParser :: GenParser Char GenericParserState String
 customNameParser = do
+  _ <- string customKeyword
+  _ <- U.spaceTabs
   firstLetter <- upper
   restOfName <- many (alphaNum <|> char '_')
-  return (firstLetter : restOfName)
+  let fullName = firstLetter : restOfName
+  if fullName `elem` typeKeywords
+    then P.unexpected "You can't use a reserved type keyword as a custom type!"
+    else return fullName
 
 readOnlyParser :: GenParser Char GenericParserState (FieldAttr, FieldVal)
 readOnlyParser = do
@@ -153,15 +154,15 @@ fieldFromAttrs name attrs = do
     FieldTypeVal typ -> Just typ
     _ -> Nothing
   let readonlyVal = lookup readOnlyKeyword attrs
-  return $ OWAModelField 
+  return OWAModelField 
     { fieldName = name
     , fieldType = actualType
-    , fieldReadOnly = maybe False (const True) readonlyVal }
+    , fieldReadOnly = isJust readonlyVal }
 
 modelElementsFromAttrs :: String -> [(ModelAttr, ModelVal)] -> Either [OWAParseError] OWAModel
 modelElementsFromAttrs filename attrs = case errs of
   [] -> Right $ OWAModel finalType (sort fields)
-  errs -> Left errs
+  errs' -> Left errs'
   where
     (maybeType, errs, fields) = splitPieces attrs
     finalType = fromMaybe filename maybeType
@@ -211,3 +212,16 @@ arrayKeyword = "Array"
 
 mapKeyword :: String
 mapKeyword = "Map"
+
+customKeyword :: String
+customKeyword = "CustomType"
+
+typeKeywords :: [String]
+typeKeywords =
+  [ intTypeKeyword
+  , floatTypeKeyword
+  , boolTypeKeyword
+  , stringTypeKeyword
+  , maybeKeyword
+  , arrayKeyword
+  , mapKeyword ]

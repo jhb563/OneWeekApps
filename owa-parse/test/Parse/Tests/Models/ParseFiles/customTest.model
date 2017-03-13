@@ -5,10 +5,10 @@ Model
   Field name
     Type String
   Field myModel 
-    Type FirstModel
+    Type CustomType FirstModel
     ReadOnly
   Field myModel2
-    Type SecondModel
+    Type CustomType  SecondModel
   // WHAT IS GOING ON HERE?
   Field myFloat // Trailing Comment
     Type Float
