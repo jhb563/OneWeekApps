@@ -25,10 +25,7 @@ import Objc.Tests.Models.Objects
 import Objc.ModelConverter
 
 runModelPrintTests :: FilePath -> IO ()
-runModelPrintTests _ = print "Model Print tests stubbed out!"
-
-runModelPrintTests' :: FilePath -> IO ()
-runModelPrintTests' currentDirectory = do
+runModelPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Objc/Tests/Models/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
@@ -198,4 +195,4 @@ completeHeaderTestFile :: String
 completeHeaderTestFile = "MyCompleteModel.h.test"
 
 completeMTestFile :: String
-completeMTestFile = "MyCompleteModel.m"
+completeMTestFile = "MyCompleteModel.m.test"
