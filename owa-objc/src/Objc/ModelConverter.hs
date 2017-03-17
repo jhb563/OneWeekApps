@@ -12,6 +12,7 @@ module Objc.ModelConverter (
 ) where
 
 import           Data.Char (toUpper)
+import           Data.List (sort)
 import           Data.Maybe (catMaybes)
 
 import           Model.OWAAppInfo
@@ -27,21 +28,38 @@ import           Objc.Utils
 -- and a model object, and returns the structure for the model's
 -- header file in Objective C
 objcHeaderFromModel :: OWAAppInfo -> OWAModel -> ObjcFile
-objcHeaderFromModel appInfo model = ObjcFile
+objcHeaderFromModel appInfo model = ObjcFile $
   [ topCommentSection (mTy ++ ".h") appInfo
-  , foundationImportsSection
-  , interfaceSection ]
+  , foundationImportsSection ] ++
+  rest
   where
     mTy = modelType model
     properties = propertyForField <$> modelFields model
     interfaceSection = InterfaceSection mTy (Just "NSObject") Nothing properties 
       [MethodHeaderListSection Nothing [initMethod model]]
+    rest = case forwardClassSection model of
+      Nothing -> [interfaceSection]
+      Just declSection -> [declSection, interfaceSection]
 
 -- | 'objcImplementationFromModels' takes the app info,
 -- and a model object, and returns the structure for the model's
 -- implementation file in Objective C
 objcImplementationFromModel :: OWAAppInfo -> OWAModel -> ObjcFile
 objcImplementationFromModel _ _ = ObjcFile []
+
+--------------------------------------------------------------------------------
+--------------------------SECTION HELPERS---------------------------------------
+--------------------------------------------------------------------------------
+
+forwardClassSection :: OWAModel -> Maybe FileSection
+forwardClassSection model = case foldl addCustomClass [] (fieldType <$> modelFields model) of
+  [] -> Nothing
+  classes -> Just $ ForwardDeclarationSection $ ClassDecl <$> (sort classes)
+  where
+    addCustomClass :: [String] -> OWAModelFieldType -> [String]
+    addCustomClass cs (CustomField customType) = customType : cs
+    addCustomClass cs (OptionalType typ) = addCustomClass cs typ
+    addCustomClass cs _ = cs
 
 propertyForField :: OWAModelField -> ObjcProperty
 propertyForField field = ObjcProperty
