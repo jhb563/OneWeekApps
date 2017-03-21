@@ -6,7 +6,7 @@
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
 //
 
-#import "OptionalsModels.h"
+#import "OptionalsModel.h"
 #import "FirstModel.h"
 
 @implementation OptionalsModel

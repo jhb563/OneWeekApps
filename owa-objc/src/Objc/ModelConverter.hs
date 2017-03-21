@@ -34,7 +34,7 @@ objcHeaderFromModel appInfo model = ObjcFile $
   rest
   where
     mTy = modelType model
-    properties = propertyForField <$> modelFields model
+    properties = (propertyForField True) <$> modelFields model
     interfaceSection = InterfaceSection mTy (Just "NSObject") Nothing properties 
       [MethodHeaderListSection Nothing [initMethod model]]
     rest = case forwardClassSection model of
@@ -45,26 +45,58 @@ objcHeaderFromModel appInfo model = ObjcFile $
 -- and a model object, and returns the structure for the model's
 -- implementation file in Objective C
 objcImplementationFromModel :: OWAAppInfo -> OWAModel -> ObjcFile
-objcImplementationFromModel _ _ = ObjcFile []
+objcImplementationFromModel appInfo model = ObjcFile $
+  [ topCommentSection (mTy ++ ".m") appInfo 
+  , importsSection model ]
+  ++ rest
+  where
+    mTy = modelType model
+    implSection = ImplementationSection mTy Nothing [constructorSection]
+    constructorSection = MethodImplementationListSection (Just "Constructor") []
+    rest = case subInterfaceSection mTy (modelFields model) of
+      Nothing -> [implSection]
+      Just section -> [section, implSection]
 
 --------------------------------------------------------------------------------
 --------------------------SECTION HELPERS---------------------------------------
 --------------------------------------------------------------------------------
 
 forwardClassSection :: OWAModel -> Maybe FileSection
-forwardClassSection model = case foldl addCustomClass [] (fieldType <$> modelFields model) of
+forwardClassSection model = case customClassesForModel model of
   [] -> Nothing
   classes -> Just $ ForwardDeclarationSection $ ClassDecl <$> (sort classes)
+
+importsSection :: OWAModel -> FileSection
+importsSection model = ImportsSection $
+  (importForType $ modelType model) :
+  map importForType (sort . customClassesForModel $ model)
+  where 
+    importForType typ = FileImport $ typ ++ ".h"
+
+customClassesForModel :: OWAModel -> [String]
+customClassesForModel model = foldl addCustomClass [] (fieldType <$> modelFields model)
   where
     addCustomClass :: [String] -> OWAModelFieldType -> [String]
     addCustomClass cs (CustomField customType) = customType : cs
     addCustomClass cs (OptionalType typ) = addCustomClass cs typ
     addCustomClass cs _ = cs
 
-propertyForField :: OWAModelField -> ObjcProperty
-propertyForField field = ObjcProperty
+subInterfaceSection :: String -> [OWAModelField] -> Maybe FileSection
+subInterfaceSection mTy fields = case readOnlyProps of
+  [] -> Nothing
+  props -> Just $ InterfaceSection mTy Nothing Nothing fieldDefs []
+  where
+    readOnlyProps = filter fieldReadOnly fields
+    fieldDefs = (propertyForField False) <$> readOnlyProps
+
+--------------------------------------------------------------------------------
+--------------------------OBJC HELPERS------------------------------------------
+--------------------------------------------------------------------------------
+
+propertyForField :: Bool -> OWAModelField -> ObjcProperty
+propertyForField isTopInterface field = ObjcProperty
   { propertyType = resolveType typ
-  , propertyAttributes = attrsForType (fieldReadOnly field)  typ
+  , propertyAttributes = attrsForType (isTopInterface && fieldReadOnly field) typ
   , propertyName = fieldName field }
   where
     typ = fieldType field 

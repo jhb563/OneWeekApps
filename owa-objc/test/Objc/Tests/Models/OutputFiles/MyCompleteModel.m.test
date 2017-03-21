@@ -12,7 +12,7 @@
 @interface MyCompleteModel ()
 
 @property (nonatomic, strong) NSDictionary* addresses;
-@property (nonatomic, strong) BOOL* flag;
+@property (nonatomic) BOOL* flag;
 @property (nonatomic) int normalField1;
 
 @end
