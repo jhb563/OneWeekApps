@@ -14,7 +14,8 @@
 #pragma mark - Constructor
 
 - (instancetype)initWithMaybeBool:(BOOL*)maybeBool_ maybeCustom:(FirstModel*)maybeCustom_ maybeFloat:(double*)maybeFloat_ maybeInt:(int*)maybeInt_ maybeString:(NSString*)maybeString_ nestedMaybe:(NSString*)nestedMaybe_ {
-  if (self == [super init]) {
+  self = [super init];
+  if (self) {
     self.maybeBool = maybeBool_;
     self.maybeCustom = maybeCustom_;
     self.maybeFloat = maybeFloat_;

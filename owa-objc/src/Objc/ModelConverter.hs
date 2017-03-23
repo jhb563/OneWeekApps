@@ -52,7 +52,7 @@ objcImplementationFromModel appInfo model = ObjcFile $
   where
     mTy = modelType model
     implSection = ImplementationSection mTy Nothing [constructorSection]
-    constructorSection = MethodImplementationListSection (Just "Constructor") []
+    constructorSection = MethodImplementationListSection (Just "Constructor") [initMethod model]
     rest = case subInterfaceSection mTy (modelFields model) of
       Nothing -> [implSection]
       Just section -> [section, implSection]
@@ -136,7 +136,7 @@ initMethod model = ObjcMethod
   , nameIntro = "initWith"
   , returnType = SimpleType "instancetype"
   , params = allParams
-  , methodBody = [] }
+  , methodBody = initBody model }
   where
     allParams = capitalizeHead $ paramForField <$> (modelFields model)
     paramForField :: OWAModelField -> ParamDef
@@ -152,3 +152,21 @@ capitalizeHead (firstParam : restParams) = modifiedFirst : restParams
     modifiedFirst = firstParam { paramTitle = capitalizeName (paramTitle firstParam) }
     capitalizeName "" = ""
     capitalizeName (a : as) = toUpper a : as
+
+initBody :: OWAModel -> [ObjcStatement]
+initBody model = 
+  [ superStatement
+  , ifBlock
+  , ReturnStatement SelfExpr]
+  where
+    superStatement = AssignStatement SelfExpr $ MethodCall (Var "super") libInit []
+    ifBlock = IfBlock SelfExpr (assignStatement <$> modelFields model)
+    assignStatement field = AssignStatement
+      (PropertyCall SelfExpr (fieldName field))
+      (Var $ fieldName field ++ "_")
+
+libInit :: CalledMethod
+libInit = LibMethod {
+  libNameIntro = "init",
+  libParams = []
+}

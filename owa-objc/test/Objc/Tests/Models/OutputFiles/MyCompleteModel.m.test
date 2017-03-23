@@ -22,13 +22,15 @@
 #pragma mark - Constructor
 
 - (instancetype)initWithAddresses:(NSDictionary*)addresses_ crazyNested:(NSDictionary*)crazyNested_ flag:(BOOL*)flag_ normalField1:(int)normalField1_ normalField2:(NSString*)normalField2_ normalField3:(double)normalField3_ user:(User*)user_ {
-  if (self == [super init]) {
+  self = [super init];
+  if (self) {
     self.addresses = addresses_;
     self.crazyNested = crazyNested_;
     self.flag = flag_;
     self.normalField1 = normalField1_;
     self.normalField2 = normalField2_;
     self.normalField3 = normalField3_;
+    self.user = user_;
   }
   return self;
 }

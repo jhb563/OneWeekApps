@@ -12,12 +12,12 @@
 
 #pragma mark - Constructor
 
-- (instancetype)initWithArrayMaybes:(NSArray*)arrayMaybes_ customs:(NSArray*)customs_ maybeArray:(NSArray*)maybeArray_ maybeBool(BOOL*)maybeBool_ myIntArray:(NSArray*)myIntArray_ nestedMaybe:(NSString*)nestedMaybe_ {
-  if (self == [super init]) {
+- (instancetype)initWithArrayMaybes:(NSArray*)arrayMaybes_ customs:(NSArray*)customs_ maybeArray:(NSArray*)maybeArray_ myIntArray:(NSArray*)myIntArray_ nestedMaybe:(NSString*)nestedMaybe_ {
+  self = [super init];
+  if (self) {
     self.arrayMaybes = arrayMaybes_;
     self.customs = customs_;
     self.maybeArray = maybeArray_;
-    self.maybeBool = maybeBool_;
     self.myIntArray = myIntArray_;
     self.nestedMaybe = nestedMaybe_;
   }

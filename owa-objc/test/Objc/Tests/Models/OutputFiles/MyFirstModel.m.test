@@ -20,7 +20,8 @@
 #pragma mark - Constructor
 
 - (instancetype)initWithBalance:(double)balance_ firstString1:(NSString*)firstString1_ flt:(double)flt_ isGood:(BOOL)isGood_ my1Value:(int)my1Value_ sEc0nd4ryValue3:(int)sEc0nd4ryValue3_ secondString2:(NSString*)secondString2_ {
-  if (self == [super init]) {
+  self = [super init];
+  if (self) {
     self.balance = balance_;
     self.firstString1 = firstString1_;
     self.flt = flt_;
@@ -30,7 +31,6 @@
     self.secondString2 = secondString2_;
   }
   return self;
-
 }
 
 @end
