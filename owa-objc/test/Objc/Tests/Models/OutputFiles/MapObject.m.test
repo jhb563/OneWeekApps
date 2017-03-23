@@ -13,7 +13,8 @@
 #pragma mark - Constructor
 
 - (instancetype)initWithCustoms:(NSDictionary*)customs_ phoneNumbers:(NSDictionary*)phoneNumbers_ scores:(NSDictionary*)scores_ {
-  if (self == [super init]) {
+  self = [super init];
+  if (self) {
     self.customs = customs_;
     self.phoneNumbers = phoneNumbers_;
     self.scores = scores_;
