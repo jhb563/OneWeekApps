@@ -34,7 +34,7 @@ objcHeaderFromModel appInfo model = ObjcFile $
   rest
   where
     mTy = modelType model
-    properties = (propertyForField True) <$> modelFields model
+    properties = propertyForField True <$> modelFields model
     interfaceSection = InterfaceSection mTy (Just "NSObject") Nothing properties 
       [MethodHeaderListSection Nothing [initMethod model]]
     rest = case forwardClassSection model of
@@ -64,11 +64,11 @@ objcImplementationFromModel appInfo model = ObjcFile $
 forwardClassSection :: OWAModel -> Maybe FileSection
 forwardClassSection model = case customClassesForModel model of
   [] -> Nothing
-  classes -> Just $ ForwardDeclarationSection $ ClassDecl <$> (sort classes)
+  classes -> Just $ ForwardDeclarationSection $ ClassDecl <$> sort classes
 
 importsSection :: OWAModel -> FileSection
 importsSection model = ImportsSection $
-  (importForType $ modelType model) :
+  importForType (modelType model) :
   map importForType (sort . customClassesForModel $ model)
   where 
     importForType typ = FileImport $ typ ++ ".h"
@@ -82,12 +82,12 @@ customClassesForModel model = foldl addCustomClass [] (fieldType <$> modelFields
     addCustomClass cs _ = cs
 
 subInterfaceSection :: String -> [OWAModelField] -> Maybe FileSection
-subInterfaceSection mTy fields = case readOnlyProps of
-  [] -> Nothing
-  props -> Just $ InterfaceSection mTy Nothing Nothing fieldDefs []
+subInterfaceSection mTy fields = if null readOnlyProps
+  then Nothing
+  else Just $ InterfaceSection mTy Nothing Nothing fieldDefs []
   where
     readOnlyProps = filter fieldReadOnly fields
-    fieldDefs = (propertyForField False) <$> readOnlyProps
+    fieldDefs = propertyForField False <$> readOnlyProps
 
 --------------------------------------------------------------------------------
 --------------------------OBJC HELPERS------------------------------------------
@@ -138,7 +138,7 @@ initMethod model = ObjcMethod
   , params = allParams
   , methodBody = initBody model }
   where
-    allParams = capitalizeHead $ paramForField <$> (modelFields model)
+    allParams = capitalizeHead $ paramForField <$> modelFields model
     paramForField :: OWAModelField -> ParamDef
     paramForField field = ParamDef
       { paramTitle = fieldName field
