@@ -26,7 +26,7 @@ data FileSection =
   ExtensionSection String [FileSection] |
   ClassSection Identifier [Identifier] [FileSection] |
   MethodImplementationListSection (Maybe String) [SwiftMethod] |
-  StatementListSection (Maybe String) [SwiftStatement] |
+  StatementListSection (Maybe String) Bool [SwiftStatement] |
   EnumSection Identifier SwiftType [Identifier] |
   ClassSpecifierSection Identifier
   deriving (Show, Eq)
@@ -68,7 +68,8 @@ data SwiftType = SimpleType String |
   OptionalType SwiftType |
   ExplicitType String |
   FunctionType [SwiftType] SwiftType |
-  DictionaryType SwiftType SwiftType
+  DictionaryType SwiftType SwiftType |
+  ArrayType SwiftType
   deriving (Show, Eq)
 
 -- | 'ParamDef' abstracts the three parts describing a method parameter
@@ -105,5 +106,6 @@ data SwiftExpression =
   ArrayLit [SwiftExpression] |
   DictionaryLit [(SwiftExpression, SwiftExpression)] |
   ExplicitExpr SwiftExpression |
-  OptionalExpr SwiftExpression
+  OptionalExpr SwiftExpression |
+  SelfExpr
   deriving (Show, Eq)

@@ -143,7 +143,7 @@ appDelegate appInfo = SwiftFile
   , ClassSection "AppDelegate" ["UIResponder", "UIApplicationDelegate"] [windowSection, methodSection] ]
   where
     windowStatement = VarDecl [] "window" (OptionalType (SimpleType "UIWindow")) Nothing
-    windowSection = StatementListSection Nothing [windowStatement]
+    windowSection = StatementListSection Nothing True [windowStatement]
     methodNames =
       [ "applicationWillResignActive"
       , "applicationDidEnterBackground"
