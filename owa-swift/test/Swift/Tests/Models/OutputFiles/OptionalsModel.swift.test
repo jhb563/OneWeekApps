@@ -8,7 +8,7 @@
 
 import Foundation
 
-class OptionalsModel {
+class OptionalsModel: NSObject {
   
   // MARK: Class Fields
   
@@ -20,7 +20,7 @@ class OptionalsModel {
   internal var nestedMaybe: String??
   
   // MARK: Initializer
-
+  
   init(maybeBool_: Bool?, maybeCustom_: FirstModel?, maybeFloat_: Double?, maybeInt_: Int?, maybeString_: String?, nestedMaybe_: String??) {
     self.maybeBool = maybeBool_
     self.maybeCustom = maybeCustom_
