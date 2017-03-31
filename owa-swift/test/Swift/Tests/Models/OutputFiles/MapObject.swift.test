@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MapObject {
+class MapObject: NSObject {
   
   // MARK: Class Fields
   
@@ -23,5 +23,5 @@ class MapObject {
     self.phoneNumbers = phoneNumbers_
     self.scores = scores_
   }
- 
+  
 }

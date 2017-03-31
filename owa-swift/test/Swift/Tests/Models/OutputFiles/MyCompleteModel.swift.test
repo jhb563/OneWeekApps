@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MyCompleteModel {
+class MyCompleteModel: NSObject {
   
   // MARK: Class Fields
   

@@ -36,7 +36,7 @@ swiftFileFromView appInfo view = SwiftFile
       [initWithFrameMethod, initWithCoderMethod, initCommonMethod]
     setupSection = MethodImplementationListSection (Just "Setup Methods") 
       [setupViewsMethod view, setupConstraintsMethod view]
-    lazyGetterSection = StatementListSection (Just "Lazy Getters")
+    lazyGetterSection = StatementListSection (Just "Lazy Getters") True
       (map lazyGetterForElement (allChildViews view))
     viewClassSection = ClassSection typeName [originalViewType]
       [ lifecycleSection

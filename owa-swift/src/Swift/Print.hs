@@ -43,7 +43,8 @@ sectionDoc (ImportsSection imports) = vcat (map importDoc imports) PPrint.<$> em
 sectionDoc (ExtensionSection extensionName sections) = extensionDoc extensionName sections PPrint.<$> empty
 sectionDoc (ClassSection typeName supers sections) = classDoc typeName supers sections PPrint.<$> empty
 sectionDoc (MethodImplementationListSection sectionTitle methods) = methodListSection sectionTitle methods
-sectionDoc (StatementListSection sectionTitle statements) = statementListSection sectionTitle statements
+sectionDoc (StatementListSection sectionTitle shouldIntersperse statements) = 
+  statementListSection sectionTitle shouldIntersperse statements
 sectionDoc (EnumSection enumName enumBaseType cases) = enumSection enumName enumBaseType cases PPrint.<$> empty
 sectionDoc (ClassSpecifierSection specifier) = text "@" <> text specifier PPrint.<$> empty
 
@@ -72,9 +73,12 @@ methodListSection Nothing methods = spaceOut (map methodDoc methods)
 methodListSection (Just title) methods = markDoc title PPrint.<$> empty PPrint.<$>
   spaceOut (map methodDoc methods)
 
-statementListSection :: Maybe String -> [SwiftStatement] -> Doc
-statementListSection Nothing statements = spaceOut (map statementDoc statements)
-statementListSection (Just title) statements = markDoc title PPrint.<$> empty PPrint.<$>
+statementListSection :: Maybe String -> Bool -> [SwiftStatement] -> Doc
+statementListSection Nothing False statements = vcat (map statementDoc statements) PPrint.<$> empty
+statementListSection Nothing True statements = spaceOut (map statementDoc statements)
+statementListSection (Just title) False statements = markDoc title PPrint.<$> empty PPrint.<$>
+  vcat (map statementDoc statements) PPrint.<$> empty
+statementListSection (Just title) True statements = markDoc title PPrint.<$> empty PPrint.<$>
   spaceOut (map statementDoc statements)
 
 enumSection :: String -> SwiftType -> [String] -> Doc
@@ -94,10 +98,10 @@ methodDoc swiftMethod = indentBlock methodDef methodBodyDoc
                   Nothing -> empty
                   Just typ -> text " ->" <+>
                     typeDoc typ
-    methodDef = qualifierDoc <+> 
-                text (name swiftMethod) <> 
+    mainDef = text (name swiftMethod) <> 
                 parens (hcat $ punctuate (text ", ") paramList) <>
                 returnDoc
+    methodDef = if null qualifierList then mainDef else qualifierDoc <+> mainDef
     methodBodyDoc = vcat (map statementDoc $ methodBody swiftMethod)
 
 typeDoc :: SwiftType -> Doc
@@ -109,6 +113,7 @@ typeDoc (FunctionType argTypes returnType') = parens
   text "->" <+> typeDoc returnType'
 typeDoc (DictionaryType keyType valueType) = brackets $
   typeDoc keyType <+> colon <+> typeDoc valueType
+typeDoc (ArrayType typ) = brackets (typeDoc typ)
 
 paramDoc :: ParamDef -> Doc
 paramDoc pDef = case label of
@@ -192,6 +197,7 @@ expressionDoc (DictionaryLit exprPairs) = brackets $ hcat $ punctuate (text ", "
       expressionDoc valueExpr
 expressionDoc (ExplicitExpr expr) = expressionDoc expr <> text "!"
 expressionDoc (OptionalExpr expr) = expressionDoc expr <> text "?"
+expressionDoc SelfExpr = text "self"
 
 markDoc :: String -> Doc
 markDoc title = text "// MARK:" <+> text title

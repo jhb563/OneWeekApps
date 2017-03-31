@@ -32,7 +32,7 @@ swiftExtensionFromAlerts appInfo alerts = SwiftFile
   , listSectionForAlerts (sort alerts) ]
   where 
     filename = alertExtensionFileName appInfo
-    typeAliasSection = StatementListSection Nothing [typeAliasStatement]
+    typeAliasSection = StatementListSection Nothing True [typeAliasStatement]
 
 --------------------------------------------------------------------------------
 --------------------------EXTENSION CONSTRUCTION--------------------------------

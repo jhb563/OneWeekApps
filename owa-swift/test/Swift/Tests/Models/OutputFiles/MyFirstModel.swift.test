@@ -8,8 +8,8 @@
 
 import Foundation
 
-class MyFirstModel {
-
+class MyFirstModel: NSObject {
+  
   // MARK: Class Fields
   
   private(set) internal var balance: Double
@@ -31,5 +31,5 @@ class MyFirstModel {
     self.sEc0nd4ryValue3 = sEc0nd4ryValue3_
     self.secondString2 = secondString2_
   }
-
+  
 }

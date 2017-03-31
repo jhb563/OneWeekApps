@@ -8,22 +8,22 @@
 
 import Foundation
 
-class CustomReferenceModel {
-
+class CustomReferenceModel: NSObject {
+  
   // MARK: Class Fields
-
+  
   internal var myFloat: Double
   private(set) internal var myModel: FirstModel
   internal var myModel2: SecondModel
   internal var name: String
   
   // MARK: Initializer
-
+  
   init(myFloat_: Double, myModel_: FirstModel, myModel2_: SecondModel, name_: String) {
     self.myFloat = myFloat_
     self.myModel = myModel_
     self.myModel2 = myModel2_
     self.name = name_
   }
-
+  
 }

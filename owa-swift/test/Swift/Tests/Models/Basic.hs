@@ -24,10 +24,7 @@ import Swift.Tests.Models.Objects
 import Swift.ModelConverter
 
 runSwiftModelPrintTests :: FilePath -> IO ()
-runSwiftModelPrintTests _ = print "Model Print tests stubbed out!"
-
-runSwiftModelPrintTests' :: FilePath -> IO ()
-runSwiftModelPrintTests' currentDirectory = do
+runSwiftModelPrintTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Swift/Tests/Models/OutputFiles/"
   hspec $
     beforeAll_ (removeDiffFiles testDirectory) $
