@@ -12,6 +12,7 @@ module Core.FileSearch (
   findFontsFiles,
   findAlertsFiles,
   findErrorsFiles,
+  findModelsFiles,
   findStringsFiles,
   findViewsFiles
 ) where
@@ -95,6 +96,11 @@ findAlertsFiles appDirectory = searchDirectoryForExtension alertsExtension [appD
 findErrorsFiles :: FilePath -> IO [FilePath]
 findErrorsFiles appDirectory = searchDirectoryForExtension errorsExtension [appDirectory] []
 
+-- | 'findModelsFiles' Locates all the files with the extension '.models', searching recursively
+-- from the given directory.
+findModelsFiles :: FilePath -> IO [FilePath]
+findModelsFiles appDirectory = searchDirectoryForExtension modelsExtension [appDirectory] []
+
 -- | 'findStringsFiles' Locates all the files with the extension '.strings', searching recursively
 -- from the given directory. It discards any files named 'Localizable.strings'
 findStringsFiles :: FilePath -> IO [FilePath]
@@ -118,6 +124,9 @@ alertsExtension = "alerts"
 
 errorsExtension :: String
 errorsExtension = "errors"
+
+modelsExtension :: String
+modelsExtension = "model"
 
 stringsExtension :: String
 stringsExtension = "strings"
