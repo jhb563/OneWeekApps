@@ -6,6 +6,7 @@ import Core.Tests.AppInfoCLI.Basic (runAppInfoCLITests)
 import Core.Tests.CodeType.Basic (runCodeTypeTests)
 import Core.Tests.FileSearch.AppDirectory (runAppDirectorySearchTests)
 import Core.Tests.FileSearch.AppInfo (runAppInfoSearchTests)
+import Core.Tests.FileSearch.Models (runModelFileSearchTests)
 import Core.Tests.FileSearch.SourceFiles (runFileSearchTests)
 import Core.Tests.FileSearch.Strings (runStringsSearchTests)
 import Core.Tests.FileSearch.Views (runViewFileSearchTests)
@@ -25,6 +26,7 @@ main = do
   runFileSearchTests currentDirectory
   runStringsSearchTests currentDirectory
   runViewFileSearchTests currentDirectory
+  runModelFileSearchTests currentDirectory
   runV010IntegrationTests currentDirectory
   runV015IntegrationTests currentDirectory
   runV020IntegrationTests currentDirectory

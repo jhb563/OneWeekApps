@@ -75,6 +75,7 @@ test-suite CoreTests
       Core.Tests.CodeType.Basic
       Core.Tests.FileSearch.AppDirectory
       Core.Tests.FileSearch.AppInfo
+      Core.Tests.FileSearch.Models
       Core.Tests.FileSearch.SourceFiles
       Core.Tests.FileSearch.Strings
       Core.Tests.FileSearch.Views
