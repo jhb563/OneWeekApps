@@ -54,37 +54,37 @@ initMethod model = SwiftMethod
 
 paramForField :: OWAModelField -> ParamDef
 paramForField field = ParamDef
-  { paramLabelName = Just name
-  , paramTitle = name
+  { paramLabelName = Just name'
+  , paramTitle = name'
   , paramType = resolveType (fieldType field) }
   where
-    name = fieldName field ++ "_"
+    name' = fieldName field ++ "_"
 
 resolveType :: OWAModelFieldType -> SwiftType
 resolveType IntField = SimpleType "Int"
 resolveType FloatField = SimpleType "Double"
 resolveType BoolField = SimpleType "Bool"
 resolveType StringField = SimpleType "String"
-resolveType (CustomField name) = SimpleType name
+resolveType (CustomField name') = SimpleType name'
 resolveType (OptionalType typ) = A.OptionalType (resolveType typ)
 resolveType (ArrayType typ) = A.ArrayType (resolveType typ)
 resolveType (MapType typ) = DictionaryType (SimpleType "String") (resolveType typ)
 
 assignStatement :: OWAModelField -> SwiftStatement
 assignStatement field = AssignStatement
-  (PropertyCall SelfExpr name)
-  (Var (name ++ "_"))
+  (PropertyCall SelfExpr name')
+  (Var (name' ++ "_"))
   where
-    name = fieldName field
+    name' = fieldName field
 
 fieldStatement :: OWAModelField -> SwiftStatement
 fieldStatement field = VarDecl 
-  qualifiers 
+  qualifiers'
   (fieldName field) 
   (resolveType (fieldType field) )
   Nothing
   where
-    qualifiers = if fieldReadOnly field
+    qualifiers' = if fieldReadOnly field
       then ["private(set)", "internal"]
       else ["internal"]
 
