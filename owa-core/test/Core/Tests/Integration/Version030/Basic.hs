@@ -10,4 +10,6 @@ module Core.Tests.Integration.Version030.Basic (
 ) where
 
 runV030IntegrationTests :: FilePath -> IO ()
-runV030IntegrationTests currentDirectory = print "Version 0.3.0 Integration Tests"
+runV030IntegrationTests currentDirectory = do
+  let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030"
+  print "Version 0.3.0 Integration Tests"
