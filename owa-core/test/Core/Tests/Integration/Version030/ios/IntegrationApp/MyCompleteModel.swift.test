@@ -1,0 +1,35 @@
+//
+// MyCompleteModel.swift
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import Foundation
+
+class MyCompleteModel: NSObject {
+  
+  // MARK: Class Fields
+  
+  private(set) internal var addresses: [String : String]
+  internal var crazyNested: [String : [[String : FirstModel]?]]
+  private(set) internal var flag: Bool?
+  private(set) internal var normalField1: Int
+  internal var normalField2: String
+  internal var normalField3: Double
+  internal var user: User
+  
+  // MARK: Initializer
+  
+  init(addresses_: [String : String], crazyNested_: [String : [[String : FirstModel]?]], flag_: Bool?, normalField1_: Int, normalField2_: String, normalField3_: Double, user_: User) {
+    self.addresses = addresses_
+    self.crazyNested = crazyNested_
+    self.flag = flag_
+    self.normalField1 = normalField1_
+    self.normalField2 = normalField2_
+    self.normalField3 = normalField3_
+    self.user = user_
+  }
+  
+}

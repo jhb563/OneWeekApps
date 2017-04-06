@@ -1,0 +1,36 @@
+//
+// MyFirstModel.m
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "MyFirstModel.h"
+
+@interface MyFirstModel ()
+
+@property (nonatomic) double balance;
+@property (nonatomic, strong) NSString* firstString1;
+
+@end
+
+@implementation MyFirstModel
+
+#pragma mark - Constructor
+
+- (instancetype)initWithBalance:(double)balance_ firstString1:(NSString*)firstString1_ flt:(double)flt_ isGood:(BOOL)isGood_ my1Value:(int)my1Value_ sEc0nd4ryValue3:(int)sEc0nd4ryValue3_ secondString2:(NSString*)secondString2_ {
+  self = [super init];
+  if (self) {
+    self.balance = balance_;
+    self.firstString1 = firstString1_;
+    self.flt = flt_;
+    self.isGood = isGood_;
+    self.my1Value = my1Value_;
+    self.sEc0nd4ryValue3 = sEc0nd4ryValue3_;
+    self.secondString2 = secondString2_;
+  }
+  return self;
+}
+
+@end

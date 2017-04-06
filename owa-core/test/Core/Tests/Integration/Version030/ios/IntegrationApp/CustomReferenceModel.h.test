@@ -1,0 +1,23 @@
+//
+// CustomReferenceModel.h
+// MySampleApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@class FirstModel;
+@class SecondModel;
+
+@interface CustomReferenceModel : NSObject
+
+@property (nonatomic) double myFloat;
+@property (nonatomic, strong, readonly) FirstModel* myModel;
+@property (nonatomic, strong) SecondModel* myModel2;
+@property (nonatomic, strong) NSString* name;
+
+- (instancetype)initWithMyFloat:(double)myFloat_ myModel:(FirstModel*)myModel_ myModel2:(SecondModel*)myModel2_ name:(NSString*)name_;
+
+@end
