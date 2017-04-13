@@ -38,7 +38,8 @@ data OWACodeType =
   CodeTypeAlerts |
   CodeTypeErrors |
   CodeTypeViews |
-  CodeTypeStrings
+  CodeTypeStrings |
+  CodeTypeModels
   deriving (Show, Eq)
 
 -- | Type for the different languages we can generate in.

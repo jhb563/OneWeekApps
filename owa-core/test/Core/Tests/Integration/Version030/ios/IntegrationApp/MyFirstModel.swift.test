@@ -1,6 +1,6 @@
 //
 // MyFirstModel.swift
-// MySampleApp
+// IntegrationApp
 //
 // Created By James Bowen 4/30/2016
 // Copyright (c) 2016 One Week Apps. All Rights Reserved
@@ -17,7 +17,7 @@ class MyFirstModel: NSObject {
   internal var flt: Double
   internal var isGood: Bool
   internal var my1Value: Int
-  private(set) internal var sEc0nd4ryValue3: Int
+  internal var sEc0nd4ryValue3: Int
   internal var secondString2: String
   
   // MARK: Initializer

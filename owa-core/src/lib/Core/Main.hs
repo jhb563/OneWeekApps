@@ -23,11 +23,13 @@ import Core.New
 import Core.Terminal
 import Core.Types
 import Model.OWAAppInfo
+import Model.OWAModel
 import Model.OWAView
 import Objc.AlertConverter
 import Objc.ColorConverter
 import Objc.ErrorConverter
 import Objc.FontConverter
+import Objc.ModelConverter
 import Objc.Print
 import Objc.StringsConverter
 import Objc.ViewConverter
@@ -36,12 +38,14 @@ import Parse.AppInfoParser
 import Parse.ColorParser
 import Parse.ErrorParser
 import Parse.FontParser
+import Parse.ModelParser
 import Parse.StringsParser
 import Parse.ViewParser
 import Swift.AlertConverter
 import Swift.ColorConverter
 import Swift.ErrorConverter
 import Swift.FontConverter
+import Swift.ModelConverter
 import Swift.Print
 import Swift.ViewConverter
 
@@ -88,6 +92,7 @@ generateFiles appDirectory = do
       produceErrorsFiles appDirectory appInfo
       produceStringsFile appDirectory appInfo
       produceViewsFiles appDirectory appInfo
+      produceModelsFiles appDirectory appInfo
       modifyLastGenTime appDirectory
 
 findAppDirectoryAndRun :: FilePath -> (FilePath -> OWAReaderT ()) -> OWAReaderT ()
@@ -439,3 +444,52 @@ printViewFiles appDirectory appInfo view = do
     mPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".m"
     swiftStructure = swiftFileFromView appInfo view
     swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".swift"
+
+---------------------------------------------------------------------------
+------------------------PRODUCING MODELS FILES------------------------------
+---------------------------------------------------------------------------
+
+produceModelsFiles :: FilePath -> OWAAppInfo -> OWAReaderT ()
+produceModelsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeModels $ do
+  printIfNotSilent "Generating models..."
+  printIfVerbose "Searching for models files..."
+  modelFiles <- liftIO $ findModelsFiles appDirectory
+  printIfVerbose "Found model files at: "
+  mapM_ printIfVerbose modelFiles
+  let appInfoFile = appDirectory ++ appInfoFileExtension
+  modelFilesToRegen <- filterM (\m -> shouldRegenerateFromFiles [appInfoFile, m]) modelFiles
+  listOfParseResults <- liftIO $ mapM parseModelFromFile modelFilesToRegen
+  let errors = concat $ lefts listOfParseResults
+  if not (null errors)
+    then do
+      printIfNotSilent "Encountered errors parsing models..."
+      printErrors errors
+    else printIfVerbose "No errors parsing models!"
+  let models = rights listOfParseResults
+  printIfVerbose ("Found" ++ show (length models) ++ " models")
+  if not (null models)
+    then printIfVerbose "Printing models..."
+    else printIfVerbose "All models are up to date!"
+  mapM_ (printModelFiles appDirectory appInfo) models
+  printIfNotSilent "Finished generating models!"
+
+printModelFiles :: FilePath -> OWAAppInfo -> OWAModel -> OWAReaderT ()
+printModelFiles appDirectory appInfo model = do
+  lang <- languageType <$> ask
+  if lang == LanguageTypeObjc
+    then do
+      liftIO $ printStructureToFile headerStructure headerPath
+      liftIO $ printStructureToFile mStructure mPath
+      printIfVerbose headerPath
+      printIfVerbose mPath
+    else do
+      liftIO $ printSwiftStructureToFile swiftStructure swiftPath
+      printIfVerbose swiftPath
+  where 
+    headerStructure = objcHeaderFromModel appInfo model
+    mStructure = objcImplementationFromModel appInfo model
+    mTy = modelType model
+    headerPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".h"
+    mPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".m"
+    swiftStructure = swiftFileFromModel appInfo model
+    swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".swift"

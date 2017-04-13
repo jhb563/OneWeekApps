@@ -18,7 +18,7 @@ import Core.Tests.Utils
 runV030IntegrationTests :: FilePath -> IO ()
 runV030IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030"
-  let outputDirectory = currentDirectory ++ "/test/Core/Integration/Version030/ios/IntegrationApp/"
+  let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030/ios/IntegrationApp/"
   createDirectoryIfMissing True outputDirectory
   runIntegrationTests testDirectory [checkModelsFilesObjc] objcResults
   runIntegrationTestsSwift testDirectory [checkModelsFilesSwift] swiftResults
@@ -37,7 +37,7 @@ checkModelsFilesObjc testDirectory = do
   let fullModelMTest1 = testDirectory ++ modelMTest1
   let fullModelMTest2 = testDirectory ++ modelMTest2
   let fullModelMTest3 = testDirectory ++ modelMTest3
-  describe "Compare Produced Objective C Models Files" $
+  describe "Compare Produced Objective C Models Files" $ do
     it "The first model header should match" $
       fullModelHeaderResult1 `filesShouldMatch` fullModelHeaderTest1
 
@@ -64,7 +64,7 @@ checkModelsFilesSwift testDirectory = do
   let fullModelTest1 = testDirectory ++ modelSwiftTest1
   let fullModelTest2 = testDirectory ++ modelSwiftTest2
   let fullModelTest3 = testDirectory ++ modelSwiftTest3
-  describe "Compare Produced Swift Models Files" $
+  describe "Compare Produced Swift Models Files" $ do
     it "The first model should match" $
       fullModelResult1 `filesShouldMatch` fullModelTest1
 
