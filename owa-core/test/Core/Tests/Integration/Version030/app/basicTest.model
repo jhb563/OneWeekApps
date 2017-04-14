@@ -1,0 +1,18 @@
+Model
+    Type MyFirstModel
+    Field isGood
+      Type Bool
+    Field firstString1
+       Type String
+       ReadOnly
+    Field my1Value
+      Type Int
+    Field secondString2
+          Type String
+    Field balance
+      Type Float
+      ReadOnly
+    Field flt
+      Type Float
+    Field sEc0nd4ryValue3
+      Type Int

@@ -70,6 +70,7 @@ codeTypesFromArgs args = if null typesInArgs
       "--errors" -> CodeTypeErrors : accum
       "--views" -> CodeTypeViews : accum
       "--strings" -> CodeTypeStrings : accum
+      "--models" -> CodeTypeModels : accum
       _ -> accum
     typesInArgs = foldr evaluateAndAdd [] args
 
@@ -93,5 +94,6 @@ allCodeTypes =
   , CodeTypeAlerts
   , CodeTypeErrors
   , CodeTypeViews
-  , CodeTypeStrings ]
+  , CodeTypeStrings 
+  , CodeTypeModels ]
 

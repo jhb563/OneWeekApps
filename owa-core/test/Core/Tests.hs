@@ -15,6 +15,7 @@ import Core.Tests.Integration.Version015.Basic (runV015IntegrationTests)
 import Core.Tests.Integration.Version020.Basic (runV020IntegrationTests)
 import Core.Tests.Integration.Version021.Basic (runV021IntegrationTests)
 import Core.Tests.Integration.Version023.Basic (runV023IntegrationTests)
+import Core.Tests.Integration.Version030.Basic (runV030IntegrationTests)
 import Core.Tests.LazyGeneration.Basic (runLazyCodeGenerationTests)
 import Core.Tests.XCode.Basic (runXCodeTests)
 
@@ -32,6 +33,7 @@ main = do
   runV020IntegrationTests currentDirectory
   runV021IntegrationTests currentDirectory
   runV023IntegrationTests currentDirectory
+  runV030IntegrationTests currentDirectory
   runLazyCodeGenerationTests currentDirectory 
   runAppInfoCLITests currentDirectory
   runCodeTypeTests currentDirectory

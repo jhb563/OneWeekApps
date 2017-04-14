@@ -1,0 +1,23 @@
+//
+// MyFirstModel.h
+// IntegrationApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+@import Foundation;
+
+@interface MyFirstModel : NSObject
+
+@property (nonatomic, readonly) double balance;
+@property (nonatomic, strong, readonly) NSString* firstString1;
+@property (nonatomic) double flt;
+@property (nonatomic) BOOL isGood;
+@property (nonatomic) int my1Value;
+@property (nonatomic) int sEc0nd4ryValue3;
+@property (nonatomic, strong) NSString* secondString2;
+
+- (instancetype)initWithBalance:(double)balance_ firstString1:(NSString*)firstString1_ flt:(double)flt_ isGood:(BOOL)isGood_ my1Value:(int)my1Value_ sEc0nd4ryValue3:(int)sEc0nd4ryValue3_ secondString2:(NSString*)secondString2_;
+
+@end

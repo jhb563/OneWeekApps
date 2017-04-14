@@ -1,0 +1,35 @@
+//
+// MyFirstModel.swift
+// IntegrationApp
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+import Foundation
+
+class MyFirstModel: NSObject {
+  
+  // MARK: Class Fields
+  
+  private(set) internal var balance: Double
+  private(set) internal var firstString1: String
+  internal var flt: Double
+  internal var isGood: Bool
+  internal var my1Value: Int
+  internal var sEc0nd4ryValue3: Int
+  internal var secondString2: String
+  
+  // MARK: Initializer
+  
+  init(balance_: Double, firstString1_: String, flt_: Double, isGood_: Bool, my1Value_: Int, sEc0nd4ryValue3_: Int, secondString2_: String) {
+    self.balance = balance_
+    self.firstString1 = firstString1_
+    self.flt = flt_
+    self.isGood = isGood_
+    self.my1Value = my1Value_
+    self.sEc0nd4ryValue3 = sEc0nd4ryValue3_
+    self.secondString2 = secondString2_
+  }
+  
+}
