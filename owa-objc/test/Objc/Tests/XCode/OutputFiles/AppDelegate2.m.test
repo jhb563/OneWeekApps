@@ -1,0 +1,43 @@
+//
+// AppDelegate.m
+// Second Test App
+//
+// Created By John 03/15/2017
+//
+
+#import "AppDelegate.h"
+#import "ViewController.h"
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
+  UIWindow* window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  window.backgroundColor = [UIColor whiteColor];
+  ViewController* mainViewController = [[ViewController alloc] init];
+  window.rootViewController = mainViewController;
+  self.window = window;
+  [self.window makeKeyAndVisible];
+  return YES;
+}
+
+- (void)applicationWillResignActive:(UIApplication*)application {
+
+}
+
+- (void)applicationDidEnterBackground:(UIApplication*)application {
+
+}
+
+- (void)applicationWillEnterForeground:(UIApplication*)application {
+
+}
+
+- (void)applicationDidBecomeActive:(UIApplication*)application {
+
+}
+
+- (void)applicationWillTerminate:(UIApplication*)application {
+
+}
+
+@end
