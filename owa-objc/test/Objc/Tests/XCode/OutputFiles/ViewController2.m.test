@@ -9,13 +9,15 @@
 
 @implementation ViewController
 
+#pragma mark - Lifecycle
+
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self.view setNeedsUpdateConstraints];
 }
 
 - (void)updateViewConstraints {
-  [super updateViewConstraints]
+  [super updateViewConstraints];
 }
 
 @end
