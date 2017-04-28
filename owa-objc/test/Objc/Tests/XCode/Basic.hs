@@ -50,8 +50,8 @@ xcodeTest1 testDirectory = describe "Print XCode File Structures for app info 1"
       (testDirectory ++ viewController1HeaderTest)
 
   it "The view controller implementation should match" $
-    (testDirectory ++ viewController1HeaderResult) `filesShouldMatch`
-      (testDirectory ++ viewController1HeaderTest)
+    (testDirectory ++ viewController1MResult) `filesShouldMatch`
+      (testDirectory ++ viewController1MTest)
 
 xcodeTest2 :: FilePath -> Spec
 xcodeTest2 testDirectory = describe "Print XCode File Structures for app info 2" $ do
@@ -68,8 +68,8 @@ xcodeTest2 testDirectory = describe "Print XCode File Structures for app info 2"
       (testDirectory ++ viewController2HeaderTest)
 
   it "The view controller implementation should match" $
-    (testDirectory ++ viewController2HeaderResult) `filesShouldMatch`
-      (testDirectory ++ viewController2HeaderTest)
+    (testDirectory ++ viewController2MResult) `filesShouldMatch`
+      (testDirectory ++ viewController2MTest)
 
 appInfo1 :: OWAAppInfo
 appInfo1 = OWAAppInfo
