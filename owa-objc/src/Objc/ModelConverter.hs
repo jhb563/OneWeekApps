@@ -35,7 +35,7 @@ objcHeaderFromModel appInfo model = ObjcFile $
   where
     mTy = modelType model
     properties = propertyForField True <$> modelFields model
-    interfaceSection = InterfaceSection mTy (Just "NSObject") Nothing properties 
+    interfaceSection = InterfaceSection mTy (Just "NSObject") Nothing [] properties 
       [MethodHeaderListSection Nothing [initMethod model]]
     rest = case forwardClassSection model of
       Nothing -> [interfaceSection]
@@ -84,7 +84,7 @@ customClassesForModel model = foldl addCustomClass [] (fieldType <$> modelFields
 subInterfaceSection :: String -> [OWAModelField] -> Maybe FileSection
 subInterfaceSection mTy fields = if null readOnlyProps
   then Nothing
-  else Just $ InterfaceSection mTy Nothing Nothing fieldDefs []
+  else Just $ InterfaceSection mTy Nothing Nothing [] fieldDefs []
   where
     readOnlyProps = filter fieldReadOnly fields
     fieldDefs = propertyForField False <$> readOnlyProps

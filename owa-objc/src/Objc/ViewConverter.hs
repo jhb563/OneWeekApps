@@ -34,7 +34,7 @@ objcHeaderFromView appInfo view = ObjcFile $
     where vTy = viewType view
           subs = allChildViews view
           properties = map (propertyForSubview True) subs
-          interfaceSection = InterfaceSection vTy (Just "UIView") Nothing properties []
+          interfaceSection = InterfaceSection vTy (Just "UIView") Nothing [] properties []
           rest = case forwardClassSection view of
                   Nothing -> [interfaceSection]
                   Just declSection -> [declSection, interfaceSection]
@@ -45,7 +45,7 @@ objcImplementationFromView :: OWAAppInfo -> OWAView -> ObjcFile
 objcImplementationFromView appInfo view = ObjcFile 
   [topCommentSection (vTy ++ ".m") appInfo,
   importsSection view (appPrefix appInfo),
-  InterfaceSection vTy Nothing Nothing properties [],
+  InterfaceSection vTy Nothing Nothing [] properties [],
   ImplementationSection vTy Nothing impSections]
     where vTy = viewType view
           subs = allChildViews view

@@ -100,6 +100,7 @@ simpleCategoryInterface category = InterfaceSection
   Nothing
   (Just $ categoryName category)
   []
+  []
   (if null (categoryMethods category)
     then []
     else [MethodHeaderListSection Nothing (categoryMethods category)])

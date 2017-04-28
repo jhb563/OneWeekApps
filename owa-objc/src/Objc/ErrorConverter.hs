@@ -33,7 +33,7 @@ objcHeaderFromErrors :: OWAAppInfo -> [OWAError] -> ObjcFile
 objcHeaderFromErrors appInfo  errors = ObjcFile
   [categoryCommentSection appInfo originalErrorTypeName categoryName' True,
   foundationImportsSection,
-  InterfaceSection originalErrorTypeName Nothing (Just categoryName') [] sections]
+  InterfaceSection originalErrorTypeName Nothing (Just categoryName') [] [] sections]
     where categoryName' = appPrefix appInfo ++ "Errors"
           sections = methodHeaderSectionsForErrors errors
 
