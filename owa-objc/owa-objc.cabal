@@ -28,6 +28,7 @@ library
       Objc.Print
       Objc.StringsConverter
       Objc.ViewConverter
+      Objc.XCode
   other-modules:
       Objc.Utils
   default-language: Haskell2010
@@ -69,4 +70,5 @@ test-suite objc-tests
       Objc.Tests.Views.Custom
       Objc.Tests.Views.CustomObjects
       Objc.Tests.Views.Objects
+      Objc.Tests.XCode.Basic
   default-language: Haskell2010

@@ -11,6 +11,7 @@ import Objc.Tests.Strings.Basic (runStringsPrintTests)
 import Objc.Tests.Views.Basic (runViewPrintTests)
 import Objc.Tests.Views.Containers (runContainerViewPrintTests)
 import Objc.Tests.Views.Custom (runCustomViewPrintTests)
+import Objc.Tests.XCode.Basic (runObjcXCodeTests)
 
 main :: IO ()
 main = do
@@ -23,3 +24,4 @@ main = do
   runContainerViewPrintTests currentDirectory
   runCustomViewPrintTests currentDirectory
   runModelPrintTests currentDirectory
+  runObjcXCodeTests currentDirectory

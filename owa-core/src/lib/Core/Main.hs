@@ -25,6 +25,7 @@ import Core.Types
 import Model.OWAAppInfo
 import Model.OWAModel
 import Model.OWAView
+import Objc.AbSyn
 import Objc.AlertConverter
 import Objc.ColorConverter
 import Objc.ErrorConverter
@@ -428,11 +429,7 @@ printViewFiles :: FilePath -> OWAAppInfo -> OWAView -> OWAReaderT ()
 printViewFiles appDirectory appInfo view = do
   lang <- languageType <$> ask
   if lang == LanguageTypeObjc
-    then do
-      liftIO $ printStructureToFile headerStructure headerPath
-      liftIO $ printStructureToFile mStructure mPath
-      printIfVerbose headerPath
-      printIfVerbose mPath
+    then printObjcFiles headerPath headerStructure mPath mStructure
     else do
       liftIO $ printSwiftStructureToFile swiftStructure swiftPath
       printIfVerbose swiftPath
@@ -477,11 +474,7 @@ printModelFiles :: FilePath -> OWAAppInfo -> OWAModel -> OWAReaderT ()
 printModelFiles appDirectory appInfo model = do
   lang <- languageType <$> ask
   if lang == LanguageTypeObjc
-    then do
-      liftIO $ printStructureToFile headerStructure headerPath
-      liftIO $ printStructureToFile mStructure mPath
-      printIfVerbose headerPath
-      printIfVerbose mPath
+    then printObjcFiles headerPath headerStructure mPath mStructure
     else do
       liftIO $ printSwiftStructureToFile swiftStructure swiftPath
       printIfVerbose swiftPath
@@ -493,3 +486,14 @@ printModelFiles appDirectory appInfo model = do
     mPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".m"
     swiftStructure = swiftFileFromModel appInfo model
     swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".swift"
+
+---------------------------------------------------------------------------
+------------------------PRINTING UTILITY-----------------------------------
+---------------------------------------------------------------------------
+
+printObjcFiles:: FilePath -> ObjcFile -> FilePath -> ObjcFile -> OWAReaderT ()
+printObjcFiles headerPath headerStructure mPath mStructure = do
+  liftIO $ printStructureToFile headerStructure headerPath
+  liftIO $ printStructureToFile mStructure mPath
+  printIfVerbose headerPath
+  printIfVerbose mPath

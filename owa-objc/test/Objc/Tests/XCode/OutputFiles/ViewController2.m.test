@@ -1,0 +1,23 @@
+//
+// ViewController.m
+// Second Test App
+//
+// Created By John 03/15/2017
+//
+
+#import "ViewController.h"
+
+@implementation ViewController
+
+#pragma mark - Lifecycle
+
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  [self.view setNeedsUpdateConstraints];
+}
+
+- (void)updateViewConstraints {
+  [super updateViewConstraints];
+}
+
+@end

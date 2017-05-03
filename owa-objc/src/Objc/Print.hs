@@ -10,6 +10,7 @@ module Objc.Print (
   printStructureToFile
 ) where
 
+import Data.Maybe (catMaybes)
 import System.IO
 import Text.PrettyPrint.Leijen as PPrint
 
@@ -37,7 +38,7 @@ sectionDoc :: FileSection -> Doc
 sectionDoc (BlockCommentSection commentLines) = vcat (map commentDoc commentLines) PPrint.<$> empty
 sectionDoc (ImportsSection includes) = vcat (map includeDoc includes) PPrint.<$> empty
 sectionDoc (ForwardDeclarationSection forwardDecls) = vcat (map forwardDeclDoc forwardDecls) PPrint.<$> empty
-sectionDoc (InterfaceSection typeName superclass possibleCategoryName properties methods) = interfaceDoc typeName superclass possibleCategoryName properties methods
+sectionDoc (InterfaceSection typeName superclass possibleCategoryName protocols properties methods) = interfaceDoc typeName superclass possibleCategoryName protocols properties methods
 sectionDoc (ImplementationSection typeName possibleCategoryName sections) = implementationDoc typeName possibleCategoryName sections
 sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSectionDoc maybeComment methods
 sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
@@ -63,22 +64,26 @@ forwardDeclDoc (EnumDecl enumName types) = indentBlock headerLine enumBody <> se
         enumBody = vcat $ punctuate (text ",") (map text types)
 forwardDeclDoc (ClassDecl className) = text "@class" <+> text className <> semi
 
-interfaceDoc :: String -> Maybe String -> Maybe String -> [ObjcProperty] -> [FileSection] -> Doc
-interfaceDoc typeName superclass possibleCategoryName properties sections = text "@interface" <+>
+interfaceDoc :: String -> Maybe String -> Maybe String -> [String] -> [ObjcProperty] -> [FileSection] -> Doc
+interfaceDoc typeName superclass possibleCategoryName protocols properties sections = text "@interface" <+>
   text typeName <+> superDocOrParens PPrint.<$>
   middleSection PPrint.<$>
   endDoc
-    where propertySection = case properties of
-                              [] -> empty 
-                              _ -> vcatWithSpace (map propertyDoc properties) PPrint.<$> empty
-          middleSection = case sections of
-            [] -> propertySection
-            _ -> propertySection PPrint.<$> vcat (map sectionDoc sections)
-          superDocOrParens = case superclass of
-                              Just super -> colon <+> text super
-                              Nothing -> case possibleCategoryName of
-                                Just name -> parens $ text name
-                                Nothing -> text "()"
+    where 
+      propertySection = case properties of
+        [] -> empty 
+        _ -> vcatWithSpace (map propertyDoc properties) PPrint.<$> empty
+      middleSection = case sections of
+        [] -> propertySection
+        _ -> propertySection PPrint.<$> vcat (map sectionDoc sections)
+      protocolDocMay = if null protocols
+        then Nothing
+        else Just $ angles $ hcat (punctuate (text ", ") (map text protocols))
+      superDocOrParens = case superclass of
+        Just super -> hcat $ punctuate (text " ") (catMaybes [Just colon, Just (text super), protocolDocMay])
+        Nothing -> case possibleCategoryName of
+          Just name -> parens $ text name
+          Nothing -> text "()"
 
 implementationDoc :: String -> Maybe String -> [FileSection] -> Doc
 implementationDoc typeName possibleCategoryName sections = text "@implementation" <+>
