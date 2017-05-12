@@ -12,7 +12,7 @@ module Core.Main (
 
 import Control.Monad
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Reader (runReaderT, ask)
+import Control.Monad.Reader (runReaderT, ask, asks)
 import Data.Either
 import System.IO 
 
@@ -160,9 +160,9 @@ produceStringsFile appDirectory appInfo = whenCodeTypePresent CodeTypeStrings $ 
       printIfVerbose ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
       let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
       printIfVerbose "Printing strings file..."
-      let folderExtension = if languageType == LanguageTypeObjc
-        then "/../objc/"
-        else "/../ios/"
+      let folderExtension = if language == LanguageTypeObjc
+            then "/../objc/"
+            else "/../ios/"
       let fullStringsPath = appDirectory ++ folderExtension ++ appName appInfo ++ stringsFileExtension
       liftIO $ printStructureToFile stringsFileStructure fullStringsPath
       printIfVerbose "Printed strings to :" 

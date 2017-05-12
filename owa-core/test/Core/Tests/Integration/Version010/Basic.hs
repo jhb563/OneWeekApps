@@ -12,4 +12,10 @@ import Core.Tests.Integration.Utils
 runV010IntegrationTests :: FilePath -> IO ()
 runV010IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version010"
-  runIntegrationTests testDirectory [checkColorsFilesObjc, checkFontsFilesObjc, checkAlertsFilesObjc, checkErrorsFilesObjc] []
+  runIntegrationTestsObjc
+    testDirectory
+    [ checkColorsFilesObjc
+    , checkFontsFilesObjc
+    , checkAlertsFilesObjc
+    , checkErrorsFilesObjc]
+    []

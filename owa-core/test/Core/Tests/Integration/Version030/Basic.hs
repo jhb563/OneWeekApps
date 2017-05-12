@@ -21,7 +21,7 @@ runV030IntegrationTests currentDirectory = do
   let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030/ios/IntegrationApp/"
   let outputDirectoryObjc = currentDirectory ++ "/test/Core/Tests/Integration/Version030/objc/IntegrationApp/"
   createDirectoryIfMissing True outputDirectory
-  runIntegrationTests testDirectory [checkModelsFilesObjc] objcResults
+  runIntegrationTestsObjc testDirectory [checkModelsFilesObjc] objcResults
   runIntegrationTestsSwift testDirectory [checkModelsFilesSwift] swiftResults
 
 checkModelsFilesObjc :: FilePath -> Spec

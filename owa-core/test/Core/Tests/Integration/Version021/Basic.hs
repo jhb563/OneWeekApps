@@ -19,8 +19,8 @@ import Core.Tests.Utils
 runV021IntegrationTests :: FilePath -> IO ()
 runV021IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version021"
-  runIntegrationTests testDirectory
-    [checkViewsFilesObjc]
+  runIntegrationTestsObjc testDirectory
+    [checkViewsFiles]
     additionalFiles
 
 checkViewsFiles :: FilePath -> Spec
