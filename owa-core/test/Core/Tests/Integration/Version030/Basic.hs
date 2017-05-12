@@ -19,8 +19,9 @@ runV030IntegrationTests :: FilePath -> IO ()
 runV030IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030"
   let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030/ios/IntegrationApp/"
+  let outputDirectoryObjc = currentDirectory ++ "/test/Core/Tests/Integration/Version030/objc/IntegrationApp/"
   createDirectoryIfMissing True outputDirectory
-  runIntegrationTests testDirectory [checkModelsFilesObjc] objcResults
+  runIntegrationTestsObjc testDirectory [checkModelsFilesObjc] objcResults
   runIntegrationTestsSwift testDirectory [checkModelsFilesSwift] swiftResults
 
 checkModelsFilesObjc :: FilePath -> Spec
@@ -92,22 +93,22 @@ swiftResults =
   ]
 
 modelHeaderResult1 :: String
-modelHeaderResult1 = "/ios/IntegrationApp/MyFirstModel.h"
+modelHeaderResult1 = "/objc/IntegrationApp/MyFirstModel.h"
 
 modelHeaderResult2 :: String
-modelHeaderResult2 = "/ios/IntegrationApp/CustomReferenceModel.h"
+modelHeaderResult2 = "/objc/IntegrationApp/CustomReferenceModel.h"
 
 modelHeaderResult3 :: String
-modelHeaderResult3 = "/ios/IntegrationApp/MyCompleteModel.h"
+modelHeaderResult3 = "/objc/IntegrationApp/MyCompleteModel.h"
 
 modelMResult1 :: String
-modelMResult1 = "/ios/IntegrationApp/MyFirstModel.m"
+modelMResult1 = "/objc/IntegrationApp/MyFirstModel.m"
 
 modelMResult2 :: String
-modelMResult2 = "/ios/IntegrationApp/CustomReferenceModel.m"
+modelMResult2 = "/objc/IntegrationApp/CustomReferenceModel.m"
 
 modelMResult3 :: String
-modelMResult3 = "/ios/IntegrationApp/MyCompleteModel.m"
+modelMResult3 = "/objc/IntegrationApp/MyCompleteModel.m"
 
 modelSwiftResult1 :: String
 modelSwiftResult1 = "/ios/IntegrationApp/MyFirstModel.swift"
@@ -119,22 +120,22 @@ modelSwiftResult3 :: String
 modelSwiftResult3 = "/ios/IntegrationApp/MyCompleteModel.swift"
 
 modelHeaderTest1 :: String
-modelHeaderTest1 = "/ios/IntegrationApp/MyFirstModel.h.test"
+modelHeaderTest1 = "/objc/IntegrationApp/MyFirstModel.h.test"
 
 modelHeaderTest2 :: String
-modelHeaderTest2 = "/ios/IntegrationApp/CustomReferenceModel.h.test"
+modelHeaderTest2 = "/objc/IntegrationApp/CustomReferenceModel.h.test"
 
 modelHeaderTest3 :: String
-modelHeaderTest3 = "/ios/IntegrationApp/MyCompleteModel.h.test"
+modelHeaderTest3 = "/objc/IntegrationApp/MyCompleteModel.h.test"
 
 modelMTest1 :: String
-modelMTest1 = "/ios/IntegrationApp/MyFirstModel.m.test"
+modelMTest1 = "/objc/IntegrationApp/MyFirstModel.m.test"
 
 modelMTest2 :: String
-modelMTest2 = "/ios/IntegrationApp/CustomReferenceModel.m.test"
+modelMTest2 = "/objc/IntegrationApp/CustomReferenceModel.m.test"
 
 modelMTest3 :: String
-modelMTest3 = "/ios/IntegrationApp/MyCompleteModel.m.test"
+modelMTest3 = "/objc/IntegrationApp/MyCompleteModel.m.test"
 
 modelSwiftTest1 :: String
 modelSwiftTest1 = "/ios/IntegrationApp/MyFirstModel.swift.test"

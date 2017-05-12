@@ -12,7 +12,7 @@ module Core.Main (
 
 import Control.Monad
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Reader (runReaderT, ask)
+import Control.Monad.Reader (runReaderT, ask, asks)
 import Data.Either
 import System.IO 
 
@@ -143,6 +143,7 @@ produceStringsFile appDirectory appInfo = whenCodeTypePresent CodeTypeStrings $ 
   printIfVerbose "Found strings files at: "
   mapM_ printIfVerbose stringsFiles
   regenFiles <- shouldRegenerateFromFiles ((appDirectory ++ appInfoFileExtension) : stringsFiles)
+  language <- asks languageType
   if not regenFiles
     then do
       printIfNotSilent "No strings modifications since last generate!"
@@ -159,7 +160,10 @@ produceStringsFile appDirectory appInfo = whenCodeTypePresent CodeTypeStrings $ 
       printIfVerbose ("Successfully parsed " ++ show (length stringSets) ++ " sets of strings")
       let stringsFileStructure = objcStringsFileFromStringSets appInfo stringSets
       printIfVerbose "Printing strings file..."
-      let fullStringsPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ stringsFileExtension
+      let folderExtension = if language == LanguageTypeObjc
+            then "/../objc/"
+            else "/../ios/"
+      let fullStringsPath = appDirectory ++ folderExtension ++ appName appInfo ++ stringsFileExtension
       liftIO $ printStructureToFile stringsFileStructure fullStringsPath
       printIfVerbose "Printed strings to :" 
       printIfVerbose fullStringsPath
@@ -202,8 +206,8 @@ produceColorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeColors $ d
           let colorHeaderFileStructure = objcHeaderFromColors appInfo colors
           let colorMFileStructure = objcImplementationFromColors appInfo colors
           printIfVerbose "Printing colors files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ colorHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ colorImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ colorHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ colorImplementationFileExtension prefix
           liftIO $ printStructureToFile colorHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile colorMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
@@ -259,8 +263,8 @@ produceFontsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeFonts $ do
           let fontHeaderFileStructure = objcHeaderFromFonts appInfo fonts
           let fontMFileStructure = objcImplementationFromFonts appInfo fonts
           printIfVerbose "Printing fonts files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ fontHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ fontImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ fontHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ fontImplementationFileExtension prefix
           liftIO $ printStructureToFile fontHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile fontMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
@@ -316,8 +320,8 @@ produceAlertsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeAlerts $ d
           let alertHeaderFileStructure = objcHeaderFromAlerts appInfo alerts
           let alertMFileStructure = objcImplementationFromAlerts appInfo alerts
           printIfVerbose "Printing alerts files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ alertHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ alertImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ alertHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ alertImplementationFileExtension prefix
           liftIO $ printStructureToFile alertHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile alertMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
@@ -373,8 +377,8 @@ produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ d
           let errorHeaderFileStructure = objcHeaderFromErrors appInfo errors'
           let errorMFileStructure = objcImplementationFromErrors appInfo errors'
           printIfVerbose "Printing errors files..."
-          let fullHeaderPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorHeaderFileExtension prefix
-          let fullMPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorImplementationFileExtension prefix
+          let fullHeaderPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ errorHeaderFileExtension prefix
+          let fullMPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ errorImplementationFileExtension prefix
           liftIO $ printStructureToFile errorHeaderFileStructure fullHeaderPath
           liftIO $ printStructureToFile errorMFileStructure fullMPath
           return $ fullHeaderPath ++ ", " ++ fullMPath
@@ -437,8 +441,8 @@ printViewFiles appDirectory appInfo view = do
     headerStructure = objcHeaderFromView appInfo view
     mStructure = objcImplementationFromView appInfo view
     vTy = viewType view
-    headerPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".h"
-    mPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".m"
+    headerPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':vTy ++ ".h"
+    mPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':vTy ++ ".m"
     swiftStructure = swiftFileFromView appInfo view
     swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".swift"
 
@@ -482,8 +486,8 @@ printModelFiles appDirectory appInfo model = do
     headerStructure = objcHeaderFromModel appInfo model
     mStructure = objcImplementationFromModel appInfo model
     mTy = modelType model
-    headerPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".h"
-    mPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".m"
+    headerPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':mTy ++ ".h"
+    mPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':mTy ++ ".m"
     swiftStructure = swiftFileFromModel appInfo model
     swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".swift"
 

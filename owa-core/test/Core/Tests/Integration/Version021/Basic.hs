@@ -19,7 +19,7 @@ import Core.Tests.Utils
 runV021IntegrationTests :: FilePath -> IO ()
 runV021IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version021"
-  runIntegrationTests testDirectory
+  runIntegrationTestsObjc testDirectory
     [checkViewsFiles]
     additionalFiles
 
@@ -53,25 +53,25 @@ additionalFiles = [view1HeaderExtension,
   view2MExtension]
 
 view1HeaderExtension :: String
-view1HeaderExtension = "/ios/IntegrationApp/MSAFirstView.h"
+view1HeaderExtension = "/objc/IntegrationApp/MSAFirstView.h"
 
 view1MExtension :: String
-view1MExtension =  "/ios/IntegrationApp/MSAFirstView.m"
+view1MExtension =  "/objc/IntegrationApp/MSAFirstView.m"
 
 view2HeaderExtension :: String
-view2HeaderExtension = "/ios/IntegrationApp/MSASecondView.h"
+view2HeaderExtension = "/objc/IntegrationApp/MSASecondView.h"
 
 view2MExtension :: String
-view2MExtension = "/ios/IntegrationApp/MSASecondView.m"
+view2MExtension = "/objc/IntegrationApp/MSASecondView.m"
 
 view1HeaderTestExtension :: String
-view1HeaderTestExtension = "/ios/IntegrationApp/MSAFirstView.h.test"
+view1HeaderTestExtension = "/objc/IntegrationApp/MSAFirstView.h.test"
 
 view1MTestExtension :: String
-view1MTestExtension =  "/ios/IntegrationApp/MSAFirstView.m.test"
+view1MTestExtension =  "/objc/IntegrationApp/MSAFirstView.m.test"
 
 view2HeaderTestExtension :: String
-view2HeaderTestExtension = "/ios/IntegrationApp/MSASecondView.h.test"
+view2HeaderTestExtension = "/objc/IntegrationApp/MSASecondView.h.test"
 
 view2MTestExtension :: String
-view2MTestExtension = "/ios/IntegrationApp/MSASecondView.m.test"
+view2MTestExtension = "/objc/IntegrationApp/MSASecondView.m.test"

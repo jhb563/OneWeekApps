@@ -116,7 +116,7 @@ fileTest file = do
     else return $ FileDoesNotExist file
 
 outputDirectoryExtension :: FilePath
-outputDirectoryExtension = "/test/Core/Tests/CodeType/ios/ViewIntegrationApp"
+outputDirectoryExtension = "/test/Core/Tests/CodeType/objc/ViewIntegrationApp"
 
 appDirectoryExtension :: FilePath
 appDirectoryExtension = "/test/Core/Tests/CodeType/app"

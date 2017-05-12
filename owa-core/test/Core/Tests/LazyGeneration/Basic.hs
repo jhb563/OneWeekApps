@@ -24,19 +24,21 @@ runLazyCodeGenerationTests currentDirectory = do
   let testDirectory = currentDirectory ++ appDirectoryExtension
   let outputDirectory = currentDirectory ++ outputDirectoryExtension
   let dirTuple = (testDirectory, outputDirectory)
+  let outputDirectoryObjc = currentDirectory ++ outputDirectoryExtensionObjc
+  let dirTupleObjc = (testDirectory, outputDirectoryObjc)
   hspec $ do
-    testCorrectFilesChangeObjc dirTuple noChangePair "If no files changed, no regeneration"
-    testCorrectFilesChangeObjc dirTuple appInfoPair "If app info changes, all files regenerate"
-    testCorrectFilesChangeObjc dirTuple colorsPair "Colors regenerated properly"
-    testCorrectFilesChangeObjc dirTuple fontsPair "Fonts regenerated properly"
-    testCorrectFilesChangeObjc dirTuple alertsPair "Alerts regenerated properly"
-    testCorrectFilesChangeObjc dirTuple errorsPair "Errors regenerated properly"
-    testCorrectFilesChangeObjc dirTuple view1Pair "View 1 regenerated properly"
-    testCorrectFilesChangeObjc dirTuple view2Pair "View 2 regenerated properly"
-    testCorrectFilesChangeObjc dirTuple view3Pair "View 3 regenerated properly"
-    testCorrectFilesChangeObjc dirTuple stringsPair "Strings regenerated properly"
-    testCorrectFilesChangeObjc dirTuple colorFontsPair "Colors and fonts regenerated together"
-    testCorrectFilesChangeObjc dirTuple alertStringsViewPair 
+    testCorrectFilesChangeObjc dirTupleObjc noChangePair "If no files changed, no regeneration"
+    testCorrectFilesChangeObjc dirTupleObjc appInfoPair "If app info changes, all files regenerate"
+    testCorrectFilesChangeObjc dirTupleObjc colorsPair "Colors regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc fontsPair "Fonts regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc alertsPair "Alerts regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc errorsPair "Errors regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc view1Pair "View 1 regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc view2Pair "View 2 regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc view3Pair "View 3 regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc stringsPair "Strings regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc colorFontsPair "Colors and fonts regenerated together"
+    testCorrectFilesChangeObjc dirTupleObjc alertStringsViewPair 
       "Alerts, strings, and a view regenerated together"
     testCorrectFilesChangeSwift dirTuple noChangePairSwift "(swift) If no files changed, no regeneration"
     testCorrectFilesChangeSwift dirTuple appInfoPairSwift "(swift) If app info changes, all files regenerate"
@@ -51,9 +53,17 @@ runLazyCodeGenerationTests currentDirectory = do
     testCorrectFilesChangeSwift dirTuple colorFontsPairSwift "(swift) Colors and fonts regenerated together"
     testCorrectFilesChangeSwift dirTuple alertStringsViewPairSwift 
       "(swift) Alerts, strings, and a view regenerated together"
-    testCorrectFilesObjcBeforeSwift dirTuple objcBeforeSwiftPair 
+    testMultiLanguageFilesChange
+      (beforeHookWithArgs ["generate"] ["generate", "--swift"] producedFiles)
+      (producedFiles ++ producedFilesSwift)
+      (testDirectory, outputDirectoryObjc, outputDirectory)
+      objcBeforeSwiftPair
       "Swift files should be generated even after Objc"
-    testCorrectFilesSwiftBeforeObjc dirTuple swiftBeforeObjcPair
+    testMultiLanguageFilesChange
+      (beforeHookWithArgs ["generate", "--swift"] ["generate"] producedFilesSwift)
+      (producedFiles ++ producedFilesSwift)
+      (testDirectory, outputDirectory, outputDirectoryObjc)
+      swiftBeforeObjcPair
       "Objc files should be generated even after Swift"
 
 noChangePair :: ([FilePath], [FilePath])
@@ -205,6 +215,23 @@ testCorrectFilesChange hook prodFiles (appDirectory, outputDirectory) (inputFile
       it "Certain files should NOT be regenerated" $
         mapM_ shouldNotBeRegenerated expectedUnregeneratedFiles
 
+testMultiLanguageFilesChange :: ((FilePath, FilePath) -> [FilePath] -> IO ()) -> [FilePath] ->
+  (FilePath, FilePath, FilePath) -> ([FilePath], [FilePath]) -> String -> Spec
+testMultiLanguageFilesChange 
+  hook prodFiles (appDirectory, outputDir1, outputDir2) (inputFiles, outputFiles) description =
+    beforeAll_ (hook (appDirectory, outputDir1) inputFiles)
+      . afterAll_ (removeResultsFiles outputDir1 prodFiles) $
+        afterAll_ (removeResultsFiles outputDir2 prodFiles) $
+        afterAll_ (removeResultsFiles appDirectory [lastGenFile]) $
+        describe description $ do
+          let expectedRegeneratedFiles = map (outputDir2 ++) outputFiles
+          let staleOutputFiles = filter (`notElem` outputFiles) prodFiles
+          let expectedUnregeneratedFiles = map (outputDir1 ++) staleOutputFiles
+          it "Certain files should be regenerated" $
+            mapM_ shouldBeRegenerated expectedRegeneratedFiles
+          it "Certain files should NOT be regenerated" $
+            mapM_ shouldNotBeRegenerated expectedUnregeneratedFiles
+
 shouldBeRegenerated :: FilePath -> Expectation
 shouldBeRegenerated file = expectRegenerated (FileWasRegenerated file) file
 
@@ -227,6 +254,9 @@ appDirectoryExtension = "/test/Core/Tests/LazyGeneration/app"
 
 outputDirectoryExtension :: FilePath
 outputDirectoryExtension = "/test/Core/Tests/LazyGeneration/ios/ViewIntegrationApp"
+
+outputDirectoryExtensionObjc :: FilePath
+outputDirectoryExtensionObjc = "/test/Core/Tests/LazyGeneration/objc/ViewIntegrationApp"
 
 producedFiles :: [FilePath]
 producedFiles = [producedColorHeader, producedColorM,
