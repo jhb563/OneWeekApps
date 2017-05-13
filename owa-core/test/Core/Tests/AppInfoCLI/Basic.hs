@@ -111,17 +111,17 @@ allGeneratedXCodeFiles =
   , generatedWorkspaceExtension ]
 
 generatedVCExtension :: FilePath
-generatedVCExtension = "ios/One Week Apps/ViewController.swift"
+generatedVCExtension = "swift/One Week Apps/ViewController.swift"
 
 generatedAppDelegateExtension :: FilePath
-generatedAppDelegateExtension = "ios/One Week Apps/AppDelegate.swift" 
+generatedAppDelegateExtension = "swift/One Week Apps/AppDelegate.swift" 
 
 generatedPlistExtension :: FilePath
-generatedPlistExtension = "ios/One Week Apps/Info.plist" 
+generatedPlistExtension = "swift/One Week Apps/Info.plist" 
 
 generatedPbxProjExtension :: FilePath
-generatedPbxProjExtension = "ios/One Week Apps.xcodeproj/project.pbxproj"
+generatedPbxProjExtension = "swift/One Week Apps.xcodeproj/project.pbxproj"
 
 generatedWorkspaceExtension :: FilePath
-generatedWorkspaceExtension = "ios/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"
+generatedWorkspaceExtension = "swift/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"
 

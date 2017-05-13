@@ -253,7 +253,7 @@ appDirectoryExtension :: FilePath
 appDirectoryExtension = "/test/Core/Tests/LazyGeneration/app"
 
 outputDirectoryExtension :: FilePath
-outputDirectoryExtension = "/test/Core/Tests/LazyGeneration/ios/ViewIntegrationApp"
+outputDirectoryExtension = "/test/Core/Tests/LazyGeneration/swift/ViewIntegrationApp"
 
 outputDirectoryExtensionObjc :: FilePath
 outputDirectoryExtensionObjc = "/test/Core/Tests/LazyGeneration/objc/ViewIntegrationApp"

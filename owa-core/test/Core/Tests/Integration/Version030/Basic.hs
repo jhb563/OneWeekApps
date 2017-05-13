@@ -18,7 +18,7 @@ import Core.Tests.Utils
 runV030IntegrationTests :: FilePath -> IO ()
 runV030IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030"
-  let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030/ios/IntegrationApp/"
+  let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version030/swift/IntegrationApp/"
   let outputDirectoryObjc = currentDirectory ++ "/test/Core/Tests/Integration/Version030/objc/IntegrationApp/"
   createDirectoryIfMissing True outputDirectory
   runIntegrationTestsObjc testDirectory [checkModelsFilesObjc] objcResults
@@ -111,13 +111,13 @@ modelMResult3 :: String
 modelMResult3 = "/objc/IntegrationApp/MyCompleteModel.m"
 
 modelSwiftResult1 :: String
-modelSwiftResult1 = "/ios/IntegrationApp/MyFirstModel.swift"
+modelSwiftResult1 = "/swift/IntegrationApp/MyFirstModel.swift"
 
 modelSwiftResult2 :: String
-modelSwiftResult2 = "/ios/IntegrationApp/CustomReferenceModel.swift"
+modelSwiftResult2 = "/swift/IntegrationApp/CustomReferenceModel.swift"
 
 modelSwiftResult3 :: String
-modelSwiftResult3 = "/ios/IntegrationApp/MyCompleteModel.swift"
+modelSwiftResult3 = "/swift/IntegrationApp/MyCompleteModel.swift"
 
 modelHeaderTest1 :: String
 modelHeaderTest1 = "/objc/IntegrationApp/MyFirstModel.h.test"
@@ -138,10 +138,10 @@ modelMTest3 :: String
 modelMTest3 = "/objc/IntegrationApp/MyCompleteModel.m.test"
 
 modelSwiftTest1 :: String
-modelSwiftTest1 = "/ios/IntegrationApp/MyFirstModel.swift.test"
+modelSwiftTest1 = "/swift/IntegrationApp/MyFirstModel.swift.test"
 
 modelSwiftTest2 :: String
-modelSwiftTest2 = "/ios/IntegrationApp/CustomReferenceModel.swift.test"
+modelSwiftTest2 = "/swift/IntegrationApp/CustomReferenceModel.swift.test"
 
 modelSwiftTest3 :: String
-modelSwiftTest3 = "/ios/IntegrationApp/MyCompleteModel.swift.test"
+modelSwiftTest3 = "/swift/IntegrationApp/MyCompleteModel.swift.test"

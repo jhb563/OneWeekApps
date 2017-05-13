@@ -21,7 +21,7 @@ import Core.Tests.Utils
 runV023IntegrationTests :: FilePath -> IO ()
 runV023IntegrationTests currentDirectory = do
   let testDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version023"
-  let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version023/ios/IntegrationApp/"
+  let outputDirectory = currentDirectory ++ "/test/Core/Tests/Integration/Version023/swift/IntegrationApp/"
   createDirectoryIfMissing True outputDirectory 
   runIntegrationTestsSwift testDirectory 
     [checkColorsFilesSwift,
@@ -44,7 +44,7 @@ additionalFiles :: [FilePath]
 additionalFiles = [view1Result]
 
 view1Result :: String
-view1Result = "/ios/IntegrationApp/VIAConstraintTest2.swift"
+view1Result = "/swift/IntegrationApp/VIAConstraintTest2.swift"
 
 view1Test :: String
-view1Test = "/ios/IntegrationApp/VIAConstraintTest2.swift.test"
+view1Test = "/swift/IntegrationApp/VIAConstraintTest2.swift.test"

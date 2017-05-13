@@ -162,7 +162,7 @@ produceStringsFile appDirectory appInfo = whenCodeTypePresent CodeTypeStrings $ 
       printIfVerbose "Printing strings file..."
       let folderExtension = if language == LanguageTypeObjc
             then "/../objc/"
-            else "/../ios/"
+            else "/../swift/"
       let fullStringsPath = appDirectory ++ folderExtension ++ appName appInfo ++ stringsFileExtension
       liftIO $ printStructureToFile stringsFileStructure fullStringsPath
       printIfVerbose "Printed strings to :" 
@@ -214,7 +214,7 @@ produceColorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeColors $ d
         else do
           let colorFileStructure = swiftExtensionFromColors appInfo colors
           printIfVerbose "Printing colors files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ colorSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../swift/" ++ appName appInfo ++ colorSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile colorFileStructure fullPath
           return fullPath
       printIfVerbose "Printed colors to files:"
@@ -271,7 +271,7 @@ produceFontsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeFonts $ do
         else do
           let fontFileStructure = swiftExtensionFromFonts appInfo fonts
           printIfVerbose "Printing fonts files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ fontSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../swift/" ++ appName appInfo ++ fontSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile fontFileStructure fullPath
           return fullPath
       printIfVerbose "Printed fonts to files:"
@@ -328,7 +328,7 @@ produceAlertsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeAlerts $ d
         else do
           let alertFileStructure = swiftExtensionFromAlerts appInfo alerts
           printIfVerbose "Printing alerts files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ alertSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../swift/" ++ appName appInfo ++ alertSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile alertFileStructure fullPath
           return fullPath
       printIfVerbose "Printed alerts to files:"
@@ -385,7 +385,7 @@ produceErrorsFiles appDirectory appInfo = whenCodeTypePresent CodeTypeErrors $ d
         else do
           let errorFileStructure = swiftExtensionFromErrors appInfo errors'
           printIfVerbose "Printing errors files..."
-          let fullPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ errorSwiftFileExtension prefix
+          let fullPath = appDirectory ++ "/../swift/" ++ appName appInfo ++ errorSwiftFileExtension prefix
           liftIO $ printSwiftStructureToFile errorFileStructure fullPath
           return fullPath
       printIfVerbose "Printed errors to files:"
@@ -444,7 +444,7 @@ printViewFiles appDirectory appInfo view = do
     headerPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':vTy ++ ".h"
     mPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':vTy ++ ".m"
     swiftStructure = swiftFileFromView appInfo view
-    swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':vTy ++ ".swift"
+    swiftPath = appDirectory ++ "/../swift/" ++ appName appInfo ++ '/':vTy ++ ".swift"
 
 ---------------------------------------------------------------------------
 ------------------------PRODUCING MODELS FILES------------------------------
@@ -489,7 +489,7 @@ printModelFiles appDirectory appInfo model = do
     headerPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':mTy ++ ".h"
     mPath = appDirectory ++ "/../objc/" ++ appName appInfo ++ '/':mTy ++ ".m"
     swiftStructure = swiftFileFromModel appInfo model
-    swiftPath = appDirectory ++ "/../ios/" ++ appName appInfo ++ '/':mTy ++ ".swift"
+    swiftPath = appDirectory ++ "/../swift/" ++ appName appInfo ++ '/':mTy ++ ".swift"
 
 ---------------------------------------------------------------------------
 ------------------------PRINTING UTILITY-----------------------------------
