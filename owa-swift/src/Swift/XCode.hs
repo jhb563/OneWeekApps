@@ -16,6 +16,7 @@ import Model.OWAAppInfo
 import Swift.AbSyn
 import Swift.Utils
 
+-- | Creates the file structure for the initial view controller in a Swift project
 initialVC :: OWAAppInfo -> SwiftFile
 initialVC appInfo = SwiftFile
   [ extensionCommentSection "ViewController.swift" appInfo
@@ -52,6 +53,7 @@ updateViewConstraintsMethod = SwiftMethod
     superStatement = ExpressionStatement $
       MethodCall (Just (Var "super")) (LibMethod "updateViewConstraints" []) []
 
+-- | Creates the file structure for the app delegate in a Swift project
 appDelegate :: OWAAppInfo -> SwiftFile
 appDelegate appInfo = SwiftFile 
   [ extensionCommentSection "AppDelegate.swift" appInfo 

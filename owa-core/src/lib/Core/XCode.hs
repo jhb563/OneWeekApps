@@ -21,9 +21,7 @@ import           System.Directory
 import           Core.XCode.Templates.Other
 import           Core.XCode.Templates.ProjectFile
 import           Model.OWAAppInfo
-import           Swift.AbSyn
 import           Swift.Print
-import           Swift.Utils
 import           Swift.XCode (initialVC, appDelegate)
 
 ---------------------------------------------------------------------------
