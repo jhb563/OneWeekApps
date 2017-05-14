@@ -21,9 +21,8 @@ import           System.Directory
 import           Core.XCode.Templates.Other
 import           Core.XCode.Templates.ProjectFile
 import           Model.OWAAppInfo
-import           Swift.AbSyn
 import           Swift.Print
-import           Swift.Utils
+import           Swift.XCode (initialVC, appDelegate)
 
 ---------------------------------------------------------------------------
 ------------------------ENTRY METHODS--------------------------------------
@@ -96,117 +95,6 @@ contextFunction _ (Just cName) "companyname" = T.pack $ map toLower cNameNoSpace
 contextFunction _ _ txt = txt
 
 ---------------------------------------------------------------------------
-------------------------FILE BUILDERS--------------------------------------
----------------------------------------------------------------------------
-
-initialVC :: OWAAppInfo -> SwiftFile
-initialVC appInfo = SwiftFile
-  [ extensionCommentSection "ViewController.swift" appInfo
-  , uiKitImportSection 
-  , ClassSection "ViewController" ["UIViewController"] [methodSection] ]
-  where
-    methodSection = MethodImplementationListSection 
-      Nothing
-      [ viewDidLoadMethod, updateViewConstraintsMethod ]
-
-viewDidLoadMethod :: SwiftMethod
-viewDidLoadMethod = SwiftMethod
-  { isInitializer = False
-  , qualifiers = ["override"]
-  , name = "viewDidLoad"
-  , returnType = Nothing
-  , params = []
-  , methodBody = [superStatement, viewUpdateStatement] }
-  where
-    superStatement = ExpressionStatement $
-      MethodCall (Just (Var "super")) (LibMethod "viewDidLoad" []) []
-    viewUpdateStatement = ExpressionStatement $
-      MethodCall (Just (Var "view")) (LibMethod "setNeedsUpdateConstraints" []) []
-
-updateViewConstraintsMethod :: SwiftMethod
-updateViewConstraintsMethod = SwiftMethod
-  { isInitializer = False
-  , qualifiers = ["override"]
-  , name = "updateViewConstraints"
-  , returnType = Nothing
-  , params = []
-  , methodBody = [superStatement] }
-  where
-    superStatement = ExpressionStatement $
-      MethodCall (Just (Var "super")) (LibMethod "updateViewConstraints" []) []
-
-appDelegate :: OWAAppInfo -> SwiftFile
-appDelegate appInfo = SwiftFile 
-  [ extensionCommentSection "AppDelegate.swift" appInfo 
-  , uiKitImportSection 
-  , ClassSpecifierSection "UIApplicationMain"
-  , ClassSection "AppDelegate" ["UIResponder", "UIApplicationDelegate"] [windowSection, methodSection] ]
-  where
-    windowStatement = VarDecl [] "window" (OptionalType (SimpleType "UIWindow")) Nothing
-    windowSection = StatementListSection Nothing True [windowStatement]
-    methodNames =
-      [ "applicationWillResignActive"
-      , "applicationDidEnterBackground"
-      , "applicationWillEnterForeground"
-      , "applicationDidBecomeActive"
-      , "applicationWillTerminate" ]
-    methodSection = MethodImplementationListSection
-      Nothing
-      (launchMethod : map appDelegateMethod methodNames)
-
-appDelegateMethod :: String -> SwiftMethod
-appDelegateMethod methodName = SwiftMethod
-  { isInitializer = False
-  , qualifiers = []
-  , name = methodName
-  , returnType = Nothing
-  , params = [ParamDef (Just "application") "application" (SimpleType "UIApplication")]
-  , methodBody = [] }
-
-launchMethod :: SwiftMethod
-launchMethod = SwiftMethod
-  { isInitializer = False
-  , qualifiers = []
-  , name = "application"
-  , returnType = Just (SimpleType "Bool")
-  , params = 
-    [ ParamDef
-        { paramLabelName = Just "application"
-        , paramTitle = "application"
-        , paramType = SimpleType "UIApplication" } 
-    , ParamDef
-        { paramLabelName = Just "didFinishLaunchingWithOptions"
-        , paramTitle = "launchOptions"
-        , paramType = OptionalType (DictionaryType (SimpleType "NSObject") (SimpleType "AnyObject")) } ]
-  , methodBody = 
-      [ windowStmt
-      , backgroundStmt
-      , mainVCStmt
-      , rootVCStmt
-      , keyAndVisibleStmt
-      , returnStmt ] }
-  where
-    optionWindow = OptionalExpr (Var "window")
-    unwrappedWindow = ExplicitExpr (Var "window")
-    mainScreenParam = PropertyCall
-      (MethodCall (Just (Var "UIScreen")) (LibMethod "mainScreen" []) [])
-      "bounds"
-    windowStmt = AssignStatement
-      (Var "window")
-      (MethodCall (Just (Var "UIWindow")) (LibMethod "init" [Just "frame"]) [mainScreenParam])
-    backgroundStmt = AssignStatement
-      (PropertyCall optionWindow "backgroundColor")
-      (MethodCall (Just (Var "UIColor")) (LibMethod "whiteColor" []) [])
-    mainVCStmt = LetDecl "mainViewController"
-      (MethodCall Nothing (LibMethod "ViewController" []) [])
-    rootVCStmt = AssignStatement
-      (PropertyCall unwrappedWindow "rootViewController")
-      (Var "mainViewController")
-    keyAndVisibleStmt = ExpressionStatement $
-      MethodCall (Just unwrappedWindow) (LibMethod "makeKeyAndVisible" []) []
-    returnStmt = ReturnStatement $ BoolLit True
-
----------------------------------------------------------------------------
 ------------------------DIRECTORIES AND FILES------------------------------
 ---------------------------------------------------------------------------
 
@@ -226,12 +114,12 @@ contentsPath :: FilePath -> String -> FilePath
 contentsPath dir projName = pbxProjDirPath dir projName ++ ".xcworkspace/contents.xcworkspacedata"
 
 baseProjectFilePath :: FilePath -> String -> FilePath
-baseProjectFilePath dir projName = dir ++ "/ios/" ++ projName ++ "/"
+baseProjectFilePath dir projName = dir ++ "/swift/" ++ projName ++ "/"
 
 pbxProjDirPath :: FilePath -> String -> FilePath
-pbxProjDirPath dir projName = dir ++ "/ios/" ++ projName ++ ".xcodeproj/"
+pbxProjDirPath dir projName = dir ++ "/swift/" ++ projName ++ ".xcodeproj/"
 
 directoriesToCreate :: FilePath -> String -> [FilePath]
 directoriesToCreate dir projName =
-  [ dir ++ "/ios/" ++ projName
-  , dir ++ "/ios/" ++ projName ++ ".xcodeproj/.xcworkspace" ]
+  [ dir ++ "/swift/" ++ projName
+  , dir ++ "/swift/" ++ projName ++ ".xcodeproj/.xcworkspace" ]

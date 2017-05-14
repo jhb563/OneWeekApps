@@ -28,6 +28,7 @@ library
       Swift.Print
       Swift.Utils
       Swift.ViewConverter
+      Swift.XCode
   default-language: Haskell2010
 
 test-suite swift-tests

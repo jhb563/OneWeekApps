@@ -143,7 +143,7 @@ removeProducedFilesSwift :: FilePath -> [String] -> IO ()
 removeProducedFilesSwift testDirectory additionalFiles = removeFiles $ map (testDirectory ++) (swiftProducedFiles ++ additionalFiles)
 
 projectExtension :: String
-projectExtension = "/ios/IntegrationApp"
+projectExtension = "/swift/IntegrationApp"
 
 projectExtensionObjc :: String
 projectExtensionObjc = "/objc/IntegrationApp"
@@ -161,10 +161,10 @@ colorImplementationTestExtension :: String
 colorImplementationTestExtension = "/objc/IntegrationApp/UIColor+IGAColors.m.test"
 
 colorSwiftResult :: String
-colorSwiftResult = "/ios/IntegrationApp/UIColor+IGAColors.swift"
+colorSwiftResult = "/swift/IntegrationApp/UIColor+IGAColors.swift"
 
 colorSwiftTest :: String
-colorSwiftTest = "/ios/IntegrationApp/UIColor+IGAColors.swift.test"
+colorSwiftTest = "/swift/IntegrationApp/UIColor+IGAColors.swift.test"
 
 fontHeaderFileExtension :: String
 fontHeaderFileExtension = "/objc/IntegrationApp/UIFont+IGAFonts.h"
@@ -179,10 +179,10 @@ fontImplementationTestExtension :: String
 fontImplementationTestExtension = "/objc/IntegrationApp/UIFont+IGAFonts.m.test"
 
 fontSwiftResult :: String
-fontSwiftResult = "/ios/IntegrationApp/UIFont+IGAFonts.swift"
+fontSwiftResult = "/swift/IntegrationApp/UIFont+IGAFonts.swift"
 
 fontSwiftTest :: String
-fontSwiftTest = "/ios/IntegrationApp/UIFont+IGAFonts.swift.test"
+fontSwiftTest = "/swift/IntegrationApp/UIFont+IGAFonts.swift.test"
 
 alertHeaderFileExtension :: String
 alertHeaderFileExtension = "/objc/IntegrationApp/UIAlertController+IGAAlerts.h"
@@ -197,10 +197,10 @@ alertImplementationTestExtension :: String
 alertImplementationTestExtension = "/objc/IntegrationApp/UIAlertController+IGAAlerts.m.test"
 
 alertSwiftResult :: String
-alertSwiftResult = "/ios/IntegrationApp/UIAlertController+IGAAlerts.swift"
+alertSwiftResult = "/swift/IntegrationApp/UIAlertController+IGAAlerts.swift"
 
 alertSwiftTest :: String
-alertSwiftTest = "/ios/IntegrationApp/UIAlertController+IGAAlerts.swift.test"
+alertSwiftTest = "/swift/IntegrationApp/UIAlertController+IGAAlerts.swift.test"
 
 errorHeaderFileExtension :: String
 errorHeaderFileExtension = "/objc/IntegrationApp/NSError+IGAErrors.h"
@@ -215,10 +215,10 @@ errorImplementationTestExtension :: String
 errorImplementationTestExtension = "/objc/IntegrationApp/NSError+IGAErrors.m.test"
 
 errorSwiftResult :: String
-errorSwiftResult = "/ios/IntegrationApp/NSError+IGAErrors.swift"
+errorSwiftResult = "/swift/IntegrationApp/NSError+IGAErrors.swift"
 
 errorSwiftTest :: String
-errorSwiftTest = "/ios/IntegrationApp/NSError+IGAErrors.swift.test"
+errorSwiftTest = "/swift/IntegrationApp/NSError+IGAErrors.swift.test"
 
 localizedStringFileObjcExtension :: String
 localizedStringFileObjcExtension = "/objc/IntegrationApp/Localizable.strings"
@@ -227,10 +227,10 @@ localizedStringsObjcTestExtension :: String
 localizedStringsObjcTestExtension = "/objc/IntegrationApp/Localizable.strings.test"
 
 localizedStringFileExtension :: String
-localizedStringFileExtension = "/ios/IntegrationApp/Localizable.strings"
+localizedStringFileExtension = "/swift/IntegrationApp/Localizable.strings"
 
 localizedStringsTestExtension :: String
-localizedStringsTestExtension = "/ios/IntegrationApp/Localizable.strings.test"
+localizedStringsTestExtension = "/swift/IntegrationApp/Localizable.strings.test"
 
 lastGenFileExtension :: String
 lastGenFileExtension = "/app/.owa_last_gen"
