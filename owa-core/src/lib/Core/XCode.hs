@@ -21,6 +21,8 @@ import           System.Directory
 import           Core.XCode.Templates.Other
 import           Core.XCode.Templates.ProjectFile
 import           Model.OWAAppInfo
+import           Objc.Print (printStructureToFile)
+import           Objc.XCode (initialVCHeader, initialVCImplementation, appDelegateHeader, appDelegateImplementation)
 import           Swift.Print
 import           Swift.XCode (initialVC, appDelegate)
 
@@ -35,45 +37,85 @@ printBaseXCodeFiles currentDirectory appInfo = do
   mapM_ 
     (createDirectoryIfMissing True) 
     (directoriesToCreate currentDirectory (appName appInfo))
-  printVC currentDirectory appInfo
-  printAppDelegate currentDirectory appInfo
-  printInfo currentDirectory projName
-  printContents currentDirectory projName cName
-  printPbxProj currentDirectory projName cName
-  where
-    projName = appName appInfo
-    cName = companyName appInfo
+  printSwiftFiles currentDirectory appInfo
+  printObjcFiles currentDirectory appInfo
 
 ---------------------------------------------------------------------------
 ------------------------FILE PRINTERS--------------------------------------
 ---------------------------------------------------------------------------
 
-printVC :: FilePath -> OWAAppInfo -> IO ()
-printVC dir info = printSwiftStructureToFile
+printSwiftFiles :: FilePath -> OWAAppInfo -> IO ()
+printSwiftFiles currentDirectory appInfo = do
+  printSwiftVC currentDirectory appInfo
+  printSwiftAppDelegate currentDirectory appInfo
+  printInfo currentDirectory projName swiftDirName
+  printContents currentDirectory projName cName swiftDirName
+  printPbxProj currentDirectory projName cName swiftDirName
+  where
+    projName = appName appInfo
+    cName = companyName appInfo
+    swiftDirName = "swift"
+
+printSwiftVC :: FilePath -> OWAAppInfo -> IO ()
+printSwiftVC dir info = printSwiftStructureToFile
   (initialVC info) 
-  (vcPath dir (appName info)) 
+  (swiftVcPath dir (appName info)) 
 
-printAppDelegate :: FilePath -> OWAAppInfo -> IO ()
-printAppDelegate dir info = printSwiftStructureToFile
+printSwiftAppDelegate :: FilePath -> OWAAppInfo -> IO ()
+printSwiftAppDelegate dir info = printSwiftStructureToFile
   (appDelegate info)
-  (appDelegatePath dir (appName info))
+  (swiftAppDelegatePath dir (appName info))
 
-printInfo :: FilePath -> String -> IO ()
-printInfo dir projName = do
-  let fullPath = infoPath dir projName
+printObjcFiles :: FilePath -> OWAAppInfo -> IO ()
+printObjcFiles currentDirectory appInfo = do
+  printObjcVCHeader currentDirectory appInfo
+  printObjcVCM currentDirectory appInfo
+  printObjcAppDelegateHeader currentDirectory appInfo
+  printObjcAppDelegateM currentDirectory appInfo
+  printInfo currentDirectory projName objcDirName
+  printContents currentDirectory projName cName objcDirName
+  printPbxProj currentDirectory projName cName objcDirName
+  where
+    projName = appName appInfo
+    cName = companyName appInfo
+    objcDirName = "objc"
+
+printObjcVCHeader :: FilePath -> OWAAppInfo -> IO ()
+printObjcVCHeader dir info = printStructureToFile
+  (initialVCHeader info)
+  (objcVcHeaderPath dir (appName info)) 
+
+printObjcVCM :: FilePath -> OWAAppInfo -> IO ()
+printObjcVCM dir info = printStructureToFile
+  (initialVCImplementation info)
+  (objcVcMPath dir (appName info)) 
+
+printObjcAppDelegateHeader :: FilePath -> OWAAppInfo -> IO ()
+printObjcAppDelegateHeader dir info = printStructureToFile
+  (appDelegateHeader info)
+  (objcAppDelegateHeaderPath dir (appName info))
+
+printObjcAppDelegateM :: FilePath -> OWAAppInfo -> IO ()
+printObjcAppDelegateM dir info = printStructureToFile
+  (appDelegateImplementation info)
+  (objcAppDelegateMPath dir (appName info))
+
+printInfo :: FilePath -> String -> String -> IO ()
+printInfo dir projName langType = do
+  let fullPath = infoPath dir projName langType
   writeFile fullPath infoPListTemplate
 
-printPbxProj :: FilePath -> String -> Maybe String -> IO ()
-printPbxProj dir projName cNameMaybe = writeFile fullPath (TL.unpack interpolatedText)
+printPbxProj :: FilePath -> String -> Maybe String -> String -> IO ()
+printPbxProj dir projName cNameMaybe langType = writeFile fullPath (TL.unpack interpolatedText)
   where
-    fullPath = pbxProjPath dir projName
+    fullPath = pbxProjPath dir projName langType
     temp = template pbxProjTemplate
     interpolatedText = render temp (contextFunction projName cNameMaybe)
 
-printContents :: FilePath -> String -> Maybe String -> IO ()
-printContents dir projName cNameMaybe = writeFile fullPath (TL.unpack interpolatedText)
+printContents :: FilePath -> String -> Maybe String -> String -> IO ()
+printContents dir projName cNameMaybe langType = writeFile fullPath (TL.unpack interpolatedText)
   where
-    fullPath = contentsPath dir projName
+    fullPath = contentsPath dir projName langType
     temp = template contentsTemplate
     interpolatedText = render temp (contextFunction projName cNameMaybe)
 
@@ -98,28 +140,42 @@ contextFunction _ _ txt = txt
 ------------------------DIRECTORIES AND FILES------------------------------
 ---------------------------------------------------------------------------
 
-vcPath :: FilePath -> String -> FilePath
-vcPath dir projName = baseProjectFilePath dir projName ++ "ViewController.swift"
+swiftVcPath :: FilePath -> String -> FilePath
+swiftVcPath dir projName = baseProjectFilePath dir projName "swift" ++ "ViewController.swift"
 
-appDelegatePath :: FilePath -> String -> FilePath
-appDelegatePath dir projName = baseProjectFilePath dir projName ++ "AppDelegate.swift"
+swiftAppDelegatePath :: FilePath -> String -> FilePath
+swiftAppDelegatePath dir projName = baseProjectFilePath dir projName "swift" ++ "AppDelegate.swift"
 
-infoPath :: FilePath -> String -> FilePath
-infoPath dir projName = baseProjectFilePath dir projName ++ "Info.plist"
+objcVcHeaderPath :: FilePath -> String -> FilePath
+objcVcHeaderPath dir projName = baseProjectFilePath dir projName "objc" ++ "ViewController.h"
 
-pbxProjPath :: FilePath -> String -> FilePath
-pbxProjPath dir projName = pbxProjDirPath dir projName ++ "project.pbxproj"
+objcVcMPath :: FilePath -> String -> FilePath
+objcVcMPath dir projName = baseProjectFilePath dir projName "objc" ++ "ViewController.m"
 
-contentsPath :: FilePath -> String -> FilePath
-contentsPath dir projName = pbxProjDirPath dir projName ++ ".xcworkspace/contents.xcworkspacedata"
+objcAppDelegateHeaderPath :: FilePath -> String -> FilePath
+objcAppDelegateHeaderPath dir projName = baseProjectFilePath dir projName "objc" ++ "AppDelegate.h"
 
-baseProjectFilePath :: FilePath -> String -> FilePath
-baseProjectFilePath dir projName = dir ++ "/swift/" ++ projName ++ "/"
+objcAppDelegateMPath :: FilePath -> String -> FilePath
+objcAppDelegateMPath dir projName = baseProjectFilePath dir projName "objc" ++ "AppDelegate.m"
 
-pbxProjDirPath :: FilePath -> String -> FilePath
-pbxProjDirPath dir projName = dir ++ "/swift/" ++ projName ++ ".xcodeproj/"
+infoPath :: FilePath -> String -> String -> FilePath
+infoPath dir projName langType = baseProjectFilePath dir projName langType ++ "Info.plist"
+
+pbxProjPath :: FilePath -> String -> String -> FilePath
+pbxProjPath dir projName langType = pbxProjDirPath dir projName langType ++ "project.pbxproj"
+
+contentsPath :: FilePath -> String -> String -> FilePath
+contentsPath dir projName langType = pbxProjDirPath dir projName langType ++ ".xcworkspace/contents.xcworkspacedata"
+
+baseProjectFilePath :: FilePath -> String -> String -> FilePath
+baseProjectFilePath dir projName langType = dir ++ "/" ++ langType ++ "/" ++ projName ++ "/"
+
+pbxProjDirPath :: FilePath -> String -> String -> FilePath
+pbxProjDirPath dir projName langType = dir ++ "/" ++ langType ++ "/" ++ projName ++ ".xcodeproj/"
 
 directoriesToCreate :: FilePath -> String -> [FilePath]
 directoriesToCreate dir projName =
   [ dir ++ "/swift/" ++ projName
-  , dir ++ "/swift/" ++ projName ++ ".xcodeproj/.xcworkspace" ]
+  , dir ++ "/swift/" ++ projName ++ ".xcodeproj/.xcworkspace"
+  , dir ++ "/objc/" ++ projName
+  , dir ++ "/objc/" ++ projName ++ ".xcodeproj/.xcworkspace" ]
