@@ -39,7 +39,8 @@ library
       Core.Terminal
       Core.Types
       Core.XCode.Templates.Other
-      Core.XCode.Templates.ProjectFile
+      Core.XCode.Templates.ProjectFileObjc
+      Core.XCode.Templates.ProjectFileSwift
       Paths_owa_core
   default-language: Haskell2010
 

@@ -19,10 +19,12 @@ import           Data.Text.Template
 import           System.Directory
 
 import           Core.XCode.Templates.Other
-import           Core.XCode.Templates.ProjectFile
+import           Core.XCode.Templates.ProjectFileObjc (objcPbxProjTemplate)
+import           Core.XCode.Templates.ProjectFileSwift (swiftPbxProjTemplate)
 import           Model.OWAAppInfo
 import           Objc.Print (printStructureToFile)
-import           Objc.XCode (initialVCHeader, initialVCImplementation, appDelegateHeader, appDelegateImplementation)
+import           Objc.XCode (initialVCHeader, initialVCImplementation, appDelegateHeader, 
+                             appDelegateImplementation, mainFileM)
 import           Swift.Print
 import           Swift.XCode (initialVC, appDelegate)
 
@@ -50,7 +52,7 @@ printSwiftFiles currentDirectory appInfo = do
   printSwiftAppDelegate currentDirectory appInfo
   printInfo currentDirectory projName swiftDirName
   printContents currentDirectory projName cName swiftDirName
-  printPbxProj currentDirectory projName cName swiftDirName
+  printSwiftPbxProj currentDirectory projName cName
   where
     projName = appName appInfo
     cName = companyName appInfo
@@ -66,6 +68,14 @@ printSwiftAppDelegate dir info = printSwiftStructureToFile
   (appDelegate info)
   (swiftAppDelegatePath dir (appName info))
 
+printSwiftPbxProj :: FilePath -> String -> Maybe String -> IO ()
+printSwiftPbxProj dir projName cNameMaybe = writeFile fullPath (TL.unpack interpolatedText)
+  where
+    langType = "swift"
+    fullPath = pbxProjPath dir projName langType
+    temp = template swiftPbxProjTemplate
+    interpolatedText = render temp (contextFunction projName cNameMaybe)
+
 printObjcFiles :: FilePath -> OWAAppInfo -> IO ()
 printObjcFiles currentDirectory appInfo = do
   printObjcVCHeader currentDirectory appInfo
@@ -74,7 +84,8 @@ printObjcFiles currentDirectory appInfo = do
   printObjcAppDelegateM currentDirectory appInfo
   printInfo currentDirectory projName objcDirName
   printContents currentDirectory projName cName objcDirName
-  printPbxProj currentDirectory projName cName objcDirName
+  printObjcPbxProj currentDirectory projName cName
+  printObjcMainFile currentDirectory appInfo
   where
     projName = appName appInfo
     cName = companyName appInfo
@@ -100,17 +111,23 @@ printObjcAppDelegateM dir info = printStructureToFile
   (appDelegateImplementation info)
   (objcAppDelegateMPath dir (appName info))
 
+printObjcPbxProj :: FilePath -> String -> Maybe String -> IO ()
+printObjcPbxProj dir projName cNameMaybe = writeFile fullPath (TL.unpack interpolatedText)
+  where
+    langType = "objc"
+    fullPath = pbxProjPath dir projName langType
+    temp = template objcPbxProjTemplate
+    interpolatedText = render temp (contextFunction projName cNameMaybe)
+
+printObjcMainFile :: FilePath -> OWAAppInfo -> IO ()
+printObjcMainFile dir info = printStructureToFile
+  (mainFileM info)
+  (objcMainPath dir (appName info))
+
 printInfo :: FilePath -> String -> String -> IO ()
 printInfo dir projName langType = do
   let fullPath = infoPath dir projName langType
   writeFile fullPath infoPListTemplate
-
-printPbxProj :: FilePath -> String -> Maybe String -> String -> IO ()
-printPbxProj dir projName cNameMaybe langType = writeFile fullPath (TL.unpack interpolatedText)
-  where
-    fullPath = pbxProjPath dir projName langType
-    temp = template pbxProjTemplate
-    interpolatedText = render temp (contextFunction projName cNameMaybe)
 
 printContents :: FilePath -> String -> Maybe String -> String -> IO ()
 printContents dir projName cNameMaybe langType = writeFile fullPath (TL.unpack interpolatedText)
@@ -157,6 +174,9 @@ objcAppDelegateHeaderPath dir projName = baseProjectFilePath dir projName "objc"
 
 objcAppDelegateMPath :: FilePath -> String -> FilePath
 objcAppDelegateMPath dir projName = baseProjectFilePath dir projName "objc" ++ "AppDelegate.m"
+
+objcMainPath :: FilePath -> String -> FilePath
+objcMainPath dir projName = baseProjectFilePath dir projName "objc" ++ "main.m"
 
 infoPath :: FilePath -> String -> String -> FilePath
 infoPath dir projName langType = baseProjectFilePath dir projName langType ++ "Info.plist"

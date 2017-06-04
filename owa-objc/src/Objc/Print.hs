@@ -44,6 +44,7 @@ sectionDoc (MethodHeaderListSection maybeComment methods) = methodHeaderListSect
 sectionDoc (MethodImplementationListSection maybePragma methods) = methodImplementationListSectionDoc maybePragma methods
 sectionDoc (LocalizedStringListSection name statements) = text "//" <+> text name PPrint.<$>
   vcat (map statementDoc statements) PPrint.<$> empty
+sectionDoc CMainMethodSection = cMethodSectionDoc
 
 commentDoc :: String -> Doc
 commentDoc [] = text "//"
@@ -204,3 +205,14 @@ pragmaDoc sectionName = text "#pragma mark -" <+> text sectionName
 
 endDoc :: Doc
 endDoc = text "@end" PPrint.<$> empty
+
+-- Unless such a time comes as we'll want to add more C functionality, there's no sense
+-- extending the Objective C abstract syntax to handle one C function. So just hardcode this.
+cMethodSectionDoc :: Doc
+cMethodSectionDoc = 
+  text "int main(int argc, char* argv[]) {" PPrint.<$>
+  text "  @autoreleasepool {" PPrint.<$>
+  text "    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));" PPrint.<$>
+  text "  }" PPrint.<$>
+  text "}" PPrint.<$>
+  empty

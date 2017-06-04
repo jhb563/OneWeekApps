@@ -3,6 +3,7 @@
 -- initialVCImplementation :: OWAAppInfo -> ObjcFile
 -- appDelegateHeader :: OWAAppInfo -> ObjcFile
 -- appDelegateImplementation :: OWAAppInfo -> ObjcFile
+-- mainFileM :: OWAAppInfo -> ObjcFile
 -- which each take an appInfo object and a list of alerts and return a
 -- file structure of objective C statements
 --
@@ -53,6 +54,10 @@ xcodeTest1 testDirectory = describe "Print XCode File Structures for app info 1"
     (testDirectory ++ viewController1MResult) `filesShouldMatch`
       (testDirectory ++ viewController1MTest)
 
+  it "The main file should match" $
+    (testDirectory ++ main1Result) `filesShouldMatch`
+      (testDirectory ++ main1Test)
+
 xcodeTest2 :: FilePath -> Spec
 xcodeTest2 testDirectory = describe "Print XCode File Structures for app info 2" $ do
   it "The app delegate header should match" $
@@ -70,6 +75,10 @@ xcodeTest2 testDirectory = describe "Print XCode File Structures for app info 2"
   it "The view controller implementation should match" $
     (testDirectory ++ viewController2MResult) `filesShouldMatch`
       (testDirectory ++ viewController2MTest)
+
+  it "The main file should match" $
+    (testDirectory ++ main2Result) `filesShouldMatch`
+      (testDirectory ++ main2Test)
 
 appInfo1 :: OWAAppInfo
 appInfo1 = OWAAppInfo
@@ -93,10 +102,12 @@ testFileStructures =
   , appDelegateImplementation appInfo1
   , initialVCHeader appInfo1
   , initialVCImplementation appInfo1
+  , mainFileM appInfo1
   , appDelegateHeader appInfo2
   , appDelegateImplementation appInfo2
   , initialVCHeader appInfo2
   , initialVCImplementation appInfo2
+  , mainFileM appInfo2
   ]
 
 resultsFiles :: [FilePath]
@@ -105,10 +116,12 @@ resultsFiles =
   , appDelegate1MResult
   , viewController1HeaderResult
   , viewController1MResult
+  , main1Result
   , appDelegate2HeaderResult
   , appDelegate2MResult
   , viewController2HeaderResult
   , viewController2MResult
+  , main2Result
   ]
 
 appDelegate1HeaderResult :: FilePath
@@ -135,6 +148,12 @@ viewController2HeaderResult = "ViewController2.h"
 viewController2MResult :: FilePath
 viewController2MResult = "ViewController2.m"
 
+main1Result :: FilePath
+main1Result = "main1.m"
+
+main2Result :: FilePath
+main2Result = "main2.m"
+
 appDelegate1HeaderTest :: FilePath
 appDelegate1HeaderTest = "AppDelegate1.h.test"
 
@@ -158,3 +177,9 @@ viewController2HeaderTest = "ViewController2.h.test"
 
 viewController2MTest :: FilePath
 viewController2MTest = "ViewController2.m.test"
+
+main1Test :: FilePath
+main1Test = "main1.m.test"
+
+main2Test :: FilePath
+main2Test = "main2.m.test"

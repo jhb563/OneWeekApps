@@ -104,24 +104,56 @@ appDirectoryExtension = testDirectoryExtension ++ "app/"
 
 allGeneratedXCodeFiles :: [FilePath]
 allGeneratedXCodeFiles =
-  [ generatedVCExtension
-  , generatedAppDelegateExtension
-  , generatedPlistExtension
-  , generatedPbxProjExtension
-  , generatedWorkspaceExtension ]
+  [ generatedSwiftVCExtension
+  , generatedSwiftAppDelegateExtension
+  , generatedSwiftPlistExtension
+  , generatedSwiftPbxProjExtension
+  , generatedSwiftWorkspaceExtension
+  , generatedObjcVCHeaderExtension
+  , generatedObjcVCMExtension
+  , generatedObjcMainExtension
+  , generatedObjcAppDelegateHeaderExtension
+  , generatedObjcAppDelegateMExtension
+  , generatedObjcPlistExtension
+  , generatedObjcPbxProjExtension
+  , generatedObjcWorkspaceExtension
+  ]
 
-generatedVCExtension :: FilePath
-generatedVCExtension = "swift/One Week Apps/ViewController.swift"
+generatedSwiftVCExtension :: FilePath
+generatedSwiftVCExtension = "swift/One Week Apps/ViewController.swift"
 
-generatedAppDelegateExtension :: FilePath
-generatedAppDelegateExtension = "swift/One Week Apps/AppDelegate.swift" 
+generatedSwiftAppDelegateExtension :: FilePath
+generatedSwiftAppDelegateExtension = "swift/One Week Apps/AppDelegate.swift" 
 
-generatedPlistExtension :: FilePath
-generatedPlistExtension = "swift/One Week Apps/Info.plist" 
+generatedSwiftPlistExtension :: FilePath
+generatedSwiftPlistExtension = "swift/One Week Apps/Info.plist" 
 
-generatedPbxProjExtension :: FilePath
-generatedPbxProjExtension = "swift/One Week Apps.xcodeproj/project.pbxproj"
+generatedSwiftPbxProjExtension :: FilePath
+generatedSwiftPbxProjExtension = "swift/One Week Apps.xcodeproj/project.pbxproj"
 
-generatedWorkspaceExtension :: FilePath
-generatedWorkspaceExtension = "swift/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"
+generatedSwiftWorkspaceExtension :: FilePath
+generatedSwiftWorkspaceExtension = "swift/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"
 
+generatedObjcVCHeaderExtension :: FilePath
+generatedObjcVCHeaderExtension = "objc/One Week Apps/ViewController.h"
+
+generatedObjcVCMExtension :: FilePath
+generatedObjcVCMExtension = "objc/One Week Apps/ViewController.m"
+
+generatedObjcMainExtension :: FilePath
+generatedObjcMainExtension = "objc/One Week Apps/main.m"
+
+generatedObjcAppDelegateHeaderExtension :: FilePath
+generatedObjcAppDelegateHeaderExtension = "objc/One Week Apps/AppDelegate.h" 
+
+generatedObjcAppDelegateMExtension :: FilePath
+generatedObjcAppDelegateMExtension = "objc/One Week Apps/AppDelegate.m" 
+
+generatedObjcPlistExtension :: FilePath
+generatedObjcPlistExtension = "objc/One Week Apps/Info.plist" 
+
+generatedObjcPbxProjExtension :: FilePath
+generatedObjcPbxProjExtension = "objc/One Week Apps.xcodeproj/project.pbxproj"
+
+generatedObjcWorkspaceExtension :: FilePath
+generatedObjcWorkspaceExtension = "objc/One Week Apps.xcodeproj/.xcworkspace/contents.xcworkspacedata"

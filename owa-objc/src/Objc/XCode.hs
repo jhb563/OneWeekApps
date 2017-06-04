@@ -11,7 +11,8 @@ module Objc.XCode
   ( initialVCHeader
   , initialVCImplementation
   , appDelegateHeader
-  , appDelegateImplementation )
+  , appDelegateImplementation 
+  , mainFileM )
   where
 
 import Model.OWAAppInfo
@@ -82,6 +83,13 @@ appDelegateImplementation appInfo = ObjcFile
           ])
     delegateFunction name = ObjcMethod False "application" (SimpleType "void")
       [ParamDef name (PointerType "UIApplication") "application"] []
+
+mainFileM :: OWAAppInfo -> ObjcFile
+mainFileM appInfo = ObjcFile
+  [ topCommentSection "main.m" appInfo 
+  , ImportsSection [ModuleImport "UIKit", FileImport "AppDelegate.h"]
+  , CMainMethodSection
+  ]
 
 didLaunchFunction :: ObjcMethod
 didLaunchFunction = ObjcMethod False "app" (SimpleType "BOOL")

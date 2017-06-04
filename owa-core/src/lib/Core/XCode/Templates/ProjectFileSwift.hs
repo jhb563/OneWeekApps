@@ -1,20 +1,20 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 {-|
-Module      : Core.XCode.Templates.ProjectFile
-Description : Contains template strings for the .pbxproj file.
+Module      : Core.XCode.Templates.ProjectFileSwift
+Description : Contains template strings for the .pbxproj file in a Swift project
 Copyright   : (c) James Bowen, 2016
 License     : MIT
 Maintainer  : jhbowen047@gmail.com
 -}
 
-module Core.XCode.Templates.ProjectFile where
+module Core.XCode.Templates.ProjectFileSwift where
 
 import Data.Text
 
 -- | Template for for project.pbxproj file in XCode.
-pbxProjTemplate :: Text
-pbxProjTemplate = "\
+swiftPbxProjTemplate :: Text
+swiftPbxProjTemplate = "\
 \// !$$*UTF8*$$!\n\
 \{\n\
 \    archiveVersion = 1;\n\
