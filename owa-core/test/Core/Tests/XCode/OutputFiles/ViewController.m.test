@@ -1,0 +1,24 @@
+//
+// ViewController.m
+// XCodeTestProject
+//
+// Created By James Bowen 4/30/2016
+// Copyright (c) 2016 One Week Apps. All Rights Reserved
+//
+
+#import "ViewController.h"
+
+@implementation ViewController
+
+#pragma mark - Lifecycle
+
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  [self.view setNeedsUpdateConstraints];
+}
+
+- (void)updateViewConstraints {
+  [super updateViewConstraints];
+}
+
+@end

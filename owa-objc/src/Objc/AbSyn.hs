@@ -30,7 +30,8 @@ data FileSection =
   ImplementationSection String (Maybe String) [FileSection] |
   MethodHeaderListSection (Maybe String) [ObjcMethod] |
   MethodImplementationListSection (Maybe String) [ObjcMethod] |
-  LocalizedStringListSection String [ObjcStatement]
+  LocalizedStringListSection String [ObjcStatement] |
+  CMainMethodSection
   deriving (Show, Eq)
 
 -- | 'Import' represents an import statement, typically at the top of an
