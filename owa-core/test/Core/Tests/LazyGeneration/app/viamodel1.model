@@ -1,0 +1,12 @@
+Model
+  Type VIAModel1
+  Field myIntArray
+    Type Array Int
+  Field arrayMaybes
+    Type Array Maybe String
+  Field maybeArray
+    Type Maybe Array Float 
+  Field customs
+    Type Array CustomType SecondModel
+  Field nestedMaybe
+    Type Maybe Maybe String

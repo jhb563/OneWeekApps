@@ -23,7 +23,7 @@ runLazyCodeGenerationTests :: FilePath -> IO ()
 runLazyCodeGenerationTests currentDirectory = do
   let testDirectory = currentDirectory ++ appDirectoryExtension
   let outputDirectory = currentDirectory ++ outputDirectoryExtension
-  let dirTuple = (testDirectory, outputDirectory)
+  let dirTupleSwift = (testDirectory, outputDirectory)
   let outputDirectoryObjc = currentDirectory ++ outputDirectoryExtensionObjc
   let dirTupleObjc = (testDirectory, outputDirectoryObjc)
   hspec $ do
@@ -36,22 +36,26 @@ runLazyCodeGenerationTests currentDirectory = do
     testCorrectFilesChangeObjc dirTupleObjc view1Pair "View 1 regenerated properly"
     testCorrectFilesChangeObjc dirTupleObjc view2Pair "View 2 regenerated properly"
     testCorrectFilesChangeObjc dirTupleObjc view3Pair "View 3 regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc model1Pair "Model 1 regenerated properly"
+    testCorrectFilesChangeObjc dirTupleObjc model2Pair "Model 2 regenerated properly"
     testCorrectFilesChangeObjc dirTupleObjc stringsPair "Strings regenerated properly"
     testCorrectFilesChangeObjc dirTupleObjc colorFontsPair "Colors and fonts regenerated together"
     testCorrectFilesChangeObjc dirTupleObjc alertStringsViewPair 
       "Alerts, strings, and a view regenerated together"
-    testCorrectFilesChangeSwift dirTuple noChangePairSwift "(swift) If no files changed, no regeneration"
-    testCorrectFilesChangeSwift dirTuple appInfoPairSwift "(swift) If app info changes, all files regenerate"
-    testCorrectFilesChangeSwift dirTuple colorsPairSwift "(swift) Colors regenerated properly"
-    testCorrectFilesChangeSwift dirTuple fontsPairSwift "(swift) Fonts regenerated properly"
-    testCorrectFilesChangeSwift dirTuple alertsPairSwift "(swift) Alerts regenerated properly"
-    testCorrectFilesChangeSwift dirTuple errorsPairSwift "(swift) Errors regenerated properly"
-    testCorrectFilesChangeSwift dirTuple view1PairSwift "(swift) View 1 regenerated properly"
-    testCorrectFilesChangeSwift dirTuple view2PairSwift "(swift) View 2 regenerated properly"
-    testCorrectFilesChangeSwift dirTuple view3PairSwift "(swift) View 3 regenerated properly"
-    testCorrectFilesChangeSwift dirTuple stringsPairSwift "(swift) Strings regenerated properly"
-    testCorrectFilesChangeSwift dirTuple colorFontsPairSwift "(swift) Colors and fonts regenerated together"
-    testCorrectFilesChangeSwift dirTuple alertStringsViewPairSwift 
+    testCorrectFilesChangeSwift dirTupleSwift noChangePairSwift "(swift) If no files changed, no regeneration"
+    testCorrectFilesChangeSwift dirTupleSwift appInfoPairSwift "(swift) If app info changes, all files regenerate"
+    testCorrectFilesChangeSwift dirTupleSwift colorsPairSwift "(swift) Colors regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift fontsPairSwift "(swift) Fonts regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift alertsPairSwift "(swift) Alerts regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift errorsPairSwift "(swift) Errors regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift view1PairSwift "(swift) View 1 regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift view2PairSwift "(swift) View 2 regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift view3PairSwift "(swift) View 3 regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift model1PairSwift "(swift) Model 1 regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift model2PairSwift "(swift) Model 2 regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift stringsPairSwift "(swift) Strings regenerated properly"
+    testCorrectFilesChangeSwift dirTupleSwift colorFontsPairSwift "(swift) Colors and fonts regenerated together"
+    testCorrectFilesChangeSwift dirTupleSwift alertStringsViewPairSwift 
       "(swift) Alerts, strings, and a view regenerated together"
     testMultiLanguageFilesChange
       (beforeHookWithArgs ["generate"] ["generate", "--swift"] producedFiles)
@@ -93,6 +97,12 @@ view2Pair = ([viewsInput2], [producedView2Header, producedView2M])
 view3Pair :: ([FilePath], [FilePath])
 view3Pair = ([viewsInput3], [producedView3Header, producedView3M])
 
+model1Pair :: ([FilePath], [FilePath])
+model1Pair = ([modelsInput1], [producedModel1Header, producedModel1M])
+
+model2Pair :: ([FilePath], [FilePath])
+model2Pair = ([modelsInput2], [producedModel2Header, producedModel2M])
+
 stringsPair :: ([FilePath], [FilePath])
 stringsPair = ([stringsInput1], [producedStrings])
 
@@ -132,6 +142,12 @@ view2PairSwift = ([viewsInput2], [producedView2Swift])
 
 view3PairSwift :: ([FilePath], [FilePath])
 view3PairSwift = ([viewsInput3], [producedView3Swift])
+
+model1PairSwift :: ([FilePath], [FilePath])
+model1PairSwift = ([modelsInput1], [producedModel1Swift])
+
+model2PairSwift :: ([FilePath], [FilePath])
+model2PairSwift = ([modelsInput2], [producedModel2Swift])
 
 stringsPairSwift :: ([FilePath], [FilePath])
 stringsPairSwift = ([stringsInput1], [producedStrings])
@@ -266,7 +282,9 @@ producedFiles = [producedColorHeader, producedColorM,
   producedStrings,
   producedView1Header, producedView1M,
   producedView2Header, producedView2M,
-  producedView3Header, producedView3M]
+  producedView3Header, producedView3M,
+  producedModel1Header, producedModel1M,
+  producedModel2Header, producedModel2M]
 
 producedFilesSwift :: [FilePath]
 producedFilesSwift = 
@@ -277,7 +295,9 @@ producedFilesSwift =
   , producedStrings
   , producedView1Swift
   , producedView2Swift
-  , producedView3Swift ]
+  , producedView3Swift 
+  , producedModel1Swift
+  , producedModel2Swift]
 
 allInputFiles :: [FilePath]
 allInputFiles = 
@@ -291,7 +311,10 @@ allInputFiles =
   , viewsInput1
   , viewsInput2
   , viewsInput3 
-  , stringsInput1 ]
+  , stringsInput1 
+  , modelsInput1
+  , modelsInput2
+  ]
 
 lastGenFile :: FilePath
 lastGenFile = "/.owa_last_gen"
@@ -391,6 +414,30 @@ producedView3M = "/VIAThirdView.m"
 
 producedView3Swift :: FilePath
 producedView3Swift = "/VIAThirdView.swift"
+
+modelsInput1 :: FilePath
+modelsInput1 = "/viamodel1.model"
+
+producedModel1Header :: FilePath
+producedModel1Header = "/VIAModel1.h"
+
+producedModel1M :: FilePath
+producedModel1M = "/VIAModel1.m"
+
+producedModel1Swift :: FilePath
+producedModel1Swift = "/VIAModel1.swift"
+
+modelsInput2 :: FilePath
+modelsInput2 = "/viamodel2.model"
+
+producedModel2Header :: FilePath
+producedModel2Header = "/VIAModel2.h"
+
+producedModel2M :: FilePath
+producedModel2M = "/VIAModel2.m"
+
+producedModel2Swift :: FilePath
+producedModel2Swift = "/VIAModel2.swift"
 
 appInfoFile :: FilePath
 appInfoFile = "/app.info"
