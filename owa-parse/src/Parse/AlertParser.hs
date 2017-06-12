@@ -39,11 +39,11 @@ parseAlertsFromFile fPath = do
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndAlerts -> let (errors, alerts) = partitionEithers errorsAndAlerts in
       if not (null errors)
-        then return $ Left (map (attachFileName source) errors)
+        then return $ Left errors
         else return $ Right alerts
 
 parseAlertContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAAlert]
-parseAlertContents = Text.Parsec.runParser
+parseAlertContents source = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     results <- alertParser `endBy` commentOrSpacesParser
@@ -51,8 +51,10 @@ parseAlertContents = Text.Parsec.runParser
     return results)
   GenericParserState {
     indentationLevel = [],
-    shouldUpdate = False
-  } 
+    shouldUpdate = False,
+    parseFileName = source
+  }
+  source
 
 ---------------------------------------------------------------------------
 --------------------PARSERS------------------------------------------------
@@ -67,9 +69,10 @@ alertParser = do
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   let maybeAlert = alertFromNameAndAttrMap name attrMap
+  source <- parseFileName <$> getState
   case maybeAlert of
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap
     }

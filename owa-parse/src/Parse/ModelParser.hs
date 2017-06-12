@@ -47,9 +47,7 @@ parseModelFromFile fPath = do
   case errorOrModel of
     Left parseError -> return (Left [ParsecError parseError])
     Right itemErrsOrModel -> case itemErrsOrModel of
-      -- TODO In this parser and all parsers, the file name should be part of
-      -- the state instead of being attached at the end.
-      Left itemErrs -> return $ Left (map (U.attachFileName source) itemErrs)
+      Left itemErrs -> return $ Left itemErrs
       Right model -> return $ Right model
 
 parseModelContents :: String -> String -> Either P.ParseError (Either [OWAParseError] OWAModel)
@@ -62,7 +60,9 @@ parseModelContents source = P.runParser
     return result)
   GenericParserState
     { indentationLevel = []
-    , shouldUpdate = False }
+    , shouldUpdate = False 
+    , parseFileName = source
+    }
   source
 
 -------------------------------------------------------------------------------
@@ -93,15 +93,16 @@ fieldParser = do
   _ <- many $ P.try U.indentedComment
   fieldAttrs <- fieldAttributeParser `sepEndBy` many (P.try U.indentedComment)
   let maybeField = fieldFromAttrs fieldName' fieldAttrs
+  source <- parseFileName <$> P.getState
   let finalFieldVal = case maybeField of
-                        Nothing -> FieldErrs [errorForField fieldName']
+                        Nothing -> FieldErrs [errorForField fieldName' source]
                         Just f -> FieldVal f
   P.modifyState U.reduceIndentationLevel
   return (fieldName', finalFieldVal)
   where
     -- Currently the only field we can be missing is type
-    errorForField name = ObjectError
-      { fileName = ""
+    errorForField name sourceFile = ObjectError
+      { fileName = sourceFile
       , itemName = name
       , missingRequiredAttributes = ["Type"] }
 

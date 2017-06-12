@@ -38,31 +38,36 @@ parseAppInfoFromFile fPath = do
   let errorOrAppInfo = parseAppInfo source contents
   case errorOrAppInfo of
     Left parseError -> return (Left [ParsecError parseError])
-    Right (Left objectError) -> return $ Left [attachFileName source objectError]
+    Right (Left objectError) -> return $ Left [objectError]
     Right (Right appInfo) -> return $ Right appInfo
 
 parseAppInfo :: String -> String -> Either ParseError (Either OWAParseError OWAAppInfo)
-parseAppInfo = Text.Parsec.runParser
+parseAppInfo source = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     appInfo <- appInfoParser
     commentOrSpacesParser
     eof
     return appInfo)
-  Identity
+  GenericParserState
+    { indentationLevel = []
+    , shouldUpdate = False
+    , parseFileName = source }
+  source
     
 -------------------------------------------------------------------------------
 ----------------------PARSERS--------------------------------------------------
 -------------------------------------------------------------------------------
 
-appInfoParser :: GenParser Char st (Either OWAParseError OWAAppInfo)
+appInfoParser :: GenParser Char GenericParserState (Either OWAParseError OWAAppInfo)
 appInfoParser = do
   attrs <- appInfoAttrLine `sepEndBy1` many (Text.Parsec.try singleTrailingComment)
   let attrMap = Map.fromList attrs
   let maybeAppInfo = appInfoFromAttrMap attrMap
+  source <- parseFileName <$> getState
   case maybeAppInfo of
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = "appInfo",
       missingRequiredAttributes = missingAttrs attrMap
     }

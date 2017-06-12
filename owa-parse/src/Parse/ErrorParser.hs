@@ -40,11 +40,11 @@ parseErrorsFromFile fPath = do
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndOWAErrors -> let (errors, owaErrors) = partitionEithers (concat errorsAndOWAErrors) in
       if not (null errors)
-        then return $ Left (map (attachFileName source) errors)
+        then return $ Left errors
         else return $ Right owaErrors
 
 parseErrorContents :: FilePath -> String -> Either ParseError [[Either OWAParseError OWAError]]
-parseErrorContents = Text.Parsec.runParser 
+parseErrorContents source = Text.Parsec.runParser 
   (do
     results <- multiErrorParser `sepEndBy` defaultDomainParser
     eof
@@ -53,8 +53,10 @@ parseErrorContents = Text.Parsec.runParser
     currentDomain = "",
     currentPrefix = Nothing,
     errorIndentationLevel = [],
-    errorShouldUpdateIndent = False
+    errorShouldUpdateIndent = False,
+    errorParseFileName = source
   }
+  source
 
 ---------------------------------------------------------------------------
 --------------------ERROR STATE--------------------------------------------
@@ -64,7 +66,8 @@ data ErrorParserState = ErrorParserState {
   currentDomain :: String,
   currentPrefix :: Maybe String,
   errorIndentationLevel :: [String],
-  errorShouldUpdateIndent :: Bool
+  errorShouldUpdateIndent :: Bool,
+  errorParseFileName :: String
 }
 
 instance ParserState ErrorParserState where
@@ -87,10 +90,9 @@ instance ParserState ErrorParserState where
   }
 
 updateDefaultDomain :: String -> Maybe String -> ErrorParserState -> ErrorParserState
-updateDefaultDomain defaultDomain Nothing currentState = ErrorParserState {
+updateDefaultDomain defaultDomain Nothing currentState = currentState {
   currentDomain = defaultDomain,
   currentPrefix = Nothing,
-  errorIndentationLevel = errorIndentationLevel currentState,
   errorShouldUpdateIndent = False
 }
 updateDefaultDomain defaultDomain (Just prefix) currentState = ErrorParserState {
@@ -119,9 +121,10 @@ errorParser = do
   let attrMap = Map.fromList attrs
   parserState <- getState
   let maybeError = errorFromNameAndAttrMap name attrMap parserState
+  source <- errorParseFileName <$> getState
   case maybeError of
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap parserState
     }

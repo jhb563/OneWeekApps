@@ -41,11 +41,11 @@ parseFontsFromFile fPath = do
     Left parseError -> return $ Left [ParsecError parseError]
     Right errorsAndFonts -> let (errors, fonts) = partitionEithers errorsAndFonts in
       if not (null errors)
-        then return $ Left (map (attachFileName source) errors)
+        then return $ Left errors
         else return $ Right fonts
 
 parseFontContents :: FilePath -> String -> Either ParseError [Either OWAParseError OWAFont]
-parseFontContents = Text.Parsec.runParser
+parseFontContents source = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     results <- fontParser `endBy` commentOrSpacesParser
@@ -53,8 +53,10 @@ parseFontContents = Text.Parsec.runParser
     return results)
   GenericParserState {
     indentationLevel = [],
-    shouldUpdate = False
+    shouldUpdate = False,
+    parseFileName = source
   }
+  source
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -69,9 +71,10 @@ fontParser = do
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList attrs
   let maybeFont = fontFromNameAndAttrMap name attrMap
+  source <- parseFileName <$> getState
   case maybeFont of
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap
     }
