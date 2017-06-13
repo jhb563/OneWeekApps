@@ -47,7 +47,7 @@ parseViewFromFile fPath = do
   case errorOrView of
     Left parseError -> return (Left [ParsecError parseError])
     Right itemErrsOrView -> case itemErrsOrView of
-      Left itemErrs -> return $ Left (map (attachFileName source) itemErrs)
+      Left itemErrs -> return $ Left itemErrs
       Right view -> return $ Right view 
 
 parseViewContents :: String -> String -> Either ParseError (Either [OWAParseError] OWAView)
@@ -61,7 +61,8 @@ parseViewContents source = Text.Parsec.runParser
   ViewParserState {
     superViewStack = [],
     viewIndentationLevel = [],
-    viewShouldUpdateIndent = False
+    viewShouldUpdateIndent = False,
+    viewParseFileName = source
   }
   source
 
@@ -72,7 +73,8 @@ parseViewContents source = Text.Parsec.runParser
 data ViewParserState = ViewParserState {
   superViewStack :: [String],
   viewIndentationLevel :: [String],
-  viewShouldUpdateIndent :: Bool
+  viewShouldUpdateIndent :: Bool,
+  viewParseFileName :: String
 }
 
 instance ParserState ViewParserState where
@@ -164,10 +166,11 @@ labelElementParser = do
   let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let maybeLabel = labelFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
+  source <- viewParseFileName <$> getState
   case maybeLabel of
     Just label' -> return $ Right (LabelElement label', modifiedConstraints)
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       -- Text is the only required keyword for Labels
       missingRequiredAttributes = [textKeyword]
@@ -193,10 +196,11 @@ buttonElementParser = do
   let modifiedConstraints = modifyConstraintsWithViewName name constraints'
   let maybeButton = buttonFromNameAndAttrs name attrMap
   modifyState reduceIndentationLevel
+  source <- viewParseFileName <$> getState
   case maybeButton of
     Just button -> return $ Right (ButtonElement button, modifiedConstraints)
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       -- Text or ImageSrc is the only required keyword for buttons 
       missingRequiredAttributes = [textKeyword ++ " or " ++ imageSourceKeyword]
@@ -249,10 +253,11 @@ imageViewParser = do
   let maybeImageView = imageViewFromNameAndAttrs name attrMap
   _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
+  source <- viewParseFileName <$> getState
   case maybeImageView of
     Just imageView -> return $ Right (ImageElement imageView, modifiedConstraints)
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       -- Source is the only required image keyword
       missingRequiredAttributes = [imageSourceKeyword]
@@ -276,10 +281,11 @@ customViewParser = do
   let maybeCustomViewRecord = customViewFromNameAndAttrs name attrMap
   _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
+  source <- viewParseFileName <$> getState
   case maybeCustomViewRecord of
     Just customViewRecord -> return $ Right (CustomViewElement customViewRecord, modifiedConstraints)
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       -- Type is the only required custom view keyword
       missingRequiredAttributes = [typeKeyword]
@@ -337,9 +343,10 @@ scrollViewParser = do
   let addedConstraintsOrFailure = addedScrollViewConstraints name (scrollDirection scrollView) modifiedConstraints
   _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
+  source <- viewParseFileName <$> getState
   case addedConstraintsOrFailure of
     Left missingStrs -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       missingRequiredAttributes = missingStrs
     }

@@ -22,8 +22,7 @@ module Parse.Utils (
   commentOrSpacesParser,
   singleTrailingComment,
   indentedComment,
-  sourceNameFromFile,
-  attachFileName
+  sourceNameFromFile
 ) where
 
 import qualified Data.Text 
@@ -51,17 +50,18 @@ class ParserState a where
 -- encompasses only those functions which related to indentation.
 data GenericParserState = GenericParserState {
   indentationLevel :: [String],
-  shouldUpdate :: Bool
+  shouldUpdate :: Bool,
+  parseFileName :: String  
 }
 
 instance ParserState GenericParserState where
   currentIndentLevel = indentationLevel
   shouldUpdateIndentLevel = shouldUpdate
-  addIndentationLevel newLevel currentState = GenericParserState {
+  addIndentationLevel newLevel currentState = currentState {
     indentationLevel = indentationLevel currentState ++ [newLevel],
     shouldUpdate = False
   }
-  reduceIndentationLevel currentState = GenericParserState {
+  reduceIndentationLevel currentState = currentState {
     indentationLevel = init $ indentationLevel currentState,
     shouldUpdate = False
   }
@@ -243,9 +243,3 @@ commentParser = do
 sourceNameFromFile :: FilePath -> String
 sourceNameFromFile fullPath = Data.Text.unpack $ 
   last (Data.Text.split (== '/') (Data.Text.pack fullPath))
-
--- | Attaches the filename to the error if it is an ObjectError. ParsecErrors
--- already have the filename attached.
-attachFileName :: String -> OWAParseError -> OWAParseError
-attachFileName _ (ParsecError err) = ParsecError err
-attachFileName source objectError = objectError {fileName = source}

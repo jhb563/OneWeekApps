@@ -38,14 +38,14 @@ parseColorsFromFile fPath = do
     Left parseError -> return (Left [ParsecError parseError])
     Right errorsAndColors -> let (errors, colors) = partitionEithers errorsAndColors in
       if not (null errors)
-        then return $ Left (map (attachFileName source) errors)
+        then return $ Left errors
         else return $ Right colors
 
 -- 'parseColorContents' takes a string representing file contents,
 -- and returns either a ParseError if the string could not be parsed,
 -- or a list of parsed colors.
 parseColorContents :: String -> String -> Either ParseError [Either OWAParseError OWAColor]
-parseColorContents = Text.Parsec.runParser
+parseColorContents source = Text.Parsec.runParser
   (do
     commentOrSpacesParser
     result <- colorParser `endBy` commentOrSpacesParser
@@ -53,8 +53,10 @@ parseColorContents = Text.Parsec.runParser
     return result)
   GenericParserState {
     indentationLevel = [],
-    shouldUpdate = False
+    shouldUpdate = False,
+    parseFileName = source
   }
+  source
 
 -------------------------------------------------------------------------------
 -----------------------------------PARSERS-------------------------------------
@@ -69,9 +71,10 @@ colorParser = do
   modifyState reduceIndentationLevel
   let attrMap = Map.fromList (concat attrs)
   let maybeColor = colorFromNameAndAttrMap name attrMap
+  source <- parseFileName <$> getState
   case maybeColor of
     Nothing -> return $ Left ObjectError {
-      fileName = "",
+      fileName = source,
       itemName = name,
       missingRequiredAttributes = missingAttrs attrMap
     }
