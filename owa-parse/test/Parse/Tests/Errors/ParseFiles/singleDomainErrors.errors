@@ -6,6 +6,7 @@ Error simpleError
 
 Error noPrefixError
   Code noPrefix
+  
   Description "I don't have a prefix"
 
 Error redundantDomain
