@@ -25,6 +25,7 @@ module Parse.Utils (
   sourceNameFromFile
 ) where
 
+import           Control.Monad (void)
 import qualified Data.Text 
 import           Text.Parsec
 import           Text.ParserCombinators.Parsec
@@ -227,7 +228,8 @@ singleTrailingComment = do
 
 -- | Parses an indented comment. 
 indentedComment :: ParserState st => GenParser Char st ()
-indentedComment = indentParser singleTrailingComment
+indentedComment = indentParser singleTrailingComment <|> void (string "\n") <|>
+  void (spaceTabs >> string "\n")
 
 commentParser :: GenParser Char st ()
 commentParser = do
