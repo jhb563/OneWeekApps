@@ -272,6 +272,7 @@ allImageViewAttributeParsers = [imageSourceParser,
 
 customViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 customViewParser = do
+  source <- viewParseFileName <$> getState
   name <- Text.Parsec.try $ nameParserWithKeyword customViewKeyword
   modifyState setShouldUpdateIndentLevel
   _ <- many $ Text.Parsec.try indentedComment
@@ -281,7 +282,6 @@ customViewParser = do
   let maybeCustomViewRecord = customViewFromNameAndAttrs name attrMap
   _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
-  source <- viewParseFileName <$> getState
   case maybeCustomViewRecord of
     Just customViewRecord -> return $ Right (CustomViewElement customViewRecord, modifiedConstraints)
     Nothing -> return $ Left ObjectError {
@@ -332,6 +332,7 @@ containerViewElementsParser containerName' = do
 
 scrollViewParser :: GenParser Char ViewParserState (Either OWAParseError (OWAViewElement, [OWAConstraint]))
 scrollViewParser = do
+  source <- viewParseFileName <$> getState
   name <- nameParserWithKeyword scrollViewKeyword
   modifyState setShouldUpdateIndentLevel
   _ <- many $ Text.Parsec.try indentedComment
@@ -343,7 +344,6 @@ scrollViewParser = do
   let addedConstraintsOrFailure = addedScrollViewConstraints name (scrollDirection scrollView) modifiedConstraints
   _ <- many $ Text.Parsec.try indentedComment
   modifyState reduceIndentationLevel
-  source <- viewParseFileName <$> getState
   case addedConstraintsOrFailure of
     Left missingStrs -> return $ Left ObjectError {
       fileName = source,

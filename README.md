@@ -32,7 +32,9 @@ You can generate code for categories for certain elements which are reusable thr
 
 The largest and most important feature is being able to generate code for your own UIView subclasses. You can specify elements within the view and use OWA’s easy layout syntax to generate Autolayout code for Objective C. Basic elements which are currently supported within views include Labels, Buttons, TextFields, ImageViews. You can also make your own custom views subviews of each other, place elements within vanilla UIViews, and embed elements within UIScrollViews. 
 
-OWA also requires that you create a file called “app.info” containing some basic information about your app such as its name, your name as author, the app prefix, and so on. 
+Version 0.3.0 also introduced code generation for models files. See `owa-parse/tests` for details on the input format.
+
+OWA also requires that you create a file called “app.info” containing some basic information about your app such as its name, your name as author, the app prefix, and so on. Since version 0.2.3, this file (and a sample XCode project) is created when you run the `owa new` command.
 
 ### Examples
 
@@ -63,12 +65,16 @@ OWA will create files called UIColor+XXXColors.h, and UIColor+XXXColors.m, where
 
 And the .m file would handle implementing these using `[UIColor colorWithRed:green:blue:alpha]` 
 
-See the tests folder for more examples. Tests for versions 0.2.0 and 0.2.1 focus on generation for view code. Earlier tests focus on generation for the generic app elements. 
+See the tests folder for more examples.
+
+## Support for Swift
+
+Since version 0.2.3, all features have been supported for Swift as well as Objective C. Note that running the `owa new` command will generate separate XCode projects, one for Objective C and one for Swift.
 
 ## Future Goals
-For the next release, the main goals are adding Swift code generation in addition to Objective C, and creating a better user experience with respect to adding generated code to XCode. See specs/spec-0.2.3.md for more details, or take a look at the Issues section on top! 
+For the next release (0.3.1), the main goals are adding code generation for View Controllers and Coordinators, which allow navigation. Once this is done, it should be possibly to create a fully fledged app.
 
-Longer term goals include generating code for more types of objects (such as View Controllers and Models) and beginning to expand to android code generation. 
+Longer term goals include generating code for more service oriented tasks like network requests. At some point, we will hopefully look at expanding to android code generation. 
 
 ## Bug Fixes and Feature Requests
 If you spot a bug, [create an issue](https://github.com/jhb563/OneWeekApps/issues/new) for it and **be sure to add the “Bug” label**. If you have an idea for a feature, you can [create an issue](https://github.com/jhb563/OneWeekApps/issues/new) for that as well, just **use the “Feature Request” label**. Depending on the request it may get tracked into the current version. Of course if you implement the feature yourself and submit a Pull Request, this is much more likely! 
