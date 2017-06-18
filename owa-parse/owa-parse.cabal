@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           owa-parse
-version:        0.1.0.0
+version:        0.3.0.0
 build-type:     Simple
 cabal-version:  >= 1.10
 
