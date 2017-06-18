@@ -1,0 +1,46 @@
+////////////////////////////////////////////////////////////////////////////////
+////////// ONE WEEK APPS VERSION 0.4.0 SPECS ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* Version 0.4 of One Week Apps will feature two new concepts: "Controllers" 
+and "Coordinators".
+
+* Controllers will naturally represent the idea of View Controllers in an iOS 
+app. But in the interest of spreading out code responsibility more and 
+simplifying the language, they will not perform all the functions we often see 
+performed by View Controllers.
+
+* In particular, the responsibility of navigation will be refactored into 
+"coordinators". These items will handle the pushing and popping of 
+view controllers, as well as passing model information around.
+
+////////////////////////////////////////////////////////////////////////////////
+////////// CONTROLLER OBJECTS //////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* We will specify a DSL for creating "controllers". These will be used as the
+basis for generating View Controller code in our iOS apps.
+
+* Controllers will have a few primary responsibilities. They will have a main
+view that they will display, they will hold model information that they view
+might use, and they will deal with recieving actions for the items in the view.
+
+* Controllers will NOT be responsible for handling navigation. Each controller
+will have access to its coordinator through a delegate function. In general,
+Objective C view controllers should NOT have to import each other in the
+implementation files.
+
+////////////////////////////////////////////////////////////////////////////////
+////////// COORDINATOR OBJECTS /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+* Coordinators will handle navigation for the app. There will be a base
+coordinator in every app that will be initialized by the app delegate. Then
+it will handle pushing and popping view controllers as needed.
+
+* Coordinators can also spawn "subcoordinators" for handling specific portions
+of the app.
+
+* When view controllers encounter certain navigation options, they'll use a
+protocol with their coordinator to message about the type of navigation action
+that should take place.
