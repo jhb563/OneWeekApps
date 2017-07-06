@@ -1,0 +1,12 @@
+Controller
+  ViewType TextContainerView   
+  Properties
+    String firstEntry
+    String secondEntry
+  Connections
+    TextFieldNext firstField secondField
+    TextFieldReturn secondField evaluateFields
+    ButtonNavigation doneButton popView
+  NavProtocol
+    Name TextControllerDelegate
+    Action shouldPopController

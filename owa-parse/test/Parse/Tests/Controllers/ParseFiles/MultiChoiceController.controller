@@ -1,0 +1,18 @@
+Controller
+  ViewType MultiChoiceView
+  Properties
+    Dictionary String passThrough 
+  Connections
+    ButtonNavigation prevButton popView
+    ButtonNavigation option1Button chooseOption1
+    ButtonNavigation option2Button chooseOption2
+    ButtonNavigation option3Button chooseOption3
+  NavProtocol
+    Name MultiChoiceDelegate
+    Action shouldPopController
+    Action didChooseOption1
+      Produces passThrough
+    Action didChooseOption2
+      Produces passThrough
+    Action didChooseOption3 
+      Produces passThrough

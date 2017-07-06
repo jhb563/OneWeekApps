@@ -1,0 +1,22 @@
+Controller
+  Type OWARegistrationController
+  ViewType OWARegistrationView
+  Properties
+    String username
+    String password
+    String email
+    String description
+    Bool isMale
+  Connections
+    ButtonNavigation prevButton popView
+    ButtonNavigation nextButton advanceView
+    ButtonPress maleButton setMale
+    ButtonPress femaleButton setFemale
+    TextFieldNext usernameField passwordField
+    TextFieldNext passwordField emailField
+    TextFieldNavigation emailField advanceView
+  NavProtocol
+    Name RegistrationDelegate
+    Action shouldPopController
+    Action shouldAdvanceView
+      Produces username, password, email, isMale   
