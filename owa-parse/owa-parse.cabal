@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:           owa-parse
-version:        0.3.0.0
+version:        0.4.0.1
 build-type:     Simple
 cabal-version:  >= 1.10
 
@@ -22,6 +22,7 @@ library
       Parse.AlertParser
       Parse.AppInfoParser
       Parse.ColorParser
+      Parse.ControllerParser
       Parse.ErrorParser
       Parse.FontParser
       Parse.ModelParser
@@ -57,6 +58,8 @@ test-suite parse-tests
       Parse.Tests.Colors.Failure
       Parse.Tests.Colors.Objects
       Parse.Tests.Comments.Basic
+      Parse.Tests.Controllers.Basic
+      Parse.Tests.Controllers.Objects
       Parse.Tests.Errors.Basic
       Parse.Tests.Errors.Errors
       Parse.Tests.Errors.Failure

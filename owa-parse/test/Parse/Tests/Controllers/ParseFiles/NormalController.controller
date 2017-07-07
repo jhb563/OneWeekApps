@@ -1,0 +1,14 @@
+Controller
+  ViewType NormalController
+  Properties
+    Array Integer myNumbers
+    Integer myNumber
+    Float myFlt
+    Maybe String possibleName
+  Connections
+    ButtonNavigation advancementButton advanceView
+  NavProtocol
+    Name NormalDelegate
+    Action shouldPopController
+    Action shouldAdvance
+      Produces myNumbers, myNumber, myFlt, possibleName
